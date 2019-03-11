@@ -1,0 +1,101 @@
+#cloud-config
+write_files:
+
+- path: /etc/sysctl.d/10-gateway.conf
+  permissions: '0644'
+  content: |
+    net.ipv4.ip_forward=1
+
+- path: /etc/dnsmasq.d/dns
+  permissions: '0644'
+  content: |
+    domain-needed
+    bogus-priv
+    bind-interfaces
+    domain=kube.local
+
+- path: /etc/dnsmasq.d/resolv-file
+  permissions: '0644' 
+  content: |
+    server=208.67.222.222
+    server=208.67.220.220
+
+- path: /etc/dnsmasq.d/dhcp
+  permissions: '0644'
+  content: |
+    dhcp-range=enp0s8,192.168.1.50,192.168.1.100,12h
+    dhcp-range=enp0s9,192.168.2.50,192.168.2.200,12h
+    dhcp-range=enp0s10,192.168.3.50,192.168.3.200,12h
+    dhcp-range=enp0s16,192.168.4.50,192.168.4.200,12h
+
+    dhcp-option=enp0s8,option:dns-server,192.168.1.254
+    dhcp-option=enp0s9,option:dns-server,192.168.2.254
+    dhcp-option=enp0s10,option:dns-server,192.168.3.254
+    dhcp-option=enp0s16,option:dns-server,192.168.4.254
+
+    dhcp-option=enp0s8,option:router,192.168.1.254
+    dhcp-option=enp0s9,option:router,192.168.2.254
+    dhcp-option=enp0s10,option:router,192.168.3.254
+    dhcp-option=enp0s16,option:router,192.168.4.254
+
+    dhcp-option=enp0s8,option:classless-static-route,0.0.0.0/0,192.168.1.254
+    dhcp-option=enp0s9,option:classless-static-route,0.0.0.0/0,192.168.2.254
+    dhcp-option=enp0s10,option:classless-static-route,0.0.0.0/0,192.168.3.254
+    dhcp-option=enp0s16,option:classless-static-route,0.0.0.0/0,192.168.4.254
+
+runcmd:
+  - [ sysctl, --system ]
+
+bootcmd:
+  - iptables -A FORWARD -i enp0s8 -j ACCEPT
+  - iptables -A FORWARD -o enp0s8 -j ACCEPT
+  - iptables -A FORWARD -i enp0s9 -j ACCEPT
+  - iptables -A FORWARD -o enp0s9 -j ACCEPT
+  - iptables -A FORWARD -i enp0s10 -j ACCEPT
+  - iptables -A FORWARD -o enp0s10 -j ACCEPT
+  - iptables -A FORWARD -i enp0s16 -j ACCEPT
+  - iptables -A FORWARD -o enp0s16 -j ACCEPT
+  - iptables -t nat -A POSTROUTING -o enp0s3 -j MASQUERADE
+
+apt:
+  sources_list: |
+    deb http://deb.debian.org/debian/ $RELEASE main contrib non-free
+    deb-src http://deb.debian.org/debian/ $RELEASE main contrib non-free
+
+    deb http://deb.debian.org/debian/ $RELEASE-updates main contrib non-free
+    deb-src http://deb.debian.org/debian/ $RELEASE-updates main contrib non-free
+
+    deb http://deb.debian.org/debian-security $RELEASE/updates main
+    deb-src http://deb.debian.org/debian-security $RELEASE/updates main
+  conf: |
+    APT {
+      Get {
+        Assume-Yes "true";
+        Fix-Broken "true";
+      };
+    };
+
+packages:
+  - dnsmasq
+  - ntopng
+
+users:
+- name: debian
+  gecos: Debian User
+  sudo: ALL=(ALL) NOPASSWD:ALL
+  shell: /bin/bash
+  lock_passwd: true
+  ssh_authorized_keys:
+    - #SSH-PUB-KEY#
+- name: root
+  lock-passwd: true
+  passwd: 
+
+package_upgrade: true
+
+ssh_pwauth: false
+
+power_state:
+  mode: reboot
+  timeout: 30
+  condition: true

@@ -1,0 +1,104 @@
+#cloud-config
+write_files:
+- path: /etc/modules-load.d/bridge.conf
+  permissions: '0644'
+  content: |
+    br_netfilter
+
+- path: /etc/sysctl.d/10-kubernetes.conf
+  permissions: '0644'
+  content: |
+    net.ipv4.ip_forward=1
+    net.bridge.bridge-nf-call-iptables=1
+    net.bridge.bridge-nf-call-arptables=1
+
+- path: /root/bin/copy-certificates.sh
+  permissions: '0755'
+  content: |
+    USER=debian
+    CONTROL_PLANE_IPS="kube-mast02 kube-mast03"
+    for host in ${CONTROL_PLANE_IPS}; do
+      scp /etc/kubernetes/pki/ca.crt "${USER}"@$host:~/.
+      scp /etc/kubernetes/pki/ca.key "${USER}"@$host:~/.
+      scp /etc/kubernetes/pki/sa.key "${USER}"@$host:~/.
+      scp /etc/kubernetes/pki/sa.pub "${USER}"@$host:~/.
+      scp /etc/kubernetes/pki/front-proxy-ca.crt "${USER}"@$host:~/.
+      scp /etc/kubernetes/pki/front-proxy-ca.key "${USER}"@$host:~/.
+      scp /etc/kubernetes/pki/etcd/ca.crt "${USER}"@$host:etcd-ca.crt
+      scp /etc/kubernetes/pki/etcd/ca.key "${USER}"@$host:etcd-ca.key
+      scp /etc/kubernetes/admin.conf "${USER}"@$host:~/.
+    done
+
+- path: /root/bin/move-certificates.sh
+  permissions: '0755'
+  content: |
+    USER=debian
+    mkdir -p /etc/kubernetes/pki/etcd
+    mv /home/${USER}/ca.crt /etc/kubernetes/pki/
+    mv /home/${USER}/ca.key /etc/kubernetes/pki/
+    mv /home/${USER}/sa.pub /etc/kubernetes/pki/
+    mv /home/${USER}/sa.key /etc/kubernetes/pki/
+    mv /home/${USER}/front-proxy-ca.crt /etc/kubernetes/pki/
+    mv /home/${USER}/front-proxy-ca.key /etc/kubernetes/pki/
+    mv /home/${USER}/etcd-ca.crt /etc/kubernetes/pki/etcd/ca.crt
+    mv /home/${USER}/etcd-ca.key /etc/kubernetes/pki/etcd/ca.key
+    mv /home/${USER}/admin.conf /etc/kubernetes/admin.conf
+
+apt:
+  sources_list: |
+    deb http://deb.debian.org/debian/ $RELEASE main contrib non-free
+    deb-src http://deb.debian.org/debian/ $RELEASE main contrib non-free
+
+    deb http://deb.debian.org/debian/ $RELEASE-updates main contrib non-free
+    deb-src http://deb.debian.org/debian/ $RELEASE-updates main contrib non-free
+
+    deb http://deb.debian.org/debian-security $RELEASE/updates main
+    deb-src http://deb.debian.org/debian-security $RELEASE/updates main
+  conf: |
+    APT {
+      Get {
+        Assume-Yes "true";
+        Fix-Broken "true";
+      };
+    };
+
+packages: 
+  - apt-transport-https
+  - ca-certificates
+  - gnupg2
+  - software-properties-common
+  - glusterfs-client
+
+runcmd:
+  - [ modprobe, br_netfilter ]
+  - [ sysctl, --system ]
+  - wget -qO - https://download.docker.com/linux/debian/gpg | apt-key add -
+  - wget -qO - https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+  - [ apt-key, fingerprint, '0EBFCD88' ]
+  - echo 'deb [arch=amd64] https://download.docker.com/linux/debian stretch stable' > /etc/apt/sources.list.d/docker-ce.list
+  - echo 'deb https://apt.kubernetes.io/ kubernetes-xenial main' > /etc/apt/sources.list.d/kubernetes.list
+  - [ apt-get, update ]
+  - [ apt-get, install, -y, 'docker-ce=18.06.0~ce~3-0~debian', containerd.io ]
+  - [ apt-get, install, -y, kubelet, kubeadm ]
+  - [ apt-mark, hold, kubelet, kubeadm, docker-ce, containerd.io ]
+
+users:
+- name: debian
+  gecos: Debian User
+  sudo: ALL=(ALL) NOPASSWD:ALL
+  shell: /bin/bash
+  lock_passwd: true
+  ssh_authorized_keys:
+    - #SSH-PUB-KEY#
+- name: root
+  lock-passwd: true
+  passwd: 
+
+package_upgrade: true
+
+ssh_pwauth: false
+
+power_state:
+  mode: reboot
+  timeout: 30
+  condition: true
