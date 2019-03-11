@@ -1,4 +1,12 @@
 ```
+$ cd ~/VirtualBox\ VMs/
+
+$ wget https://www.dropbox.com/s/v6h0sedqt3za9pl/image-base.tar.bz2?dl=0
+
+$ tar xvjf image-base.tar.bz2
+
+$ vboxmanage registervm ~/VirtualBox\ VMs/image-base/image-base.vbox
+
 $ ./create-image.sh \
     -s ~/.ssh/id_rsa.pub \
     -u ~/Projects/images/data/gate/user-data \
