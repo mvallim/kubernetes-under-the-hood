@@ -1,5 +1,6 @@
+<div style="text-align:center"><img src ="under-the-hood.jpg" /></div>
+
 # Kubernetes under the hood
-![](under-the-hood.jpg)
 
 ## Getting Started
 
