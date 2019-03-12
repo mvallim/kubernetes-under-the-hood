@@ -1,4 +1,6 @@
-<div style="text-align:center"><img src ="under-the-hood.jpg" /></div>
+<div>
+    <img align="center" src="under-the-hood.jpg" />
+</div>
 
 # Kubernetes under the hood
 
