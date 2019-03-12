@@ -28,7 +28,7 @@ help_exit() {
   echo "This is a utility script for create image using cloud-init.
 Options:
   -b, --base-image BASE_IMAGE
-              Name of VistualBox base image.
+              Name of VirtualBox base image.
   -o, --hostname HOSTNAME
               Hostname of new image
   -s, --ssh-pub-keyfile SSH_PUB_KEY_FILE
