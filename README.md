@@ -35,6 +35,7 @@ If you are a dnsmasq running on your local machine execute this to use private D
 
 ```
 $ echo "server=/kube.local/192.168.254.254" | sudo tee -a /etc/dnsmasq.d/server
+$ sudo service dnsmasq restart
 ```
 
 ## Running
