@@ -41,7 +41,7 @@ $ sudo service dnsmasq restart
 Create a Host-Only adpter on Virtualbox
 
 ```
-vboxmanage hostonlyif ipconfig vboxnet0 --ip 192.168.254.1 --netmask 255.255.0.0
+$ vboxmanage hostonlyif ipconfig vboxnet0 --ip 192.168.254.1 --netmask 255.255.0.0
 ```
 
 ## Running
