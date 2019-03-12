@@ -72,7 +72,7 @@ $ ./create-image.sh -h or --help
 ## Running Demo
 
 ```
-$ ./create-image.sh \
+./create-image.sh \
     -s ~/.ssh/id_rsa.pub \
     -u ~/Projects/images/data/gate/user-data \
     -n ~/Projects/images/data/gate/network-config \
@@ -80,94 +80,47 @@ $ ./create-image.sh \
     -o gate-node01 \
     -b image-base
 
-$ ./create-image.sh \
-    -s ~/.ssh/id_rsa.pub \
-    -u ~/Projects/images/data/hapx/user-data \
-    -n ~/Projects/images/data/hapx/network-config \
-    -p ~/Projects/images/data/hapx/post-config-interfaces \
-    -o hapx-node01 \
-    -b image-base
+for instance in hapx-node01 hapx-node02; do
+    ./create-image.sh \
+        -s ~/.ssh/id_rsa.pub \
+        -u ~/Projects/images/data/hapx/user-data \
+        -n ~/Projects/images/data/hapx/network-config \
+        -p ~/Projects/images/data/hapx/post-config-interfaces \
+        -o ${instance} \
+        -b image-base
+done
 
-$ ./create-image.sh \
-    -s ~/.ssh/id_rsa.pub \
-    -u ~/Projects/images/data/hapx/user-data \
-    -n ~/Projects/images/data/hapx/network-config \
-    -p ~/Projects/images/data/hapx/post-config-interfaces \
-    -o hapx-node02 \
-    -b image-base
+for instance in kube-mast01 kube-mast02 kube-mast03; do
+    ./create-image.sh \
+        -s ~/.ssh/id_rsa.pub \
+        -u ~/Projects/images/data/kube/user-data \
+        -n ~/Projects/images/data/kube/network-config \
+        -p ~/Projects/images/data/kube-mast/post-config-interfaces \
+        -o ${instance} \
+        -b image-base
+done
 
-$ ./create-image.sh \
-    -s ~/.ssh/id_rsa.pub \
-    -u ~/Projects/images/data/kube/user-data \
-    -n ~/Projects/images/data/kube/network-config \
-    -p ~/Projects/images/data/kube-mast/post-config-interfaces \
-    -o kube-mast01 \
-    -b image-base
+for instance in kube-node01 kube-node02 kube-node03; do
+    ./create-image.sh \
+        -s ~/.ssh/id_rsa.pub \
+        -u ~/Projects/images/data/kube/user-data \
+        -n ~/Projects/images/data/kube/network-config \
+        -p ~/Projects/images/data/kube-node/post-config-interfaces \
+        -o ${instance} \
+        -b image-base
+done
 
-$ ./create-image.sh \
-    -s ~/.ssh/id_rsa.pub \
-    -u ~/Projects/images/data/kube/user-data \
-    -n ~/Projects/images/data/kube/network-config \
-    -p ~/Projects/images/data/kube-mast/post-config-interfaces \
-    -o kube-mast02 \
-    -b image-base
-
-$ ./create-image.sh \
-    -s ~/.ssh/id_rsa.pub \
-    -u ~/Projects/images/data/kube/user-data \
-    -n ~/Projects/images/data/kube/network-config \
-    -p ~/Projects/images/data/kube-mast/post-config-interfaces \
-    -o kube-mast03 \
-    -b image-base
-
-$ ./create-image.sh \
-    -s ~/.ssh/id_rsa.pub \
-    -u ~/Projects/images/data/kube/user-data \
-    -n ~/Projects/images/data/kube/network-config \
-    -p ~/Projects/images/data/kube-node/post-config-interfaces \
-    -o kube-node01 \
-    -b image-base
-
-$ ./create-image.sh \
-    -s ~/.ssh/id_rsa.pub \
-    -u ~/Projects/images/data/kube/user-data \
-    -n ~/Projects/images/data/kube/network-config \
-    -p ~/Projects/images/data/kube-node/post-config-interfaces \
-    -o kube-node02 \
-    -b image-base
-
-$ ./create-image.sh \
-    -s ~/.ssh/id_rsa.pub \
-    -u ~/Projects/images/data/kube/user-data \
-    -n ~/Projects/images/data/kube/network-config \
-    -p ~/Projects/images/data/kube-node/post-config-interfaces \
-    -o kube-node03 \
-    -b image-base
-
-$ ./create-image.sh \
-    -s ~/.ssh/id_rsa.pub \
-    -u ~/Projects/images/data/glus/user-data \
-    -n ~/Projects/images/data/glus/network-config \
-    -p ~/Projects/images/data/glus/post-config-interfaces \
-    -o kube-glus01 \
-    -b image-base
-
-$ ./create-image.sh \
-    -s ~/.ssh/id_rsa.pub \
-    -u ~/Projects/images/data/glus/user-data \
-    -n ~/Projects/images/data/glus/network-config \
-    -p ~/Projects/images/data/glus/post-config-interfaces \
-    -o kube-glus02 \
-    -b image-base
-
-$ ./create-image.sh \
-    -s ~/.ssh/id_rsa.pub \
-    -u ~/Projects/images/data/glus/user-data \
-    -n ~/Projects/images/data/glus/network-config \
-    -p ~/Projects/images/data/glus/post-config-interfaces \
-    -o kube-glus03 \
-    -b image-base
+for instance in kube-glus01 kube-glus02 kube-glus03; do
+    ./create-image.sh \
+        -s ~/.ssh/id_rsa.pub \
+        -u ~/Projects/images/data/glus/user-data \
+        -n ~/Projects/images/data/glus/network-config \
+        -p ~/Projects/images/data/glus/post-config-interfaces \
+        -o ${instance} \
+        -b image-base
+done
 ```
+
 ## Contributing
 
 Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
