@@ -74,18 +74,18 @@ $ ./create-image.sh -h or --help
 ```
 ./create-image.sh \
     -s ~/.ssh/id_rsa.pub \
-    -u ~/Projects/images/data/gate/user-data \
-    -n ~/Projects/images/data/gate/network-config \
-    -p ~/Projects/images/data/gate/post-config-interfaces \
+    -u data/gate/user-data \
+    -n data/gate/network-config \
+    -p data/gate/post-config-interfaces \
     -o gate-node01 \
     -b image-base
 
 for instance in hapx-node01 hapx-node02; do
     ./create-image.sh \
         -s ~/.ssh/id_rsa.pub \
-        -u ~/Projects/images/data/hapx/user-data \
-        -n ~/Projects/images/data/hapx/network-config \
-        -p ~/Projects/images/data/hapx/post-config-interfaces \
+        -u data/hapx/user-data \
+        -n data/hapx/network-config \
+        -p data/hapx/post-config-interfaces \
         -o ${instance} \
         -b image-base
 done
@@ -93,9 +93,9 @@ done
 for instance in kube-mast01 kube-mast02 kube-mast03; do
     ./create-image.sh \
         -s ~/.ssh/id_rsa.pub \
-        -u ~/Projects/images/data/kube/user-data \
-        -n ~/Projects/images/data/kube/network-config \
-        -p ~/Projects/images/data/kube-mast/post-config-interfaces \
+        -u data/kube/user-data \
+        -n data/kube/network-config \
+        -p data/kube-mast/post-config-interfaces \
         -o ${instance} \
         -b image-base
 done
@@ -103,9 +103,9 @@ done
 for instance in kube-node01 kube-node02 kube-node03; do
     ./create-image.sh \
         -s ~/.ssh/id_rsa.pub \
-        -u ~/Projects/images/data/kube/user-data \
-        -n ~/Projects/images/data/kube/network-config \
-        -p ~/Projects/images/data/kube-node/post-config-interfaces \
+        -u data/kube/user-data \
+        -n data/kube/network-config \
+        -p data/kube-node/post-config-interfaces \
         -o ${instance} \
         -b image-base
 done
@@ -113,9 +113,9 @@ done
 for instance in kube-glus01 kube-glus02 kube-glus03; do
     ./create-image.sh \
         -s ~/.ssh/id_rsa.pub \
-        -u ~/Projects/images/data/glus/user-data \
-        -n ~/Projects/images/data/glus/network-config \
-        -p ~/Projects/images/data/glus/post-config-interfaces \
+        -u data/glus/user-data \
+        -n data/glus/network-config \
+        -p data/glus/post-config-interfaces \
         -o ${instance} \
         -b image-base
 done
