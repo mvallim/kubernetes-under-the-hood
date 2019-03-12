@@ -11,7 +11,7 @@ write_files:
       token_retransmits_before_loss_const: 10
       clear_node_high_bit: yes
       crypto_cipher: aes256
-      crypto_hash: sha1
+      crypto_hash: sha256
       interface {
         ringnumber: 0
         bindnetaddr: 192.168.4.0
@@ -100,7 +100,7 @@ runcmd:
   - [ apt-get, -y, install, haveged ]
   - [ corosync-keygen ]
   - [ apt-get, -y, purge, haveged ]
-  - [ wget, "https://raw.githubusercontent.com/russki/cluster-agents/master/haproxy", -O, /usr/lib/ocf/resource.d/heartbeat/haproxy ]
+  - [ wget, "https://raw.githubusercontent.com/russki/cluster-agents/master/haproxy", -q, -O, /usr/lib/ocf/resource.d/heartbeat/haproxy ]
   - [ chmod, "0755", /usr/lib/ocf/resource.d/heartbeat/haproxy ]
   - [ systemctl, restart, pacemaker, corosync ]
   - [ systemctl, enable, pacemaker, corosync ]
