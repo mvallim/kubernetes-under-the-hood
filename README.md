@@ -1,3 +1,7 @@
+The premise is that you already have Virtualbox properly installed on your local machine.
+
+To continue with this demo you need to download the base image and register it in Virtualbox.
+
 ```
 $ cd ~/VirtualBox\ VMs/
 
@@ -6,7 +10,27 @@ $ wget https://www.dropbox.com/s/v6h0sedqt3za9pl/image-base.tar.bz2?dl=0
 $ tar xvjf image-base.tar.bz2
 
 $ vboxmanage registervm ~/VirtualBox\ VMs/image-base/image-base.vbox
+```
 
+You need to add the routes on your local machine to access the internal network of Virtualbox.
+
+```
+$ sudo ip route add 192.168.1.0/24 via 192.168.1.254
+$ sudo ip route add 192.168.2.0/24 via 192.168.2.254
+$ sudo ip route add 192.168.3.0/24 via 192.168.3.254
+$ sudo ip route add 192.168.4.0/24 via 192.168.4.254
+$ sudo ip route add 192.168.254.0/24 via 192.168.254.254
+```
+
+If you are a dnsmasq running on your local machine execute this to use private DNS of this DEMO to domain 'kube.local'
+
+```
+$ echo "server=/kube.local/192.168.254.254" | sudo tee -a /etc/dnsmasq.d/server
+```
+
+Now let's create the images using a tool (create-image.sh) that will help us clone the base image and add the user-data, meta-data and network-config scripts that cloud-init will use to make the installation of the necessary packages and configurations.
+
+```
 $ ./create-image.sh \
     -s ~/.ssh/id_rsa.pub \
     -u ~/Projects/images/data/gate/user-data \
