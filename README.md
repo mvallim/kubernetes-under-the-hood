@@ -1,4 +1,5 @@
 # Kubernetes under the hood
+![](under-the-hood.jpg)
 
 ## Getting Started
 
