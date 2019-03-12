@@ -38,6 +38,12 @@ $ echo "server=/kube.local/192.168.254.254" | sudo tee -a /etc/dnsmasq.d/server
 $ sudo service dnsmasq restart
 ```
 
+Create a Host-Only adpter in Virtualbox
+
+```
+vboxmanage hostonlyif ipconfig vboxnet0 --ip 192.168.254.1 --netmask 255.255.0.0
+```
+
 ## Running
 
 Now let's create the images using a tool (create-image.sh) that will help us clone the base image and add the user-data, meta-data and network-config scripts that cloud-init will use to make the installation of the necessary packages and configurations.
