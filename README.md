@@ -79,7 +79,7 @@ $ ./create-image.sh -h or --help
 ## Running Demo
 
 ```
-./create-image.sh \
+$ ./create-image.sh \
     -s ~/.ssh/id_rsa.pub \
     -u data/gate/user-data \
     -n data/gate/network-config \
@@ -87,7 +87,7 @@ $ ./create-image.sh -h or --help
     -o gate-node01 \
     -b image-base
 
-for instance in hapx-node01 hapx-node02; do
+$ for instance in hapx-node01 hapx-node02; do
     ./create-image.sh \
         -s ~/.ssh/id_rsa.pub \
         -u data/hapx/user-data \
@@ -97,7 +97,7 @@ for instance in hapx-node01 hapx-node02; do
         -b image-base
 done
 
-for instance in kube-mast01 kube-mast02 kube-mast03; do
+$ for instance in kube-mast01 kube-mast02 kube-mast03; do
     ./create-image.sh \
         -s ~/.ssh/id_rsa.pub \
         -u data/kube/user-data \
@@ -107,7 +107,7 @@ for instance in kube-mast01 kube-mast02 kube-mast03; do
         -b image-base
 done
 
-for instance in kube-node01 kube-node02 kube-node03; do
+$ for instance in kube-node01 kube-node02 kube-node03; do
     ./create-image.sh \
         -s ~/.ssh/id_rsa.pub \
         -u data/kube/user-data \
@@ -117,7 +117,7 @@ for instance in kube-node01 kube-node02 kube-node03; do
         -b image-base
 done
 
-for instance in glus-node01 glus-node02 glus-node03; do
+$ for instance in glus-node01 glus-node02 glus-node03; do
     ./create-image.sh \
         -s ~/.ssh/id_rsa.pub \
         -u data/glus/user-data \
