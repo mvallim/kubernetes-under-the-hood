@@ -21,6 +21,13 @@ $ vboxmanage registervm ~/VirtualBox\ VMs/image-base/image-base.vbox
 
 ## Configuring
 
+Create a Host-Only adpter on Virtualbox
+
+```
+$ vboxmanage hostonlyif create
+$ vboxmanage hostonlyif ipconfig vboxnet0 --ip 192.168.254.1 --netmask 255.255.0.0
+```
+
 You need to add the routes on your local machine to access the internal network of Virtualbox.
 
 ```
@@ -36,12 +43,6 @@ If you are a dnsmasq running on your local machine execute this to use private D
 ```
 $ echo "server=/kube.local/192.168.254.254" | sudo tee -a /etc/dnsmasq.d/server
 $ sudo service dnsmasq restart
-```
-
-Create a Host-Only adpter on Virtualbox
-
-```
-$ vboxmanage hostonlyif ipconfig vboxnet0 --ip 192.168.254.1 --netmask 255.255.0.0
 ```
 
 ## Running
