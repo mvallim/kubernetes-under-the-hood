@@ -82,13 +82,28 @@ write_files:
       errorfile 503 /etc/haproxy/errors/503.http
       errorfile 504 /etc/haproxy/errors/504.http
 
+    resolvers hapxdns
+      nameserver dns1 192.168.4.254:53
+      resolve_retries 3
+      timeout resolve 1s
+      timeout retry 1s
+      hold other 30s
+      hold refused 30s
+      hold nx 30s
+      hold timeout 30s
+      hold valid 10s
+      hold obsolete 30s
+
     frontend haproxycontrolplane
       bind *:6443
       mode tcp
+      option tcplog
       default_backend backendcontrolplane
 
     backend backendcontrolplane
       mode tcp
+      option tcplog
+      option tcp-check      
       balance roundrobin
       server kube-mast01 kube-mast01:6443 check
       server kube-mast02 kube-mast02:6443 check
