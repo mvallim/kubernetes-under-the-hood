@@ -116,7 +116,7 @@ for instance in kube-node01 kube-node02 kube-node03; do
         -b image-base
 done
 
-for instance in kube-glus01 kube-glus02 kube-glus03; do
+for instance in glus-node01 glus-node02 glus-node03; do
     ./create-image.sh \
         -s ~/.ssh/id_rsa.pub \
         -u data/glus/user-data \

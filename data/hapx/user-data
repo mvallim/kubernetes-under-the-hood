@@ -143,7 +143,6 @@ users:
     - #SSH-PUB-KEY#
 - name: root
   lock-passwd: true
-  passwd: 
 
 package_upgrade: true
 

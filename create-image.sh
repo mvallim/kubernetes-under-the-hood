@@ -14,7 +14,7 @@ VBOXMANAGE=`which VBoxManage`
 GENISOIMAGE=`which genisoimage`
 SED=`which sed`
 UUIDGEN=`which uuidgen`
-POSTCONFIGURE=${SCRIPT_DIR}/post-configure.sh
+POSTCONFIGUREINTERFACES=${SCRIPT_DIR}/post-config-interfaces.sh
 
 usage() {
   echo -e "USAGE: ${PROG} [--base-image <BASE_IMAGE>] [--hostname <HOSTNAME>]
@@ -181,8 +181,12 @@ ${VBOXMANAGE} clonevm ${BASE_IMAGE} --mode all --name ${HOSTNAME} --register
 ${VBOXMANAGE} storageattach ${HOSTNAME} --storagectl "IDE" --port 1 --device 0 \
     --type dvddrive --medium ${SCRIPT_DIR}/vms/${HOSTNAME}/${HOSTNAME}-cidata.iso
 
-if [[ -f ${NETWORK_INTERFACES_FILE} ]]; then
-  ${POSTCONFIGURE} -v ${HOSTNAME} -p ${POST_CONFIG_INTERFACES_FILE}
+if [[ -f ${NETWORK_INTERFACES_FILE} && -f ${POST_CONFIG_INTERFACES_FILE} ]]; then
+  ${POSTCONFIGUREINTERFACES} -v ${HOSTNAME} -p ${POST_CONFIG_INTERFACES_FILE}
+fi
+
+if [[ -f ${POST_CONFIG_STORAGE_FILE} ]]; then
+  ${POSTCONFIGURESTORAGES} -v ${HOSTNAME} -p ${POST_CONFIG_STORAGE_FILE}
 fi
 
 if [[ "${AUTO_START}" = "true" ]]; then
