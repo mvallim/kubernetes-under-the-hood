@@ -71,9 +71,10 @@ write_files:
       mode	http
       option	httplog
       option	dontlognull
-      timeout connect 5000
-      timeout client  50000
-      timeout server  50000
+      timeout client 20s
+      timeout server 20s
+      timeout connect 4s
+      default-server init-addr last,libc,none
       errorfile 400 /etc/haproxy/errors/400.http
       errorfile 403 /etc/haproxy/errors/403.http
       errorfile 408 /etc/haproxy/errors/408.http
@@ -82,32 +83,28 @@ write_files:
       errorfile 503 /etc/haproxy/errors/503.http
       errorfile 504 /etc/haproxy/errors/504.http
 
-    resolvers hapxdns
-      nameserver dns1 192.168.4.254:53
+    resolvers dns
+      nameserver dns-01 192.168.4.254:53
       resolve_retries 3
-      timeout resolve 1s
       timeout retry 1s
       hold other 30s
       hold refused 30s
       hold nx 30s
       hold timeout 30s
       hold valid 10s
-      hold obsolete 30s
 
-    frontend haproxycontrolplane
+    frontend kubernetes-apiserver-https
       bind *:6443
       mode tcp
-      option tcplog
-      default_backend backendcontrolplane
+      default_backend kubernetes-master-nodes
 
-    backend backendcontrolplane
+    backend kubernetes-master-nodes
       mode tcp
-      option tcplog
-      option tcp-check      
+      option tcp-check
       balance roundrobin
-      server kube-mast01 kube-mast01:6443 check
-      server kube-mast02 kube-mast02:6443 check
-      server kube-mast03 kube-mast03:6443 check
+        server kube-mast01 kube-mast01:6443 check resolvers dns fall 3 rise 2
+        server kube-mast02 kube-mast02:6443 check resolvers dns fall 3 rise 2
+        server kube-mast03 kube-mast03:6443 check resolvers dns fall 3 rise 2 backup
 
     listen stats
       bind *:32700
