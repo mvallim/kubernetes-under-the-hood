@@ -19,7 +19,7 @@ To continue with this demo you need to download the base image and register it i
 ```
 $ cd ~/VirtualBox\ VMs/
 
-$ wget https://www.dropbox.com/s/v6h0sedqt3za9pl/image-base.tar.bz2?dl=0
+$ wget https://www.dropbox.com/s/v6h0sedqt3za9pl/image-base.tar.bz2?dl=0 -O image-base.tar.bz2
 
 $ tar xvjf image-base.tar.bz2
 
