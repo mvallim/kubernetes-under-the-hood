@@ -3,7 +3,7 @@
 PROG="$(basename "${0}")"
 SCRIPT_DIR="$(cd "$(dirname "${0}")" && pwd)"
 VMNAME=""
-POST_CONFIG_INTERFACES_FILE=""
+POST_CONFIG_STORAGES_FILE=""
 VBOXMANAGE=`which vboxmanage`
 
 usage() {
@@ -16,8 +16,8 @@ help_exit() {
 Options:
   -v, --vm-name VMNAME
               Name of VistualBox vm.
-  -i, --post-config-interfaces POST_CONFIG_INTERFACES_FILE
-              Path to an post config interface data file.              
+  -s, --post-config-storages POST_CONFIG_STORAGES_FILE
+              Path to an post config storages data file.              
   -h, --help  Output this help message.
 "
   exit 0
@@ -55,8 +55,8 @@ while [[ $# -ge 1 ]]; do
         if [[ $? -eq 2 ]]; then shift; fi
         keypos=$keylen
         ;;
-        i|-post-config-interfaces)
-        POST_CONFIG_INTERFACES_FILE=$(assign "${key:${keypos}}" "${2}")
+        s|-post-config-storages)
+        POST_CONFIG_STORAGES_FILE=$(assign "${key:${keypos}}" "${2}")
         if [[ $? -eq 2 ]]; then shift; fi
         keypos=$keylen
         ;;
@@ -81,28 +81,22 @@ if [[ -z ${VMNAME} ]]; then
   exit 1
 fi
 
-if [[ -z ${POST_CONFIG_INTERFACES_FILE} || ! -f ${POST_CONFIG_INTERFACES_FILE} ]]; then
+if [[ -z ${POST_CONFIG_STORAGES_FILE} || ! -f ${POST_CONFIG_STORAGES_FILE} ]]; then
   echo "Post config interface data file, not found"
   exit 1
 fi
 
-NICS=`cat ${POST_CONFIG_INTERFACES_FILE} | shyaml keys`
+STORAGES=`cat ${POST_CONFIG_STORAGES_FILE} | shyaml keys`
 
-for nic in ${NICS}; do
-  ID=`cat ${POST_CONFIG_INTERFACES_FILE} | shyaml get-value $nic.id`
-  TYPE=`cat ${POST_CONFIG_INTERFACES_FILE} | shyaml get-value $nic.type`
+for storage in ${STORAGES}; do
+  ID=`cat ${POST_CONFIG_STORAGES_FILE} | shyaml get-value $storage.id`
+  SIZE=`cat ${POST_CONFIG_STORAGES_FILE} | shyaml get-value $storage.size`
+  FORMAT=`cat ${POST_CONFIG_STORAGES_FILE} | shyaml get-value $storage.format`
+  VARIANT=`cat ${POST_CONFIG_STORAGES_FILE} | shyaml get-value $storage.variant`
+  EXTENSION=`echo ${FORMAT} | tr '[:upper:]' '[:lower:]'`
 
-  if [[ "${TYPE}" = "nat" ]]; then
-    ${VBOXMANAGE} modifyvm ${VMNAME} --nic${ID} ${TYPE}
-  fi
+  ${VBOXMANAGE} createmedium disk --size ${SIZE} --format ${FORMAT} --variant ${VARIANT} --filename vms/${VMNAME}/disks/${VMNAME}-disk-${ID}.${EXTENSION}
 
-  if [[ "${TYPE}" = "intnet" ]]; then
-    NAME=`cat ${POST_CONFIG_INTERFACES_FILE} | shyaml get-value $nic.name`
-    ${VBOXMANAGE} modifyvm ${VMNAME} --nic${ID} ${TYPE} --intnet${ID} ${NAME}
-  fi
+  ${VBOXMANAGE} storageattach ${VMNAME} --storagectl SATA --port ${ID} --type hdd --medium vms/${VMNAME}/disks/${VMNAME}-disk-${ID}.${EXTENSION}
 
-  if [[ "${TYPE}" = "hostonly" ]]; then
-    ADAPTER=`cat ${POST_CONFIG_INTERFACES_FILE} | shyaml get-value $nic.adapter`
-    ${VBOXMANAGE} modifyvm ${VMNAME} --nic${ID} ${TYPE} --hostonlyadapter${ID} ${ADAPTER}
-  fi
 done

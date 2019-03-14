@@ -51,11 +51,12 @@ Now let's create the images using a tool (create-image.sh) that will help us clo
 
 ```
 $ ./create-image.sh \
-    -s or --ssh-pub-keyfile SSH_PUB_KEY_FILE \
+    -k or --ssh-pub-keyfile SSH_PUB_KEY_FILE \
     -u or --user-data USER_DATA_FILE \
     -m or --meta-data META_DATA_FILE \
     -n or --network-interfaces NETWORK_INTERFACES_FILE \
-    -p or --post-config-interfaces POST_CONFIG_INTERFACES_FILE \
+    -i or --post-config-interfaces POST_CONFIG_INTERFACES_FILE \
+    -s or --post-config-storages POST_CONFIG_STORAGES_FILE \
     -o or --hostname HOSTNAME \
     -b or --base-image BASE_IMAGE \
     -a or --auto-start AUTO_START
@@ -67,6 +68,7 @@ $ ./create-image.sh \
 * __`META_DATA_FILE`__: Path to an meta data file. Default is '/data/meta-data'.
 * __`NETWORK_INTERFACES_FILE`__: Path to an network interface data file.
 * __`POST_CONFIG_INTERFACES_FILE`__: Path to an post config interface data file.
+* __`POST_CONFIG_STORAGES_FILE`__: Path to an post config storage data file.
 * __`HOSTNAME`__: Hostname of new image.
 * __`BASE_IMAGE`__: Name of VirtualBox base image.
 * __`AUTO_START`__: Auto start vm. Default is true.
@@ -80,49 +82,50 @@ $ ./create-image.sh -h or --help
 
 ```
 $ ./create-image.sh \
-    -s ~/.ssh/id_rsa.pub \
+    -k ~/.ssh/id_rsa.pub \
     -u data/gate/user-data \
     -n data/gate/network-config \
-    -p data/gate/post-config-interfaces \
+    -i data/gate/post-config-interfaces \
     -o gate-node01 \
     -b image-base
 
 $ for instance in hapx-node01 hapx-node02; do
     ./create-image.sh \
-        -s ~/.ssh/id_rsa.pub \
+        -k ~/.ssh/id_rsa.pub \
         -u data/hapx/user-data \
         -n data/hapx/network-config \
-        -p data/hapx/post-config-interfaces \
+        -i data/hapx/post-config-interfaces \
         -o ${instance} \
         -b image-base
 done
 
 $ for instance in kube-mast01 kube-mast02 kube-mast03; do
     ./create-image.sh \
-        -s ~/.ssh/id_rsa.pub \
+        -k ~/.ssh/id_rsa.pub \
         -u data/kube/user-data \
         -n data/kube/network-config \
-        -p data/kube-mast/post-config-interfaces \
+        -i data/kube-mast/post-config-interfaces \
         -o ${instance} \
         -b image-base
 done
 
 $ for instance in kube-node01 kube-node02 kube-node03; do
     ./create-image.sh \
-        -s ~/.ssh/id_rsa.pub \
+        -k ~/.ssh/id_rsa.pub \
         -u data/kube/user-data \
         -n data/kube/network-config \
-        -p data/kube-node/post-config-interfaces \
+        -i data/kube-node/post-config-interfaces \
         -o ${instance} \
         -b image-base
 done
 
 $ for instance in glus-node01 glus-node02 glus-node03; do
     ./create-image.sh \
-        -s ~/.ssh/id_rsa.pub \
+        -k ~/.ssh/id_rsa.pub \
         -u data/glus/user-data \
         -n data/glus/network-config \
-        -p data/glus/post-config-interfaces \
+        -i data/glus/post-config-interfaces \
+        -s data/glus/post-config-storages \
         -o ${instance} \
         -b image-base
 done

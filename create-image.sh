@@ -9,17 +9,21 @@ META_DATA_FILE="${SCRIPT_DIR}/data/meta-data"
 USER_DATA_FILE="${SCRIPT_DIR}/data/user-data"
 NETWORK_INTERFACES_FILE=""
 POST_CONFIG_INTERFACES_FILE=""
+POST_CONFIG_STORAGES_FILE=""
 AUTO_START="true"
 VBOXMANAGE=`which VBoxManage`
 GENISOIMAGE=`which genisoimage`
 SED=`which sed`
 UUIDGEN=`which uuidgen`
 POSTCONFIGUREINTERFACES=${SCRIPT_DIR}/post-config-interfaces.sh
+POSTCONFIGURESTORAGES=${SCRIPT_DIR}/post-config-storages.sh
 
 usage() {
   echo -e "USAGE: ${PROG} [--base-image <BASE_IMAGE>] [--hostname <HOSTNAME>]
         [--ssh-pub-keyfile <SSH_PUB_KEY_FILE>] [--meta-data <META_DATA_FILE>] 
         [--user-data <USER_DATA_FILE>] [--networ-interfaces <NETWORK_INTERFACES_FILE>]
+        [--post-config-interfaces POST_CONFIG_INTERFACES_FILE]
+        [--post-config-storages POST_CONFIG_STORAGES_FILE]
         [--auto-start true|false]\n"
 }
 
@@ -31,7 +35,7 @@ Options:
               Name of VirtualBox base image.
   -o, --hostname HOSTNAME
               Hostname of new image
-  -s, --ssh-pub-keyfile SSH_PUB_KEY_FILE
+  -k, --ssh-pub-keyfile SSH_PUB_KEY_FILE
               Path to an SSH public key.
   -m, --meta-data META_DATA_FILE
               Path to an meta data file. Default is '${META_DATA_FILE}'.
@@ -39,8 +43,10 @@ Options:
               Path to an user data file. Default is '${USER_DATA_FILE}'.
   -n, --network-interfaces NETWORK_INTERFACES_FILE
               Path to an network interface data file.
-  -p, --post-config-interfaces POST_CONFIG_INTERFACES_FILE
+  -i, --post-config-interfaces POST_CONFIG_INTERFACES_FILE
               Path to an post config interface data file.
+  -s, --post-config-storages POST_CONFIG_STORAGES_FILE
+              Path to an post config storage data file.
   -a, --auto-start true|false
               Auto start vm. Default is true.
   -h, --help  Output this help message.
@@ -86,7 +92,7 @@ while [[ $# -ge 1 ]]; do
         if [[ $? -eq 2 ]]; then shift; fi
         keypos=$keylen
         ;;
-        s|-ssh-pub-keyfile)
+        k|-ssh-pub-keyfile)
         SSH_PUB_KEY_FILE=$(assign "${key:${keypos}}" "${2}")
         SSH_PUB_KEY_FILE_CONTENT=`cat ${SSH_PUB_KEY_FILE}`
         if [[ $? -eq 2 ]]; then shift; fi
@@ -107,11 +113,16 @@ while [[ $# -ge 1 ]]; do
         if [[ $? -eq 2 ]]; then shift; fi
         keypos=$keylen
         ;;
-        p|-post-config-interfaces)
+        i|-post-config-interfaces)
         POST_CONFIG_INTERFACES_FILE=$(assign "${key:${keypos}}" "${2}")
         if [[ $? -eq 2 ]]; then shift; fi
         keypos=$keylen
-        ;;           
+        ;;
+        s|-post-config-storages)
+        POST_CONFIG_STORAGES_FILE=$(assign "${key:${keypos}}" "${2}")
+        if [[ $? -eq 2 ]]; then shift; fi
+        keypos=$keylen
+        ;;                   
         a|-auto-start)
         AUTO_START=$(assign "${key:${keypos}}" "${2}")
         if [[ $? -eq 2 ]]; then shift; fi
@@ -182,11 +193,11 @@ ${VBOXMANAGE} storageattach ${HOSTNAME} --storagectl "IDE" --port 1 --device 0 \
     --type dvddrive --medium ${SCRIPT_DIR}/vms/${HOSTNAME}/${HOSTNAME}-cidata.iso
 
 if [[ -f ${NETWORK_INTERFACES_FILE} && -f ${POST_CONFIG_INTERFACES_FILE} ]]; then
-  ${POSTCONFIGUREINTERFACES} -v ${HOSTNAME} -p ${POST_CONFIG_INTERFACES_FILE}
+  ${POSTCONFIGUREINTERFACES} -v ${HOSTNAME} -i ${POST_CONFIG_INTERFACES_FILE}
 fi
 
-if [[ -f ${POST_CONFIG_STORAGE_FILE} ]]; then
-  ${POSTCONFIGURESTORAGES} -v ${HOSTNAME} -p ${POST_CONFIG_STORAGE_FILE}
+if [[ -f ${POST_CONFIG_STORAGES_FILE} ]]; then
+  ${POSTCONFIGURESTORAGES} -v ${HOSTNAME} -s ${POST_CONFIG_STORAGES_FILE}
 fi
 
 if [[ "${AUTO_START}" = "true" ]]; then
