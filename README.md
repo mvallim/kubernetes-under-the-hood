@@ -7,8 +7,10 @@
 The premise is that you already have Virtualbox properly installed on your local machine.
 
 Install `shyaml` with user `root`
+
 ```
-# pip3 uninstall shyaml
+# apt-get install python3-pip
+# pip3 install shyaml
 ```
 
 ### Download base image
