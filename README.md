@@ -6,6 +6,11 @@
 ### Prerequisites
 The premise is that you already have Virtualbox properly installed on your local machine.
 
+Install `shyaml` with user `root`
+```
+# pip3 uninstall shyaml
+```
+
 ### Download base image
 To continue with this demo you need to download the base image and register it in Virtualbox.
 
