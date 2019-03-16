@@ -104,7 +104,7 @@ write_files:
       balance roundrobin
         server kube-mast01 kube-mast01:6443 check resolvers dns fall 3 rise 2
         server kube-mast02 kube-mast02:6443 check resolvers dns fall 3 rise 2
-        server kube-mast03 kube-mast03:6443 check resolvers dns fall 3 rise 2 backup
+        server kube-mast03 kube-mast03:6443 check resolvers dns fall 3 rise 2
 
     listen stats
       bind *:32700
