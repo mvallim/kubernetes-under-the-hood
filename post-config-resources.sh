@@ -3,7 +3,7 @@
 PROG="$(basename "${0}")"
 SCRIPT_DIR="$(cd "$(dirname "${0}")" && pwd)"
 VMNAME=""
-POST_CONFIG_STORAGES_FILE=""
+POST_CONFIG_RESOURCES_FILE=""
 VBOXMANAGE=`which vboxmanage`
 
 usage() {
@@ -16,8 +16,8 @@ help_exit() {
 Options:
   -v, --vm-name VMNAME
               Name of VistualBox vm.
-  -s, --post-config-storages POST_CONFIG_STORAGES_FILE
-              Path to an post config storages data file.              
+  -r, --post-config-resources POST_CONFIG_RESOURCES_FILE
+              Path to an post config resources data file.              
   -h, --help  Output this help message.
 "
   exit 0
@@ -55,8 +55,8 @@ while [[ $# -ge 1 ]]; do
         if [[ $? -eq 2 ]]; then shift; fi
         keypos=$keylen
         ;;
-        s|-post-config-storages)
-        POST_CONFIG_STORAGES_FILE=$(assign "${key:${keypos}}" "${2}")
+        r|-post-config-resources)
+        POST_CONFIG_RESOURCES_FILE=$(assign "${key:${keypos}}" "${2}")
         if [[ $? -eq 2 ]]; then shift; fi
         keypos=$keylen
         ;;
@@ -81,22 +81,13 @@ if [[ -z ${VMNAME} ]]; then
   exit 1
 fi
 
-if [[ -z ${POST_CONFIG_STORAGES_FILE} || ! -f ${POST_CONFIG_STORAGES_FILE} ]]; then
-  echo "Post config storages data file, not found"
+if [[ -z ${POST_CONFIG_RESOURCES_FILE} || ! -f ${POST_CONFIG_RESOURCES_FILE} ]]; then
+  echo "Post config resources data file, not found"
   exit 1
 fi
 
-STORAGES=`cat ${POST_CONFIG_STORAGES_FILE} | shyaml keys`
+PROCESSORS=`cat ${POST_CONFIG_RESOURCES_FILE} | shyaml get-value processors`
+MEMORY=`cat ${POST_CONFIG_RESOURCES_FILE} | shyaml get-value memory`
 
-for storage in ${STORAGES}; do
-  ID=`cat ${POST_CONFIG_STORAGES_FILE} | shyaml get-value $storage.id`
-  SIZE=`cat ${POST_CONFIG_STORAGES_FILE} | shyaml get-value $storage.size`
-  FORMAT=`cat ${POST_CONFIG_STORAGES_FILE} | shyaml get-value $storage.format`
-  VARIANT=`cat ${POST_CONFIG_STORAGES_FILE} | shyaml get-value $storage.variant`
-  EXTENSION=`echo ${FORMAT} | tr '[:upper:]' '[:lower:]'`
-
-  ${VBOXMANAGE} createmedium disk --size ${SIZE} --format ${FORMAT} --variant ${VARIANT} --filename vms/${VMNAME}/disks/${VMNAME}-disk-${ID}.${EXTENSION}
-
-  ${VBOXMANAGE} storageattach ${VMNAME} --storagectl SATA --port ${ID} --type hdd --medium vms/${VMNAME}/disks/${VMNAME}-disk-${ID}.${EXTENSION}
-
-done
+${VBOXMANAGE} modifyvm ${VMNAME} --cpuhotplug on
+${VBOXMANAGE} modifyvm ${VMNAME} --cpus ${PROCESSORS} --memory ${MEMORY} --vram 33

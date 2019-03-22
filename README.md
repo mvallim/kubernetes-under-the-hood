@@ -71,6 +71,7 @@ $ ./create-image.sh \
     -n or --network-interfaces NETWORK_INTERFACES_FILE \
     -i or --post-config-interfaces POST_CONFIG_INTERFACES_FILE \
     -s or --post-config-storages POST_CONFIG_STORAGES_FILE \
+    -r or --post-config-resources POST_CONFIG_RESOURCES_FILE \
     -o or --hostname HOSTNAME \
     -b or --base-image BASE_IMAGE \
     -a or --auto-start AUTO_START
@@ -83,6 +84,7 @@ $ ./create-image.sh \
 * __`NETWORK_INTERFACES_FILE`__: Path to an network interface data file.
 * __`POST_CONFIG_INTERFACES_FILE`__: Path to an post config interface data file.
 * __`POST_CONFIG_STORAGES_FILE`__: Path to an post config storage data file.
+* __`POST_CONFIG_RESOURCES_FILE`__: Path to an post config resources data file.
 * __`HOSTNAME`__: Hostname of new image.
 * __`BASE_IMAGE`__: Name of VirtualBox base image.
 * __`AUTO_START`__: Auto start vm. Default is true.
@@ -100,6 +102,7 @@ $ ./create-image.sh \
     -u data/gate/user-data \
     -n data/gate/network-config \
     -i data/gate/post-config-interfaces \
+    -r data/gate/post-config-resources \
     -o gate-node01 \
     -b image-base
 
@@ -109,6 +112,7 @@ $ for instance in hapx-node01 hapx-node02; do
         -u data/hapx/user-data \
         -n data/hapx/network-config \
         -i data/hapx/post-config-interfaces \
+        -r data/hapx/post-config-resources \
         -o ${instance} \
         -b image-base
 done
@@ -119,6 +123,7 @@ $ for instance in kube-mast01 kube-mast02 kube-mast03; do
         -u data/kube/user-data \
         -n data/kube/network-config \
         -i data/kube-mast/post-config-interfaces \
+        -r data/kube-mast/post-config-resources \
         -o ${instance} \
         -b image-base
 done
@@ -129,6 +134,7 @@ $ for instance in kube-node01 kube-node02 kube-node03; do
         -u data/kube/user-data \
         -n data/kube/network-config \
         -i data/kube-node/post-config-interfaces \
+        -r data/kube-node/post-config-resources \
         -o ${instance} \
         -b image-base
 done
@@ -140,6 +146,7 @@ $ for instance in glus-node01 glus-node02 glus-node03; do
         -n data/glus/network-config \
         -i data/glus/post-config-interfaces \
         -s data/glus/post-config-storages \
+        -r data/glus/post-config-resources \
         -o ${instance} \
         -b image-base
 done

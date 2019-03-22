@@ -10,6 +10,7 @@ USER_DATA_FILE="${SCRIPT_DIR}/data/user-data"
 NETWORK_INTERFACES_FILE=""
 POST_CONFIG_INTERFACES_FILE=""
 POST_CONFIG_STORAGES_FILE=""
+POST_CONFIG_RESOURCES_FILE=""
 AUTO_START="true"
 VBOXMANAGE=`which VBoxManage`
 GENISOIMAGE=`which genisoimage`
@@ -17,6 +18,7 @@ SED=`which sed`
 UUIDGEN=`which uuidgen`
 POSTCONFIGUREINTERFACES=${SCRIPT_DIR}/post-config-interfaces.sh
 POSTCONFIGURESTORAGES=${SCRIPT_DIR}/post-config-storages.sh
+POSTCONFIGURERESOURCES=${SCRIPT_DIR}/post-config-resources.sh
 
 usage() {
   echo -e "USAGE: ${PROG} [--base-image <BASE_IMAGE>] [--hostname <HOSTNAME>]
@@ -24,6 +26,7 @@ usage() {
         [--user-data <USER_DATA_FILE>] [--networ-interfaces <NETWORK_INTERFACES_FILE>]
         [--post-config-interfaces POST_CONFIG_INTERFACES_FILE]
         [--post-config-storages POST_CONFIG_STORAGES_FILE]
+        [--post-config-resources POST_CONFIG_RESOURCES_FILE]
         [--auto-start true|false]\n"
 }
 
@@ -47,6 +50,8 @@ Options:
               Path to an post config interface data file.
   -s, --post-config-storages POST_CONFIG_STORAGES_FILE
               Path to an post config storage data file.
+  -r, --post-config-resources POST_CONFIG_RESOURCES_FILE
+              Path to an post config resources data file.              
   -a, --auto-start true|false
               Auto start vm. Default is true.
   -h, --help  Output this help message.
@@ -122,7 +127,12 @@ while [[ $# -ge 1 ]]; do
         POST_CONFIG_STORAGES_FILE=$(assign "${key:${keypos}}" "${2}")
         if [[ $? -eq 2 ]]; then shift; fi
         keypos=$keylen
-        ;;                   
+        ;;
+        r|-post-config-resources)
+        POST_CONFIG_RESOURCES_FILE=$(assign "${key:${keypos}}" "${2}")
+        if [[ $? -eq 2 ]]; then shift; fi
+        keypos=$keylen
+        ;;        
         a|-auto-start)
         AUTO_START=$(assign "${key:${keypos}}" "${2}")
         if [[ $? -eq 2 ]]; then shift; fi
@@ -198,6 +208,10 @@ fi
 
 if [[ -f ${POST_CONFIG_STORAGES_FILE} ]]; then
   ${POSTCONFIGURESTORAGES} -v ${HOSTNAME} -s ${POST_CONFIG_STORAGES_FILE}
+fi
+
+if [[ -f ${POST_CONFIG_RESOURCES_FILE} ]]; then
+  ${POSTCONFIGURERESOURCES} -v ${HOSTNAME} -r ${POST_CONFIG_RESOURCES_FILE}
 fi
 
 if [[ "${AUTO_START}" = "true" ]]; then
