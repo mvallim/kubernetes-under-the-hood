@@ -166,6 +166,7 @@ We use [GitHub](https://github.com/mvallim/kubernetes-under-the-hood) for versio
 * **Fabio Franco Uechi** - *Validation demo* - [fabito](https://github.com/fabito)
 * **Dirceu Alves Silva** - *Validation demo* - [dirceusilva](https://github.com/dirceuSilva)
 * **Leandro Nunes Fantinatto** - *Validation demo* - [lnfnunes](https://github.com/lnfnunes)
+* **Ivam dos Santos Luz** - *Validation demo, Articles* - [ivamluz](https://github.com/ivamluz)
 * **Marcos de Lima Goncalves** - *Validation demo, Presentation Organizer* - []()
 * **Murilo Woigt Miranda** - *Validation demo, Presentation Organizer* - []()
 
