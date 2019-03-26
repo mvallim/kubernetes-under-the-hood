@@ -31,6 +31,8 @@ $ wget https://www.dropbox.com/s/v6h0sedqt3za9pl/image-base.tar.bz2?dl=0 -O imag
 $ tar xvjf image-base.tar.bz2
 
 $ vboxmanage registervm ~/VirtualBox\ VMs/image-base/image-base.vbox
+
+$ rm image-base.tar.bz2
 ```
 
 ## Configuring
@@ -57,7 +59,7 @@ $ sudo ip route add 192.168.4.0/24 via 192.168.4.254
 $ sudo ip route add 192.168.254.0/24 via 192.168.254.254
 ```
 
-If you are a dnsmasq running on your local machine execute this to use private DNS of this DEMO to domain 'kube.local'
+If you are a using dnsmasq on your local machine execute this to use private DNS of this DEMO to domain 'kube.local'
 
 ```
 $ echo "server=/kube.local/192.168.254.254" | sudo tee -a /etc/dnsmasq.d/server
