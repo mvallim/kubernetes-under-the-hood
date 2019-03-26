@@ -14,6 +14,12 @@ Install `shyaml` with user `root`
 # pip3 install shyaml
 ```
 
+Install `genisoimage` with user `root`
+
+```
+# apt-get install genisoimage
+```
+
 ### Download base image
 To continue with this demo you need to download the base image and register it in Virtualbox.
 
@@ -168,7 +174,7 @@ We use [GitHub](https://github.com/mvallim/kubernetes-under-the-hood) for versio
 * **Leandro Nunes Fantinatto** - *Validation demo* - [lnfnunes](https://github.com/lnfnunes)
 * **Ivam dos Santos Luz** - *Validation demo, Articles* - [ivamluz](https://github.com/ivamluz)
 * **Marcos de Lima Goncalves** - *Validation demo, Presentation Organizer* - []()
-* **Murilo Woigt Miranda** - *Validation demo, Presentation Organizer* - []()
+* **Murilo Woigt Miranda** - *Validation demo, Presentation Organizer* - [woigt-ciandt](https://github.com/woigt-ciandt)
 
 See also the list of [contributors](CONTRIBUTORS.txt) who participated in this project.
 
