@@ -3,7 +3,7 @@
 
 ## Getting Started
 
-### Prerequisites
+### Prerequisites (GNU/Linux Debian/Ubuntu)
 The premise is that you already have Virtualbox properly installed on your local machine.
 
 Install `shyaml` with user `root`
