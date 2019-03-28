@@ -7,5 +7,5 @@ provisioner: kubernetes.io/glusterfs
 allowVolumeExpansion: true
 reclaimPolicy: Retain
 parameters:
-  resturl: "http://10.244.3.12:8080"
+  resturl: "http://10.244.3.20:8080"
   volumetype: "replicate:3"
