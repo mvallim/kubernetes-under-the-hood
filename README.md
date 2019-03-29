@@ -1,7 +1,7 @@
 # Kubernetes under the hood
 ![](under-the-hood.jpg)
 
-Presentation: ![Kubernetes under the hood journey](kubernetes-under-the-hood-journey.pdf)
+Presentation: [Kubernetes under the hood journey](kubernetes-under-the-hood-journey.pdf)
 
 ## Getting Started
 
