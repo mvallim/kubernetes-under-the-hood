@@ -3,6 +3,9 @@
 
 Presentation: [Kubernetes under the hood journey](kubernetes-under-the-hood-journey.pdf)
 
+## Target Audience
+The target audience for this tutorial is someone planning to install a Kubernetes cluster and wants to understand how everything fits together.
+
 ## Getting Started
 
 ### Prerequisites (GNU/Linux Debian/Ubuntu)
