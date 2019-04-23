@@ -1,7 +1,7 @@
 # Kubernetes under the hood
 ![](under-the-hood.jpg)
 
-Presentation: [Kubernetes under the hood journey](kubernetes-under-the-hood-journey.pdf)
+Presentation: [Kubernetes under the hood journey](https://docs.google.com/presentation/d/1xhGp4tmCqpFxkKJZ4VhPFqKHHYE8DcldZ7iTOKaPFSI/edit?usp=sharing)
 
 ## Target Audience
 The target audience for this tutorial is someone planning to install a Kubernetes cluster and wants to understand how everything fits together.
