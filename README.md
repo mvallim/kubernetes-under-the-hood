@@ -251,7 +251,7 @@ sudo su -
 cat <<EOF > kubeadm-config.yaml
 apiVersion: kubeadm.k8s.io/v1beta1
 kind: ClusterConfiguration
-kubernetesVersion: stable
+kubernetesVersion: stable-1.13
 apiServer:
   certSANs:
   - "192.168.4.20"

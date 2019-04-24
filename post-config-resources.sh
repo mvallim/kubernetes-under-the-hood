@@ -89,5 +89,5 @@ fi
 PROCESSORS=`cat ${POST_CONFIG_RESOURCES_FILE} | shyaml get-value processors`
 MEMORY=`cat ${POST_CONFIG_RESOURCES_FILE} | shyaml get-value memory`
 
-${VBOXMANAGE} modifyvm ${VMNAME} --cpuhotplug on
+${VBOXMANAGE} modifyvm ${VMNAME} --cpuhotplug off
 ${VBOXMANAGE} modifyvm ${VMNAME} --cpus ${PROCESSORS} --memory ${MEMORY} --vram 33
