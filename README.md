@@ -275,7 +275,9 @@ ssh-copy-id debian@kube-mast03
 kubeadm token create --print-join-command
 ```
 
-### Join Kube Masters
+The last command print the command to you join nodes on cluster, you will use this command to join master and wokers on cluster
+
+#### Join second Kube Master
 ```
 ssh debian@kube-mast02.kube.local
 
@@ -287,10 +289,56 @@ kubeadm join 192.168.4.20:6443 \
     --token ??? \
     --discovery-token-ca-cert-hash sha256:??? \
     --experimental-control-plane
-
-ssh debian@kube-mast02.kube.local
 ```
 
+#### Join third Kube Master
+```
+ssh debian@kube-mast03.kube.local
+
+sudo su -
+
+~/bin/move-certificates.sh
+
+kubeadm join 192.168.4.20:6443 \
+    --token ??? \
+    --discovery-token-ca-cert-hash sha256:??? \
+    --experimental-control-plane
+```
+
+### Join Kube Workers
+
+#### Join first Kube Worker
+```
+ssh debian@kube-node01.kube.local
+
+sudo su -
+
+kubeadm join 192.168.4.20:6443 \
+    --token ??? \
+    --discovery-token-ca-cert-hash sha256:??? \
+```
+
+#### Join second Kube Worker
+```
+ssh debian@kube-node02.kube.local
+
+sudo su -
+
+kubeadm join 192.168.4.20:6443 \
+    --token ??? \
+    --discovery-token-ca-cert-hash sha256:??? \
+```
+
+#### Join third Kube Worker
+```
+ssh debian@kube-node03.kube.local
+
+sudo su -
+
+kubeadm join 192.168.4.20:6443 \
+    --token ??? \
+    --discovery-token-ca-cert-hash sha256:??? \
+```
 
 ## Contributing
 
