@@ -3,7 +3,9 @@
 
 SlideShare: [Kubernetes under the hood journey](https://pt.slideshare.net/MarcosVallim1/kubernetes-under-the-hood-journey/MarcosVallim1/kubernetes-under-the-hood-journey)
 
-[[embed url=https://www.slideshare.net/MarcosVallim1/kubernetes-under-the-hood-journey]]
+<div class="iframe_container">
+  <iframe src="//www.slideshare.net/slideshow/embed_code/key/clDgrECx2EaFFo" width="595" height="485" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC; border-width:1px; margin-bottom:5px; max-width: 100%;" allowfullscreen> </iframe> <div style="margin-bottom:5px"> <strong> <a href="//www.slideshare.net/MarcosVallim1/kubernetes-under-the-hood-journey" title="Kubernetes under the hood journey" target="_blank">Kubernetes under the hood journey</a> </strong> de <strong><a href="https://www.slideshare.net/MarcosVallim1" target="_blank">Marcos Vallim</a></strong> </div>
+</div>
 
 ## Target Audience
 The target audience for this tutorial is someone planning to install a Kubernetes cluster and wants to understand how everything fits together.
