@@ -174,7 +174,7 @@ done
 
 ### Configure hosts
 
-You can configure `/etc/hosts` with the ip and name of VM's.
+You can configure in your local machine `/etc/hosts` with the ip and name of VM's.
 
 For you get ip of VM:
 
@@ -240,11 +240,9 @@ colocation loc inf: virtual-ip-resource haproxy-resource
 order ord inf: virtual-ip-resource haproxy-resource
 commit
 bye
-
-exit
 ```
 
-### Configure Kube Masters
+### Configure Kube Master
 ```
 ssh debian@kube-mast01.kube.local
 
@@ -273,7 +271,26 @@ ssh-copy-id debian@kube-mast02
 ssh-copy-id debian@kube-mast03
 
 ~/bin/copy-certificates.sh
+
+kubeadm token create --print-join-command
 ```
+
+### Join Kube Masters
+```
+ssh debian@kube-mast02.kube.local
+
+sudo su -
+
+~/bin/move-certificates.sh
+
+kubeadm join 192.168.4.20:6443 \
+    --token ??? \
+    --discovery-token-ca-cert-hash sha256:??? \
+    --experimental-control-plane
+
+ssh debian@kube-mast02.kube.local
+```
+
 
 ## Contributing
 
