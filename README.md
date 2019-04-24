@@ -64,14 +64,6 @@ $ sudo ip route add 192.168.4.0/24 via 192.168.4.254
 $ sudo ip route add 192.168.254.0/24 via 192.168.254.254
 ```
 
-If you are a using dnsmasq on your local machine execute this to use private DNS of this DEMO to domain 'kube.local'
-
-```
-$ echo "server=/kube.local/192.168.254.254" | sudo tee -a /etc/dnsmasq.d/server
-
-$ sudo service dnsmasq restart
-```
-
 ## Running
 
 Now let's create the images using a tool (create-image.sh) that will help us clone the base image and add the user-data, meta-data and network-config scripts that cloud-init will use to make the installation of the necessary packages and configurations.
@@ -109,6 +101,7 @@ $ ./create-image.sh -h or --help
 
 ## Running Demo
 
+### Create gateway
 ```
 $ ./create-image.sh \
     -k ~/.ssh/id_rsa.pub \
@@ -118,7 +111,12 @@ $ ./create-image.sh \
     -r data/gate/post-config-resources \
     -o gate-node01 \
     -b image-base
+```
 
+Wait the gate-node01 finish the configuration and start VM, to the next steps.
+
+### Create HAProxy Cluster
+```
 $ for instance in hapx-node01 hapx-node02; do
     ./create-image.sh \
         -k ~/.ssh/id_rsa.pub \
@@ -129,7 +127,10 @@ $ for instance in hapx-node01 hapx-node02; do
         -o ${instance} \
         -b image-base
 done
+```
 
+### Create Kubernete Masters
+```
 $ for instance in kube-mast01 kube-mast02 kube-mast03; do
     ./create-image.sh \
         -k ~/.ssh/id_rsa.pub \
@@ -140,7 +141,10 @@ $ for instance in kube-mast01 kube-mast02 kube-mast03; do
         -o ${instance} \
         -b image-base
 done
+```
 
+### Create Kube Workers
+```
 $ for instance in kube-node01 kube-node02 kube-node03; do
     ./create-image.sh \
         -k ~/.ssh/id_rsa.pub \
@@ -151,7 +155,10 @@ $ for instance in kube-node01 kube-node02 kube-node03; do
         -o ${instance} \
         -b image-base
 done
+```
 
+### Create Gluster Nodes
+```
 $ for instance in glus-node01 glus-node02 glus-node03; do
     ./create-image.sh \
         -k ~/.ssh/id_rsa.pub \
@@ -163,6 +170,109 @@ $ for instance in glus-node01 glus-node02 glus-node03; do
         -o ${instance} \
         -b image-base
 done
+```
+
+### Configure hosts
+
+You can configure `/etc/hosts` with the ip and name of VM's.
+
+For you get ip of VM:
+
+```
+vboxmanage guestproperty enumerate hapx-node01 | grep IP | grep -o -w -P -e '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'
+vboxmanage guestproperty enumerate hapx-node02 | grep IP | grep -o -w -P -e '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'
+
+vboxmanage guestproperty enumerate kube-mast01 | grep IP | grep -o -w -P -e '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'
+vboxmanage guestproperty enumerate kube-mast02 | grep IP | grep -o -w -P -e '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'
+vboxmanage guestproperty enumerate kube-mast03 | grep IP | grep -o -w -P -e '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'
+
+vboxmanage guestproperty enumerate kube-node01 | grep IP | grep -o -w -P -e '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'
+vboxmanage guestproperty enumerate kube-node02 | grep IP | grep -o -w -P -e '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'
+vboxmanage guestproperty enumerate kube-node03 | grep IP | grep -o -w -P -e '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'
+
+vboxmanage guestproperty enumerate glus-node01 | grep IP | grep -o -w -P -e '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'
+vboxmanage guestproperty enumerate glus-node02 | grep IP | grep -o -w -P -e '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'
+vboxmanage guestproperty enumerate glus-node03 | grep IP | grep -o -w -P -e '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}'
+```
+
+Ex.
+
+```
+192.168.254.254 gate-node01 gate-node01.kube.local
+
+192.168.1.10 kube-mast01 kube-mast01.kube.local
+192.168.1.11 kube-mast02 kube-mast02.kube.local
+192.168.1.10 kube-mast03 kube-mast03.kube.local
+
+192.168.2.10 kube-node01 kube-node01.kube.local
+192.168.2.11 kube-node02 kube-node02.kube.local
+192.168.2.10 kube-node03 kube-node03.kube.local
+
+192.168.3.10 glus-node01 glus-node01.kube.local
+192.168.3.11 glus-node02 glus-node02.kube.local
+192.168.3.10 glus-node03 glus-node03.kube.local
+
+192.168.4.10 hapx-node01 hapx-node01.kube.local
+192.168.4.11 hapx-node02 hapx-node02.kube.local
+
+```
+
+If you are a using dnsmasq on your local machine execute this to use private DNS of this DEMO to domain 'kube.local'
+
+```
+$ echo "server=/kube.local/192.168.254.254" | sudo tee -a /etc/dnsmasq.d/server
+
+$ sudo service dnsmasq restart
+```
+
+### Configure HAProxy Cluster
+```
+ssh debian@hapx-node01.kube.local
+
+sudo crm configure
+
+property stonith-enabled=no
+property no-quorum-policy=ignore
+property default-resource-stickiness=100
+primitive virtual-ip-resource ocf:heartbeat:IPaddr2 params ip="192.168.4.20" nic="enp0s3" cidr_netmask="32" meta migration-threshold=2 op monitor interval=20 timeout=60 on-fail=restart
+primitive haproxy-resource ocf:heartbeat:haproxy op monitor interval=20 timeout=60 on-fail=restart
+colocation loc inf: virtual-ip-resource haproxy-resource
+order ord inf: virtual-ip-resource haproxy-resource
+commit
+bye
+
+exit
+```
+
+### Configure Kube Masters
+```
+ssh debian@kube-mast01.kube.local
+
+sudo su -
+
+cat <<EOF > kubeadm-config.yaml
+apiVersion: kubeadm.k8s.io/v1beta1
+kind: ClusterConfiguration
+kubernetesVersion: stable
+apiServer:
+  certSANs:
+  - "192.168.4.20"
+controlPlaneEndpoint: "192.168.4.20:6443"
+networking:
+  podSubnet: 10.244.0.0/16
+EOF
+
+kubeadm init --config=kubeadm-config.yaml
+
+kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/a70459be0084506e4ec919aa1c114638878db11b/Documentation/kube-flannel.yml
+
+ssh-keygen -t rsa -b 4096
+
+ssh-copy-id debian@kube-mast02
+
+ssh-copy-id debian@kube-mast03
+
+~/bin/copy-certificates.sh
 ```
 
 ## Contributing
