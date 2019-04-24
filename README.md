@@ -214,7 +214,6 @@ Ex.
 
 192.168.4.10 hapx-node01 hapx-node01.kube.local
 192.168.4.11 hapx-node02 hapx-node02.kube.local
-
 ```
 
 If you are a using dnsmasq on your local machine execute this to use private DNS of this DEMO to domain 'kube.local'
