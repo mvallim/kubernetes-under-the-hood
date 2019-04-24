@@ -272,9 +272,9 @@ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/a70459be008450
 
 ssh-keygen -t rsa -b 4096
 
-ssh-copy-id debian@kube-mast02
+ssh-copy-id debian@kube-mast02 #(default password: debian)
 
-ssh-copy-id debian@kube-mast03
+ssh-copy-id debian@kube-mast03 #(default password: debian)
 
 ~/bin/copy-certificates.sh
 
