@@ -262,6 +262,12 @@ EOF
 
 kubeadm init --config=kubeadm-config.yaml
 
+mkdir -p $HOME/.kube
+
+cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+
+chown $(id -u):$(id -g) $HOME/.kube/config
+
 kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/a70459be0084506e4ec919aa1c114638878db11b/Documentation/kube-flannel.yml
 
 ssh-keygen -t rsa -b 4096
