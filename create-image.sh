@@ -3,10 +3,11 @@
 PROG="$(basename "${0}")"
 SCRIPT_DIR="$(cd "$(dirname "${0}")" && pwd)"
 BASE_IMAGE=""
+LINUX_DISTRIBUTION="debian"
 HOSTNAME=""
 SSH_PUB_KEY_FILE=""
-META_DATA_FILE="${SCRIPT_DIR}/data/meta-data"
-USER_DATA_FILE="${SCRIPT_DIR}/data/user-data"
+META_DATA_FILE="${SCRIPT_DIR}/data/${LINUX_DISTRIBUTION}/meta-data"
+USER_DATA_FILE="${SCRIPT_DIR}/data/${LINUX_DISTRIBUTION}/user-data"
 NETWORK_INTERFACES_FILE=""
 POST_CONFIG_INTERFACES_FILE=""
 POST_CONFIG_STORAGES_FILE=""
@@ -21,8 +22,8 @@ POSTCONFIGURESTORAGES=${SCRIPT_DIR}/post-config-storages.sh
 POSTCONFIGURERESOURCES=${SCRIPT_DIR}/post-config-resources.sh
 
 usage() {
-  echo -e "USAGE: ${PROG} [--base-image <BASE_IMAGE>] [--hostname <HOSTNAME>]
-        [--ssh-pub-keyfile <SSH_PUB_KEY_FILE>] [--meta-data <META_DATA_FILE>] 
+  echo -e "USAGE: ${PROG} [--base-image <BASE_IMAGE>] [--linux-distribution LINUX_DISTRIBUTION]
+        [--hostname <HOSTNAME>] [--ssh-pub-keyfile <SSH_PUB_KEY_FILE>] [--meta-data <META_DATA_FILE>] 
         [--user-data <USER_DATA_FILE>] [--networ-interfaces <NETWORK_INTERFACES_FILE>]
         [--post-config-interfaces POST_CONFIG_INTERFACES_FILE]
         [--post-config-storages POST_CONFIG_STORAGES_FILE]
@@ -36,6 +37,8 @@ help_exit() {
 Options:
   -b, --base-image BASE_IMAGE
               Name of VirtualBox base image.
+  -l, --linux-distribution LINUX_DISTRIBUTION (debian|ubuntu)
+              Name of Linux distribution. Default is '${LINUX_DISTRIBUTION}'.
   -o, --hostname HOSTNAME
               Hostname of new image
   -k, --ssh-pub-keyfile SSH_PUB_KEY_FILE
@@ -91,6 +94,11 @@ while [[ $# -ge 1 ]]; do
         if [[ $? -eq 2 ]]; then shift; fi
         keypos=$keylen
         ;;
+        l|-linux-distribution)
+        LINUX_DISTRIBUTION=$(assign "${key:${keypos}}" "${2}")
+        if [[ $? -eq 2 ]]; then shift; fi
+        keypos=$keylen
+        ;;        
         o|-hostname)
         HOSTNAME=$(assign "${key:${keypos}}" "${2}")
         HOSTNAME=`echo ${HOSTNAME} | tr '[:upper:]' '[:lower:]'`
@@ -104,32 +112,32 @@ while [[ $# -ge 1 ]]; do
         keypos=$keylen
         ;;
         m|-meta-data)
-        META_DATA_FILE=$(assign "${key:${keypos}}" "${2}")
+        META_DATA_FILE=${SCRIPT_DIR}/data/${LINUX_DISTRIBUTION}/$(assign "${key:${keypos}}" "${2}")
         if [[ $? -eq 2 ]]; then shift; fi
         keypos=$keylen
         ;;
         u|-user-data)
-        USER_DATA_FILE=$(assign "${key:${keypos}}" "${2}")
+        USER_DATA_FILE=${SCRIPT_DIR}/data/${LINUX_DISTRIBUTION}/$(assign "${key:${keypos}}" "${2}")
         if [[ $? -eq 2 ]]; then shift; fi
         keypos=$keylen
         ;;
         n|-network-interfaces)
-        NETWORK_INTERFACES_FILE=$(assign "${key:${keypos}}" "${2}")
+        NETWORK_INTERFACES_FILE=${SCRIPT_DIR}/data/${LINUX_DISTRIBUTION}/$(assign "${key:${keypos}}" "${2}")
         if [[ $? -eq 2 ]]; then shift; fi
         keypos=$keylen
         ;;
         i|-post-config-interfaces)
-        POST_CONFIG_INTERFACES_FILE=$(assign "${key:${keypos}}" "${2}")
+        POST_CONFIG_INTERFACES_FILE=${SCRIPT_DIR}/data/${LINUX_DISTRIBUTION}/$(assign "${key:${keypos}}" "${2}")
         if [[ $? -eq 2 ]]; then shift; fi
         keypos=$keylen
         ;;
         s|-post-config-storages)
-        POST_CONFIG_STORAGES_FILE=$(assign "${key:${keypos}}" "${2}")
+        POST_CONFIG_STORAGES_FILE=${SCRIPT_DIR}/data/${LINUX_DISTRIBUTION}/$(assign "${key:${keypos}}" "${2}")
         if [[ $? -eq 2 ]]; then shift; fi
         keypos=$keylen
         ;;
         r|-post-config-resources)
-        POST_CONFIG_RESOURCES_FILE=$(assign "${key:${keypos}}" "${2}")
+        POST_CONFIG_RESOURCES_FILE=${SCRIPT_DIR}/data/${LINUX_DISTRIBUTION}/$(assign "${key:${keypos}}" "${2}")
         if [[ $? -eq 2 ]]; then shift; fi
         keypos=$keylen
         ;;        
@@ -202,7 +210,7 @@ ${VBOXMANAGE} clonevm ${BASE_IMAGE} --mode all --name ${HOSTNAME} --register
 ${VBOXMANAGE} storageattach ${HOSTNAME} --storagectl "IDE" --port 1 --device 0 \
     --type dvddrive --medium ${SCRIPT_DIR}/vms/${HOSTNAME}/${HOSTNAME}-cidata.iso
 
-if [[ -f ${NETWORK_INTERFACES_FILE} && -f ${POST_CONFIG_INTERFACES_FILE} ]]; then
+if [[ -f ${POST_CONFIG_INTERFACES_FILE} ]]; then
   ${POSTCONFIGUREINTERFACES} -v ${HOSTNAME} -i ${POST_CONFIG_INTERFACES_FILE}
 fi
 

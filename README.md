@@ -79,6 +79,7 @@ $ ./create-image.sh \
     -r or --post-config-resources POST_CONFIG_RESOURCES_FILE \
     -o or --hostname HOSTNAME \
     -b or --base-image BASE_IMAGE \
+    -l or --linux-distribution LINUX_DISTRIBUTION \
     -a or --auto-start AUTO_START
 ```
 
@@ -92,6 +93,7 @@ $ ./create-image.sh \
 * __`POST_CONFIG_RESOURCES_FILE`__: Path to an post config resources data file.
 * __`HOSTNAME`__: Hostname of new image.
 * __`BASE_IMAGE`__: Name of VirtualBox base image.
+* __`LINUX_DISTRIBUTION`__: Name of Linux distribution. Default is 'debian'.
 * __`AUTO_START`__: Auto start vm. Default is true.
 
 For more information:
@@ -105,10 +107,10 @@ $ ./create-image.sh -h or --help
 ```
 $ ./create-image.sh \
     -k ~/.ssh/id_rsa.pub \
-    -u data/gate/user-data \
-    -n data/gate/network-config \
-    -i data/gate/post-config-interfaces \
-    -r data/gate/post-config-resources \
+    -u gate/user-data \
+    -n gate/network-config \
+    -i gate/post-config-interfaces \
+    -r gate/post-config-resources \
     -o gate-node01 \
     -b image-base
 ```
@@ -120,10 +122,9 @@ Wait the gate-node01 finish the configuration and start VM, to the next steps.
 $ for instance in hapx-node01 hapx-node02; do
     ./create-image.sh \
         -k ~/.ssh/id_rsa.pub \
-        -u data/hapx/user-data \
-        -n data/hapx/network-config \
-        -i data/hapx/post-config-interfaces \
-        -r data/hapx/post-config-resources \
+        -u hapx/user-data \
+        -i hapx/post-config-interfaces \
+        -r hapx/post-config-resources \
         -o ${instance} \
         -b image-base
 done
@@ -134,10 +135,9 @@ done
 $ for instance in kube-mast01 kube-mast02 kube-mast03; do
     ./create-image.sh \
         -k ~/.ssh/id_rsa.pub \
-        -u data/kube/user-data \
-        -n data/kube/network-config \
-        -i data/kube-mast/post-config-interfaces \
-        -r data/kube-mast/post-config-resources \
+        -u kube/user-data \
+        -i kube-mast/post-config-interfaces \
+        -r kube-mast/post-config-resources \
         -o ${instance} \
         -b image-base
 done
@@ -148,10 +148,9 @@ done
 $ for instance in kube-node01 kube-node02 kube-node03; do
     ./create-image.sh \
         -k ~/.ssh/id_rsa.pub \
-        -u data/kube/user-data \
-        -n data/kube/network-config \
-        -i data/kube-node/post-config-interfaces \
-        -r data/kube-node/post-config-resources \
+        -u kube/user-data \
+        -i kube-node/post-config-interfaces \
+        -r kube-node/post-config-resources \
         -o ${instance} \
         -b image-base
 done
@@ -162,11 +161,10 @@ done
 $ for instance in glus-node01 glus-node02 glus-node03; do
     ./create-image.sh \
         -k ~/.ssh/id_rsa.pub \
-        -u data/glus/user-data \
-        -n data/glus/network-config \
-        -i data/glus/post-config-interfaces \
-        -s data/glus/post-config-storages \
-        -r data/glus/post-config-resources \
+        -u glus/user-data \
+        -i glus/post-config-interfaces \
+        -s glus/post-config-storages \
+        -r glus/post-config-resources \
         -o ${instance} \
         -b image-base
 done

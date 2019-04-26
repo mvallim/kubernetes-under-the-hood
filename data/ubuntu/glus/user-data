@@ -1,0 +1,53 @@
+#cloud-config
+apt:
+  sources_list: |
+    deb http://us.archive.ubuntu.com/ubuntu/ $RELEASE main restricted universe multiverse
+    deb-src http://us.archive.ubuntu.com/ubuntu/ $RELEASE main restricted universe multiverse
+
+    deb http://us.archive.ubuntu.com/ubuntu/ $RELEASE-security main restricted universe multiverse
+    deb http://us.archive.ubuntu.com/ubuntu/ $RELEASE-updates main restricted universe multiverse
+
+    deb-src http://us.archive.ubuntu.com/ubuntu/ $RELEASE-security main restricted universe multiverse
+    deb-src http://us.archive.ubuntu.com/ubuntu/ $RELEASE-updates main restricted universe multiverse
+  conf: |
+    APT {
+      Get {
+        Assume-Yes "true";
+        Fix-Broken "true";
+      };
+    };
+
+packages: 
+  - apt-transport-https
+  - software-properties-common
+  - thin-provisioning-tools
+  - xfsprogs
+
+runcmd:
+  - wget -qO - https://download.gluster.org/pub/gluster/glusterfs/5/rsa.pub | apt-key add -
+  - echo 'deb https://download.gluster.org/pub/gluster/glusterfs/5/LATEST/Debian/9/amd64/apt/ stretch main' > /etc/apt/sources.list.d/gluster.list
+  - [ apt-get, update ]
+  - [ apt-get, install, -y, glusterfs-server ]
+  - [ apt-mark, hold, glusterfs-common, glusterfs-client, glusterfs-server ]
+
+users:
+- name: ubuntu
+  gecos: Ubuntu User
+  sudo: ALL=(ALL) NOPASSWD:ALL
+  shell: /bin/bash
+  lock_passwd: true
+  ssh_authorized_keys:
+    - #SSH-PUB-KEY#
+- name: root
+  lock-passwd: true
+  ssh_authorized_keys:
+    - #SSH-PUB-KEY#
+
+package_upgrade: true
+
+ssh_pwauth: false
+
+power_state:
+  mode: reboot
+  timeout: 30
+  condition: true

@@ -2,11 +2,6 @@
 version: 1
 config:
   - type: physical
-    name: enp0s3
-    subnets:
-      - control: auto
-        type: dhcp
-  - type: physical
     name: enp0s8
     subnets:
       - control: auto
