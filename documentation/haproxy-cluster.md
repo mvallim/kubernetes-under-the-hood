@@ -35,7 +35,6 @@ bye
 ```
 
 ### View stats HAProxy
-
 Open your browser with address [http://192.168.4.20:32700](http://192.168.4.20:32700)
 
 User: admin
@@ -44,5 +43,5 @@ Password: admin
 It will show:
 ![](images/haproxy-cluster-stats.png)
 
-
-
+### Test High Availability 
+Shutdown one of the two VMs (hapx-node01 or hapx-node02) and press F5 in your browser, where you have opened the HAProxy statistics. No difference or error should occur. :)
