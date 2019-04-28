@@ -183,7 +183,15 @@ ssh-copy-id debian@kube-mast03 #(default password: debian)
 ~/bin/copy-certificates.sh
 ```
 
+#### Print Join Command
+```
+kubeadm token create --print-join-command
+```
 
+The expected outputs is:
+```
+kubeadm join 192.168.4.20:6443 --token y5uii4.5myd468ieaavd0g6 --discovery-token-ca-cert-hash sha256:d4990d904f85ad8fb2d2bbb2e56b35a8cd0714092b40e3778209a0f1d4fa38b9
+```
 > The last command print the command to you join nodes on cluster, you will use this command to join master and wokers on cluster
 
 #### Join second Kube Master
@@ -195,10 +203,11 @@ sudo su -
 ~/bin/move-certificates.sh
 
 kubeadm join 192.168.4.20:6443 \
-    --token ??? \
-    --discovery-token-ca-cert-hash sha256:??? \
+    --token y5uii4.5myd468ieaavd0g6 \
+    --discovery-token-ca-cert-hash sha256:d4990d904f85ad8fb2d2bbb2e56b35a8cd0714092b40e3778209a0f1d4fa38b9 \
     --experimental-control-plane
 ```
+> Add the `--experimental-control-plane` at the end of command
 
 #### Join third Kube Master
 ```
@@ -209,7 +218,8 @@ sudo su -
 ~/bin/move-certificates.sh
 
 kubeadm join 192.168.4.20:6443 \
-    --token ??? \
-    --discovery-token-ca-cert-hash sha256:??? \
+    --token y5uii4.5myd468ieaavd0g6 \
+    --discovery-token-ca-cert-hash sha256:d4990d904f85ad8fb2d2bbb2e56b35a8cd0714092b40e3778209a0f1d4fa38b9 \
     --experimental-control-plane
 ```
+> Add the `--experimental-control-plane` at the end of command
