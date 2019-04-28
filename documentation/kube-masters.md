@@ -14,8 +14,8 @@ Master components can be run on any machine in the cluster. However, for simplic
 * **Kube Proxy** - Kube Proxy acts as a network proxy and a load balancer for a service on a single worker node. It takes care of the network routing for TCP and UDP packets.
 * **Flannel** - It is a layer 3 network fabric designed for Kubernetes.
 * **CoreDNS** - It is the DNS Server of the Kubernetes cluster.
-> More info about Flannel: https://github.com/coreos/flannel
-> Mode info about CoreDNS: https://github.com/coredns/coredns
+> * More info about Flannel: https://github.com/coreos/flannel
+> * Mode info about CoreDNS: https://github.com/coredns/coredns
 
 ### Overview
 <p align="center">
