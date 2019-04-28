@@ -11,10 +11,13 @@
 * Each Pod will see itself with the same IP that other Pods see it as having.
 
 #### Master to Worker
-![](images/kube-network-model-master-to-worker)
+![](images/kube-network-model-master-to-worker.png)
 
 #### Worker to Worker
+![](images/kube-network-model-woker-to-worker.png)
 
 #### Intra Node - Pod to Pod
+![](images/kube-network-model-pod-to-pod.png)
 
 #### Pod to Internet
+![](images/kube-network-model-pod-to-internet.png)
