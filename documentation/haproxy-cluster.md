@@ -16,7 +16,7 @@ Pacemaker is an Open Source, High Availability resource manager suitable for bot
 
 ## Solution
 <p align="center">
-  <img width="460" height="300" src="images/haproxy-cluster.gif">
+  <img src="images/haproxy-cluster.gif">
 </p>
 
 ### Configure
