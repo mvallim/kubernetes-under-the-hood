@@ -70,25 +70,37 @@ EOF
 kubeadm init --config=kubeadm-config.yaml
 ```
 
-Checking the state of node
+Checking the state of node and pods
 
 ```
 mkdir -p $HOME/.kube
-
 cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-
 chown $(id -u):$(id -g) $HOME/.kube/config
 
 kubectl get nodes -o wide
+kubectl get pods -o wide --all-namespaces
 ```
 
-The expected output is:
+The expected outputs is:
 ```
 NAME          STATUS     ROLES    AGE   VERSION   INTERNAL-IP    EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION   CONTAINER-RUNTIME
 kube-mast01   NotReady   master   53s   v1.13.5   192.168.1.72   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-9-amd64    docker://18.6.0
 ```
 
-If you look at the status on the `kube-mast01` node it is **NotReady**, beacause until that point we do not have a network component configured in our K8S cluster, in which case we will use Flannel as previously already planned.
+```
+NAMESPACE     NAME                                  READY   STATUS    RESTARTS   AGE   IP             NODE          NOMINATED NODE   READINESS GATES
+kube-system   coredns-86c58d9df4-6gzrk              0/1     Pending   0          89s   <none>         <none>        <none>           <none>
+kube-system   coredns-86c58d9df4-fxj5r              0/1     Pending   0          89s   <none>         <none>        <none>           <none>
+kube-system   etcd-kube-mast01                      1/1     Running   0          46s   192.168.1.72   kube-mast01   <none>           <none>
+kube-system   kube-apiserver-kube-mast01            1/1     Running   0          43s   192.168.1.72   kube-mast01   <none>           <none>
+kube-system   kube-controller-manager-kube-mast01   1/1     Running   0          44s   192.168.1.72   kube-mast01   <none>           <none>
+kube-system   kube-proxy-8kb86                      1/1     Running   0          89s   192.168.1.72   kube-mast01   <none>           <none>
+kube-system   kube-scheduler-kube-mast01            1/1     Running   0          27s   192.168.1.72   kube-mast01   <none>           <none>
+```
+
+If you look at the status on the `kube-mast01` node it is **NotReady** and pods of coredns is **Pending**, beacause until that point we do not have a network component configured in our K8S cluster, in which case we will use Flannel as previously already planned.
+
+#### Deploy Flannel
 
 ```
 kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/a70459be0084506e4ec919aa1c114638878db11b/Documentation/kube-flannel.yml
@@ -107,22 +119,42 @@ daemonset.extensions/kube-flannel-ds-ppc64le created
 daemonset.extensions/kube-flannel-ds-s390x created
 ```
 
-Checking the state of node after Flannel deployed
+Checking the state of node and pods after Flannel deployed
 
 ```
 kubectl get nodes -o wide
+kubectl get pods -o wide --all-namespaces
 ```
 
-The expected output is:
+The expected outputs is:
 ```
 NAME          STATUS   ROLES    AGE     VERSION   INTERNAL-IP    EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION   CONTAINER-RUNTIME
 kube-mast01   Ready    master   4m30s   v1.13.5   192.168.1.72   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-9-amd64    docker://18.6.0
 ```
 
-If you look at the status on the `kube-mast01` node it is now **Ready**.
+```
+NAMESPACE     NAME                                  READY   STATUS    RESTARTS   AGE     IP             NODE          NOMINATED NODE   READINESS GATES
+kube-system   coredns-86c58d9df4-6gzrk              1/1     Running   0          6m4s    10.244.0.4     kube-mast01   <none>           <none>
+kube-system   coredns-86c58d9df4-fxj5r              1/1     Running   0          6m4s    10.244.0.5     kube-mast01   <none>           <none>
+kube-system   etcd-kube-mast01                      1/1     Running   0          5m21s   192.168.1.72   kube-mast01   <none>           <none>
+kube-system   kube-apiserver-kube-mast01            1/1     Running   0          5m18s   192.168.1.72   kube-mast01   <none>           <none>
+kube-system   kube-controller-manager-kube-mast01   1/1     Running   0          5m19s   192.168.1.72   kube-mast01   <none>           <none>
+kube-system   kube-flannel-ds-amd64-545vl           1/1     Running   0          24s     192.168.1.72   kube-mast01   <none>           <none>
+kube-system   kube-proxy-8kb86                      1/1     Running   0          6m4s    192.168.1.72   kube-mast01   <none>           <none>
+kube-system   kube-scheduler-kube-mast01            1/1     Running   0          5m2s    192.168.1.72   kube-mast01   <none>           <none>
+```
 
+If you look at the status on the `kube-mast01` node it is now **Ready** and coredns is **Running**, and now there is pod `kube-flannel-ds-amd64`.
+
+### Join Master Replicas
+
+Agora nós precisamos ingressar o outros nodes ao nosso cluster K8S
 
 ```
+ssh debian@kube-mast01.kube.local
+
+sudo su -
+
 ssh-keygen -t rsa -b 4096
 
 ssh-copy-id debian@kube-mast02 #(default password: debian)
