@@ -13,6 +13,8 @@ The target audience for this tutorial is someone planning to install a Kubernete
 * [Configuring hosts](documentation/configure-hosts.md)
 * [Putting all together](documentation/putting-all-together.md)
   - [HAProxy Cluster](documentation/haproxy-cluster.md)
+  - [Kube Masters](documentation/kube-masters.md)
+  - [Kube Wrokers](documentation/kube-workers.md)
 
 ## Contributing
 
