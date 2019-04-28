@@ -25,11 +25,9 @@ Install `genisoimage` with user `root`
 # apt-get install genisoimage
 ```
 
-### Creating base image
+### Creating Linux base image
 
-#### Linux Base Image
-
-##### Partitioning
+#### Partitioning
 
 The big decision about configuring Linux is how hard drive space is divided.
 
@@ -52,7 +50,7 @@ The volumes shall be initially divided as follows:
 | *var*     | 10 Gb  | "Variable" files, such as logs, databases, web pages and e-mail files, container images, etc.          |
 > **source:** http://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html)
 
-##### Software
+#### Software
 The installation of software packages that make up the base image are necessary to avoid repetition of work in the other VMs that will be created from it.
 
 As we are creating an image using VirtualBox as our virtualization system an important software that should compose every image is VirtualBox Guest Additions, in addition to its dependencies.
@@ -70,7 +68,17 @@ The softwares to be installed will be the following:
 | *VirtualBox Guest Additions* | The VirtualBox Guest Additions consist of device drivers and system applications that optimize the operating system for better performance and usability. One of the usability features required in this guide is automated logons, which is why you need to install the Guest Additions in the virtual machine. |
 > **source:** apt-cache show package-name
 
-### Download base image
+#### Installation
+In the following videos you will be shown how to do a base installation for both Debian 9 Stretch and Ubuntu 18.04 LTS Server.
+
+*Debian*
+[![Debian 9 Stretch base image VirtualBox](http://i3.ytimg.com/vi/mG8scaDoZog/hqdefault.jpg)](https://youtu.be/mG8scaDoZog)
+
+*Ubuntu*
+[![Debian 9 Stretch base image VirtualBox](http://i3.ytimg.com/vi/Zo82rXBEzco/hqdefault.jpg)](https://youtu.be/Zo82rXBEzco)
+
+
+#### Or if you prefere download base image
 To continue with this demo you need to download the base image and register it in Virtualbox.
 
 ```
