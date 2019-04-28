@@ -192,6 +192,8 @@ ssh debian@kube-mast01.kube.local 'sudo cat /root/.kube/config' > ~/.kube/config
 kubectl proxy
 ```
 
+Open your browser with address [http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/](http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/)
+
 Now copy the token and paste it into Enter token field on log in screen.
 ![](images/kube-dashboard-auth.png)
 
