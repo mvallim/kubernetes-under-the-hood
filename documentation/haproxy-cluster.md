@@ -42,7 +42,7 @@ User: admin
 Password: admin
 
 It will show:
-![](images/haproxy-cluster-stats.gif)
+![](images/haproxy-cluster-stats.png)
 
 
 
