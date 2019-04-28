@@ -25,6 +25,35 @@ Install `genisoimage` with user `root`
 # apt-get install genisoimage
 ```
 
+### Creating base image
+
+#### Linux Base Image
+
+##### Partitioning
+
+The big decision about configuring Linux is how hard drive space is divided.
+
+This design allows for dynamic growth and fine-tuning when needed. Being caught off guard with a scenario there is no more storage space available, with no immediate option other than deleting files is never a good experience. The long-term life and growth of the system, as well as the budgetary concerns, must be taken into account.
+
+Isolating root volume, especially for static data that does not grow much over time, is the central concern. Isolating the other directories in their own volumes will be the strategy used so that their dynamic growth does not affect the root partition. Filling the root volume in a system is a very bad thing and should be avoided at all costs. With segregated partitions, we have margin of maneuver, like increasing one partition, reducing another, since the volume is not 100% occupied by the logical volumes (partitions).
+
+Partitions may be increased later, but start with this minimum size, these numbers will be used for the initial installation of the system.
+
+The volumes shall be initially divided as follows:
+
+| Partition | Size   | Description                                                                                            |
+|-----------|--------|--------------------------------------------------------------------------------------------------------|
+| *boot*    | 512 Mb | Boot loader files (ex: kernel, initrd). Single space residing outside the Logical Volume Manager (LVM) |
+| *root*    | 2 Gb   | Operational System (/ bin, / lib, / etc, / sbin)                                                       |
+| *home*    | 2 Gb   | User directories.                                                                                      |
+| *opt*     | 1 Gb   | Static application packages.                                                                           |
+| *tmp*     | 1 Gb   | Temporary files.                                                                                       |
+| *usr*     | 10 Gb  | Secondary hierarchy for shared user data whose access is restricted for read only.                     |
+| *var*     | 10 Gb  | "Variable" files, such as logs, databases, web pages and e-mail files, container images, etc.          |
+> **source:** http://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html)
+
+
+
 ### Download base image
 To continue with this demo you need to download the base image and register it in Virtualbox.
 
