@@ -30,7 +30,7 @@ At this point we need to inform the initial configurations in our K8S cluster.
 
 The **SAN**, **Plane Control EndPoint** and **POD Subnet** information is required.
 
-* The Control Plane EndPoint address was defined in the HAProxy Cluster (192.168.4.20) ([see here](documentation/haproxy-cluster.md)).
+* The Control Plane EndPoint address was defined in the HAProxy Cluster (192.168.4.20) ([see here](/documentation/haproxy-cluster.md)).
 * The SAN address will be the same as the Control Plane EndPoint.
 * The CIDR of the PODs will be the range recommended by the Flannel configuration. ([see here](https://github.com/coreos/flannel/blob/master/Documentation/kube-flannel.yml) search for `net-conf.json`)
 
