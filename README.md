@@ -8,7 +8,7 @@ The target audience for this tutorial is someone planning to install a Kubernete
 
 ## Getting Started
 * [Creating Linux base image](/documentation/create-linux-image.md)
-* [Configuring your station](/documentation/configure-local.md)
+* [Configuring your station](/documentation/configure-your-station.md)
 * [Running VMs](/documentation/running-vms.md)
 * [Configuring hosts](/documentation/configure-hosts.md)
 * [Putting all together](/documentation/putting-all-together.md)
