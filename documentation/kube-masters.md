@@ -30,9 +30,9 @@ At this point we need to inform the initial configurations in our K8S cluster.
 
 The **SAN**, **Plane Control EndPoint** and **POD Subnet** information is required.
 
-* The Control Plane EndPoint address was defined in the HAProxy Cluster (192.168.4.20) ([see here](/documentation/haproxy-cluster.md)).
+* The Control Plane EndPoint address was defined in the HAProxy Cluster (192.168.4.20) ([here](/documentation/haproxy-cluster.md)).
 * The SAN address will be the same as the Control Plane EndPoint.
-* The CIDR of the PODs will be the range recommended by the Flannel configuration. ([see here](https://github.com/coreos/flannel/blob/master/Documentation/kube-flannel.yml) search for `net-conf.json`)
+* The CIDR of the PODs will be the range recommended by the Flannel configuration. ([here](https://github.com/coreos/flannel/blob/master/Documentation/kube-flannel.yml) search for `net-conf.json`)
 
 Based on the above information we will have a kubeadm-config.yml as below:
 
@@ -101,11 +101,13 @@ kube-system   kube-scheduler-kube-mast01            1/1     Running   0         
 
 If you look at the status on the `kube-mast01` node it is **NotReady** and pods of coredns is **Pending**, beacause until that point we do not have a network component configured in our K8S cluster, in which case we will use Flannel as previously already planned.
 
-#### Flannel
+### Flannel
 “Flannel is a simple and easy way to configure a layer 3 network fabric designed for Kubernetes.
 Flannel runs a small, single binary agent called flanneld on each host, and is responsible for allocating a subnet lease to each host out of a larger, preconfigured address space. Flannel uses either the Kubernetes API or etcd directly to store the network configuration, the allocated subnets, and any auxiliary data (such as the host's public IP). Packets are forwarded using one of several backend mechanisms including VXLAN and various cloud integrations.”
 
-##### Deploy
+You can see Kubernetes Network Model [here](/documentation/kubernetes-network-model.md)
+
+#### Deploy
 ```
 kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/a70459be0084506e4ec919aa1c114638878db11b/Documentation/kube-flannel.yml
 ```
