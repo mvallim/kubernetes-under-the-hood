@@ -244,6 +244,8 @@ kube-mast01   Ready    master   34m     v1.13.5   192.168.1.72   <none>        D
 kube-mast02   Ready    master   4m34s   v1.13.5   192.168.1.68   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-9-amd64    docker://18.6.0
 kube-mast03   Ready    master   2m54s   v1.13.5   192.168.1.81   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-9-amd64    docker://18.6.0
 ```
+All master nodes **Ready** 
+
 ```
 NAMESPACE     NAME                                  READY   STATUS    RESTARTS   AGE     IP             NODE          NOMINATED NODE   READINESS GATES
 kube-system   coredns-86c58d9df4-6gzrk              1/1     Running   0          34m     10.244.0.4     kube-mast01   <none>           <none>
@@ -267,6 +269,7 @@ kube-system   kube-scheduler-kube-mast01            1/1     Running   1         
 kube-system   kube-scheduler-kube-mast02            1/1     Running   0          5m22s   192.168.1.68   kube-mast02   <none>           <none>
 kube-system   kube-scheduler-kube-mast03            1/1     Running   0          3m42s   192.168.1.81   kube-mast03   <none>           <none>
 ```
+All master pods **Running** 
 
 ### View stats HAProxy Cluster
 Open your browser with address [http://192.168.4.20:32700](http://192.168.4.20:32700)
@@ -276,3 +279,8 @@ Password: admin
 
 It will show:
 ![](images/haproxy-cluster-stats-masters.png)
+
+All Control Plane EndPoints **UP**
+* kube-mast01:6443
+* kube-mast02:6443
+* kube-mast03:6443
