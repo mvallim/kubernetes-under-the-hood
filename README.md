@@ -344,8 +344,7 @@ ssh-copy-id debian@kube-mast03 #(default password: debian)
 
 kubeadm token create --print-join-command
 ```
-
-The last command print the command to you join nodes on cluster, you will use this command to join master and wokers on cluster
+> The last command print the command to you join nodes on cluster, you will use this command to join master and wokers on cluster
 
 #### Join second Kube Master
 ```
