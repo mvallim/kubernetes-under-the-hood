@@ -2,7 +2,7 @@
 
 ## Overview
 <p align="center">
-  <img src="images/kube-network-model.gif">
+  <img src="images/kube-network-model.png">
 </p>
 
 ### Assumptions
