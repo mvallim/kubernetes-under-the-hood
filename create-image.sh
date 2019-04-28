@@ -6,8 +6,8 @@ BASE_IMAGE=""
 LINUX_DISTRIBUTION="debian"
 HOSTNAME=""
 SSH_PUB_KEY_FILE=""
-META_DATA_FILE="${SCRIPT_DIR}/data/${LINUX_DISTRIBUTION}/meta-data"
-USER_DATA_FILE="${SCRIPT_DIR}/data/${LINUX_DISTRIBUTION}/user-data"
+META_DATA_FILE="meta-data"
+USER_DATA_FILE="user-data"
 NETWORK_INTERFACES_FILE=""
 POST_CONFIG_INTERFACES_FILE=""
 POST_CONFIG_STORAGES_FILE=""
@@ -112,32 +112,32 @@ while [[ $# -ge 1 ]]; do
         keypos=$keylen
         ;;
         m|-meta-data)
-        META_DATA_FILE=${SCRIPT_DIR}/data/${LINUX_DISTRIBUTION}/$(assign "${key:${keypos}}" "${2}")
+        META_DATA_FILE=$(assign "${key:${keypos}}" "${2}")
         if [[ $? -eq 2 ]]; then shift; fi
         keypos=$keylen
         ;;
         u|-user-data)
-        USER_DATA_FILE=${SCRIPT_DIR}/data/${LINUX_DISTRIBUTION}/$(assign "${key:${keypos}}" "${2}")
+        USER_DATA_FILE=$(assign "${key:${keypos}}" "${2}")
         if [[ $? -eq 2 ]]; then shift; fi
         keypos=$keylen
         ;;
         n|-network-interfaces)
-        NETWORK_INTERFACES_FILE=${SCRIPT_DIR}/data/${LINUX_DISTRIBUTION}/$(assign "${key:${keypos}}" "${2}")
+        NETWORK_INTERFACES_FILE=$(assign "${key:${keypos}}" "${2}")
         if [[ $? -eq 2 ]]; then shift; fi
         keypos=$keylen
         ;;
         i|-post-config-interfaces)
-        POST_CONFIG_INTERFACES_FILE=${SCRIPT_DIR}/data/${LINUX_DISTRIBUTION}/$(assign "${key:${keypos}}" "${2}")
+        POST_CONFIG_INTERFACES_FILE=$(assign "${key:${keypos}}" "${2}")
         if [[ $? -eq 2 ]]; then shift; fi
         keypos=$keylen
         ;;
         s|-post-config-storages)
-        POST_CONFIG_STORAGES_FILE=${SCRIPT_DIR}/data/${LINUX_DISTRIBUTION}/$(assign "${key:${keypos}}" "${2}")
+        POST_CONFIG_STORAGES_FILE=$(assign "${key:${keypos}}" "${2}")
         if [[ $? -eq 2 ]]; then shift; fi
         keypos=$keylen
         ;;
         r|-post-config-resources)
-        POST_CONFIG_RESOURCES_FILE=${SCRIPT_DIR}/data/${LINUX_DISTRIBUTION}/$(assign "${key:${keypos}}" "${2}")
+        POST_CONFIG_RESOURCES_FILE=$(assign "${key:${keypos}}" "${2}")
         if [[ $? -eq 2 ]]; then shift; fi
         keypos=$keylen
         ;;        
@@ -161,6 +161,13 @@ while [[ $# -ge 1 ]]; do
   esac
   shift
 done
+
+META_DATA_FILE=${SCRIPT_DIR}/data/${LINUX_DISTRIBUTION}/${META_DATA_FILE}
+USER_DATA_FILE=${SCRIPT_DIR}/data/${LINUX_DISTRIBUTION}/${USER_DATA_FILE}
+NETWORK_INTERFACES_FILE=${SCRIPT_DIR}/data/${LINUX_DISTRIBUTION}/${NETWORK_INTERFACES_FILE}
+POST_CONFIG_INTERFACES_FILE=${SCRIPT_DIR}/data/${LINUX_DISTRIBUTION}/${POST_CONFIG_INTERFACES_FILE}
+POST_CONFIG_STORAGES_FILE=${SCRIPT_DIR}/data/${LINUX_DISTRIBUTION}/${POST_CONFIG_STORAGES_FILE}
+POST_CONFIG_RESOURCES_FILE=${SCRIPT_DIR}/data/${LINUX_DISTRIBUTION}/${POST_CONFIG_RESOURCES_FILE}
 
 if [[ -z ${BASE_IMAGE} ]]; then
   echo "Base image not found"

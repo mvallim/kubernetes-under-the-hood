@@ -70,6 +70,15 @@ $ wget https://www.dropbox.com/s/xcsk4matlzmjo2m/debian-base-image.tar.bz2?dl=0 
 $ vboxmanage registervm ~/VirtualBox\ VMs/debian-base-image/debian-base-image.vbox
 ```
 
+##### Ubuntu
+```
+$ cd ~/VirtualBox\ VMs/
+
+$ wget https://www.dropbox.com/s/hicmmy39gc3gog2/ubuntu-base-image.tar.bz2?dl=0 -O - | tar xvjf -
+
+$ vboxmanage registervm ~/VirtualBox\ VMs/ubuntu-base-image/ubuntu-base-image.vbox
+```
+
 ## Configuring
 
 ### Prerequisites (GNU/Linux Debian/Ubuntu)
@@ -161,6 +170,7 @@ $ ./create-image.sh \
     -i gate/post-config-interfaces \
     -r gate/post-config-resources \
     -o gate-node01 \
+    -l debian \
     -b debian-base-image
 ```
 
@@ -175,6 +185,7 @@ $ for instance in hapx-node01 hapx-node02; do
         -i hapx/post-config-interfaces \
         -r hapx/post-config-resources \
         -o ${instance} \
+        -l debian \
         -b debian-base-image
 done
 ```
@@ -188,6 +199,7 @@ $ for instance in kube-mast01 kube-mast02 kube-mast03; do
         -i kube-mast/post-config-interfaces \
         -r kube-mast/post-config-resources \
         -o ${instance} \
+        -l debian \
         -b debian-base-image
 done
 ```
@@ -201,6 +213,7 @@ $ for instance in kube-node01 kube-node02 kube-node03; do
         -i kube-node/post-config-interfaces \
         -r kube-node/post-config-resources \
         -o ${instance} \
+        -l debian \
         -b debian-base-image
 done
 ```
@@ -215,6 +228,7 @@ $ for instance in glus-node01 glus-node02 glus-node03; do
         -s glus/post-config-storages \
         -r glus/post-config-resources \
         -o ${instance} \
+        -l debian \
         -b debian-base-image
 done
 ```
