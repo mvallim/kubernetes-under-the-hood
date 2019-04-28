@@ -1,5 +1,7 @@
 # Kubernetes under the hood
-![](under-the-hood.jpg)
+<p align="center">
+  <img src="documentation/images/under-the-hood.jpg">
+</p>
 
 It even includes a SlideShare explaining the reasoning behid it [Kubernetes under the hood journey](https://pt.slideshare.net/MarcosVallim1/kubernetes-under-the-hood-journey/MarcosVallim1/kubernetes-under-the-hood-journey)
 
