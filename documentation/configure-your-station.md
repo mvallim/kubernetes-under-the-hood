@@ -1,4 +1,4 @@
-## Configuring
+## Configuring your station
 
 ### Prerequisites (GNU/Linux Debian/Ubuntu)
 

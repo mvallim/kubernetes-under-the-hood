@@ -1,8 +1,6 @@
-## Getting Started
+## Creating Linux base image
 
-### Creating Linux base image
-
-#### Partitioning
+### Partitioning
 
 The big decision about configuring Linux is how hard drive space is divided.
 
@@ -25,7 +23,7 @@ The volumes shall be initially divided as follows:
 | **var**     | 10 Gb  | "Variable" files, such as logs, databases, web pages and e-mail files, container images, etc.          |
 > **source:** http://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html)
 
-#### Software
+### Software
 The installation of software packages that make up the base image are necessary to avoid repetition of work in the other VMs that will be created from it.
 
 As we are creating an image using VirtualBox as our virtualization system an important software that should compose every image is VirtualBox Guest Additions, in addition to its dependencies.
@@ -43,7 +41,7 @@ The softwares to be installed will be the following:
 | **VirtualBox Guest Additions** | The VirtualBox Guest Additions consist of device drivers and system applications that optimize the operating system for better performance and usability. One of the usability features required in this guide is automated logons, which is why you need to install the Guest Additions in the virtual machine. |
 > **source:** apt-cache show package-name
 
-#### Installation
+### Installation
 In the following videos you will be shown how to do a base installation for both Debian 9 Stretch and Ubuntu 18.04 LTS Server.
 
 > **ISO install:** https://cdimage.debian.org/debian-cd/current/amd64/iso-dvd/debian-9.9.0-amd64-DVD-1.iso
@@ -52,9 +50,9 @@ In the following videos you will be shown how to do a base installation for both
 > **ISO install:** http://cdimage.ubuntu.com/ubuntu/releases/18.04/release/ubuntu-18.04.2-server-amd64.iso
 [![Debian 9 Stretch base image VirtualBox](http://i3.ytimg.com/vi/Zo82rXBEzco/hqdefault.jpg)](https://youtu.be/Zo82rXBEzco)
 
-#### Or if you prefere download base image
+### Or if you prefere download base image
 
-##### Debian
+#### Debian
 ```
 $ cd ~/VirtualBox\ VMs/
 
@@ -63,7 +61,7 @@ $ wget https://www.dropbox.com/s/xcsk4matlzmjo2m/debian-base-image.tar.bz2?dl=0 
 $ vboxmanage registervm ~/VirtualBox\ VMs/debian-base-image/debian-base-image.vbox
 ```
 
-##### Ubuntu
+#### Ubuntu
 ```
 $ cd ~/VirtualBox\ VMs/
 

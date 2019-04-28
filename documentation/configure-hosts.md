@@ -1,4 +1,4 @@
-## Configure local hosts
+## Configure hosts
 
 ### /etc/hosts
 
