@@ -14,7 +14,7 @@
 ![](images/kube-network-model-master-to-worker.png)
 
 #### Worker to Worker
-![](images/kube-network-model-woker-to-worker.png)
+![](images/kube-network-model-worker-to-worker.png)
 
 #### Intra Node - Pod to Pod
 ![](images/kube-network-model-pod-to-pod.png)
