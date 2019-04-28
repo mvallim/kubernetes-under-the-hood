@@ -162,6 +162,8 @@ $ ./create-image.sh -h or --help
 
 ## Running Demo
 
+All VM initializations and configurations use **cloud-init**, all YAML scripts are in the ![`data`](/ data) directory for the linux distribution used by VMs.
+
 ### Create gateway
 ```
 $ ./create-image.sh \
@@ -175,9 +177,10 @@ $ ./create-image.sh \
     -b debian-base-image
 ```
 
-Wait the gate-node01 finish the configuration and start VM, to the next steps.
+> Wait the gate-node01 finish the configuration and start VM, to the next steps.
 
 ### Create HAProxy Cluster
+
 ```
 $ for instance in hapx-node01 hapx-node02; do
     ./create-image.sh \
