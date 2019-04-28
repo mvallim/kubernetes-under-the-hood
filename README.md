@@ -8,23 +8,6 @@ The target audience for this tutorial is someone planning to install a Kubernete
 
 ## Getting Started
 
-### Prerequisites (GNU/Linux Debian/Ubuntu)
-The premise is that you already have Virtualbox properly installed on your local machine.
-
-Install `shyaml` with user `root`
-
-```
-# apt-get install python3-pip
-
-# pip3 install shyaml
-```
-
-Install `genisoimage` with user `root`
-
-```
-# apt-get install genisoimage
-```
-
 ### Creating Linux base image
 
 #### Partitioning
@@ -78,20 +61,36 @@ In the following videos you will be shown how to do a base installation for both
 #### Or if you prefere download base image
 To continue with this demo you need to download the base image and register it in Virtualbox.
 
+##### Debian
 ```
 $ cd ~/VirtualBox\ VMs/
 
-$ wget https://www.dropbox.com/s/v6h0sedqt3za9pl/image-base.tar.bz2?dl=0 -O image-base.tar.bz2
+$ wget https://www.dropbox.com/s/xcsk4matlzmjo2m/debian-base-image.tar.bz2?dl=0 -O - | tar xvjf -
 
-$ tar xvjf image-base.tar.bz2
-
-$ vboxmanage registervm ~/VirtualBox\ VMs/image-base/image-base.vbox
-
-$ rm image-base.tar.bz2
+$ vboxmanage registervm ~/VirtualBox\ VMs/debian-base-image/debian-base-image.vbox
 ```
 
 ## Configuring
 
+### Prerequisites (GNU/Linux Debian/Ubuntu)
+
+The premise is that you already have Virtualbox properly installed on your local machine.
+
+Install `shyaml` with user `root`
+
+```
+# apt-get install python3-pip
+
+# pip3 install shyaml
+```
+
+Install `genisoimage` with user `root`
+
+```
+# apt-get install genisoimage
+```
+
+### Configure Host Adapter VirtualBox
 Create a Host-Only adpter on Virtualbox
 
 ```
@@ -162,7 +161,7 @@ $ ./create-image.sh \
     -i gate/post-config-interfaces \
     -r gate/post-config-resources \
     -o gate-node01 \
-    -b image-base
+    -b debian-base-image
 ```
 
 Wait the gate-node01 finish the configuration and start VM, to the next steps.
@@ -176,7 +175,7 @@ $ for instance in hapx-node01 hapx-node02; do
         -i hapx/post-config-interfaces \
         -r hapx/post-config-resources \
         -o ${instance} \
-        -b image-base
+        -b debian-base-image
 done
 ```
 
@@ -189,7 +188,7 @@ $ for instance in kube-mast01 kube-mast02 kube-mast03; do
         -i kube-mast/post-config-interfaces \
         -r kube-mast/post-config-resources \
         -o ${instance} \
-        -b image-base
+        -b debian-base-image
 done
 ```
 
@@ -202,7 +201,7 @@ $ for instance in kube-node01 kube-node02 kube-node03; do
         -i kube-node/post-config-interfaces \
         -r kube-node/post-config-resources \
         -o ${instance} \
-        -b image-base
+        -b debian-base-image
 done
 ```
 
@@ -216,11 +215,11 @@ $ for instance in glus-node01 glus-node02 glus-node03; do
         -s glus/post-config-storages \
         -r glus/post-config-resources \
         -o ${instance} \
-        -b image-base
+        -b debian-base-image
 done
 ```
 
-### Configure hosts
+### Configure local hosts
 
 You can configure in your local machine `/etc/hosts` with the ip and name of VM's.
 
