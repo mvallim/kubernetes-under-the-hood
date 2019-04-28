@@ -70,6 +70,9 @@ Now you can see the dashboard pod `kubernetes-dashboard-57df4db6b-pcwn2`
 ### Configure
 
 #### `serviceaccount`
+
+We need service account to access K8S Dashboard
+
 ```
 kubectl create serviceaccount cluster-admin-dashboard -n kube-system
 
@@ -88,6 +91,9 @@ clusterrolebinding.rbac.authorization.k8s.io/cluster-admin-dashboard created
 ```
 
 ### View Dashboard
+
+We need get token of service account `cluster-admin-dashboard`
+
 ```
 kubectl get secret -n kube-system
 ```
@@ -135,7 +141,9 @@ token-cleaner-token-tzdh2                        kubernetes.io/service-account-t
 ttl-controller-token-q5p9n                       kubernetes.io/service-account-token   3      179m
 ```
 
-Now you can see the token of `cluster-admin-dashboard` with name `cluster-admin-dashboard-token-q89fp`
+Now you can see the service account token of `cluster-admin-dashboard` with name `cluster-admin-dashboard-token-q89fp`
+
+To get token we describe `cluster-admin-dashboard-token-q89fp`
 
 ```
 kubectl describe secret cluster-admin-dashboard-token-q89fp -n kube-system
@@ -157,6 +165,10 @@ ca.crt:     1025 bytes
 namespace:  11 bytes
 token:      eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlLXN5c3RlbSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJjbHVzdGVyLWFkbWluLWRhc2hib2FyZC10b2tlbi1xODlmcCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJjbHVzdGVyLWFkbWluLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6IjVlNzZkZmU4LTY5OGQtMTFlOS04Y2U4LTA4MDAyNzZmNjEzYiIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDprdWJlLXN5c3RlbTpjbHVzdGVyLWFkbWluLWRhc2hib2FyZCJ9.QQ8YLxtkx5dotSI5Yo7xKrpdKpw9bTba_LYvkdYobe_UW8Gg2ldp6j1FUMXTK63_TTehl3QMjyGm7o0nnvycLrkbXtIhL72m6dDNr6bMgRKdIDScAtU9KOk05EPXbHmnCRuEdqJlA24vlgGc7-14lTCVt5O7-dwTvisPaX0pZJkkVk90X5EBsoY3wITtIrNiGpnXW8eQINWzxVk4Tmhq8UQbibOo-0C77dh0joWEnIN7ToKBp3fIwqp8-UvyUMvsDEhio12fWngvwjxssOpRg1a_AuH_Ib6yOa-E13s97vo-SHgDFTnhEPP5EVSbxBx75bOzbGIatNuSGNRg-UFHcQ
 ```
+
+We are going to use token `eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlLXN5c3RlbSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJjbHVzdGVyLWFkbWluLWRhc2hib2FyZC10b2tlbi1xODlmcCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJjbHVzdGVyLWFkbWluLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6IjVlNzZkZmU4LTY5OGQtMTFlOS04Y2U4LTA4MDAyNzZmNjEzYiIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDprdWJlLXN5c3RlbTpjbHVzdGVyLWFkbWluLWRhc2hib2FyZCJ9.QQ8YLxtkx5dotSI5Yo7xKrpdKpw9bTba_LYvkdYobe_UW8Gg2ldp6j1FUMXTK63_TTehl3QMjyGm7o0nnvycLrkbXtIhL72m6dDNr6bMgRKdIDScAtU9KOk05EPXbHmnCRuEdqJlA24vlgGc7-14lTCVt5O7-dwTvisPaX0pZJkkVk90X5EBsoY3wITtIrNiGpnXW8eQINWzxVk4Tmhq8UQbibOo-0C77dh0joWEnIN7ToKBp3fIwqp8-UvyUMvsDEhio12fWngvwjxssOpRg1a_AuH_Ib6yOa-E13s97vo-SHgDFTnhEPP5EVSbxBx75bOzbGIatNuSGNRg-UFHcQ`
+
+#### `kube proxy`
 
 ```
 kubectl proxy
