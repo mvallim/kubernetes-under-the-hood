@@ -70,12 +70,7 @@ EOF
 kubeadm init --config=kubeadm-config.yaml
 ```
 
-Checking the state of nodes
-
-```
-kubectl get nodes
-```
-
+Checking the state of node
 
 ```
 mkdir -p $HOME/.kube
@@ -84,8 +79,50 @@ cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 
 chown $(id -u):$(id -g) $HOME/.kube/config
 
-kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/a70459be0084506e4ec919aa1c114638878db11b/Documentation/kube-flannel.yml
+kubectl get nodes -o wide
+```
 
+The expected output is:
+```
+NAME          STATUS     ROLES    AGE   VERSION   INTERNAL-IP    EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION   CONTAINER-RUNTIME
+kube-mast01   NotReady   master   53s   v1.13.5   192.168.1.72   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-9-amd64    docker://18.6.0
+```
+
+If you look at the status on the `kube-mast01` node it is **NotReady**, beacause until that point we do not have a network component configured in our K8S cluster, in which case we will use Flannel as previously already planned.
+
+```
+kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/a70459be0084506e4ec919aa1c114638878db11b/Documentation/kube-flannel.yml
+```
+
+The expected output is:
+```
+clusterrole.rbac.authorization.k8s.io/flannel created
+clusterrolebinding.rbac.authorization.k8s.io/flannel created
+serviceaccount/flannel created
+configmap/kube-flannel-cfg created
+daemonset.extensions/kube-flannel-ds-amd64 created
+daemonset.extensions/kube-flannel-ds-arm64 created
+daemonset.extensions/kube-flannel-ds-arm created
+daemonset.extensions/kube-flannel-ds-ppc64le created
+daemonset.extensions/kube-flannel-ds-s390x created
+```
+
+Checking the state of node after Flannel deployed
+
+```
+kubectl get nodes -o wide
+```
+
+The expected output is:
+```
+NAME          STATUS   ROLES    AGE     VERSION   INTERNAL-IP    EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION   CONTAINER-RUNTIME
+kube-mast01   Ready    master   4m30s   v1.13.5   192.168.1.72   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-9-amd64    docker://18.6.0
+```
+
+If you look at the status on the `kube-mast01` node it is now **Ready**.
+
+
+```
 ssh-keygen -t rsa -b 4096
 
 ssh-copy-id debian@kube-mast02 #(default password: debian)
