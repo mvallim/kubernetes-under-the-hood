@@ -237,7 +237,7 @@ kubeadm join 192.168.4.20:6443 \
 
 ### View stats K8S Cluster
 ```
-ssh debian@kube-mast03.kube.local
+ssh debian@kube-mast01.kube.local
 
 sudo su -
 
