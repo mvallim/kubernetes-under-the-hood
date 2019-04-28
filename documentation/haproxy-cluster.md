@@ -19,7 +19,24 @@ Pacemaker is an Open Source, High Availability resource manager suitable for bot
   <img src="images/haproxy-cluster.gif">
 </p>
 
+## Definitions and Configure
+
+### ocf:heartbeat:IPaddr2
+This Linux-specific resource manages IP alias IP addresses. It can add an IP alias, or remove one. In addition, it can implement Cluster Alias IP functionality if invoked as a clone resource.
+> More info about ocf:heartbeat:IPaddr2: http://linux-ha.org/doc/man-pages/re-ra-IPaddr2.html
+
+### ocf:heartbeat:haproxy
+Manages haproxy daemon as an OCF resource in an High Availability setup.
+> More info about ocf:heartbeat:haproxy: https://raw.githubusercontent.com/russki/cluster-agents/master/haproxy
+
 ### Configure
+
+We will define here that our Virtual IP will be 192.168.4.20, ip of the K8S cluster (Control Plane EndPoint).
+
+The HAProxy configuration cloud-init can be found [here](/data/debian/hapx/user-data), which correspond to doing a Load Balance for the Kube Master Nodes.
+
+At this point we will configure the features of our HAProxy Cluster using [crmsh](https://crmsh.github.io/)
+
 ```
 ssh debian@hapx-node01.kube.local
 
@@ -44,6 +61,12 @@ Password: admin
 
 It will show:
 ![](images/haproxy-cluster-stats.png)
+
+All Control Plane EndPoints *DOWN*
+
+* kube-mast01:6443
+* kube-mast02:6443
+* kube-mast03:6443
 
 ### Test High Availability 
 Shutdown one of the two VMs (hapx-node01 or hapx-node02) and press F5 in your browser, where you have opened the HAProxy statistics. No difference or error should occur. :)
