@@ -23,6 +23,33 @@ Master components can be run on any machine in the cluster. However, for simplic
 </p>
 
 ### Configure
+
+#### kubeadm-config
+
+At this point we need to inform the initial configurations in our K8S cluster.
+
+The **SAN**, **Plane Control EndPoint** and **POD Subnet** information is required.
+
+The Control Plane EndPoint address was defined in the HAProxy Cluster (192.168.4.20) ([see here] (documentation / haproxy-cluster.md)).
+The SAN address will be the same as the Control Plane EndPoint.
+The CIDR of the PODs will be the range recommended by the Flannel configuration. ([see here] (https://github.com/coreos/flannel/blob/master/Documentation/kube-flannel.yml) search for `net-conf.json`)
+
+Based on the above information we will have a kubeadm-config.yml as below:
+
+```
+apiVersion: kubeadm.k8s.io/v1beta1
+kind: ClusterConfiguration
+kubernetesVersion: stable-1.13
+apiServer:
+  certSANs:
+  - "192.168.4.20"
+controlPlaneEndpoint: "192.168.4.20:6443"
+networking:
+  podSubnet: 10.244.0.0/16
+```
+
+#### kubeadm init
+
 ```
 ssh debian@kube-mast01.kube.local
 
@@ -41,7 +68,16 @@ networking:
 EOF
 
 kubeadm init --config=kubeadm-config.yaml
+```
 
+Checking the state of nodes
+
+```
+kubectl get nodes
+```
+
+
+```
 mkdir -p $HOME/.kube
 
 cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
