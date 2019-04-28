@@ -25,7 +25,7 @@ The volumes shall be initially divided as follows:
 | Partition   | Size   | Description                                                                                            |
 |-------------|--------|--------------------------------------------------------------------------------------------------------|
 | **boot**    | 512 Mb | Boot loader files (ex: kernel, initrd). Single space residing outside the Logical Volume Manager (LVM) |
-| **root**    | 2 Gb   | Operational System (/ bin, / lib, / etc, / sbin)                                                       |
+| **root**    | 2 Gb   | Operational System (/bin, /lib, /etc, /sbin)                                                           |
 | **home**    | 2 Gb   | User directories.                                                                                      |
 | **opt**     | 1 Gb   | Static application packages.                                                                           |
 | **tmp**     | 1 Gb   | Temporary files.                                                                                       |
