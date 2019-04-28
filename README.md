@@ -15,6 +15,9 @@ The target audience for this tutorial is someone planning to install a Kubernete
   - [HAProxy Cluster](documentation/haproxy-cluster.md)
   - [Kube Masters](documentation/kube-masters.md)
   - [Kube Workers](documentation/kube-workers.md)
+  - [Dashboard](documentation/kube-dashboard.md)
+  - [MetalLB](documentation/kube-metallb.md)
+  - [Heketi](documentation/kube-heketi.md)
 
 ## Contributing
 
