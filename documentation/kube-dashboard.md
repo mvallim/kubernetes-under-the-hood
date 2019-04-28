@@ -4,7 +4,7 @@ Dashboard is a web-based Kubernetes user interface. You can use Dashboard to dep
 Dashboard also provides information on the state of Kubernetes resources in your cluster and on any errors that may have occurred.
 
 <p align="center">
-  <img src="images/kube-master-overview.png">
+  <img src="images/kube-dashboard.png">
 </p>
 
 ### Deploy
