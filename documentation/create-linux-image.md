@@ -50,7 +50,7 @@ In the following videos you will be shown how to do a base installation for both
 > **ISO install:** http://cdimage.ubuntu.com/ubuntu/releases/18.04/release/ubuntu-18.04.2-server-amd64.iso
 [![Debian 9 Stretch base image VirtualBox](http://i3.ytimg.com/vi/Zo82rXBEzco/hqdefault.jpg)](https://youtu.be/Zo82rXBEzco)
 
-### Or if you prefere download base image
+### Or if you prefer download base image
 
 #### Debian
 ```
