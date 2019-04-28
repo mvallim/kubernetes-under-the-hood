@@ -7,11 +7,12 @@ It even includes a SlideShare explaining the reasoning behid it [Kubernetes unde
 The target audience for this tutorial is someone planning to install a Kubernetes cluster and wants to understand how everything fits together.
 
 ## Getting Started
-* [Creating Linux base image](/documentation/create-linux-image.md)
-* [Configuring your station](/documentation/configure-your-station.md)
-* [Running VMs](/documentation/running-vms.md)
-* [Configuring hosts](/documentation/configure-hosts.md)
-* [Putting all together](/documentation/putting-all-together.md)
+* [Creating Linux base image](documentation/create-linux-image.md)
+* [Configuring your station](documentation/configure-your-station.md)
+* [Running VMs](documentation/running-vms.md)
+* [Configuring hosts](documentation/configure-hosts.md)
+* [Putting all together](documentation/putting-all-together.md)
+  - [HAProxy Cluster](documentation/haproxy-cluster.md)
 
 ## Contributing
 
