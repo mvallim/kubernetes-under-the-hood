@@ -52,7 +52,24 @@ The volumes shall be initially divided as follows:
 | *var*     | 10 Gb  | "Variable" files, such as logs, databases, web pages and e-mail files, container images, etc.          |
 > **source:** http://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html)
 
+##### Software
+The installation of software packages that make up the base image are necessary to avoid repetition of work in the other VMs that will be created from it.
 
+As we are creating an image using VirtualBox as our virtualization system an important software that should compose every image is VirtualBox Guest Additions, in addition to its dependencies.
+
+The softwares to be installed will be the following:
+
+| Software                     | Description                                                                                                     |
+|------------------------------|-----------------------------------------------------------------------------------------------------------------|
+| *build-essential*            | This package contains an informational list of packages which are considered essential for building Debian packages.  This package also depends on the packages on that list, to make it easy to have the build-essential packages installed. |
+| *module-assistant*           | The module-assistant tool (also known as m-a) helps users and maintainers with managing external Linux kernel modules packaged for Debian.
+It also contains some infrastructure to be used by the build-scripts in the accompanying modules-source packages in Debian. |
+| *resolvconf*                 | Resolvconf is a framework for keeping up to date the system's information about name servers. It sets itself up as the intermediary between programs that supply this information (such as ifup and ifdown, DHCP clients, the PPP daemon and local name servers) and programs that use this information (such as DNS caches and resolver libraries). |
+| *ntp*                        | NTP, the Network Time Protocol, is used to keep computer clocks accurate by synchronizing them over the Internet or a local network, or by following an accurate hardware receiver that interprets GPS, DCF-77, NIST or similar time signals. |
+| *sudo*                       | Sudo is a program designed to allow a sysadmin to give limited root privileges to users and log root activity.  The basic philosophy is to give as few privileges as possible but still allow people to get their work done. |
+| *cloud-init*                 | Cloud-init provides a framework and tool to configure and customize virtual machine instances for Infrastructure-as-a-Service (IaaS) clouds platforms. It can for example set a default locale and hostname, generate SSH private host keys, install SSH public keys for logging into a default account, set up ephemeral mount points, and run user-provided scripts. |
+| *VirtualBox Guest Additions* | The VirtualBox Guest Additions consist of device drivers and system applications that optimize the operating system for better performance and usability. One of the usability features required in this guide is automated logons, which is why you need to install the Guest Additions in the virtual machine. |
+> **source:** apt-cache show package-name
 
 ### Download base image
 To continue with this demo you need to download the base image and register it in Virtualbox.
