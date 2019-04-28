@@ -24,7 +24,7 @@ Master components can be run on any machine in the cluster. However, for simplic
 
 ### Configure
 
-#### kubeadm-config
+#### `kubeadm-config`
 
 At this point we need to inform the initial configurations in our K8S cluster.
 
@@ -48,7 +48,7 @@ networking:
   podSubnet: 10.244.0.0/16
 ```
 
-#### kubeadm init
+#### `kubeadm init`
 
 ```
 ssh debian@kube-mast01.kube.local
