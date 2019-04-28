@@ -192,6 +192,10 @@ ssh-copy-id debian@kube-mast03 #(default password: debian)
 
 #### Print Join Command
 ```
+ssh debian@kube-mast01.kube.local
+
+sudo su -
+
 kubeadm token create --print-join-command
 ```
 
@@ -199,7 +203,7 @@ The expected outputs is:
 ```
 kubeadm join 192.168.4.20:6443 --token y5uii4.5myd468ieaavd0g6 --discovery-token-ca-cert-hash sha256:d4990d904f85ad8fb2d2bbb2e56b35a8cd0714092b40e3778209a0f1d4fa38b9
 ```
-> The last command print the command to you join nodes on cluster, you will use this command to join master and wokers on cluster
+> The last command print the command to you join nodes on cluster, you will use this command to join master on cluster
 
 #### Join second Kube Master
 ```
