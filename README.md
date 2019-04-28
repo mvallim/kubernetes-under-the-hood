@@ -162,7 +162,7 @@ $ ./create-image.sh -h or --help
 
 ## Running Demo
 
-All VM initializations and configurations use **cloud-init**, all YAML scripts are in the ![data](/data) directory for the linux distribution used by VMs.
+All VM initializations and configurations use **cloud-init**, all YAML scripts are in the [data](/data) directory for the linux distribution used by VMs.
 
 ### Create gateway
 ```
