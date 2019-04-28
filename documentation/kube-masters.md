@@ -148,7 +148,26 @@ If you look at the status on the `kube-mast01` node it is now **Ready** and core
 
 ### Join Master Replicas
 
-Agora nós precisamos ingressar o outros nodes ao nosso cluster K8S
+Now we need to join the other nodes to our K8S cluster. For this we need the certificates that were generated in the previous steps.
+
+The installation and configuration of these VMs were done through the cloud-init that already makes available ([here](/data/debian/kube/user-data)) a copy and move script of certificates.
+
+The copied certificate is:
+* Kubernetes general
+  - /etc/kubernetes/pki/ca.crt
+  - /etc/kubernetes/pki/ca.key
+  - /etc/kubernetes/pki/sa.key
+  - /etc/kubernetes/pki/sa.pub
+* For the front-end proxy
+  - /etc/kubernetes/pki/front-proxy-ca.crt
+  - /etc/kubernetes/pki/front-proxy-ca.key
+* For all etcd-related functions
+  - /etc/kubernetes/pki/etcd/ca.crt
+  - /etc/kubernetes/pki/etcd/ca.key
+* Admin configuration of cluster
+  - /etc/kubernetes/admin.conf
+
+#### Copy certificates
 
 ```
 ssh debian@kube-mast01.kube.local
@@ -162,9 +181,9 @@ ssh-copy-id debian@kube-mast02 #(default password: debian)
 ssh-copy-id debian@kube-mast03 #(default password: debian)
 
 ~/bin/copy-certificates.sh
-
-kubeadm token create --print-join-command
 ```
+
+
 > The last command print the command to you join nodes on cluster, you will use this command to join master and wokers on cluster
 
 #### Join second Kube Master
