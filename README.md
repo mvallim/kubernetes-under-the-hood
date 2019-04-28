@@ -61,7 +61,6 @@ In the following videos you will be shown how to do a base installation for both
 [![Debian 9 Stretch base image VirtualBox](http://i3.ytimg.com/vi/Zo82rXBEzco/hqdefault.jpg)](https://youtu.be/Zo82rXBEzco)
 
 #### Or if you prefere download base image
-To continue with this demo you need to download the base image and register it in Virtualbox.
 
 ##### Debian
 ```
