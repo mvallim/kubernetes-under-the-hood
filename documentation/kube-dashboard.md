@@ -84,7 +84,6 @@ kubectl create clusterrolebinding cluster-admin-dashboard \
 kubectl create clusterrolebinding permissive-binding \
     --clusterrole=cluster-admin \
     --user=cluster-admin-dashboard \
-    --user=kubelet \
     --group=system:serviceaccounts
 ```
 
