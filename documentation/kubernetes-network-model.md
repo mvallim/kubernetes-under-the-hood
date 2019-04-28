@@ -11,6 +11,7 @@
 * Each Pod will see itself with the same IP that other Pods see it as having.
 
 #### Master to Worker
+![](images/kube-network-model-master-to-worker)
 
 #### Worker to Worker
 
