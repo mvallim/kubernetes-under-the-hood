@@ -34,7 +34,7 @@ The **SAN**, **Plane Control EndPoint** and **POD Subnet** information is requir
 * The SAN address will be the same as the Control Plane EndPoint.
 * The CIDR of the PODs will be the range recommended by the Flannel configuration. ([here](https://github.com/coreos/flannel/blob/master/Documentation/kube-flannel.yml) search for `net-conf.json`)
 
-Based on the above information we will have a [`kubeadm-config.yml`](/master/kubeadm-config.yml) as below:
+Based on the above information we will have a [`kubeadm-config.yml`](../master/kubeadm-config.yaml) as below:
 
 ```
 apiVersion: kubeadm.k8s.io/v1beta1
