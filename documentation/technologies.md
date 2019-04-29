@@ -13,9 +13,9 @@
 | **Debian**     | Debian is a free operating system (OS) for your computer. An operating system is the set of basic programs and utilities that make your computer run.<br>Reference: https://www.debian.org/ |
 | **Ubuntu**     | Ubuntu is an open source software operating system that runs from the desktop, to the cloud, to all your internet connected things.<br>Reference: https://www.ubuntu.com/ |
 | **cloud-init** | The standard for customising cloud instances<br>Reference: https://cloud-init.io/ |
-| **Gluster**    |             |
-| **Pacemaker**  |             |
-| **Corosync**   |             |
+| **Gluster**    | Gluster is a free and open source software scalable network filesystem.<br>Reference: https://www.gluster.org/ |
+| **Pacemaker**  | Pacemaker is an Open Source, High Availability resource manager suitable for both small and large clusters.<br>Reference: https://clusterlabs.org/pacemaker/ |
+| **Corosync**   | The Corosync Cluster Engine is a Group Communication System with additional features for implementing high availability within applications.<br>Corosync is used as a High Availability framework by projects such as Apache Qpid and Pacemaker.<br>Reference: https://clusterlabs.org/corosync.html |
 | **XFS**        |             |
 | **Docker**     |             |
 | **VirtualBox** |             |
