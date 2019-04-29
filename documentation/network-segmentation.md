@@ -54,3 +54,6 @@ Network segmentation in a computer network is a practice of separating computer 
 | MetalLB            | 192.168.2.10 - 192.168.2.49 |
 
 #### Blueprint
+<p align="center">
+  <img src="images/networking-diagram.png">
+</p>
