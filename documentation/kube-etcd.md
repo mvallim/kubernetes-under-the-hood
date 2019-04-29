@@ -16,3 +16,6 @@
 | 10                | **4**                              | 5                         |
 
 ### Consensus (raft)
+<p align="center">
+  <img src="images/kube-etcd.gif">
+</p>
