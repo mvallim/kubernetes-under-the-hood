@@ -21,7 +21,7 @@ The target audience for this tutorial is someone planning to install a Kubernete
 8. [Configuring hosts](documentation/configure-hosts.md)
 9. Putting all together
    - [HAProxy Cluster](documentation/haproxy-cluster.md)
-   - [Kubernetes](documentation/kube.md) (under construction)
+   - [Kubernetes](documentation/kube.md)
      - [flannel](documentation/kube-flannel.md)
      - [etcd](documentation/kube-etcd.md)
    - [Kube Masters](documentation/kube-masters.md)

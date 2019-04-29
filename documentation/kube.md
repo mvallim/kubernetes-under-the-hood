@@ -40,4 +40,6 @@ But the data written into this filesystem is destroyed when the container is res
 | Persistent Volume | Cluster lifetime   |
 
 #### Namespaces
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a vulputate lacus. Quisque eget accumsan massa, quis tincidunt magna. Proin id scelerisque velit. Mauris sed euismod erat, quis aliquam nisl. Donec massa neque, mollis hendrerit ligula quis, gravida lacinia sem. Quisque id semper dui, quis facilisis tellus. Cras interdum ligula non tellus molestie scelerisque. Vestibulum in hendrerit felis, auctor molestie quam. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Fusce luctus leo nisi, at fringilla felis viverra tristique. Quisque eget dapibus justo. Aenean mollis sapien ut lorem pretium tempus. Praesent malesuada eros vel facilisis laoreet. Praesent facilisis posuere nunc ut pulvinar. In luctus ipsum eget leo mattis, quis molestie erat bibendum. Proin eros metus, cursus a vulputate ut, semper ut elit.
+The namespace you can segregate your K8S Cluster in different environments, and you can limit the computational resources for each of them.
+
+Ex. Production, User Acceptance Test (UAT)
