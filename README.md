@@ -11,7 +11,9 @@ The target audience for this tutorial is someone planning to install a Kubernete
 ## Index
 1. [Kubernetes Journey - Up and running out of the cloud](documentation/objective.md)
 2. [Technologies](documentation/technologies.md) (under construction)
-3. [Network Segmentation](documentation/network-segmentation.md)
+3. Networking
+   - [Services (DNS, DHCP, Gateway, NAT)](documentation/network-services.md) (under construction)
+   - [Segmentation](documentation/network-segmentation.md)
 4. [Creating Linux base image](documentation/create-linux-image.md)
 5. [Configuring your station](documentation/configure-your-station.md)
 6. [Running VMs](documentation/running-vms.md)
