@@ -4,7 +4,7 @@ Hello there!
 
 We have been following the industry transformation, especially with regards to IT infrastructure.
 
-We testified the first application infrastructure modernization wave, through which corporations were able to reach great economies of scale by leveraging virtualization techniques. Having that in place, it was not necessary to wait for the acquisition of physical hardware to increase CPU, memory nor disk anymore. It was just a matter of changing configuration and everything was good again.
+We testified the first application infrastructure modernization wave, through which corporations were able to reach great economies of scale by leveraging virtualization techniques. Having that in place, it was not necessary to wait for the acquisition of physical hardware in order to increase CPU, memory nor disk anymore. It was just a matter of changing configuration and everything was good again.
 
 Later, following the application development modernization movement, where applications became more and more complex, talking to each other through service interfaces, we watched the rise of the containerization movement. At first, limited to developers local environments, making it easy to develop and test applications locally, as well to run demos of products.
 
@@ -16,4 +16,4 @@ Having Kubernetes available through the big cloud providers brought many benefit
 
 We’ll dive deep into infrastructure concepts (networking, security, high availability, disaster recovery etc), that development teams are often not familiar with, but are definitely required to successfully install Kubernetes from scratch.
 
-If you have an interest in this subject and want to understand how to setup a Kubernetes cluster in detail, you can’t miss this journey!
+If you're interested in this subject and want to understand how to setup a Kubernetes cluster in detail, you can’t miss this journey!
