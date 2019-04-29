@@ -11,12 +11,12 @@ The target audience for this tutorial is someone planning to install a Kubernete
 ## Index
 1. [Kubernetes Journey - Up and running out of the cloud](documentation/objective.md)
 2. [Technologies](documentation/technologies.md) (under construction)
-2. [Network Segmentation](documentation/network-segmentation.md)
-3. [Creating Linux base image](documentation/create-linux-image.md)
-4. [Configuring your station](documentation/configure-your-station.md)
-5. [Running VMs](documentation/running-vms.md)
-6. [Configuring hosts](documentation/configure-hosts.md)
-7. Putting all together
+3. [Network Segmentation](documentation/network-segmentation.md)
+4. [Creating Linux base image](documentation/create-linux-image.md)
+5. [Configuring your station](documentation/configure-your-station.md)
+6. [Running VMs](documentation/running-vms.md)
+7. [Configuring hosts](documentation/configure-hosts.md)
+8. Putting all together
    - [HAProxy Cluster](documentation/haproxy-cluster.md)
    - [Kube Masters](documentation/kube-masters.md)
    - [Kube Workers](documentation/kube-workers.md)
