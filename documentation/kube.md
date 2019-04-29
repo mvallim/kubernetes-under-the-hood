@@ -10,18 +10,23 @@
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tempor risus id diam dignissim facilisis. Quisque tempor, justo in blandit volutpat, magna mi aliquet mi, ac consectetur urna libero sit amet lacus. Nulla sed vestibulum ex, quis rutrum libero. Ut vitae quam a nisl mollis suscipit auctor ut dolor. Praesent pharetra viverra nunc at rhoncus. Quisque consequat dictum congue. Curabitur eu felis sed massa ultricies ullamcorper. Vivamus vel laoreet tellus. Nulla a vulputate diam, iaculis ultrices ex. Nam convallis eu neque vitae molestie. Sed in arcu ultrices, aliquet lectus et, commodo nunc. Aliquam congue purus a dolor consequat ultrices. Vestibulum id lectus porttitor urna blandit consectetur in sit amet lacus.
 
 #### Service
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam elementum rhoncus ligula id dignissim. Maecenas nec dolor sed tortor rutrum gravida id ut ipsum. Aliquam porttitor neque non nunc ultrices, tincidunt porta quam dapibus. In hac habitasse platea dictumst. Nulla vulputate justo id massa vulputate tincidunt sit amet et mauris. Maecenas nisi tortor, luctus nec fringilla ac, facilisis ac leo. Sed eu nibh sollicitudin, sodales nulla nec, feugiat lectus. Aliquam congue turpis sed enim efficitur, porttitor condimentum lorem elementum. Vivamus sodales tristique nibh, et vulputate arcu gravida sed. Sed in lorem vel leo hendrerit vehicula vel vel quam. Praesent auctor purus ligula, at laoreet arcu feugiat vitae. Duis id porta quam.
+* **ClusterIP**: Exposes the service on a cluster-internal IP. Choosing this value makes the service only reachable from within the cluster. This is the default ServiceType.
+
+* **NodePort**: Exposes the service on each Node’s IP at a static port (the NodePort). A ClusterIP service, to which the NodePort service will route, is automatically created. You’ll be able to contact the NodePort service, from outside the cluster, by requesting <NodeIP>:<NodePort>.
+
+* **LoadBalancer**: Exposes the service externally using a cloud provider’s load balancer. NodePort and ClusterIP services, to which the external load balancer will route, are automatically created.
+
+<p align="center">
+  <img src="images/kube-service.gif">
+</p>
 
 #### Volumes
-* **Filesystem**
-In Kubernetes, each container can read and write in its own filesystem.
+* **Filesystem**: In Kubernetes, each container can read and write in its own filesystem.
 But the data written into this filesystem is destroyed when the container is restarted or removed.
 
-* **Volume**
-Kubernetes has volumes. Volumes that are in a POD will exist as long as the POD exists. Volumes can be shared among the same POD containers. When a POD is restarted or removed the volume is destroyed.
+* **Volume**: Kubernetes has volumes. Volumes that are in a POD will exist as long as the POD exists. Volumes can be shared among the same POD containers. When a POD is restarted or removed the volume is destroyed.
 
-* **Persistent Volume**
-The Kubernetes has persistent volumes. Persistent volumes are long-term stores within the Kubernetes cluster. Persistent volumes go beyond containers, PODs, and nodes, they exist as long as the Kubernetes cluster exists. A POD claims the use of a persistent volume for reading or writing or for reading and writing.
+* **Persistent Volume**: The Kubernetes has persistent volumes. Persistent volumes are long-term stores within the Kubernetes cluster. Persistent volumes go beyond containers, PODs, and nodes, they exist as long as the Kubernetes cluster exists. A POD claims the use of a persistent volume for reading or writing or for reading and writing.
 
 | Type              | How long?          |
 |-------------------|--------------------|
