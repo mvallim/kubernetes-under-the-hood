@@ -23,6 +23,7 @@ The target audience for this tutorial is someone planning to install a Kubernete
    - [HAProxy Cluster](documentation/haproxy-cluster.md)
    - [Kubernetes](documentation/kube.md) (under construction)
      - [Network Model](documentation/kube-network-model.md)
+     - [flannel](documentation/kube-flannel.md) (under construction)
      - [etcd](documentation/kube-etcd.md) (under construction)
      - [Kube Masters](documentation/kube-masters.md)
      - [Kube Workers](documentation/kube-workers.md)
