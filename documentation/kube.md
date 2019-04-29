@@ -12,7 +12,7 @@
 ### Objects
 
 #### Pods
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tempor risus id diam dignissim facilisis. Quisque tempor, justo in blandit volutpat, magna mi aliquet mi, ac consectetur urna libero sit amet lacus. Nulla sed vestibulum ex, quis rutrum libero. Ut vitae quam a nisl mollis suscipit auctor ut dolor. Praesent pharetra viverra nunc at rhoncus. Quisque consequat dictum congue. Curabitur eu felis sed massa ultricies ullamcorper. Vivamus vel laoreet tellus. Nulla a vulputate diam, iaculis ultrices ex. Nam convallis eu neque vitae molestie. Sed in arcu ultrices, aliquet lectus et, commodo nunc. Aliquam congue purus a dolor consequat ultrices. Vestibulum id lectus porttitor urna blandit consectetur in sit amet lacus.
+It is the smallest unit within a cluster, nothing more than containers running within its Kubernetes cluster. It can be a container running any application. Ex. nginx, jetty, redis, memcached, etc
 
 #### Service
 * **ClusterIP**: Exposes the service on a cluster-internal IP. Choosing this value makes the service only reachable from within the cluster. This is the default ServiceType.
