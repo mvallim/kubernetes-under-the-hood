@@ -10,6 +10,7 @@ The target audience for this tutorial is someone planning to install a Kubernete
 
 ## Index
 1. [Kubernetes Journey - Up and running out of the cloud](documentation/objective.md)
+2. [Common Cluster](documentation/common-cluster.md)
 2. [Technologies](documentation/technologies.md) (under construction)
 3. Networking
    - [Services (DNS, DHCP, Gateway, NAT)](documentation/network-services.md) (under construction)
