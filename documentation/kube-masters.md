@@ -55,7 +55,7 @@ ssh debian@kube-mast01.kube.local
 
 sudo su -
 
-wget https://raw.githubusercontent.com/mvallim/kubernetes-under-the-hood/master/master/kube-config.yaml -q
+wget https://raw.githubusercontent.com/mvallim/kubernetes-under-the-hood/master/master/kubeadm-config.yaml -q
 
 kubeadm init --config=kubeadm-config.yaml
 ```
