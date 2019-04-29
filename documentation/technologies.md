@@ -1,7 +1,7 @@
 ## Technologies
 
 <p align="center">
-  <img src="documentation/images/technologies.png">
+  <img src="images/technologies.png">
 </p>
 
 | Technology     | Description |
