@@ -21,9 +21,11 @@ The target audience for this tutorial is someone planning to install a Kubernete
 8. [Configuring hosts](documentation/configure-hosts.md)
 9. Putting all together
    - [HAProxy Cluster](documentation/haproxy-cluster.md)
-   - [Kube Masters](documentation/kube-masters.md)
-   - [Kube Workers](documentation/kube-workers.md)
-   - [Dashboard](documentation/kube-dashboard.md)
+   - Kubernetes
+     - [Kubernetes Network Model](/documentation/kube-network-model.md)
+     - [Kube Masters](documentation/kube-masters.md)
+     - [Kube Workers](documentation/kube-workers.md)
+     - [Dashboard](documentation/kube-dashboard.md)
    - [Demo Application](https://kubernetes.io/docs/tutorials/stateless-application/guestbook/)
    - [MetalLB](documentation/kube-metallb.md) (under construction)
    - [Heketi](documentation/kube-heketi.md) (under construction)
