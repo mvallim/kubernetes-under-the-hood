@@ -8,12 +8,14 @@ It even includes a SlideShare explaining the reasoning behid it [Kubernetes unde
 ## Target Audience
 The target audience for this tutorial is someone planning to install a Kubernetes cluster and wants to understand how everything fits together.
 
-## Getting Started
-* [Creating Linux base image](documentation/create-linux-image.md)
-* [Configuring your station](documentation/configure-your-station.md)
-* [Running VMs](documentation/running-vms.md)
-* [Configuring hosts](documentation/configure-hosts.md)
-* Putting all together
+## Index
+1. [Kubernetes Journey - Up and running out of the cloud](documentation/objective.md)
+2. [Network Segmentation](documentation/network-segmentation.md)
+3. [Creating Linux base image](documentation/create-linux-image.md)
+4. [Configuring your station](documentation/configure-your-station.md)
+5. [Running VMs](documentation/running-vms.md)
+6. [Configuring hosts](documentation/configure-hosts.md)
+7. Putting all together
   - [HAProxy Cluster](documentation/haproxy-cluster.md)
   - [Kube Masters](documentation/kube-masters.md)
   - [Kube Workers](documentation/kube-workers.md)
