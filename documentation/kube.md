@@ -13,16 +13,14 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. In tempor risus id diam
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam elementum rhoncus ligula id dignissim. Maecenas nec dolor sed tortor rutrum gravida id ut ipsum. Aliquam porttitor neque non nunc ultrices, tincidunt porta quam dapibus. In hac habitasse platea dictumst. Nulla vulputate justo id massa vulputate tincidunt sit amet et mauris. Maecenas nisi tortor, luctus nec fringilla ac, facilisis ac leo. Sed eu nibh sollicitudin, sodales nulla nec, feugiat lectus. Aliquam congue turpis sed enim efficitur, porttitor condimentum lorem elementum. Vivamus sodales tristique nibh, et vulputate arcu gravida sed. Sed in lorem vel leo hendrerit vehicula vel vel quam. Praesent auctor purus ligula, at laoreet arcu feugiat vitae. Duis id porta quam.
 
 #### Volumes
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a vulputate lacus. Quisque eget accumsan massa, quis tincidunt magna. Proin id scelerisque velit. Mauris sed euismod erat, quis aliquam nisl. Donec massa neque, mollis hendrerit ligula quis, gravida lacinia sem. Quisque id semper dui, quis facilisis tellus. Cras interdum ligula non tellus molestie scelerisque. Vestibulum in hendrerit felis, auctor molestie quam. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Fusce luctus leo nisi, at fringilla felis viverra tristique. Quisque eget dapibus justo. Aenean mollis sapien ut lorem pretium tempus. Praesent malesuada eros vel facilisis laoreet. Praesent facilisis posuere nunc ut pulvinar. In luctus ipsum eget leo mattis, quis molestie erat bibendum. Proin eros metus, cursus a vulputate ut, semper ut elit.
-
-* **Filesystem**
+##### **Filesystem**
 In Kubernetes, each container can read and write in its own filesystem.
 But the data written into this filesystem is destroyed when the container is restarted or removed.
 
-* **Volume**
+##### **Volume**
 Kubernetes has volumes. Volumes that are in a POD will exist as long as the POD exists. Volumes can be shared among the same POD containers. When a POD is restarted or removed the volume is destroyed.
 
-* **Persistent Volume**
+##### **Persistent Volume**
 The Kubernetes has persistent volumes. Persistent volumes are long-term stores within the Kubernetes cluster. Persistent volumes go beyond containers, PODs, and nodes, they exist as long as the Kubernetes cluster exists. A POD claims the use of a persistent volume for reading or writing or for reading and writing.
 
 | Type              | How long?          |
@@ -31,3 +29,5 @@ The Kubernetes has persistent volumes. Persistent volumes are long-term stores w
 | Volume            | Pod lifetime       |
 | Persistent Volume | Cluster lifetime   |
 
+#### Namespaces
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a vulputate lacus. Quisque eget accumsan massa, quis tincidunt magna. Proin id scelerisque velit. Mauris sed euismod erat, quis aliquam nisl. Donec massa neque, mollis hendrerit ligula quis, gravida lacinia sem. Quisque id semper dui, quis facilisis tellus. Cras interdum ligula non tellus molestie scelerisque. Vestibulum in hendrerit felis, auctor molestie quam. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Fusce luctus leo nisi, at fringilla felis viverra tristique. Quisque eget dapibus justo. Aenean mollis sapien ut lorem pretium tempus. Praesent malesuada eros vel facilisis laoreet. Praesent facilisis posuere nunc ut pulvinar. In luctus ipsum eget leo mattis, quis molestie erat bibendum. Proin eros metus, cursus a vulputate ut, semper ut elit.
