@@ -16,6 +16,6 @@
 | **Gluster**    | Gluster is a free and open source software scalable network filesystem.<br>Reference: https://www.gluster.org/ |
 | **Pacemaker**  | Pacemaker is an Open Source, High Availability resource manager suitable for both small and large clusters.<br>Reference: https://clusterlabs.org/pacemaker/ |
 | **Corosync**   | The Corosync Cluster Engine is a Group Communication System with additional features for implementing high availability within applications.<br>Corosync is used as a High Availability framework by projects such as Apache Qpid and Pacemaker.<br>Reference: https://clusterlabs.org/corosync.html |
-| **XFS**        |             |
-| **Docker**     |             |
-| **VirtualBox** |             |
+| **XFS**        | XFS is a high-performance 64-bit journaling file system created by Silicon Graphics, Inc (SGI) in 1993. It was the default file system in SGI's IRIX operating system starting with its version 5.3. XFS was ported to the Linux kernel in 2001; as of June 2014, XFS is supported by most Linux distributions, some of which use it as the default file system.<br>Reference: http://xfs.org/index.php/Main_Page |
+| **Docker**     | Enterprise Container Platform for High Velocity Innovation.<br>Reference: https://www.docker.com/ |
+| **VirtualBox** | VirtualBox is a powerful x86 and AMD64/Intel64 virtualization product for enterprise as well as home use. Not only is VirtualBox an extremely feature rich, high performance product for enterprise customers, it is also the only professional solution that is freely available as Open Source Software under the terms of the GNU General Public License (GPL) version 2.<br> Reference: https://www.virtualbox.org/ |
