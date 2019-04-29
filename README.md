@@ -13,7 +13,7 @@ The target audience for this tutorial is someone planning to install a Kubernete
 2. [Common Cluster](documentation/common-cluster.md)
 2. [Technologies](documentation/technologies.md) (under construction)
 3. Networking
-   - [Services (DNS, DHCP, Gateway, NAT)](documentation/network-services.md) (under construction)
+   - [Services (DNS, DHCP, Gateway, NAT)](documentation/network-services.md)
    - [Segmentation](documentation/network-segmentation.md)
 4. [Creating Linux base image](documentation/create-linux-image.md)
 5. [Configuring your station](documentation/configure-your-station.md)
