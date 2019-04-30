@@ -67,7 +67,7 @@ spec:
 
 #### Configure
 
-Based on the planed network configuration ([here](documentation/network-segmentation.md#loadbalancer)) we will have a [`metallb-config.yaml`](../metallb/metallb-config.yaml) as below:
+Based on the planed network configuration ([here](/documentation/network-segmentation.md#loadbalancer)) we will have a [`metallb-config.yaml`](../metallb/metallb-config.yaml) as below:
 
 ```
 apiVersion: v1
