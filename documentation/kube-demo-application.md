@@ -192,7 +192,7 @@ Scaling up or down is easy because your servers are defined as a Service that us
    redis-slave-74ccb764fc-sps4r    1/1     Running   0          8m39s
    ```
 
-### Cleaning up
+### Cleaning up (Don't clean if you enable [`LoadBalancer`](/documentation/kube-metallb.md))
 Deleting the Deployments and Services also deletes any running Pods. Use labels to delete multiple resources with one command.
 
 1. Run the following commands to delete all Pods, Deployments, and Services.
