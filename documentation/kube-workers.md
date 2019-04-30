@@ -1,17 +1,17 @@
 ## Kube Workers
 A node is a worker machine in Kubernetes, previously known as a minion. A node may be a VM or physical machine, depending on the cluster. Each node contains the services necessary to run pods and is managed by the master components. The services on a node include the container runtime, kubelet and kube-proxy. 
 
+### Overview
+<p align="center">
+  <img src="images/kube-worker-overview.png">
+</p>
+
 ### Components
 * **Kubelet** - Kubelet gets the configuration of a pod from the API Server and ensures that the described containers are up and running.
 * **Docker** - It takes care of downloading the images and starting the containers.
 * **Kube Proxy** - Kube Proxy acts as a network proxy and a load balancer for a service on a single worker node. It takes care of the network routing for TCP and UDP packets.
 * **Flannel** - It is a layer 3 network fabric designed for Kubernetes.
 > * More info about **Flannel**: https://github.com/coreos/flannel
-
-### Overview
-<p align="center">
-  <img src="images/kube-worker-overview.png">
-</p>
 
 ### Configure
 

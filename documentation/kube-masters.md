@@ -3,6 +3,11 @@ Master components provide the cluster’s control plane. Master components make 
 
 Master components can be run on any machine in the cluster. However, for simplicity, set up scripts typically start all master components on the same machine, and do not run user containers on this machine.
 
+### Overview
+<p align="center">
+  <img src="images/kube-master-overview.png">
+</p>
+
 ### Components
 
 * **Kubelet** - Kubelet gets the configuration of a pod from the API Server and ensures that the described containers are up and running.
@@ -16,11 +21,6 @@ Master components can be run on any machine in the cluster. However, for simplic
 * **CoreDNS** - It is the DNS Server of the Kubernetes cluster.
 > * More info about **Flannel**: https://github.com/coreos/flannel
 > * More info about **CoreDNS**: https://github.com/coredns/coredns
-
-### Overview
-<p align="center">
-  <img src="images/kube-master-overview.png">
-</p>
 
 ### Configure
 
