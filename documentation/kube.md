@@ -15,6 +15,7 @@
 It is the smallest unit within a cluster, nothing more than containers running within its K8S Cluster. It can be a container running any application. Ex. nginx, jetty, redis, memcached, etc
 
 ### Service
+Service is a component that acts as an internal basic load balancer and an ambassador for pods. A service groups logical collections of pods that perform the same function to present them as a single entity.
 
 <p align="center">
   <img src="images/kube-service.png">
