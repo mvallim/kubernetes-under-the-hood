@@ -1,4 +1,4 @@
-## Technologies
+## Technology Stack
 
 <p align="center">
   <img src="images/technologies.png">

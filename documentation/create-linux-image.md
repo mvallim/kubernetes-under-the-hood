@@ -1,16 +1,14 @@
-## Creating Linux base image
+## Creating the base Linux image
 
 ### Partitioning
 
-The big decision about configuring Linux is how hard drive space is divided.
+The big decision to take when configuring Linux is how the hard drive space should divided.
 
-This design allows for dynamic growth and fine-tuning when needed. Being caught off guard with a scenario there is no more storage space available, with no immediate option other than deleting files is never a good experience. The long-term life and growth of the system, as well as the budgetary concerns, must be taken into account.
+The design proposed here allows for dynamic growth and fine-tuning when needed. Being caught off guard in a scenario where there is no more storage space available, with no immediate option other than deleting files is never a good experience. The long-term life and growth of the system, as well as budgetary concerns, must be taken into account.
 
-Isolating root volume, especially for static data that does not grow much over time, is the central concern. Isolating the other directories in their own volumes will be the strategy used so that their dynamic growth does not affect the root partition. Filling the root volume in a system is a very bad thing and should be avoided at all costs. With segregated partitions, we have margin of maneuver, like increasing one partition, reducing another, since the volume is not 100% occupied by the logical volumes (partitions).
+Isolating the root volume, especially for static data that does not grow much over time, is the central concern. Isolating the other directories in their own volumes will be the strategy adopted here so that their dynamic growth does not affect the root partition. Filling the root volume in a system is a very bad thing and should be avoided at all costs. By segregating partitions, we have a bunch of options to act, like increasing one partition and/or reducing another, for example, since the volume is not 100% occupied by the logical volumes (partitions).
 
-Partitions may be increased later, but start with this minimum size, these numbers will be used for the initial installation of the system.
-
-The volumes shall be initially divided as follows:
+Partitions may be increased later, but this is how our volumes will be initially divided for the system installation:
 
 | Partition   | Size   | Description                                                                                            |
 |-------------|--------|--------------------------------------------------------------------------------------------------------|
@@ -19,16 +17,16 @@ The volumes shall be initially divided as follows:
 | **home**    | 2 Gb   | User directories.                                                                                      |
 | **opt**     | 1 Gb   | Static application packages.                                                                           |
 | **tmp**     | 1 Gb   | Temporary files.                                                                                       |
-| **usr**     | 10 Gb  | Secondary hierarchy for shared user data whose access is restricted for read only.                     |
+| **usr**     | 10 Gb  | Secondary hierarchy for shared user data which access is restricted for read only.                     |
 | **var**     | 10 Gb  | "Variable" files, such as logs, databases, web pages and e-mail files, container images, etc.          |
 > **source:** http://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html)
 
 ### Software
 The installation of software packages that make up the base image are necessary to avoid repetition of work in the other VMs that will be created from it.
 
-As we are creating an image using VirtualBox as our virtualization system an important software that should compose every image is VirtualBox Guest Additions, in addition to its dependencies.
+Since we are using VirtualBox as our virtualization system,  an important software that should compose every image is [VirtualBox Guest Additions](https://docs.oracle.com/cd/E36500_01/E36502/html/qs-guest-additions.html), as well as its dependencies.
 
-The softwares to be installed will be the following:
+The softwares to be installed are the following:
 
 | Software                       | Description                                                                                                     |
 |--------------------------------|-----------------------------------------------------------------------------------------------------------------|
@@ -42,7 +40,7 @@ The softwares to be installed will be the following:
 > **source:** apt-cache show package-name
 
 ### Installation
-In the following videos you will be shown how to do a base installation for both Debian 9 Stretch and Ubuntu 18.04 LTS Server.
+You can see how to perform the base installation for both Debian 9 Stretch and Ubuntu 18.04 LTS Server in the following videos:
 
 > **ISO install:** https://cdimage.debian.org/debian-cd/current/amd64/iso-dvd/debian-9.9.0-amd64-DVD-1.iso
 [![Debian 9 Stretch base image VirtualBox](http://i3.ytimg.com/vi/mG8scaDoZog/hqdefault.jpg)](https://youtu.be/mG8scaDoZog)
@@ -50,7 +48,7 @@ In the following videos you will be shown how to do a base installation for both
 > **ISO install:** http://cdimage.ubuntu.com/ubuntu/releases/18.04/release/ubuntu-18.04.2-server-amd64.iso
 [![Debian 9 Stretch base image VirtualBox](http://i3.ytimg.com/vi/Zo82rXBEzco/hqdefault.jpg)](https://youtu.be/Zo82rXBEzco)
 
-### Or if you prefer download base image
+### Or, if you prefer to download the base image:
 
 #### Debian
 ```
