@@ -23,8 +23,7 @@ Service is a component that acts as an internal basic load balancer and an ambas
 
 ---
 
-* **ClusterIP**
-Exposes the service on a cluster-internal IP. Choosing this value makes the service only reachable from within the cluster. This is the default ServiceType.
+* **ClusterIP**: Exposes the service on a cluster-internal IP. Choosing this value makes the service only reachable from within the cluster. This is the default ServiceType.
 
 <p align="center">
   <img src="images/kube-service-clusterip.png">
@@ -32,8 +31,7 @@ Exposes the service on a cluster-internal IP. Choosing this value makes the serv
 
 ---
 
-* **NodePort**
-Exposes the service on each Node’s IP at a static port (the NodePort). A ClusterIP service, to which the NodePort service will route, is automatically created. You’ll be able to contact the NodePort service, from outside the cluster, by requesting `<NodeIP>:<NodePort>`.
+* **NodePort**: Exposes the service on each Node’s IP at a static port (the NodePort). A ClusterIP service, to which the NodePort service will route, is automatically created. You’ll be able to contact the NodePort service, from outside the cluster, by requesting `<NodeIP>:<NodePort>`.
 
 <p align="center">
   <img src="images/kube-service-nodeport.png">
@@ -41,8 +39,7 @@ Exposes the service on each Node’s IP at a static port (the NodePort). A Clust
 
 ---
 
-* **LoadBalancer**
-Exposes the service externally using a cloud provider’s load balancer. NodePort and ClusterIP services, to which the external load balancer will route, are automatically created.
+* **LoadBalancer**: Exposes the service externally using a cloud provider’s load balancer. NodePort and ClusterIP services, to which the external load balancer will route, are automatically created.
 
 <p align="center">
   <img src="images/kube-service-loadbalancer.png">
