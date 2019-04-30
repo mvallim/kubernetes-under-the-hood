@@ -111,4 +111,4 @@ data:
    load-balancer-service   LoadBalancer   10.107.119.217   192.168.2.10   80:30154/TCP   3m4s   app=guestbook,tier=frontend
    ```
 
-> Now if you look at the status on the `EXTERNAL-IP` it is **`192.168.2.10`** and be access directly from external, without using `NodePort` (`Node:Port`) or `ClusterIp` (`kubectl proxy`)
+> Now if you look at the status on the `EXTERNAL-IP` it is **`192.168.2.10`** and be access directly from external, without using [`NodePort`](/documentation/kube.md#service) or [`ClusterIp`](/documentation/kube.md#service)
