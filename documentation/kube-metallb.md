@@ -112,3 +112,27 @@ data:
    ```
 
 > Now if you look at the status on the `EXTERNAL-IP` it is **`192.168.2.10`** and can be access directly from external, without using [`NodePort`](/documentation/kube.md#service) or [`ClusterIp`](/documentation/kube.md#service). Remember this IP **192.168.2.10** isn't assigned to any node. In this example of service we can access using [`http://192.168.2.10`](http://192.168.2.10).
+
+### Cleaning up
+Deleting the services
+
+1. Run the following commands to delete service.
+   ```
+   kubectl delete service load-balancer-service
+   ```
+
+   The responses should be:
+   ```
+   service "load-balancer-service" deleted
+   ```
+
+2. Query the list of service:
+   ```
+   kubectl get services
+   ```
+
+   The response should be this:
+   ```
+   NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+   kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   2d2h
+   ```
