@@ -24,7 +24,7 @@ sudo su -
 kubeadm token create --print-join-command
 ```
 
-The expected outputs is:
+The response should look similar to this:
 ```
 kubeadm join 192.168.4.20:6443 --token y5uii4.5myd468ieaavd0g6 --discovery-token-ca-cert-hash sha256:d4990d904f85ad8fb2d2bbb2e56b35a8cd0714092b40e3778209a0f1d4fa38b9
 ```
@@ -74,7 +74,7 @@ kubectl get nodes -o wide
 kubectl get pods -o wide --all-namespaces
 ```
 
-The expected outputs is:
+The responses should look similar to this:
 ```
 NAME          STATUS   ROLES    AGE    VERSION   INTERNAL-IP     EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION   CONTAINER-RUNTIME
 kube-mast01   Ready    master   161m   v1.13.5   192.168.1.72    <none>        Debian GNU/Linux 9 (stretch)   4.9.0-9-amd64    docker://18.6.0

@@ -16,7 +16,7 @@ sudo su -
 kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/master/aio/deploy/recommended/kubernetes-dashboard.yaml
 ```
 
-The expected output is:
+The response should look similar to this:
 ```
 secret/kubernetes-dashboard-certs created
 secret/kubernetes-dashboard-csrf created
@@ -33,7 +33,7 @@ Checking the state of pods after dashboard deployed
 kubectl get pods -o wide -n kube-system
 ```
 
-The expected outputs is:
+The response should look similar to this:
 ```
 NAME                                   READY   STATUS    RESTARTS   AGE    IP              NODE          NOMINATED NODE   READINESS GATES
 coredns-86c58d9df4-6gzrk               1/1     Running   0          171m   10.244.0.4      kube-mast01   <none>           <none>
@@ -87,7 +87,7 @@ kubectl create clusterrolebinding permissive-binding \
     --group=system:serviceaccounts
 ```
 
-The expected outputs is:
+The responses should look similar to this:
 ```
 serviceaccount/cluster-admin-dashboard created
 ```
@@ -108,7 +108,7 @@ We need get token of service account `cluster-admin-dashboard`
 kubectl get secret -n kube-system
 ```
 
-The expected outputs is:
+The response should look similar to this:
 ```
 NAME                                             TYPE                                  DATA   AGE
 attachdetach-controller-token-m9c6n              kubernetes.io/service-account-token   3      179m
@@ -159,7 +159,7 @@ To get token we describe `cluster-admin-dashboard-token-q89fp`
 kubectl describe secret cluster-admin-dashboard-token-q89fp -n kube-system
 ```
 
-The expected outputs is:
+The response should look similar to this:
 ```
 Name:         cluster-admin-dashboard-token-q89fp
 Namespace:    kube-system

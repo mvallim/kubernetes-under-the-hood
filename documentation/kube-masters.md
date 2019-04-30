@@ -72,7 +72,7 @@ kubectl get nodes -o wide
 kubectl get pods -o wide --all-namespaces
 ```
 
-The expected outputs is:
+The responses should look similar to this:
 ```
 NAME          STATUS     ROLES    AGE   VERSION   INTERNAL-IP    EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION   CONTAINER-RUNTIME
 kube-mast01   NotReady   master   53s   v1.13.5   192.168.1.72   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-9-amd64    docker://18.6.0
@@ -100,7 +100,7 @@ sudo su -
 kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/a70459be0084506e4ec919aa1c114638878db11b/Documentation/kube-flannel.yml
 ```
 
-The expected output is:
+The response should look similar to this:
 ```
 clusterrole.rbac.authorization.k8s.io/flannel created
 clusterrolebinding.rbac.authorization.k8s.io/flannel created
@@ -121,7 +121,7 @@ kubectl get nodes -o wide
 kubectl get pods -o wide --all-namespaces
 ```
 
-The expected outputs is:
+The responses should look similar to this:
 ```
 NAME          STATUS   ROLES    AGE     VERSION   INTERNAL-IP    EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION   CONTAINER-RUNTIME
 kube-mast01   Ready    master   4m30s   v1.13.5   192.168.1.72   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-9-amd64    docker://18.6.0
@@ -246,7 +246,7 @@ docker run --rm -it \
     --endpoints https://kube-mast01:2379 member list
 ```
 
-The expected outputs is:
+The responses should look similar to this:
 ```
 member 5c81b5ea448e2eb is healthy: got healthy result from https://192.168.1.72:2379
 member 1d7ec3729980eebe is healthy: got healthy result from https://192.168.1.68:2379
@@ -269,7 +269,7 @@ kubectl get nodes -o wide
 kubectl get pods -o wide --all-namespaces
 ```
 
-The expected outputs is:
+The responses should look similar to this:
 ```
 NAME          STATUS   ROLES    AGE     VERSION   INTERNAL-IP    EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION   CONTAINER-RUNTIME
 kube-mast01   Ready    master   34m     v1.13.5   192.168.1.72   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-9-amd64    docker://18.6.0
