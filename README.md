@@ -28,7 +28,7 @@ The target audience for this tutorial is someone planning to install a Kubernete
    - [Kube Workers](documentation/kube-workers.md)
    - [Dashboard](documentation/kube-dashboard.md)
    - [Demo Application](documentation/kube-demo-application.md)
-   - [Enable LoadBalancer using MetalLB](documentation/kube-metallb.md)
+   - [Activating LoadBalancer using MetalLB](documentation/kube-metallb.md)
    - [Gluster](documentation/gluster.md) (under construction)
    - [Heketi](documentation/kube-heketi.md) (under construction)
 
