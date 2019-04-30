@@ -1,21 +1,21 @@
 ## Network segmentation
 
-Network segmentation in a computer network is a practice of separating computer networks into subnets into network segments. The advantages of this practice is in improving safety performance.
+Network segmentation in a computer network is the practice of separating computer networks into subnets (network segments). The main advantages of this practice is to improve safety and performance.
 
 ### Benefits
 
 * **Traffic reduction**
-    - Causes network traffic to be isolated to each network segment, which means that each network segment has its own traffic volume not influencing the entire network.
+    - Causes network traffic to be isolated to each network segment, which means that each network segment has its own traffic volume, not influencing the entire network.
 * **Safety**
-    - Broadcast is restricted only to that network segment and not the entire network
+    - Broadcast is restricted only to that network segment and not the entire network.
     - The resources present in a network segment may be isolated from other networks or restricted from one subnet to another.
-    - Common attacks are restricted to each subnet, not the entire network. In this way it is important to segment the network by type of resources (database, nfs, web)
-* **Containment of problems**
-    - Any network problem in one subnet is restricted to that subnet without affecting the entire network
+    - Common attacks are restricted to each subnet, not the entire network. Given this it is important to segment the network by type of resources (database, nfs, web etc).
+* **Isolation of problems**
+    - Any network problem in one subnet is restricted to that subnet without affecting the entire network.
 * **Accesses**
-    - Limitation of access to each of the subnets, as well as the form with one `a` subnet can access the other subnet `b`
+    - Limitation of access into and between each of the subnets (subnet `a` can only access subnet `b`, for example).
 
-### Overview
+### Network overview for this project
 
 #### Net and Subnets
 | Name          | Range          |
