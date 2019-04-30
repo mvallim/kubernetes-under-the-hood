@@ -223,6 +223,41 @@ kubeadm join 192.168.4.20:6443 \
 ```
 > Add the `--experimental-control-plane` at the end of command
 
+### View stats of etcd
+```
+ssh debian@kube-mast01.kube.local
+
+sudo su -
+
+docker run --rm -it \
+    --net host \
+    -v /etc/kubernetes:/etc/kubernetes quay.io/coreos/etcd:v3.2.24 etcdctl \
+    --cert-file /etc/kubernetes/pki/etcd/peer.crt \
+    --key-file /etc/kubernetes/pki/etcd/peer.key \
+    --ca-file /etc/kubernetes/pki/etcd/ca.crt \
+    --endpoints https://kube-mast01:2379 cluster-health
+
+docker run --rm -it \
+    --net host \
+    -v /etc/kubernetes:/etc/kubernetes quay.io/coreos/etcd:v3.2.24 etcdctl \
+    --cert-file /etc/kubernetes/pki/etcd/peer.crt \
+    --key-file /etc/kubernetes/pki/etcd/peer.key \
+    --ca-file /etc/kubernetes/pki/etcd/ca.crt \
+    --endpoints https://kube-mast01:2379 member list
+```
+
+The expected outputs is:
+```
+member 5c81b5ea448e2eb is healthy: got healthy result from https://192.168.1.72:2379
+member 1d7ec3729980eebe is healthy: got healthy result from https://192.168.1.68:2379
+member ea93a1a33cffaceb is healthy: got healthy result from https://192.168.1.81:2379
+```
+```
+5c81b5ea448e2eb: name=kube-mast01 peerURLs=https://192.168.1.72:2380 clientURLs=https://192.168.1.72:2379 isLeader=false
+1d7ec3729980eebe: name=kube-mast02 peerURLs=https://192.168.1.68:2380 clientURLs=https://192.168.1.68:2379 isLeader=true
+ea93a1a33cffaceb: name=kube-mast03 peerURLs=https://192.168.1.81:2380 clientURLs=https://192.168.1.81:2379 isLeader=false
+```
+
 ### View stats K8S Cluster
 ```
 ssh debian@kube-mast01.kube.local
