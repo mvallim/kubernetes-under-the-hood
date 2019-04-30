@@ -44,9 +44,9 @@ The guestbook applications needs to communicate to the Redis master to write its
    
    The response should be similar to this:
    ```
-   NAME           TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)    AGE
-   kubernetes     ClusterIP   10.0.0.1     <none>        443/TCP    1m
-   redis-master   ClusterIP   10.0.0.151   <none>        6379/TCP   8s
+   NAME           TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)    AGE
+   kubernetes     ClusterIP   10.96.0.1     <none>        443/TCP    46h
+   redis-master   ClusterIP   10.103.95.1   <none>        6379/TCP   7s
    ```
 
 > Note: This manifest file creates a Service named redis-master with a set of labels that match the labels previously defined, so the Service routes network traffic to the Redis master Pod.
@@ -70,10 +70,10 @@ If there are not any replicas running, this Deployment would start the two repli
 
    The response should be similar to this:
    ```
-   NAME                            READY     STATUS              RESTARTS   AGE
-   redis-master-1068406935-3lswp   1/1       Running             0          1m
-   redis-slave-2005841000-fpvqc    0/1       ContainerCreating   0          6s
-   redis-slave-2005841000-phfv9    0/1       ContainerCreating   0          6s
+   NAME                            READY   STATUS              RESTARTS   AGE
+   redis-master-6fbbc44567-sxvjh   1/1     Running             0          66s
+   redis-slave-74ccb764fc-smr7n    0/1     ContainerCreating   0          6s
+   redis-slave-74ccb764fc-sps4r    0/1     ContainerCreating   0          6s
    ```
 
 #### Creating the Redis Slave Service
@@ -91,10 +91,10 @@ The guestbook application needs to communicate to Redis slaves to read data. To 
    
    The response should be similar to this:
    ```
-   NAME           TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)    AGE
-   kubernetes     ClusterIP   10.0.0.1     <none>        443/TCP    2m
-   redis-master   ClusterIP   10.0.0.151   <none>        6379/TCP   1m
-   redis-slave    ClusterIP   10.0.0.223   <none>        6379/TCP   6s
+   NAME           TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+   kubernetes     ClusterIP   10.96.0.1        <none>        443/TCP    46h
+   redis-master   ClusterIP   10.103.95.1      <none>        6379/TCP   2m15s
+   redis-slave    ClusterIP   10.105.138.125   <none>        6379/TCP   7s
    ```
 
 ### Set up and Expose the Guestbook Frontend
@@ -113,10 +113,10 @@ The guestbook application has a web frontend serving the HTTP requests written i
    
    The response should be similar to this:
    ```
-   NAME                        READY     STATUS    RESTARTS   AGE
-   frontend-3823415956-dsvc5   1/1       Running   0          54s
-   frontend-3823415956-k22zn   1/1       Running   0          54s
-   frontend-3823415956-w9gbt   1/1       Running   0          54s
+   NAME                            READY   STATUS    RESTARTS   AGE
+   frontend-74b4665db5-vr6hf       1/1     Running   0          70s
+   frontend-74b4665db5-z76vh       1/1     Running   0          70s
+   frontend-74b4665db5-zg5kw       1/1     Running   0          70s
    ```
 
 #### Creating the Frontend Service
@@ -138,15 +138,17 @@ If you want guests to be able to access your guestbook, you must configure the f
    
    The response should be similar to this:
    ```
-   NAME           TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)        AGE
-   frontend       NodePort    10.0.0.112   <none>       80:31323/TCP   6s
-   kubernetes     ClusterIP   10.0.0.1     <none>        443/TCP        4m
-   redis-master   ClusterIP   10.0.0.151   <none>        6379/TCP       2m
-   redis-slave    ClusterIP   10.0.0.223   <none>        6379/TCP       1m
+   NAME           TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+   frontend       NodePort    10.99.225.158    <none>        80:30551/TCP   9s
+   kubernetes     ClusterIP   10.96.0.1        <none>        443/TCP        46h
+   redis-master   ClusterIP   10.103.95.1      <none>        6379/TCP       4m17s
+   redis-slave    ClusterIP   10.105.138.125   <none>        6379/TCP       2m9s
    ```
 
 #### Viewing the Frontend Service via NodePort
-Open your browser with address [http://kube-node01.kube.local:31323](http://kube-node01.kube.local:31323)
+Open your browser with address [http://kube-node01.kube.local:30551](http://kube-node01.kube.local:30551)
+
+> Keep attention on port **`30551`**, you should change correspondent port show in your on output above.
 
 ### Scale the Web Frontend
 Scaling up or down is easy because your servers are defined as a Service that uses a Deployment controller.
@@ -163,15 +165,15 @@ Scaling up or down is easy because your servers are defined as a Service that us
    
    The response should look similar to this:
    ```
-   NAME                            READY     STATUS    RESTARTS   AGE
-   frontend-3823415956-70qj5       1/1       Running   0          5s
-   frontend-3823415956-dsvc5       1/1       Running   0          54m
-   frontend-3823415956-k22zn       1/1       Running   0          54m
-   frontend-3823415956-w9gbt       1/1       Running   0          54m
-   frontend-3823415956-x2pld       1/1       Running   0          5s
-   redis-master-1068406935-3lswp   1/1       Running   0          56m
-   redis-slave-2005841000-fpvqc    1/1       Running   0          55m
-   redis-slave-2005841000-phfv9    1/1       Running   0          55m
+   NAME                            READY   STATUS    RESTARTS   AGE
+   frontend-74b4665db5-n2bsk       1/1     Running   0          8s
+   frontend-74b4665db5-sf42s       1/1     Running   0          8s
+   frontend-74b4665db5-vr6hf       1/1     Running   0          5m24s
+   frontend-74b4665db5-z76vh       1/1     Running   0          5m24s
+   frontend-74b4665db5-zg5kw       1/1     Running   0          5m24s
+   redis-master-6fbbc44567-sxvjh   1/1     Running   0          8m45s
+   redis-slave-74ccb764fc-smr7n    1/1     Running   0          7m45s
+   redis-slave-74ccb764fc-sps4r    1/1     Running   0          7m45s
    ```
 
 3. Run the following command to scale down the number of frontend Pods:
@@ -186,12 +188,12 @@ Scaling up or down is easy because your servers are defined as a Service that us
 
    The response should look similar to this:
    ```
-   NAME                            READY     STATUS    RESTARTS   AGE
-   frontend-3823415956-k22zn       1/1       Running   0          1h
-   frontend-3823415956-w9gbt       1/1       Running   0          1h
-   redis-master-1068406935-3lswp   1/1       Running   0          1h
-   redis-slave-2005841000-fpvqc    1/1       Running   0          1h
-   redis-slave-2005841000-phfv9    1/1       Running   0          1h
+   NAME                            READY   STATUS    RESTARTS   AGE
+   frontend-74b4665db5-z76vh       1/1     Running   0          6m18s
+   frontend-74b4665db5-zg5kw       1/1     Running   0          6m18s
+   redis-master-6fbbc44567-sxvjh   1/1     Running   0          9m39s
+   redis-slave-74ccb764fc-smr7n    1/1     Running   0          8m39s
+   redis-slave-74ccb764fc-sps4r    1/1     Running   0          8m39s
    ```
 
 ### Cleaning up
