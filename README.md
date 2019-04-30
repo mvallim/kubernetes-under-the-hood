@@ -9,6 +9,8 @@ It even includes a SlideShare explaining the reasoning behid it [Kubernetes unde
 The target audience for this tutorial is someone planning to install a Kubernetes cluster and wants to understand how everything fits together.
 
 ## Index
+***Atention**: the documentation for this project is being actively improved to explain the demonstrated concepts clearly. If you face any difficulties while following the steps described in the documentation, please open an issue, so we can keep improving it.*
+
 1. [Kubernetes Journey - Up and running out of the cloud](documentation/objective.md)
 2. [Common Cluster Architecture](documentation/common-cluster.md)
 3. [Technology Stack](documentation/technologies.md)
