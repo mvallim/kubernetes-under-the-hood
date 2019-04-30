@@ -7,7 +7,7 @@ The guestbook application uses Redis to store its data. It writes its data to a 
 
 1. Launch a terminal window in the directory you downloaded the manifest files.
 
-2. Apply the Redis Master Deployment from the redis-master-deployment.yaml file:
+2. Apply the Redis Master Deployment from the `redis-master-deployment.yaml` file:
    ```
    kubectl apply -f https://k8s.io/examples/application/guestbook/redis-master-deployment.yaml
    ```
@@ -32,7 +32,7 @@ The guestbook application uses Redis to store its data. It writes its data to a 
 ### Creating the Redis Master Service
 The guestbook applications needs to communicate to the Redis master to write its data. You need to apply a Service to proxy the traffic to the Redis master Pod. A Service defines a policy to access the Pods.
 
-1. Apply the Redis Master Service from the following redis-master-service.yaml file:
+1. Apply the Redis Master Service from the following `redis-master-service.yaml` file:
    ```
    kubectl apply -f https://k8s.io/examples/application/guestbook/redis-master-service.yaml
    ```
@@ -49,7 +49,7 @@ The guestbook applications needs to communicate to the Redis master to write its
    redis-master   ClusterIP   10.103.95.1   <none>        6379/TCP   7s
    ```
 
-> Note: This manifest file creates a Service named redis-master with a set of labels that match the labels previously defined, so the Service routes network traffic to the Redis master Pod.
+> Note: This manifest file creates a Service named `redis-master` with a set of labels that match the labels previously defined, so the Service routes network traffic to the Redis master Pod.
 
 ### Start up the Redis Slaves
 Although the Redis master is a single pod, you can make it highly available to meet traffic demands by adding replica Redis slaves.
@@ -59,7 +59,7 @@ Deployments scale based off of the configurations set in the manifest file. In t
 
 If there are not any replicas running, this Deployment would start the two replicas on your container cluster. Conversely, if there are more than two replicas are running, it would scale down until two replicas are running.
 
-1. Apply the Redis Slave Deployment from the redis-slave-deployment.yaml file:
+1. Apply the Redis Slave Deployment from the `redis-slave-deployment.yaml` file:
    ```
    kubectl apply -f https://k8s.io/examples/application/guestbook/redis-slave-deployment.yaml
    ```
@@ -79,7 +79,7 @@ If there are not any replicas running, this Deployment would start the two repli
 #### Creating the Redis Slave Service
 The guestbook application needs to communicate to Redis slaves to read data. To make the Redis slaves discoverable, you need to set up a Service. A Service provides transparent load balancing to a set of Pods.
 
-1. Apply the Redis Slave Service from the following redis-slave-service.yaml file:
+1. Apply the Redis Slave Service from the following `redis-slave-service.yaml` file:
    ```
    kubectl apply -f https://k8s.io/examples/application/guestbook/redis-slave-service.yaml
    ```
@@ -98,10 +98,10 @@ The guestbook application needs to communicate to Redis slaves to read data. To 
    ```
 
 ### Set up and Expose the Guestbook Frontend
-The guestbook application has a web frontend serving the HTTP requests written in PHP. It is configured to connect to the redis-master Service for write requests and the redis-slave service for Read requests.
+The guestbook application has a web frontend serving the HTTP requests written in PHP. It is configured to connect to the `redis-master` Service for write requests and the `redis-slave` service for Read requests.
 
 #### Creating the Guestbook Frontend Deployment
-1. Apply the frontend Deployment from the frontend-deployment.yaml file:
+1. Apply the frontend Deployment from the `frontend-deployment.yaml` file:
    ```
    kubectl apply -f https://k8s.io/examples/application/guestbook/frontend-deployment.yaml
    ```
@@ -120,13 +120,9 @@ The guestbook application has a web frontend serving the HTTP requests written i
    ```
 
 #### Creating the Frontend Service
-The redis-slave and redis-master Services you applied are only accessible within the container cluster because the default type for a Service is ClusterIP. ClusterIP provides a single IP address for the set of Pods the Service is pointing to. This IP address is accessible only within the cluster.
+The `redis-slave` and `redis-master` Services you applied are only accessible within the container cluster because the default type for a Service is ClusterIP. `ClusterIP` provides a single IP address for the set of Pods the Service is pointing to. This IP address is accessible only within the cluster.
 
-If you want guests to be able to access your guestbook, you must configure the frontend Service to be externally visible, so a client can request the Service from outside the container cluster. Minikube can only expose Services through NodePort.
-
-> Note: Some cloud providers, like Google Compute Engine or Google Kubernetes Engine, support external load balancers. If your cloud provider supports load balancers and you want to use it, simply delete or comment out type: NodePort, and uncomment type: LoadBalancer.
-
-1. Apply the frontend Service from the frontend-service.yaml file:
+1. Apply the frontend Service from the `frontend-service.yaml` file:
    ```
    kubectl apply -f https://k8s.io/examples/application/guestbook/frontend-service.yaml
    ```
@@ -145,7 +141,7 @@ If you want guests to be able to access your guestbook, you must configure the f
    redis-slave    ClusterIP   10.105.138.125   <none>        6379/TCP       2m9s
    ```
 
-#### Viewing the Frontend Service via NodePort
+#### Viewing the Frontend Service via **`NodePort`**
 Open your browser with address [http://kube-node01.kube.local:30551](http://kube-node01.kube.local:30551)
 
 > Keep attention on port **`30551`**, you should change correspondent port show in your on output above.
