@@ -18,8 +18,9 @@ The target audience for this tutorial is someone planning to install a Kubernete
    - [Services (DNS, DHCP, Gateway, NAT)](documentation/network-services.md)
    - [Network and Subnets](documentation/network.md) (under construction)
    - [Segmentation](documentation/network-segmentation.md)
-5. [Creating the base Linux image](documentation/create-linux-image.md)
-   - [Cloud-Init Bootstrap](documentation/cloud-init.md) (under construction)
+5. Linux Image
+   - [Creating the base image](documentation/create-linux-image.md)
+   - [cloud-init Bootstrap](documentation/cloud-init.md) (under construction)
 6. [Configuring your station](documentation/configure-your-station.md)
 7. [Running VMs](documentation/running-vms.md)
 8. [Configuring hosts](documentation/configure-hosts.md)
