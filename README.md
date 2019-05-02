@@ -23,7 +23,7 @@ The target audience for this tutorial is someone planning to install a Kubernete
    - Linux Image
      - [Creating the base image](documentation/create-linux-image.md)
      - [cloud-init Bootstrap](documentation/cloud-init.md)
-     - [Configuring your station](documentation/configure-your-station.md)
+   - [Configuring your station](documentation/configure-your-station.md)
    - [Running VMs](documentation/running-vms.md)
    - [Configuring hosts](documentation/configure-hosts.md)
 9. Putting all together
