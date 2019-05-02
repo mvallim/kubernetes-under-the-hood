@@ -11,7 +11,8 @@ The target audience for this tutorial is someone planning to install a Kubernete
 ## Index
 ***Atention**: the documentation for this project is being actively improved to explain the demonstrated concepts clearly. If you face any difficulties while following the steps described in the documentation, please open an issue, so we can keep improving it.*
 
-1. [Kubernetes Journey - Up and running out of the cloud](documentation/objective.md)
+1. Introdution
+   - [Kubernetes Journey - Up and running out of the cloud](documentation/objective.md)
 2. Planning
    - [Architecture Overview](documentation/common-cluster.md)
    - [Technology Stack](documentation/technologies.md)
