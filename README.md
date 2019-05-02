@@ -12,18 +12,20 @@ The target audience for this tutorial is someone planning to install a Kubernete
 ***Atention**: the documentation for this project is being actively improved to explain the demonstrated concepts clearly. If you face any difficulties while following the steps described in the documentation, please open an issue, so we can keep improving it.*
 
 1. [Kubernetes Journey - Up and running out of the cloud](documentation/objective.md)
-2. [Architecture Overview](documentation/common-cluster.md)
-3. [Technology Stack](documentation/technologies.md)
-4. Networking
-   - [Services (DNS, DHCP, Gateway, NAT)](documentation/network-services.md)
-   - [Network and Subnets](documentation/network.md) (under construction)
-   - [Segmentation](documentation/network-segmentation.md)
-5. Linux Image
-   - [Creating the base image](documentation/create-linux-image.md)
-   - [cloud-init Bootstrap](documentation/cloud-init.md)
-6. [Configuring your station](documentation/configure-your-station.md)
-7. [Running VMs](documentation/running-vms.md)
-8. [Configuring hosts](documentation/configure-hosts.md)
+2. Planning
+   - [Architecture Overview](documentation/common-cluster.md)
+   - [Technology Stack](documentation/technologies.md)
+   - Networking
+     - [Services (DNS, DHCP, Gateway, NAT)](documentation/network-services.md)
+     - [Network and Subnets](documentation/network.md) (under construction)
+     - [Segmentation](documentation/network-segmentation.md)
+3. Preparation
+   - Linux Image
+     - [Creating the base image](documentation/create-linux-image.md)
+     - [cloud-init Bootstrap](documentation/cloud-init.md)
+     - [Configuring your station](documentation/configure-your-station.md)
+   - [Running VMs](documentation/running-vms.md)
+   - [Configuring hosts](documentation/configure-hosts.md)
 9. Putting all together
    - [HAProxy Cluster](documentation/haproxy-cluster.md)
    - [Kubernetes](documentation/kube.md)
