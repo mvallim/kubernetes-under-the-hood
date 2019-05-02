@@ -12,7 +12,7 @@ The target audience for this tutorial is someone planning to install a Kubernete
 ***Atention**: the documentation for this project is being actively improved to explain the demonstrated concepts clearly. If you face any difficulties while following the steps described in the documentation, please open an issue, so we can keep improving it.*
 
 1. [Kubernetes Journey - Up and running out of the cloud](documentation/objective.md)
-2. [Common Cluster Architecture](documentation/common-cluster.md)
+2. [Architecture Overview](documentation/common-cluster.md)
 3. [Technology Stack](documentation/technologies.md)
 4. Networking
    - [Services (DNS, DHCP, Gateway, NAT)](documentation/network-services.md)
