@@ -1,3 +1,3 @@
-## Common Cluster Architecture
+## Architecture Overview
 
 ![](images/common-cluster.png)
