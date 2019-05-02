@@ -5,7 +5,7 @@
 ### Overview
 `cloud-init` is a utility for instance initialization. It allows automatic configuration of instances as it is initialized, transforming a generic image of Linux into a configured server in a few seconds, quickly and easily.
 
-The `cloud-init` program that is available in the latest Linux distributions and is capable of running service, user, and package install configurations. One of the most popular formats for [`user-data`](https://cloudinit.readthedocs.io/en/latest/topics/examples.html) scripts is the` cloud-config` file format.
+The `cloud-init` program that is available in the latest Linux distributions and is capable of running service, user, and package install configurations. One of the most popular formats for [`user-data`](https://cloudinit.readthedocs.io/en/latest/topics/examples.html) scripts is the `cloud-config` file format.
 
 `cloud-config` files are special scripts designed to be run by the` cloud-init` process. They are usually used for initial setup on the first startup of a server.
 
