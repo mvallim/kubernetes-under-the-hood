@@ -20,6 +20,15 @@ The `cloud-init` program that is available in the latest Linux distributions and
 * perform upgrade: upgrade all packages.
 * reboot: reboot or shut down when finished with cloud-init.
 
-### Getting Start
-
 ### Seed ISO
+The initialization of the data source used here will be [`nocloud`](https://cloudinit.readthedocs.io/en/latest/topics/datasources/nocloud.html). To boot the system in this way, you need to create an ISO file with a `meta-data` file and a `user-data` file, as shown below:
+
+```
+genisoimage -input-charset utf-8 \
+  -output hostname-cidata.iso \
+  -volid cidata -joliet -rock meta-data user-data
+```
+
+Attach the generated `hostname-cidata.iso` to your virtual machine and reboot to `cloud-init` to take effect.
+
+> You can observe this procedure inside the script [`create-image.sh`](/create-image.sh).
