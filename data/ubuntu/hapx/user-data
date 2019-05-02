@@ -120,8 +120,6 @@ runcmd:
   - [ chmod, "0755", /usr/lib/ocf/resource.d/heartbeat/haproxy ]
   - [ systemctl, restart, pacemaker, corosync ]
   - [ systemctl, enable, pacemaker, corosync ]
-  - [ rm, -f, /etc/machine-id ]
-  - [ systemd-machine-id-setup ]
 
 apt:
   sources_list: |

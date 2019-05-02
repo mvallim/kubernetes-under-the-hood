@@ -45,6 +45,8 @@ write_files:
 
 runcmd:
   - [ sysctl, --system ]
+  - [ systemctl, stop, systemd-resolved ]
+  - [ systemctl, disable, systemd-resolved ]
 
 bootcmd:
   - iptables -A FORWARD -i enp0s8 -j ACCEPT
