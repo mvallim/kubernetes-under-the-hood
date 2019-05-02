@@ -187,8 +187,7 @@ Now we need configure kubectl in your local station.
    kubectl proxy
    ```
 
-3. View dashboard ui
-   Open your browser with address [http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/](http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/)
+3. To view dashboard ui open your browser with address [http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/](http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/)
 
 4. Now copy the token and paste it into Enter token field on log in screen.
    ![](images/kube-dashboard-auth.png)
