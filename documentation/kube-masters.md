@@ -208,7 +208,7 @@ The copied certificate is:
    ~/bin/move-certificates.sh
    ```
 
-2. Run the following command to join master replica on cluster using the join command execute on the step *`Print Join Command`*:
+2. Run the following command to join master replica on cluster using the join command execute on the step [**`Print Join Command`**](#print-join-command):
    ```
    kubeadm join 192.168.4.20:6443 \
        --token y5uii4.5myd468ieaavd0g6 \
@@ -228,7 +228,7 @@ The copied certificate is:
    ~/bin/move-certificates.sh
    ```
 
-2. Run the following command to join master replica on cluster using the join command execute on the step *`Print Join Command`*:
+2. Run the following command to join master replica on cluster using the join command execute on the step [**`Print Join Command`**](#print-join-command):
    ```
    kubeadm join 192.168.4.20:6443 \
        --token y5uii4.5myd468ieaavd0g6 \
