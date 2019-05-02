@@ -16,10 +16,6 @@ The target audience for this tutorial is someone planning to install a Kubernete
 3. [Technology Stack](documentation/technologies.md)
 4. Networking
    - [Services (DNS, DHCP, Gateway, NAT)](documentation/network-services.md)
-   - [DNS](documentation/network-dns.md) (under construction)
-   - [DHCP](documentation/network-dhcp.md) (under construction)
-   - [Gateway](documentation/network-gateway.md) (under construction)
-   - [NAT](documentation/network-nat.md) (under construction)
    - [Network and Subnets](documentation/network.md) (under construction)
    - [Segmentation](documentation/network-segmentation.md)
 5. Linux Image
