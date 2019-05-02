@@ -20,7 +20,7 @@ The target audience for this tutorial is someone planning to install a Kubernete
    - [Segmentation](documentation/network-segmentation.md)
 5. Linux Image
    - [Creating the base image](documentation/create-linux-image.md)
-   - [cloud-init Bootstrap](documentation/cloud-init.md) (under construction)
+   - [cloud-init Bootstrap](documentation/cloud-init.md)
 6. [Configuring your station](documentation/configure-your-station.md)
 7. [Running VMs](documentation/running-vms.md)
 8. [Configuring hosts](documentation/configure-hosts.md)
