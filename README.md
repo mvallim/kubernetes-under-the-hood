@@ -9,26 +9,34 @@ It even includes a SlideShare explaining the reasoning behid it [Kubernetes unde
 The target audience for this tutorial is someone planning to install a Kubernetes cluster and wants to understand how everything fits together.
 
 ## Index
-1. [Kubernetes Journey - Up and running out of the cloud](documentation/objective.md)
-2. [Common Cluster Architecture](documentation/common-cluster.md)
-3. [Technology Stack](documentation/technologies.md)
-4. Networking
-   - [Services (DNS, DHCP, Gateway, NAT)](documentation/network-services.md)
-   - [Segmentation](documentation/network-segmentation.md)
-5. [Creating the base Linux image](documentation/create-linux-image.md)
-6. [Configuring your station](documentation/configure-your-station.md)
-7. [Running VMs](documentation/running-vms.md)
-8. [Configuring hosts](documentation/configure-hosts.md)
+***Atention**: the documentation for this project is being actively improved to explain the demonstrated concepts clearly. If you face any difficulties while following the steps described in the documentation, please open an issue, so we can keep improving it.*
+
+1. Introdution
+   - [Kubernetes Journey - Up and running out of the cloud](documentation/objective.md)
+2. Planning
+   - [Architecture Overview](documentation/common-cluster.md)
+   - [Technology Stack](documentation/technologies.md)
+   - Networking
+     - [Services (DNS, DHCP, Gateway, NAT)](documentation/network-services.md)
+     - [Network and Subnets](documentation/network.md) (under construction)
+     - [Segmentation](documentation/network-segmentation.md)
+3. Preparation
+   - Linux Image
+     - [Creating the base image](documentation/create-linux-image.md)
+     - [cloud-init Bootstrap](documentation/cloud-init.md)
+   - [Configuring your station](documentation/configure-your-station.md)
+   - [Running VMs](documentation/running-vms.md)
+   - [Configuring hosts](documentation/configure-hosts.md)
 9. Putting all together
    - [HAProxy Cluster](documentation/haproxy-cluster.md)
    - [Kubernetes](documentation/kube.md)
      - [flannel](documentation/kube-flannel.md)
      - [etcd](documentation/kube-etcd.md)
-   - [Kube Masters](documentation/kube-masters.md)
-   - [Kube Workers](documentation/kube-workers.md)
-   - [Dashboard](documentation/kube-dashboard.md)
-   - [Demo Application](https://kubernetes.io/docs/tutorials/stateless-application/guestbook/)
-   - [MetalLB](documentation/kube-metallb.md) (under construction)
+     - [Masters](documentation/kube-masters.md)
+     - [Workers](documentation/kube-workers.md)
+     - [Dashboard](documentation/kube-dashboard.md)
+     - [Demo Application](documentation/kube-demo-application.md)
+     - [Activating LoadBalancer using MetalLB](documentation/kube-metallb.md)
    - [Gluster](documentation/gluster.md) (under construction)
    - [Heketi](documentation/kube-heketi.md) (under construction)
 

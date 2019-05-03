@@ -87,7 +87,7 @@ users:
   ssh_authorized_keys:
     - #SSH-PUB-KEY#
 - name: root
-  lock-passwd: true
+  lock_passwd: true
 
 package_upgrade: true
 

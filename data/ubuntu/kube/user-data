@@ -88,12 +88,12 @@ users:
   gecos: Ubuntu User
   sudo: ALL=(ALL) NOPASSWD:ALL
   shell: /bin/bash
-  lock-passwd: false
+  lock_passwd: false
   passwd: $6$iM6OIg9u$xCPf.UWJf5cOI1rwAivy4Zr7Xkh9Fj7W2bWqmUwr0ZY.2fZ41NHr1AFDpNIDRuMwMUqD9oJTg0p3IZGhnBm0l/
   ssh_authorized_keys:
     - #SSH-PUB-KEY#
 - name: root
-  lock-passwd: true
+  lock_passwd: true
 
 package_upgrade: true
 

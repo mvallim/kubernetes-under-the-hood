@@ -39,7 +39,7 @@ users:
   ssh_authorized_keys:
     - #SSH-PUB-KEY#
 - name: root
-  lock-passwd: true
+  lock_passwd: true
   ssh_authorized_keys:
     - #SSH-PUB-KEY#
 
