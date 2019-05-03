@@ -28,7 +28,7 @@ Each station is called a "node" and, in combination, forms the cluster. In some 
 It may seem very simple to aggregate multiple computers together to perform tasks, but it is not. Efforts to efficiently build this kind of use began at IBM in 1960 and are under constant renovation. The objective is always to increase the efficiency of the fusion, that is, to optimize the full use of the resources of all the stations and to evolve in the dynamicity of the circuit.
 
 ### Are all clusters the same?
-No. There are different types of supercomputers that are focused on different benefits of merging and hence are more suitable for certain tasks and markets. See below the four main types of clusters:
+No. There are different types of clusters that are focused on different benefits of merging and hence are more suitable for certain tasks and markets. See below the four main types of clusters:
 
 #### Failover or High Availability (HA)
 As its name suggests, these clusters are developed with the main focus being on maintaining the ever active network. Regardless of what happens at each node, it is essential that the system remain online. For this, several stations work on a system of redundancy invisible to the user. Almost as if, in a basketball game, a player who has exactly the same characteristics as the holder - practically a clone of the original - was always warm and standing on the edge of the court. If the principal needs to leave, immediately the other takes action, without the judge, the cheer or the team mates realizing. This is a type of cluster commonly used in services such as e-mail, which can not get out of the air at all.
