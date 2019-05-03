@@ -10,7 +10,7 @@ GlusterFS is a scalable network filesystem suitable for data-intensive tasks suc
 Distributed volumes distribute files across the bricks in the volume. You can use distributed volumes where the requirement is to scale storage and the redundancy is either not important or is provided by other hardware/software layers.
 
 <p align="center">
-  <img src="images/glster-distributed.png">
+  <img src="images/gluster-distributed.png">
 </p>
 
 #### Replicated
@@ -18,7 +18,7 @@ Distributed volumes distribute files across the bricks in the volume. You can us
 Replicated volumes replicate files across bricks in the volume. You can use replicated volumes in environments where high-availability and high-reliability are critical.
 
 <p align="center">
-  <img src="images/glster-replicated.png">
+  <img src="images/gluster-replicated.png">
 </p>
 
 #### Dispersed
@@ -26,7 +26,7 @@ Replicated volumes replicate files across bricks in the volume. You can use repl
 Dispersed volumes are based on erasure codes, providing space-efficient protection against disk or server failures. It stores an encoded fragment of the original file to each brick in a way that only a subset of the fragments is needed to recover the original file (EC). The number of bricks that can be missing without losing access to data is configured by the administrator on volume creation time.
 
 <p align="center">
-  <img src="images/glster-dispersed.png">
+  <img src="images/gluster-dispersed.png">
 </p>
 
 ##### Erasure coding (EC)
@@ -42,6 +42,6 @@ Erasure coding is primarily used in applications that have a low tolerance for d
 ##### Overview
 
 <p align="center">
-  <img src="images/glster-ec.png">
+  <img src="images/gluster-ec.gif">
 </p>
 
