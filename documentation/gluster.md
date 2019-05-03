@@ -23,8 +23,25 @@ Replicated volumes replicate files across bricks in the volume. You can use repl
 
 #### Dispersed
 
-Dispersed volumes are based on erasure codes, providing space-efficient protection against disk or server failures. It stores an encoded fragment of the original file to each brick in a way that only a subset of the fragments is needed to recover the original file. The number of bricks that can be missing without losing access to data is configured by the administrator on volume creation time.
+Dispersed volumes are based on erasure codes, providing space-efficient protection against disk or server failures. It stores an encoded fragment of the original file to each brick in a way that only a subset of the fragments is needed to recover the original file (EC). The number of bricks that can be missing without losing access to data is configured by the administrator on volume creation time.
 
 <p align="center">
   <img src="images/glster-dispersed.png">
 </p>
+
+##### Erasure coding (EC)
+
+It is a data protection and storage process through which a data object is separated into smaller components/fragments and each of those fragments is encoded with redundant data padding. EC transforms data object fragments into larger fragments and uses the primary data object identifier to recover each fragment.
+
+Erasure coding is also known as forward error correction (FEC).
+
+Erasure coding is primarily used in applications that have a low tolerance for data errors. This includes most data backup services and technologies including disk arrays, object-based cloud storage, archival storage and distributed data applications.
+
+> Reference: https://en.wikipedia.org/wiki/Erasure_code
+
+##### Overview
+
+<p align="center">
+  <img src="images/glster-ec.png">
+</p>
+
