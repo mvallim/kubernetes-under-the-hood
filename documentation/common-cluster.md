@@ -41,3 +41,6 @@ In some cases, it is not possible to prioritize performance over stability or vi
 
 #### Parallel Processing
 In this type of cluster, large tasks are divided into less complex activities, distributed by the system and executed in parallel by the various nodes that compose the cluster. Therefore, this type of cluster is well suited for very complex computational tasks. Roughly speaking, it would be like splitting a jigsaw puzzle of five thousand pieces into ten friends, having each friend responsible for assembling a chunk containing five hundred pieces. After each friend finishes its part, the chunks are them combined to solve the puzzle (MapRedue anyone?)
+
+#### In what category does Kubernetes fall into?
+Kubernetes uses a combined approach. Failover and High Availability, so it's able to (re)schedule PODs to run on different nodes, keeping the application up even if one (or more) of the PODs fail. And Load Balancing, so it's able to distribute requests to PODs running on different nodes, avoiding that a specific node becomes a hotspot and eventually impacts the performance of applications.
