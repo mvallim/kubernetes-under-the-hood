@@ -38,7 +38,7 @@ The target audience for this tutorial is someone planning to install a Kubernete
      - [Demo Application](documentation/kube-demo-application.md)
      - [Activating LoadBalancer using MetalLB](documentation/kube-metallb.md)
    - [Gluster](documentation/gluster.md)
-   - [Heketi](documentation/kube-heketi.md) (under construction)
+   - [Heketi](documentation/kube-heketi.md)
 
 ## Contributing
 
