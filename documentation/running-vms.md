@@ -1,6 +1,6 @@
 ## Running
 
-Now let's create the images using a tool (create-image.sh) that will help us clone the base image and add the user-data, meta-data and network-config scripts that cloud-init will use to make the installation of the necessary packages and configurations.
+Now let's create the images using a tool ([`create-image.sh`](/create-image.sh)) that will help us clone the base image and add the user-data, meta-data and network-config scripts that cloud-init will use to make the installation of the necessary packages and configurations.
 
 ```
 $ ./create-image.sh \
@@ -37,7 +37,7 @@ $ ./create-image.sh -h or --help
 
 ## Running Demo
 
-All VM initializations and configurations use **cloud-init**, all YAML scripts are in the [data](/data) directory for the linux distribution used by VMs.
+All VM initializations and configurations use [**`cloud-init`**](/documentation/cloud-init.md), all YAML scripts are in the [data](/data) directory for the linux distribution used by VMs.
 
 ### Create gateway
 ```
