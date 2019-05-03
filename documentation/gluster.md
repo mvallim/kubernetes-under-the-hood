@@ -33,7 +33,7 @@ Dispersed volumes are based on erasure codes, providing space-efficient protecti
 
 It is a data protection and storage process through which a data object is separated into smaller components/fragments and each of those fragments is encoded with redundant data padding. EC transforms data object fragments into larger fragments and uses the primary data object identifier to recover each fragment.
 
-Erasure coding is also known as forward error correction (FEC).
+Erasure coding is also known as **forward error correction** (FEC).
 
 Erasure coding is primarily used in applications that have a low tolerance for data errors. This includes most data backup services and technologies including disk arrays, object-based cloud storage, archival storage and distributed data applications.
 
