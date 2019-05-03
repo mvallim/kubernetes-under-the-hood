@@ -40,7 +40,7 @@ The target audience for this tutorial is someone planning to install a Kubernete
      - [MetalLB](documentation/kube-metallb.md)
    - Volumes
      - [Gluster](documentation/gluster.md)
-     - [Heketi](documentation/kube-heketi.md)
+     - [Heketi](documentation/kube-heketi.md) (under construction)
      - [Demo StorageClass](documentation/kube-demo-storageclass.md) (under construction)
 
 ## Contributing

@@ -20,25 +20,38 @@
 ### Install
 
 #### Deploy
-```
-git clone git@github.com:gluster/gluster-kubernetes.git
-```
+1. Run
+   ```
+   git clone git@github.com:gluster/gluster-kubernetes.git
+   ```
 
-```
-cd deploy
+2. Edit
+   ```
+   cd deploy
+   
+   vi topology
+   ```
 
-vi topology
-```
+3. Create
+   ```
+   kubectl create namespace glusterfs
+   ```
 
-```
-kubectl create namespace glusterfs
-```
+4. Deploy
+   ```
+   ./gk-deploy --ssh-keyfile ~/.ssh/id_rsa --ssh-user root --cli kubectl \
+       --templates_dir ./kube-templates --namespace glusterfs \
+       topology.json
+   ```
 
-```
-./gk-deploy --ssh-keyfile ~/.ssh/id_rsa --ssh-user root --cli kubectl \
-    --templates_dir ./kube-templates --namespace glusterfs \
-    topology.json
-```
+5. Query
+   ```
+   kubectl get pods -n glusterfs
+   ```
+
+   Output:
+   ```
+   ```
 
 #### Configure Storage Class
 
@@ -49,7 +62,6 @@ apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
   name: glusterfs-storage
-  namespace: glusterfs
 provisioner: kubernetes.io/glusterfs
 allowVolumeExpansion: true
 reclaimPolicy: Retain
@@ -60,9 +72,19 @@ parameters:
   volumetype: "replicate:3"
 ```
 
-```
-kubectl create -f glusterfs-storageclass.yaml
-```
+1. Run
+   ```
+   kubectl create -f glusterfs-storageclass.yaml
+   ```
+
+2. Query:
+   ```
+   kubectl get storageclass
+   ```
+
+   Output:
+   ```
+   ```
 
 #### Create Volume
 
@@ -82,4 +104,51 @@ spec:
       storage: 2Gi
 ```
 
+1. Run
+   ```
+   kubectl create -f https://raw.githubusercontent.com/mvallim/kubernetes-under-the-hood/master/heketi/persistent-volume-claim.yaml
+   ```
+
+2. Query:
+   ```
+   kubectl get persistentvolumeclaim
+   ```
+
+   Output:
+   ```
+   ```
+
+#### Expand Volume
+1. Run:
+   ```
+   kubectl get persistentvolumeclaim persistent-volume-0001 -o yaml > persistent-volume-claim.yaml
+   ```
+
+2. Edit file:
+   ```
+   kubectl apply -f persistent-volume-claim.yaml
+   ```
+
+3. Query:
+   ```
+   kubectl get persistentvolumeclaim
+   ```
+   
+   Output:
+   ```
+   ```
+
 #### Cleaning up
+1. Run:
+   ```
+   kubectl delete persistentvolumeclaim persistent-volume-0001
+   ```
+
+2. Query:
+   ```
+   kubectl get persistentvolumeclaim
+   ```
+   
+   Output:
+   ```
+   ```
