@@ -17,7 +17,9 @@
   <img src="images/heketi-expand-volume.gif">
 </p>
 
-### Deploy
+### Install
+
+#### Deploy
 ```
 git clone git@github.com:gluster/gluster-kubernetes.git
 ```
@@ -38,7 +40,7 @@ kubectl create namespace glusterfs
     topology.json
 ```
 
-### Configure Storage Class
+#### Configure Storage Class
 
 StorageClass manifest:
 
@@ -61,3 +63,7 @@ parameters:
 ```
 kubectl create -f glusterfs-storageclass.yaml
 ```
+
+#### Create Volume
+
+#### Cleaning up
