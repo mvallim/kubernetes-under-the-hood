@@ -22,6 +22,7 @@ GlusterFS is a scalable network filesystem suitable for data-intensive tasks suc
 Cluster is an English term meaning "agglomerate" or "agglomeration" and can be applied in various contexts. In the case of computing, the term defines a system architecture capable of combining several computers to work together.
 
 Each station is called a "node" and, in combination, forms the cluster. In some cases, it is possible to see references such as "supercomputers" or "cluster computing" for the same scenario, representing the hardware used or the software specially developed to be able to combine these equipments.
+> Reference: https://en.wikipedia.org/wiki/Computer_cluster
 
 ### How are clusters formed?
 It may seem very simple to aggregate multiple computers together to perform tasks, but it is not. Efforts to efficiently build this kind of use began at IBM in 1960 and are under constant renovation. The objective is always to increase the efficiency of the fusion, that is, to optimize the full use of the resources of all the stations and to evolve in the dynamicity of the circuit.
