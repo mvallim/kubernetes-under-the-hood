@@ -66,4 +66,20 @@ kubectl create -f glusterfs-storageclass.yaml
 
 #### Create Volume
 
+PersistentVolumeClaim manifest:
+```
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: persistent-volume-0001
+  annotations:
+    volume.beta.kubernetes.io/storage-class: glusterfs-storage
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 2Gi
+```
+
 #### Cleaning up
