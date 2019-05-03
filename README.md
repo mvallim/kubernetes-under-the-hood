@@ -27,7 +27,7 @@ The target audience for this tutorial is someone planning to install a Kubernete
    - [Configuring your station](documentation/configure-your-station.md)
    - [Running VMs](documentation/running-vms.md)
    - [Configuring hosts](documentation/configure-hosts.md)
-9. Putting all together
+4. Putting all together
    - [HAProxy Cluster](documentation/haproxy-cluster.md)
    - [Kubernetes](documentation/kube.md)
      - [flannel](documentation/kube-flannel.md)
