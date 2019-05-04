@@ -39,11 +39,11 @@
 
 2. Edit config
 
-   This takes the form of a topology file, which describes the nodes present in the GlusterFS cluster and the block devices attached to them for use by heketi. A sample topology file is provided. When creating your own    topology file:
+   This takes the form of a topology file, which describes the nodes present in the GlusterFS cluster and the block devices attached to them for use by heketi. A [sample topology file](https://raw.githubusercontent.com/gluster/gluster-kubernetes/master/deploy/topology.json.sample) is provided. When creating your own topology file:
    
    * Make sure the topology file only lists block devices intended for heketi's use. heketi needs access to whole block devices (e.g. /dev/sdb, /dev/vdb) which it will partition and format.
    
-   * The hostnames array is a bit misleading. manage should be a list of hostnames for the node, but storage should be a list of IP addresses on the node for backend storage communications.
+   * The `hostnames` array is a bit misleading. `manage` should be a list of hostnames for the node, but `storage` should be a list of IP addresses on the node for backend storage communications.
 
    1. Create a topology file:
       ```
@@ -52,7 +52,7 @@
       cp topology.json.sample topology.json
       ```
    
-   2. Resolv hostnames of Gluster Nodes:
+   2. Resolve hostnames of Gluster Nodes:
       ```
       host glus-node01.kube.local
    
@@ -132,7 +132,7 @@
       }
       ```
 
-3. Create namespace `glusterfs`
+3. Create namespace `glusterfs`:
    ```
    kubectl create namespace glusterfs
    ```
@@ -144,14 +144,14 @@
 
 4. Deploy
 
-   Next, run the gk-deploy script from a machine with administrative access to your Kubernetes cluster. You should familiarize yourself with the script's options by running gk-deploy -h. Some things to note when running the script:
+   Next, run the [`gk-deploy`](https://raw.githubusercontent.com/gluster/gluster-kubernetes/master/deploy/gk-deploy) script from a machine with administrative access to your Kubernetes cluster. You should familiarize yourself with the script's options by running `gk-deploy -h`. Some things to note when running the script:
 
    * By default it expects the topology file to be in the same directory as itself. You can specify a different location as the first non-option argument on the command-line.
-   * By default it expects to have access to Kubernetes template files in a subdirectory called kube-templates. Specify their location otherwise with -t.
+   * By default it expects to have access to Kubernetes template files in a subdirectory called `kube-templates`. Specify their location otherwise with `-t`.
    * By default it will NOT deploy GlusterFS, allowing you to use heketi with any existing GlusterFS cluster. If you specify the -g option, it will deploy a GlusterFS DaemonSet onto your Kubernetes cluster by treating the nodes listed in the topology file as hyper-converged nodes with both Kubernetes and storage devices on them.
    * If you use a pre-existing GlusterFS cluster, please note that any pre-existing volumes will not be detected by heketi, and thus not be under heketi's management.
 
-   Run:
+   Run the following commands to deploy Heketi:
    ```
    ./gk-deploy \
        --ssh-keyfile ~/.ssh/id_rsa \
@@ -232,26 +232,31 @@
    Deployment complete!   
    ```
 
-5. Query
+5. Query the list of Pod of Heketi is running:
    ```
-   kubectl -n glusterfs exec -i heketi-74ddc88bd6-mv65m -- heketi-cli -s http://localhost:8080 cluster list
-
    kubectl get pods -n glusterfs
    ```
 
-   The responses should be:
-   ```
-   Clusters:
-   Id:f9a5eaedce718d176f74e2bb7e3455c0 [file][block]
-   ```
+   The response should be:
    ```
    NAME                      READY   STATUS    RESTARTS   AGE
    heketi-74ddc88bd6-mv65m   1/1     Running   0          3m37
    ```
 
+6. Query the list of Gluster Cluster is running:
+   ```
+   kubectl -n glusterfs exec -i heketi-74ddc88bd6-mv65m -- heketi-cli -s http://localhost:8080 cluster list
+   ```
+
+   The response should be:
+   ```
+   Clusters:
+   Id:f9a5eaedce718d176f74e2bb7e3455c0 [file][block]
+   ```
+
 #### Configure Storage Class
 
-StorageClass manifest:
+[`StorageClass`](https://kubernetes.io/docs/concepts/storage/storage-classes/) manifest:
 
 ```
 apiVersion: storage.k8s.io/v1
@@ -266,7 +271,7 @@ parameters:
   volumetype: "replicate:3"
 ```
 
-1. Run
+1. Run the following commands to create storage class:
    ```
    cat <<EOF > glusterfs-storageclass.yaml
    apiVersion: storage.k8s.io/v1
@@ -289,7 +294,7 @@ parameters:
    storageclass.storage.k8s.io/glusterfs-storage created
    ```
 
-2. Query:
+2. Query the list of storage class:
    ```
    kubectl get storageclass
    ```
@@ -302,7 +307,7 @@ parameters:
 
 #### Create Volume
 
-PersistentVolumeClaim manifest:
+[`PersistentVolumeClaim`](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#persistentvolumeclaims) manifest:
 ```
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -318,7 +323,7 @@ spec:
       storage: 2Gi
 ```
 
-1. Run
+1. Run the following command to create PersistentVolumeClaim
    ```
    kubectl create -f https://raw.githubusercontent.com/mvallim/kubernetes-under-the-hood/master/heketi/persistent-volume-claim.yaml
    ```
@@ -328,21 +333,26 @@ spec:
    persistentvolumeclaim/persistent-volume-0001 created
    ```
 
-2. Query:
+2. Query the list of persistent volume claim:
+   ```
+   kubectl get persistentvolumeclaim
+   ```
+
+   The responses should be:
+   ```
+   NAME                     STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS        AGE
+   persistent-volume-0001   Bound    pvc-8dc0ce07-6e08-11e9-b6f1-0800276f613b   2Gi        RWX            glusterfs-storage   31s
+   ```
+
+3. Query the list of persistent volume:
    ```
    kubectl get persistentvolume
-
-   kubectl get persistentvolumeclaim
    ```
 
    The responses should be:
    ```
    NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                            STORAGECLASS        REASON   AGE
    pvc-8dc0ce07-6e08-11e9-b6f1-0800276f613b   2Gi        RWX            Retain           Bound    default/persistent-volume-0001   glusterfs-storage            31s
-   ```
-   ```
-   NAME                     STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS        AGE
-   persistent-volume-0001   Bound    pvc-8dc0ce07-6e08-11e9-b6f1-0800276f613b   2Gi        RWX            glusterfs-storage   31s
    ```
 
 #### Expand Volume
