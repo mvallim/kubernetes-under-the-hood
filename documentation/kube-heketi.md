@@ -20,7 +20,7 @@
 ### Install
 > Full reference: https://github.com/gluster/gluster-kubernetes
 
-#### Deploy
+### Deploy
 1. Run
    ```
    git clone git@github.com:gluster/gluster-kubernetes.git
@@ -256,7 +256,7 @@
 
 ---
 
-#### Configure Storage Class
+### Configure Storage Class
 
 [`StorageClass`](https://kubernetes.io/docs/concepts/storage/storage-classes/) manifest:
 
@@ -309,7 +309,7 @@ parameters:
 
 ---
 
-#### Create Volume Claim
+### Create Volume Claim
 
 [`PersistentVolumeClaim`](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#persistentvolumeclaims) manifest:
 ```
@@ -361,7 +361,7 @@ spec:
 
 ---
 
-#### Expand Volume
+### Expand Volume
 1. Run the following command to get persistent volume claim manifest of `persistent-volume-0001`:
    ```
    kubectl get persistentvolumeclaim persistent-volume-0001 -o yaml > persistent-volume-claim.yaml
@@ -450,7 +450,7 @@ spec:
 
 ---
 
-#### Cleaning up
+### Cleaning up
 1. Run the following commands to delete `PersistentVolumeClaim` and `PersistentVolume`:
    ```
    kubectl delete persistentvolumeclaim persistent-volume-0001
