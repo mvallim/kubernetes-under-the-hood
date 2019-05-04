@@ -18,6 +18,7 @@
 </p>
 
 ### Install
+> Full reference: https://github.com/gluster/gluster-kubernetes
 
 #### Deploy
 1. Run
@@ -38,7 +39,13 @@
 
 2. Edit config
 
-   1. Copy sample:
+   This takes the form of a topology file, which describes the nodes present in the GlusterFS cluster and the block devices attached to them for use by heketi. A sample topology file is provided. When creating your own    topology file:
+   
+   * Make sure the topology file only lists block devices intended for heketi's use. heketi needs access to whole block devices (e.g. /dev/sdb, /dev/vdb) which it will partition and format.
+   
+   * The hostnames array is a bit misleading. manage should be a list of hostnames for the node, but storage should be a list of IP addresses on the node for backend storage communications.
+
+   1. Create a topology file:
       ```
       cd gluster-kubernetes/deploy
       
