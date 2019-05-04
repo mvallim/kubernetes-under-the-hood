@@ -254,6 +254,8 @@
    Id:f9a5eaedce718d176f74e2bb7e3455c0 [file][block]
    ```
 
+---
+
 #### Configure Storage Class
 
 [`StorageClass`](https://kubernetes.io/docs/concepts/storage/storage-classes/) manifest:
@@ -305,7 +307,9 @@ parameters:
    glusterfs-storage   kubernetes.io/glusterfs   17s
    ```
 
-#### Create Volume
+---
+
+#### Create Volume Claim
 
 [`PersistentVolumeClaim`](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#persistentvolumeclaims) manifest:
 ```
@@ -354,6 +358,8 @@ spec:
    NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                            STORAGECLASS        REASON   AGE
    pvc-8dc0ce07-6e08-11e9-b6f1-0800276f613b   2Gi        RWX            Retain           Bound    default/persistent-volume-0001   glusterfs-storage            31s
    ```
+
+---
 
 #### Expand Volume
 1. Run the following command to get persistent volume claim manifest of `persistent-volume-0001`:
