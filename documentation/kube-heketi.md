@@ -323,7 +323,7 @@ spec:
       storage: 2Gi
 ```
 
-1. Run the following command to create PersistentVolumeClaim
+1. Run the following command to create PersistentVolumeClaim:
    ```
    kubectl create -f https://raw.githubusercontent.com/mvallim/kubernetes-under-the-hood/master/heketi/persistent-volume-claim.yaml
    ```
@@ -356,12 +356,12 @@ spec:
    ```
 
 #### Expand Volume
-1. Run:
+1. Run the following command to get persistent volume claim manifest of `persistent-volume-0001`:
    ```
    kubectl get persistentvolumeclaim persistent-volume-0001 -o yaml > persistent-volume-claim.yaml
    ```
 
-   persistent-volume-claim.yaml
+   The output file `persistent-volume-claim.yaml` should be:
    ```
    apiVersion: v1
    kind: PersistentVolumeClaim
@@ -397,6 +397,19 @@ spec:
    ```
 
 2. Edit file and change `spec` resource storage to `10Gi`:
+
+   Part of file `persistent-volume-claim.yaml`
+   ```
+   spec:
+     accessModes:
+     - ReadWriteMany
+     dataSource: null
+     resources:
+       requests:
+         storage: 10Gi
+   ```
+
+3. Apply the persistent volume claim from the following `persistent-volume-claim.yaml` file:
    ```
    kubectl apply -f persistent-volume-claim.yaml
    ```
@@ -407,22 +420,27 @@ spec:
    persistentvolumeclaim/persistent-volume-0001 configured
    ```
 
-3. Query:
+4. Query the list of persistent volume claim:
    ```
-   kubectl get persistentvolume
-
    kubectl get persistentvolumeclaim
    ```
    
-   The responses should be:
-   ```
-   NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                            STORAGECLASS        REASON   AGE
-   pvc-8dc0ce07-6e08-11e9-b6f1-0800276f613b   10Gi       RWX            Retain           Bound    default/persistent-volume-0001   glusterfs-storage            5m6s
-   ```   
+   The response should be:
    ```
    NAME                     STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS        AGE
    persistent-volume-0001   Bound    pvc-8dc0ce07-6e08-11e9-b6f1-0800276f613b   10Gi       RWX            glusterfs-storage   4m2s
    ```
+
+5. Query the list of persistent volume:
+   ```
+   kubectl get persistentvolume
+   ```
+   
+   The response should be:
+   ```
+   NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                            STORAGECLASS        REASON   AGE
+   pvc-8dc0ce07-6e08-11e9-b6f1-0800276f613b   10Gi       RWX            Retain           Bound    default/persistent-volume-0001   glusterfs-storage            5m6s
+   ```   
 
 #### Cleaning up
 1. Run:
