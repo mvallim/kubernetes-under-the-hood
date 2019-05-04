@@ -143,6 +143,7 @@
    ```
 
 4. Deploy
+
    Next, run the gk-deploy script from a machine with administrative access to your Kubernetes cluster. You should familiarize yourself with the script's options by running gk-deploy -h. Some things to note when running the script:
 
    * By default it expects the topology file to be in the same directory as itself. You can specify a different location as the first non-option argument on the command-line.
