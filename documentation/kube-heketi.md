@@ -52,7 +52,7 @@
       cp topology.json.sample topology.json
       ```
    
-   2. Resolv names of Gluster Nodes:
+   2. Resolv hostnames of Gluster Nodes:
       ```
       host glus-node01.kube.local
    
@@ -132,7 +132,7 @@
       }
       ```
 
-3. Create namespace
+3. Create namespace `glusterfs`
    ```
    kubectl create namespace glusterfs
    ```
@@ -143,6 +143,14 @@
    ```
 
 4. Deploy
+   Next, run the gk-deploy script from a machine with administrative access to your Kubernetes cluster. You should familiarize yourself with the script's options by running gk-deploy -h. Some things to note when running the script:
+
+   * By default it expects the topology file to be in the same directory as itself. You can specify a different location as the first non-option argument on the command-line.
+   * By default it expects to have access to Kubernetes template files in a subdirectory called kube-templates. Specify their location otherwise with -t.
+   * By default it will NOT deploy GlusterFS, allowing you to use heketi with any existing GlusterFS cluster. If you specify the -g option, it will deploy a GlusterFS DaemonSet onto your Kubernetes cluster by treating the nodes listed in the topology file as hyper-converged nodes with both Kubernetes and storage devices on them.
+   * If you use a pre-existing GlusterFS cluster, please note that any pre-existing volumes will not be detected by heketi, and thus not be under heketi's management.
+
+   Run:
    ```
    ./gk-deploy \
        --ssh-keyfile ~/.ssh/id_rsa \
