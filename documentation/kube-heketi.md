@@ -448,6 +448,8 @@ spec:
    pvc-8dc0ce07-6e08-11e9-b6f1-0800276f613b   10Gi       RWX            Retain           Bound    default/persistent-volume-0001   glusterfs-storage            5m6s
    ```   
 
+---
+
 #### Cleaning up
 1. Run the following commands to delete `PersistentVolumeClaim` and `PersistentVolume`:
    ```
