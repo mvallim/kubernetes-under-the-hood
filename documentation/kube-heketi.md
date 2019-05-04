@@ -443,7 +443,7 @@ spec:
    ```   
 
 #### Cleaning up
-1. Run:
+1. Run the following commands to delete `PersistentVolumeClaim` and `PersistentVolume`:
    ```
    kubectl delete persistentvolumeclaim persistent-volume-0001
 
@@ -458,7 +458,7 @@ spec:
    persistentvolume "pvc-8dc0ce07-6e08-11e9-b6f1-0800276f613b" deleted
    ```
 
-2. Query:
+2. Query the list of `PersistentVolumeClaim` and `PersistentVolume`:
    ```
    kubectl get persistentvolume
 
