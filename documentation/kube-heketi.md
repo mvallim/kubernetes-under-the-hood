@@ -46,27 +46,21 @@ Patch file [`kube-controller-manager-patch`](https://raw.githubusercontent.com/m
 
    wget -q https://raw.githubusercontent.com/mvallim/kubernetes-under-the-hood/master/master/kube-controller-manager-patch
    
-   patch /etc/kubernetes/manifests/kube-controller-manager.yaml < kube-controller-manager-patch
-   
-   systemctl restart kubelet.service
+   patch --no-backup-if-mismatch /etc/kubernetes/manifests/kube-controller-manager.yaml < kube-controller-manager-patch
    ```
    ```
    ssh debian@kube-mast02.kube.local
    
    wget -q https://raw.githubusercontent.com/mvallim/kubernetes-under-the-hood/master/master/kube-controller-manager-patch
 
-   patch /etc/kubernetes/manifests/kube-controller-manager.yaml < kube-controller-manager-patch
-   
-   systemctl restart kubelet.service
+   patch --no-backup-if-mismatch /etc/kubernetes/manifests/kube-controller-manager.yaml < kube-controller-manager-patch
    ```
    ```
-   ssh debian@kube-mast02.kube.local
+   ssh debian@kube-mast03.kube.local
    
    wget -q https://raw.githubusercontent.com/mvallim/kubernetes-under-the-hood/master/master/kube-controller-manager-patch
 
-   patch /etc/kubernetes/manifests/kube-controller-manager.yaml < kube-controller-manager-patch
-   
-   systemctl restart kubelet.service
+   patch --no-backup-if-mismatch /etc/kubernetes/manifests/kube-controller-manager.yaml < kube-controller-manager-patch
    ```
 
 > Reference: https://github.com/gluster/gluster-kubernetes/issues/570
