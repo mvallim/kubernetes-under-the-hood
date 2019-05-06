@@ -269,26 +269,13 @@ provisioner: kubernetes.io/glusterfs
 allowVolumeExpansion: true
 reclaimPolicy: Retain
 parameters:
-  resturl: "http://10.244.5.9:8080"
+  resturl: "http://heketi.glusterfs.svc.cluster.local:8080"
   volumetype: "replicate:3"
 ```
 
 1. Run the following commands to create storage class:
    ```
-   cat <<EOF > glusterfs-storageclass.yaml
-   apiVersion: storage.k8s.io/v1
-   kind: StorageClass
-   metadata:
-     name: glusterfs-storage
-   provisioner: kubernetes.io/glusterfs
-   allowVolumeExpansion: true
-   reclaimPolicy: Retain
-   parameters:
-     resturl: "http://10.244.5.9:8080"
-     volumetype: "replicate:3"
-   EOF
-
-   kubectl create -f glusterfs-storageclass.yaml
+   kubectl create -f https://raw.githubusercontent.com/mvallim/kubernetes-under-the-hood/master/heketi/gluster-storage-class.yaml
    ```
 
    The response should be:

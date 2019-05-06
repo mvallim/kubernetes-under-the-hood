@@ -102,7 +102,7 @@ data:
 
 3. Query the state of service `load-balancer-service`
    ```
-   kubectl get deploy -n metallb-system -o wide
+   kubectl get service load-balancer-service -o wide
    ```
 
    The response should look similar to this:
