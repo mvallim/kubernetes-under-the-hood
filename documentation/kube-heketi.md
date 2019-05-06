@@ -214,7 +214,7 @@ Patch file [`kube-controller-manager-patch`](https://raw.githubusercontent.com/m
 
    Confirm question `Y`
 
-   The response should be:
+   The response should be (if you are using kubectl < 1.13. Otherwise ou get a error, but it doesn't affect the deploy Heketi. See [here](https://github.com/gluster/gluster-kubernetes/pull/576)):
    ```
    Using Kubernetes CLI.
    Using namespace "glusterfs".
