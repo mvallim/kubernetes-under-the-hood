@@ -20,7 +20,7 @@
 ### Install
 > Full reference: https://github.com/gluster/gluster-kubernetes
 
-####[Set up Heketi Rest URL in Storage Class](https://github.com/gluster/gluster-kubernetes/issues/570)
+#### [Set up Heketi Rest URL in Storage Class](https://github.com/gluster/gluster-kubernetes/issues/570)
 
 *"So basically I have updated `/etc/kubernetes/manifests/kube-controller-manager.yaml` by adding `dnsPolicy: ClusterFirstWithHostNet` and restarted `kubelet`."*
 
