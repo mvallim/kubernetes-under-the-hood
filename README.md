@@ -18,7 +18,6 @@ The target audience for this tutorial is someone planning to install a Kubernete
    - [Technology Stack](documentation/technologies.md)
    - Networking
      - [Services (DNS, DHCP, Gateway, NAT)](documentation/network-services.md)
-     - [Network and Subnets](documentation/network.md) (under construction)
      - [Segmentation](documentation/network-segmentation.md)
 3. Preparation
    - Linux Image
