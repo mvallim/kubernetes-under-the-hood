@@ -25,6 +25,7 @@
 *"So basically I have updated `/etc/kubernetes/manifests/kube-controller-manager.yaml` by adding `dnsPolicy: ClusterFirstWithHostNet` and restarted `kubelet`."* - Thanks [BostjanBozic](https://github.com/BostjanBozic)!!
 
 Patch file [`kube-controller-manager-patch`](https://raw.githubusercontent.com/mvallim/kubernetes-under-the-hood/master/master/kube-controller-manager-patch):
+
 ```
 --- kube-controller-manager.yaml        2019-05-06 05:32:38.212961105 -0300
 +++ kube-controller-manager-patch.yaml  2019-05-06 05:32:14.380556753 -0300
@@ -39,6 +40,7 @@ Patch file [`kube-controller-manager-patch`](https://raw.githubusercontent.com/m
 ```
 
 1. Apply patch `/etc/kubernetes/manifests/kube-controller-manager.yaml` on master nodes
+
    ```
    ssh debian@kube-mast01.kube.local
 
