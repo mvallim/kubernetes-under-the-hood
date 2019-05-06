@@ -208,7 +208,8 @@ Patch file [`kube-controller-manager-patch`](https://raw.githubusercontent.com/m
        --ssh-keyfile ~/.ssh/id_rsa \
        --ssh-user root --cli kubectl \
        --no-object \
-       --templates_dir ./kube-templates --namespace glusterfs \
+       --templates_dir ./kube-templates \
+       --namespace glusterfs \
        topology.json
    ```
 
