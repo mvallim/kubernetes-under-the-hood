@@ -17,10 +17,7 @@
   <img src="images/heketi-expand-volume.gif">
 </p>
 
-### Install
-> Full reference: https://github.com/gluster/gluster-kubernetes
-
-#### [Set up Heketi Rest URL in Storage Class](https://github.com/gluster/gluster-kubernetes/issues/570)
+### [Set up Heketi Rest URL in Storage Class](https://github.com/gluster/gluster-kubernetes/issues/570)
 
 *"So basically I have updated `/etc/kubernetes/manifests/kube-controller-manager.yaml` by adding `dnsPolicy: ClusterFirstWithHostNet` and restarted `kubelet`."* - Thanks [BostjanBozic](https://github.com/BostjanBozic)!!
 
@@ -64,6 +61,9 @@ Patch file [`kube-controller-manager-patch`](https://raw.githubusercontent.com/m
    ```
 
    > Reference: https://github.com/gluster/gluster-kubernetes/issues/570
+
+### Install
+> Full reference: https://github.com/gluster/gluster-kubernetes
 
 ### Deploy
 1. Run
