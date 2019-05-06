@@ -41,12 +41,16 @@ Patch file [`kube-controller-manager-patch`](https://raw.githubusercontent.com/m
    ```
    ssh debian@kube-mast01.kube.local
 
+   sudo su -
+
    wget -q https://raw.githubusercontent.com/mvallim/kubernetes-under-the-hood/master/master/kube-controller-manager-patch
    
    patch --no-backup-if-mismatch /etc/kubernetes/manifests/kube-controller-manager.yaml < kube-controller-manager-patch
    ```
    ```
    ssh debian@kube-mast02.kube.local
+
+   sudo su -
    
    wget -q https://raw.githubusercontent.com/mvallim/kubernetes-under-the-hood/master/master/kube-controller-manager-patch
 
@@ -54,6 +58,8 @@ Patch file [`kube-controller-manager-patch`](https://raw.githubusercontent.com/m
    ```
    ```
    ssh debian@kube-mast03.kube.local
+
+   sudo su -
    
    wget -q https://raw.githubusercontent.com/mvallim/kubernetes-under-the-hood/master/master/kube-controller-manager-patch
 
