@@ -63,7 +63,7 @@ Patch file [`kube-controller-manager-patch`](https://raw.githubusercontent.com/m
    patch --no-backup-if-mismatch /etc/kubernetes/manifests/kube-controller-manager.yaml < kube-controller-manager-patch
    ```
 
-> Reference: https://github.com/gluster/gluster-kubernetes/issues/570
+   > Reference: https://github.com/gluster/gluster-kubernetes/issues/570
 
 ### Deploy
 1. Run
