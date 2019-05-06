@@ -22,9 +22,7 @@
 
 #### [Set up Heketi Rest URL in Storage Class](https://github.com/gluster/gluster-kubernetes/issues/570)
 
-*"So basically I have updated `/etc/kubernetes/manifests/kube-controller-manager.yaml` by adding `dnsPolicy: ClusterFirstWithHostNet` and restarted `kubelet`."*
-
-Thanks [BostjanBozic](https://github.com/BostjanBozic)!!
+*"So basically I have updated `/etc/kubernetes/manifests/kube-controller-manager.yaml` by adding `dnsPolicy: ClusterFirstWithHostNet` and restarted `kubelet`."* - Thanks [BostjanBozic](https://github.com/BostjanBozic)!!
 
 Patch file [`kube-controller-manager-patch`](https://raw.githubusercontent.com/mvallim/kubernetes-under-the-hood/master/master/kube-controller-manager-patch):
 ```
