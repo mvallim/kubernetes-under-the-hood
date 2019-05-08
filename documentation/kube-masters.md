@@ -50,6 +50,8 @@ networking:
 
 #### `kubeadm init`
 
+This approach requires less infrastructure. The etcd members and control plane nodes are co-located.
+
 1. Run the following commands to init master node:
    ```
    ssh debian@kube-mast01.kube.local
