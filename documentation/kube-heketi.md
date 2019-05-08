@@ -36,7 +36,7 @@ Patch file [`kube-controller-manager-patch`](https://raw.githubusercontent.com/m
    volumes:
 ```
 
-1. Apply patch `/etc/kubernetes/manifests/kube-controller-manager.yaml` on master nodes
+1. Apply patch `/etc/kubernetes/manifests/kube-controller-manager.yaml` on master nodes. This will change the [static pod](https://kubernetes.io/docs/tasks/administer-cluster/static-pod/) `kube-controller-manager` configuration by adding `dnsPolicy`.
 
    ```
    ssh debian@kube-mast01.kube.local
