@@ -7,7 +7,7 @@ We have been following the industry transformation, especially with regards to I
 We testified the first application infrastructure modernization wave, through which corporations were able to reach great economies of scale by leveraging virtualization techniques. Having that in place, it was not necessary to wait for the acquisition of physical hardware in order to increase CPU, memory nor disk anymore. It was just a matter of changing configuration and everything was good again.
 
 <p align="center">
-  <img src="images/virtualization-lxc.png"><\br>
+  <img src="images/virtualization-lxc.png"><br>
   Image by: https://www.redhat.com
 </p>
 
@@ -18,7 +18,7 @@ Then came the Cloud with a whole new modernization movement. Many companies have
 It was in this scenario, where we have applications that became complex systems, comprised of multiple integrated and ever evolving smaller parts, that Kubernetes was born. The main cloud providers each provide their own flavor of Kubernetes (name GKE, EKS, AKS, etc.)
 
 <p align="center">
-  <img src="images/kubernetes-cloud-flavors.png"><\br>
+  <img src="images/kubernetes-cloud-flavors.png"><br>
   Kubernetes Flavors in the Cloud (GKE, AKS, EKS)
 </p>
 
