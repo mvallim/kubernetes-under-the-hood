@@ -7,9 +7,9 @@ We have been following the industry transformation, especially with regards to I
 We testified the first application infrastructure modernization wave, through which corporations were able to reach great economies of scale by leveraging virtualization techniques. Having that in place, it was not necessary to wait for the acquisition of physical hardware in order to increase CPU, memory nor disk anymore. It was just a matter of changing configuration and everything was good again.
 
 <p align="center">
-  <img src="images/virtualizadion-lxc.png">
+  <img src="images/virtualization-lxc.png">
+  Image by: https://www.redhat.com
 </p>
-Image by: https://www.redhat.com
 
 Later, following the application development modernization movement, where applications became more and more complex, talking to each other through service interfaces, we watched the rise of the containerization movement. At first, limited to developers local environments, making it easy to develop and test applications locally, as well to run demos of products.
 
@@ -19,8 +19,8 @@ It was in this scenario, where we have applications that became complex systems,
 
 <p align="center">
   <img src="images/kubernetes-cloud-flavors.png">
+  Kubernetes Flavors in the Cloud (GKE, AKS, EKS)
 </p>
-Kubernetes Flavors in the Cloud (GKE, AKS, EKS)
 
 Having Kubernetes available through the big cloud providers brought many benefits to software developers and corporations. However, there is still a considerable amount of companies that can’t leverage cloud for a variety of reasons (regulations, for example) and want to take advantage of Kubernetes capabilities. It is this context, in which the public cloud is not an option and the company wants to install Kubernetes in its data-center, that we will explore and demystify in this series of articles.
 
