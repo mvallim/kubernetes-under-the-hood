@@ -96,7 +96,10 @@ The cloud-init utility that is available in the latest Linux distributions is ca
 cloud-config files are special scripts designed to be processed by the cloud-init utility. They are usually used to set up a server during its first boot.
 
 We can see cloud-init in action below (tip: you can reduce the video velocity to see it in more detail):
-[![cloud-init in action](http://i3.ytimg.com/vi/SZ30i9Lo4rk/hqdefault.jpg)](https://youtu.be/SZ30i9Lo4rk)
+
+<p align="center">
+  <a href="https://youtu.be/SZ30i9Lo4rk"><img src="http://i3.ytimg.com/vi/SZ30i9Lo4rk/hqdefault.jpg" title="cloud-init in action" alt="cloud-init in action"></a>
+</p>
 
 ## LVM
 
