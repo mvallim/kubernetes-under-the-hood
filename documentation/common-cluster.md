@@ -5,11 +5,11 @@
 
 ## HAProxy cluster
 
-High Availability HAProxy load balancer supported by a Floating IP and the [Corosync](https://clusterlabs.org/corosync.html)/[Pacemaker](https://clusterlabs.org/pacemaker/) cluster stack.
+High Availability **HAProxy** load balancer supported by a **Floating IP** and the [Corosync](https://clusterlabs.org/corosync.html)/[Pacemaker](https://clusterlabs.org/pacemaker/) cluster stack.
 
-Floating IPs are also known as “shared” or “virtual” IP addresses. A Floating IP is a normal IP address assigned to a node that may eventually fail. For failover, a node with similar characteristics (Passive) runs alongside with the main (Active) node in an Active/Passive mode. If a failure occurs, this Floating IP will be assigned to the Passive node automatically and transparently, making it the active one, avoiding downtime.
+**Floating IPs** are also known as “shared” or “virtual” IP addresses. A **Floating IP** is a normal IP address assigned to a node that may eventually fail. For failover, a node with similar characteristics (Passive) runs alongside with the main (Active) node in an Active/Passive mode. If a failure occurs, this **Floating IP** will be assigned to the Passive node automatically and transparently, making it the active one, avoiding downtime.
 
-Each of the HAProxy load balancers will be configured to split traffic between backend application servers. If the primary load balancer goes down, the Floating IP will be moved to the second load balancer automatically, allowing it continue serving without downtime.
+Each of the **HAProxy** load balancers will be configured to split traffic between backend application servers. If the primary load balancer goes down, the **Floating IP** will be moved to the second load balancer automatically, allowing it continue serving without downtime.
 <p align="center">
   <img src="images/haproxy-cluster.gif">
 </p>
@@ -22,7 +22,7 @@ Kubernetes is an open-source platform and is production-ready.
 
 ## Gluster
 
-[GlusterFS](https://docs.gluster.org/en/latest/Administrator%20Guide/GlusterFS%20Introduction/) is a scalable network filesystem suitable for data-intensive tasks such as cloud storage and media streaming. GlusterFS is free and open source software and can utilize common off-the-shelf hardware. The main purpose of Gluster here is to provide volumes to Kubernetes Pods. It will be managed and [orchestrated like any other app](https://github.com/gluster/gluster-kubernetes) in Kubernetes. This is a convenient way to unlock the power of dynamically provisioned, persistent GlusterFS volumes in Kubernetes.
+[GlusterFS](https://docs.gluster.org/en/latest/Administrator%20Guide/GlusterFS%20Introduction/) is a scalable network filesystem suitable for data-intensive tasks such as cloud storage and media streaming. GlusterFS is free and open source software and can utilize common off-the-shelf hardware. The main purpose of **Gluster** here is to provide volumes to Kubernetes Pods. It will be managed and [orchestrated like any other app](https://github.com/gluster/gluster-kubernetes) in Kubernetes. This is a convenient way to unlock the power of dynamically provisioned, persistent GlusterFS volumes in Kubernetes.
 <p align="center">
   <img src="images/gluster-create-volume.gif">
 </p>
