@@ -174,7 +174,7 @@ Docker was initially developed based on LXC technology but has become independen
 
 <p align="center">
   <img src="images/brief-container-history.png"><br>
-  Above is a brief summary of the history of containers taken from Wikipedia and [other sources](https://content.pivotal.io/infographics/moments-in-container-history)
+  Above is a brief summary of the history of containers taken from Wikipedia and <a href="https://content.pivotal.io/infographics/moments-in-container-history">other sources</a>
 </p>
 
 This is essentially a way of packing your software in container format. But what does that mean? It means that all your software and its dependencies (like libraries, configurations, etc) are contained in this container, making it easier to port your application without having to worry about potential differences in the environment where your application is deployed into.
