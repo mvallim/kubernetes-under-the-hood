@@ -6,11 +6,11 @@
 
 Reference: http://www.haproxy.org/
 
-We’ll be using **HAProxy** to create a **Load Balancer (LB)** — as we’ve mentioned in the previous article — for the **Kubernetes API**.
+We’ll be using **HAProxy** to create a **Load Balancer (LB)** — as we’ve mentioned [here](documentation/common-cluster.md) — for the **Kubernetes API**.
 
 Let’s imagine a scenario: What would happen if we had only one **HAProxy** instance performing the Load Balancing? We would introduce a Single Point of Failure ([SPOF](https://en.wikipedia.org/wiki/Single_point_of_failure)) to our architecture. I mean, if, for any reason, this single **HAProxy** failed, we would totally lose access to the **Kubernetes API**. Of course, this is a situation we want to avoid at all costs, given the importance of this component to our solution.
 
-To solve this problem, **HAProxy** will be part of a **High Availability Cluster (HA)** powered by a **Floating IP** and with at least two **HAProxy** services configured, as already presented in the previous article.
+To solve this problem, **HAProxy** will be part of a **High Availability Cluster (HA)** powered by a **Floating IP** and with at least two **HAProxy** services configured, as already presented [here](documentation/common-cluster.md).
 
 In summary, we will be creating a **Highly Available Cluster** for **Load Balancing**.
 
@@ -164,7 +164,7 @@ In our specific case, since we are going to create a VM image that will be the b
 
 Reference: https://www.gluster.org/
 
-You can see the objective of the Gluster in the previous article.
+You can see the objective of the Gluster [here](documentation/common-cluster.md).
 
 ## Docker
 
@@ -201,7 +201,7 @@ Reference: https://kubernetes.io/
 
 As we saw above, Kubernetes is an open-source container orchestration system for automating application deployment, scaling, and management, able to manage containers smartly and cleanly.
 
-We’ll cover the internals of Kubernetes in detail in the next articles of this series.
+We’ll cover the internals of Kubernetes in detail in the other topic.
 
 <p align="center">
   <img src="images/brace-yourselves-kubernetes.jpeg"><br>
