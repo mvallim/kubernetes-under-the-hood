@@ -13,6 +13,9 @@ To solve this problem, HAProxy will be part of a High Availability Cluster (HA) 
 
 In summary, we will be creating a Highly Available Cluster for Load Balancing.
 
+<p align="center">
+  <img src="images/cluster-ha.png">
+</p>
 
 ## Corosync
 
@@ -29,10 +32,14 @@ Corosync has two main purposes: Keeping the status of the cluster (knowing when 
 
 To update the cluster status, all nodes of the cluster should have Corosync installed and configured the same way. Thus, every time a node containing Corosync starts, imagine the following conversation takes place:
 
-* The new node sends a broadcast message saying: “Is there any Corosync member there?”
-* The existing Corosync instances in the network receive the message and respond: “I’m here!”
-* The new node receives the response from these existing instances and says: “Hi there! I want to join the cluster. Here are my credentials!”
+* The new node sends a broadcast message saying: *“Is there any Corosync member there?”*
+* The existing Corosync instances in the network receive the message and respond: *“I’m here!”*
+* The new node receives the response from these existing instances and says: *“Hi there! I want to join the cluster. Here are my credentials!”*
 * The existing Corosync instances receive this request-to-join message, evaluate the credentials (configuration) received and decide, based on the quorum configuration, if the new instance should or shouldn’t be accepted to this “very special club”.
+
+<p align="center">
+  <img src="images/corosync-interaction-join.gif">
+</p>
 
 #### A node leaves the cluster
 
@@ -47,6 +54,10 @@ To know when a node leaves the cluster, Corosync continuously monitors the healt
 * Each node will have a vote saying whether that node is healthy or unhealthy from their point of view.
 * Corosync will then evaluate the quorum configuration against the received votes to decide whether the node should be marked as healthy or unhealthy.
 * If the node is marked unhealthy it will still be known to the cluster but won’t be used while it is in that state.
+
+<p align="center">
+  <img src="images/corosync-interaction-leave.gif">
+</p>
 
 ## Pacemaker
 
@@ -64,6 +75,9 @@ Pacemaker uses a declarative approach. It means we will create a configuration f
 
 In simple terms, when a node is in active mode, we want the Floating IP and HAProxy to be assigned to and be executed on it, while all the other nodes will be in passive mode until, for any reason, the node or the resources attached to it fail. When that happens, the resources that are assigned to the active node are “migrated to” (or started on) one of the passive nodes where all the dependency conditions can be satisfied. Once this happens, the selected node becomes the active one and the previously active node transitions to the passive state. Check the animation below:
 
+<p align="center">
+  <img src="images/haproxy-cluster.gif">
+</p>
 
 ## dnsmasq
 
@@ -79,6 +93,9 @@ DHCP and DNS will work in synchronization; that is, for each new host that joins
 
 As a more practical example, consider what usually happens when we create a new instance on cloud platforms (GCP, AWS, Azure, etc). Each new instance created immediately receives an IP, DNS resolvers, routes and hostname registration in the internal DNS. At the end of the day, it’s DHCP, together with DNS, who is doing this work for us behind the scenes.
 
+<p align="center">
+  <img src="images/dhcp-interaction.gif">
+</p>
 
 ## VirtualBox
 
@@ -89,6 +106,9 @@ Well, since we don’t have access to an actual bare-metal server, we’ll be us
 
 This technology stack is all we need to exercise the concepts demonstrated throughout this series of articles.
 
+<p align="center">
+  <img src="images/virtualbox-gui.png">
+</p>
 
 ## cloud-init
 
@@ -126,8 +146,11 @@ That’s basically what LVM allows us to do with our disks. LVM allows us to con
 
 In our specific case, since we are going to create a VM image that will be the base for many other images (Gateway, HAProxy, Kubernetes master/worker nodes and Gluster), with each service having its own demand for space (our slots, in this case, would be /var, /usr, /tmp, /opt, / etc), LVM will provide us with the flexibility to resize our partition volumes as needed without having to worry about this details in advance.
 
+<p align="center">
+  <img src="images/lvm-expand-concept.gif"><br>
+  LVM extension concept in action
+</p>
 
-LVM extension concept in action
 
 ## Gluster
 *“Gluster is a free and open source software scalable network filesystem.”*
@@ -146,6 +169,11 @@ Reference: https://www.docker.com/
 
 Docker was initially developed based on LXC technology but has become independent. It offers more than just running containers: it makes it easy to create, build, upload, and control version images.
 
+<p align="center">
+  <img src="images/brief-container-history.png"><br>
+  Image by: https://www.redhat.com
+</p>
+
 
 This is essentially a way of packing your software in container format. But what does that mean? It means that all your software and its dependencies (like libraries, configurations, etc) are contained in this container, making it easier to port your application without having to worry about potential differences in the environment where your application is deployed into.
 
@@ -153,8 +181,10 @@ One of the great advantages of this approach is that you can start your containe
 
 Some may argue the same could be achieved through virtualization. This assumption is correct and the result would be practically the same but the big difference here is that we have better use of our resources. Using containers, we are able to share our OS resources, removing the need for an entire operating system host our application. For a better understanding of this concept, check the image below:
 
-
-Image by: https://www.redhat.com
+<p align="center">
+  <img src="images/virtualization-lxc.png"><br>
+  Image by: https://www.redhat.com
+</p>
 
 All this sounds really great but what happens when I have an ecosystem of applications running on Docker containers? This makes our management work very unproductive, boring and prone to errors. That’s where Kubernetes joins the party. Kubernetes is an open-source container orchestration system for automating application deployment, scaling, and management, able to manage containers smartly and cleanly.
 
@@ -166,6 +196,10 @@ Reference: https://kubernetes.io/
 As we saw above, Kubernetes is an open-source container orchestration system for automating application deployment, scaling, and management, able to manage containers smartly and cleanly.
 
 We’ll cover the internals of Kubernetes in detail in the next articles of this series.
+
+<p align="center">
+  <img src="images/brace-yourselves-kubernetes.jpeg"><br>
+</p>
 
 ## Debian
 
