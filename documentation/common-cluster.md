@@ -32,6 +32,7 @@ Kubernetes is an open-source platform and is production-ready.
 Cluster is an English term meaning “agglomerate” or “agglomeration” and can be applied in various contexts. In the context of computing, the term defines a system architecture capable of combining several computers to work together.
 
 Each station is called a “node” and, in combination, forms the cluster. In some cases, it is possible to see references such as “supercomputers” or “cluster computing” for the same scenario, representing the hardware used or the software specially developed to be able to combine these equipments.
+
 Reference: https://en.wikipedia.org/wiki/Computer_cluster
 
 ## How are clusters formed?
@@ -45,6 +46,7 @@ No. There are different types of clusters that are focused on different benefits
 ### Failover or High Availability (HA)
 
 As its name suggests, this type of cluster is developed with a focus to keep the application always active and responsive. Regardless of what happens at each node, it is essential that the system remains online. For this, several nodes work on a redundancy schema that is invisible to the user. To illustrate this concept, imagine a basketball game where a substitute player who has exactly the same characteristics as a starting one — practically a clone of the original — is always warm and standing on the edge of the court. If the starting player needs to leave for any reason, the substitute player immediately takes action, without the referee, the public nor the teammates realizing it. This is a type of cluster commonly used in services such as email, where getting out-of-service is simply not acceptable.
+
 <p align="center">
   <img src="images/cluster-ha.png">
 </p>
@@ -52,6 +54,7 @@ As its name suggests, this type of cluster is developed with a focus to keep the
 ### Load Balancing
 
 In this type of architecture, all nodes are responsible for performing tasks. Be it to respond to incoming traffic requests or to provide resources, the tasks are always distributed to the machines that compose the system. It’s literally a “all for one” approach. The simplest to the most complex tasks are performed with the computing power resulting from the union of all the available resources. In this model, performance is the priority and if any of the nodes fails it is removed from the system and the task is redistributed among the remaining ones.
+
 <p align="center">
   <img src="images/cluster-load-balancer.png">
 </p>
@@ -59,6 +62,7 @@ In this type of architecture, all nodes are responsible for performing tasks. Be
 ### Parallel Processing
 
 In this type of cluster, large tasks are divided between less complex activities, distributed by the system and executed in parallel by the various nodes that compose the cluster. Therefore, this type of cluster is well suited for very complex computational tasks. Roughly speaking, it would be like splitting a jigsaw puzzle of five thousand pieces between ten friends, having each friend responsible for assembling a chunk containing five hundred pieces. After each friend finishes its part, the chunks are them combined to solve the main puzzle (MapReduce anyone?)
+
 <p align="center">
   <img src="images/cluster-parallel.png">
 </p>
