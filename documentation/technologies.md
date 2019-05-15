@@ -124,6 +124,9 @@ cloud-config files are special scripts designed to be processed by the cloud-ini
 
 We can see cloud-init in action below (tip: you can reduce the video velocity to see it in more detail):
 
+<p align="center">
+  <a href="https://youtu.be/SZ30i9Lo4rk"><img src="http://i3.ytimg.com/vi/SZ30i9Lo4rk/hqdefault.jpg"></a>
+</p>
 
 ## LVM
 
@@ -142,9 +145,9 @@ To maximize the efficiency of use of these spaces, each venue is basically a hug
 
 Imagine Google I/O, for example. During the conference, a bigger slot may be configured to host the keynote sessions and, right after these sessions end, the space may be reconfigured into smaller sections to hold the other sessions of the event.
 
-That’s basically what LVM allows us to do with our disks. LVM allows us to configure our servers without having to know in advance what’s their intended use. We don’t need to know what services will run on them, neither what’s the expected volume of data these services will generate. It also allows us to manipulate and resize volumes in real time, just like in the example for venue space allocation in conferences above.
+That’s basically what LVM allows us to do with our disks. **LVM** allows us to configure our servers without having to know in advance what’s their intended use. We don’t need to know what services will run on them, neither what’s the expected volume of data these services will generate. It also allows us to manipulate and resize volumes in real time, just like in the example for venue space allocation in conferences above.
 
-In our specific case, since we are going to create a VM image that will be the base for many other images (Gateway, HAProxy, Kubernetes master/worker nodes and Gluster), with each service having its own demand for space (our slots, in this case, would be /var, /usr, /tmp, /opt, / etc), LVM will provide us with the flexibility to resize our partition volumes as needed without having to worry about this details in advance.
+In our specific case, since we are going to create a VM image that will be the base for many other images (Gateway, HAProxy, Kubernetes master/worker nodes and Gluster), with each service having its own demand for space (our slots, in this case, would be /var, /usr, /tmp, /opt, / etc), **LVM** will provide us with the flexibility to resize our partition volumes as needed without having to worry about this details in advance.
 
 <p align="center">
   <img src="images/lvm-expand-concept.gif"><br>
@@ -170,10 +173,8 @@ Reference: https://www.docker.com/
 Docker was initially developed based on LXC technology but has become independent. It offers more than just running containers: it makes it easy to create, build, upload, and control version images.
 
 <p align="center">
-  <img src="images/brief-container-history.png"><br>
-  Image by: https://www.redhat.com
+  <img src="images/brief-container-history.png">
 </p>
-
 
 This is essentially a way of packing your software in container format. But what does that mean? It means that all your software and its dependencies (like libraries, configurations, etc) are contained in this container, making it easier to port your application without having to worry about potential differences in the environment where your application is deployed into.
 
