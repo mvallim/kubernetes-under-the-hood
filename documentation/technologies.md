@@ -5,6 +5,7 @@
 *“HAProxy is a free, very fast and reliable solution offering high availability, load balancing, and proxying for TCP and HTTP-based applications. It is particularly suited for very high traffic web sites and powers quite a number of the world’s most visited ones. Over the years it has become the de-facto standard opensource load balancer, is now shipped with most mainstream Linux distributions, and is often deployed by default in cloud platforms. Since it does not advertise itself, we only know it’s used when the admins report it :-)”*
 
 Reference: http://www.haproxy.org/
+
 We’ll be using HAProxy to create a Load Balancer (LB) — as we’ve mentioned in the previous article — for the Kubernetes API.
 
 Let’s imagine a scenario: What would happen if we had only one HAProxy instance performing the Load Balancing? We would introduce a Single Point of Failure (SPOF) to our architecture. I mean, if, for any reason, this single HAProxy failed, we would totally lose access to the Kubernetes API. Of course, this is a situation we want to avoid at all costs, given the importance of this component to our solution.
@@ -102,6 +103,7 @@ As a more practical example, consider what usually happens when we create a new 
 *“VirtualBox is a powerful x86 and AMD64/Intel64 virtualization product for enterprise as well as home use. Not only is VirtualBox an extremely feature rich, high-performance product for enterprise customers, it is also the only professional solution that is freely available as Open Source Software under the terms of the GNU General Public License (GPL) version 2.”*
 
 Reference: https://www.virtualbox.org/
+
 Well, since we don’t have access to an actual bare-metal server, we’ll be using VirtualBox (an open source alternative) for simulating machines and networks in our data center.
 
 This technology stack is all we need to exercise the concepts demonstrated throughout this series of articles.
