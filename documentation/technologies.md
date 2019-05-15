@@ -167,7 +167,6 @@ You can see the objective of the Gluster in the previous article.
 *“Docker is a collection of interoperating software-as-a-service and platform-as-a-service offerings that employ operating-system-level virtualization to cultivate development and delivery of software inside standardized software packages called containers. The software that hosts the containers is called Docker Engine. It was first started in 2013 and is developed by Docker, Inc. The service has both free and premium tiers.”*
 
 Reference: https://en.wikipedia.org/wiki/Docker_(software)
-
 Reference: https://www.docker.com/
 
 Docker was initially developed based on LXC technology but has become independent. It offers more than just running containers: it makes it easy to create, build, upload, and control version images.
@@ -195,6 +194,7 @@ All this sounds really great but what happens when I have an ecosystem of applic
 *“Kubernetes (K8s) is an open-source system for automating deployment, scaling, and management of containerized applications.”*
 
 Reference: https://kubernetes.io/
+
 As we saw above, Kubernetes is an open-source container orchestration system for automating application deployment, scaling, and management, able to manage containers smartly and cleanly.
 
 We’ll cover the internals of Kubernetes in detail in the next articles of this series.
