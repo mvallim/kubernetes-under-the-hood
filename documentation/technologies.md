@@ -130,7 +130,7 @@ We can see cloud-init in action below (tip: you can reduce the video velocity to
 
 ## LVM
 
-*“LVM means Logical Volume Manager.*
+*“**LVM means Logical Volume Manager.***
 
 ***What is the Logical Volume Management?***
 *The Logical volume management provides a higher-level abstraction of the disk storage on a computer system than the traditional view of disks and partitions. This gives the system administrator much more flexibility in allocating storage to applications and users.*
@@ -173,7 +173,8 @@ Reference: https://www.docker.com/
 Docker was initially developed based on LXC technology but has become independent. It offers more than just running containers: it makes it easy to create, build, upload, and control version images.
 
 <p align="center">
-  <img src="images/brief-container-history.png">
+  <img src="images/brief-container-history.png"><br>
+  Above is a brief summary of the history of containers taken from Wikipedia and [other sources](https://content.pivotal.io/infographics/moments-in-container-history)
 </p>
 
 This is essentially a way of packing your software in container format. But what does that mean? It means that all your software and its dependencies (like libraries, configurations, etc) are contained in this container, making it easier to port your application without having to worry about potential differences in the environment where your application is deployed into.
