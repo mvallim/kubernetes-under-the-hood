@@ -43,10 +43,10 @@ The softwares to be installed are the following:
 You can see how to perform the base installation for both Debian 9 Stretch and Ubuntu 18.04 LTS Server in the following videos:
 
 > **ISO install:** https://cdimage.debian.org/debian-cd/current/amd64/iso-dvd/debian-9.9.0-amd64-DVD-1.iso
-[![Debian 9 Stretch base image VirtualBox](http://i3.ytimg.com/vi/mG8scaDoZog/hqdefault.jpg)](https://youtu.be/mG8scaDoZog)
+[![Debian 9 Stretch base image VirtualBox](http://i3.ytimg.com/vi/uZzZZrlfJjs/hqdefault.jpg)](https://youtu.be/uZzZZrlfJjs)
 
 > **ISO install:** http://cdimage.ubuntu.com/ubuntu/releases/18.04/release/ubuntu-18.04.2-server-amd64.iso
-[![Debian 9 Stretch base image VirtualBox](http://i3.ytimg.com/vi/Zo82rXBEzco/hqdefault.jpg)](https://youtu.be/Zo82rXBEzco)
+[![Ubuntu 18.04 LTS server base image VirtualBox](http://i3.ytimg.com/vi/AbmW-O9vmuw/hqdefault.jpg)](https://youtu.be/AbmW-O9vmuw)
 
 ### Or, if you prefer to download the base image:
 
