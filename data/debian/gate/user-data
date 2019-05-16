@@ -23,15 +23,20 @@ write_files:
 - path: /etc/dnsmasq.d/dhcp
   permissions: '0644'
   content: |
-    dhcp-range=enp0s8,192.168.1.50,192.168.1.100,12h
-    dhcp-range=enp0s9,192.168.2.50,192.168.2.200,12h
-    dhcp-range=enp0s10,192.168.3.50,192.168.3.200,12h
-    dhcp-range=enp0s16,192.168.4.50,192.168.4.200,12h
+    dhcp-range=enp0s8,192.168.1.53,192.168.1.253,12h
+    dhcp-range=enp0s9,192.168.2.53,192.168.2.253,12h
+    dhcp-range=enp0s10,192.168.3.53,192.168.3.253,12h
+    dhcp-range=enp0s16,192.168.4.53,192.168.4.253,12h
 
-    dhcp-option=enp0s8,option:dns-server,192.168.1.254
-    dhcp-option=enp0s9,option:dns-server,192.168.2.254
-    dhcp-option=enp0s10,option:dns-server,192.168.3.254
-    dhcp-option=enp0s16,option:dns-server,192.168.4.254
+    dhcp-option=enp0s8,option:dns-server,192.168.1.1
+    dhcp-option=enp0s9,option:dns-server,192.168.2.1
+    dhcp-option=enp0s10,option:dns-server,192.168.3.1
+    dhcp-option=enp0s16,option:dns-server,192.168.4.1
+
+    dhcp-option=enp0s8,option:domain-name,kube.local
+    dhcp-option=enp0s9,option:domain-name,kube.local
+    dhcp-option=enp0s10,option:domain-name,kube.local
+    dhcp-option=enp0s16,option:domain-name,kube.local
 
     dhcp-option=enp0s8,option:router,192.168.1.254
     dhcp-option=enp0s9,option:router,192.168.2.254
