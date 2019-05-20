@@ -11,16 +11,12 @@ config:
       - type: static
         address: 192.168.1.1
       - type: static
-        address: 192.168.1.2
-      - type: static
         address: 192.168.1.254
   - type: physical
     name: enp0s9
     subnets:
       - type: static
         address: 192.168.2.1
-      - type: static
-        address: 192.168.2.2
       - type: static
         address: 192.168.2.254
   - type: physical
@@ -29,16 +25,12 @@ config:
       - type: static
         address: 192.168.3.1
       - type: static
-        address: 192.168.3.2
-      - type: static
         address: 192.168.3.254
   - type: physical
     name: enp0s16
     subnets:
       - type: static
         address: 192.168.4.1
-      - type: static
-        address: 192.168.4.2
       - type: static
         address: 192.168.4.254
   - type: physical
