@@ -6,6 +6,12 @@ write_files:
   content: |
     net.ipv4.ip_forward=1
 
+- path: /etc/sysctl.d/20-arp.conf
+  permissions: '0644'
+  content: |
+    net.ipv4.conf.default.rp_filter=2
+    net.ipv4.conf.all.rp_filter=2    
+
 - path: /etc/dnsmasq.d/dns
   permissions: '0644'
   content: |
