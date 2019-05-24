@@ -171,6 +171,7 @@ You can see the objective of the Gluster [here](/documentation/common-cluster.md
 *“Docker is a collection of interoperating [software-as-a-service](https://en.wikipedia.org/wiki/Software-as-a-service) and [platform-as-a-service](https://en.wikipedia.org/wiki/Platform-as-a-service) offerings that employ [operating-system-level virtualization](https://en.wikipedia.org/wiki/Operating-system-level_virtualization) to cultivate development and delivery of software inside standardized software packages called [containers](https://en.wikipedia.org/wiki/Container_%28virtualization%29). The software that hosts the containers is called **Docker Engine**. It was first started in 2013 and is developed by [Docker, Inc](https://en.wikipedia.org/wiki/Docker,_Inc.). The service has both free and premium tiers.”*
 
 Reference: https://en.wikipedia.org/wiki/Docker_(software)
+
 Reference: https://www.docker.com/
 
 **Docker** was initially developed based on [LXC](https://linuxcontainers.org/lxc/introduction/) technology but has become independent. It offers more than just running containers: it makes it easy to create, build, upload, and control version images.
