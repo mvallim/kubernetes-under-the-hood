@@ -7,8 +7,13 @@ users:
   lock_passwd: true
   ssh_authorized_keys:
     - #SSH-PUB-KEY#
+
 package_upgrade: true
+
 ssh_pwauth: false
+
+manage_etc_hosts: true
+
 power_state:
  mode: reboot
  timeout: 30

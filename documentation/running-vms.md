@@ -61,6 +61,7 @@ $ for instance in hapx-node01 hapx-node02; do
     ./create-image.sh \
         -k ~/.ssh/id_rsa.pub \
         -u hapx/user-data \
+        -n hapx/network-config \
         -i hapx/post-config-interfaces \
         -r hapx/post-config-resources \
         -o ${instance} \
@@ -75,6 +76,7 @@ $ for instance in kube-mast01 kube-mast02 kube-mast03; do
     ./create-image.sh \
         -k ~/.ssh/id_rsa.pub \
         -u kube/user-data \
+        -n kube-mast/network-config \
         -i kube-mast/post-config-interfaces \
         -r kube-mast/post-config-resources \
         -o ${instance} \
@@ -89,6 +91,7 @@ $ for instance in kube-node01 kube-node02 kube-node03; do
     ./create-image.sh \
         -k ~/.ssh/id_rsa.pub \
         -u kube/user-data \
+        -n kube-node/network-config \
         -i kube-node/post-config-interfaces \
         -r kube-node/post-config-resources \
         -o ${instance} \
@@ -103,6 +106,7 @@ $ for instance in glus-node01 glus-node02 glus-node03; do
     ./create-image.sh \
         -k ~/.ssh/id_rsa.pub \
         -u glus/user-data \
+        -n glus/network-config \
         -i glus/post-config-interfaces \
         -s glus/post-config-storages \
         -r glus/post-config-resources \
