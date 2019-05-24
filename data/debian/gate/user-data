@@ -49,10 +49,10 @@ write_files:
     dhcp-option=enp0s10,option:router,192.168.3.254
     dhcp-option=enp0s16,option:router,192.168.4.254
 
-    dhcp-option=enp0s8,option:classless-static-route,0.0.0.0/0,192.168.1.254,192.168.0.0/16,192.168.1.254
-    dhcp-option=enp0s9,option:classless-static-route,0.0.0.0/0,192.168.2.254,192.168.0.0/16,192.168.2.254
-    dhcp-option=enp0s10,option:classless-static-route,0.0.0.0/0,192.168.3.254,192.168.0.0/16,192.168.3.254
-    dhcp-option=enp0s16,option:classless-static-route,0.0.0.0/0,192.168.4.254,192.168.0.0/16,192.168.4.254
+    dhcp-option=enp0s8,option:classless-static-route,0.0.0.0/0,192.168.1.254,192.168.1.0/24,192.168.1.254
+    dhcp-option=enp0s9,option:classless-static-route,0.0.0.0/0,192.168.2.254,192.168.2.128/25,192.168.2.254
+    dhcp-option=enp0s10,option:classless-static-route,0.0.0.0/0,192.168.3.254,192.168.3.0/24,192.168.3.254
+    dhcp-option=enp0s16,option:classless-static-route,0.0.0.0/0,192.168.4.254,192.168.4.128/25,192.168.4.254
 
 runcmd:
   - [ sysctl, --system ]
@@ -103,6 +103,8 @@ users:
 package_upgrade: true
 
 ssh_pwauth: false
+
+manage_etc_hosts: true
 
 power_state:
   mode: reboot

@@ -160,6 +160,8 @@ package_upgrade: true
 
 ssh_pwauth: false
 
+manage_etc_hosts: true
+
 power_state:
   mode: reboot
   timeout: 30
