@@ -1,0 +1,5 @@
+---
+nic1:
+  id: 1
+  type: intnet
+  name: glus

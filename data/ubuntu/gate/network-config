@@ -1,0 +1,47 @@
+---
+version: 1
+config:
+  - type: physical
+    name: enp0s3
+    subnets:
+      - type: dhcp
+  - type: physical
+    name: enp0s8
+    subnets:
+      - type: static
+        address: 192.168.1.1/24
+      - type: static
+        address: 192.168.1.254/24
+  - type: physical
+    name: enp0s9
+    subnets:
+      - type: static
+        address: 192.168.2.1/25
+      - type: static
+        address: 192.168.2.126/25
+      - type: static
+        address: 192.168.2.129/25
+      - type: static
+        address: 192.168.2.254/25        
+  - type: physical
+    name: enp0s10
+    subnets:
+      - type: static
+        address: 192.168.3.1/24
+      - type: static
+        address: 192.168.3.254/24
+  - type: physical
+    name: enp0s16
+    subnets:
+      - type: static
+        address: 192.168.4.1/25
+      - type: static
+        address: 192.168.4.126/25
+      - type: static
+        address: 192.168.4.129/25
+      - type: static
+        address: 192.168.4.254/25
+  - type: physical
+    name: enp0s17
+    subnets:
+      - type: dhcp

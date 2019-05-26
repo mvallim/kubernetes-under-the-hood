@@ -1,0 +1,20 @@
+#cloud-config
+users:
+- name: debian
+  gecos: Debian User
+  sudo: ALL=(ALL) NOPASSWD:ALL
+  shell: /bin/bash
+  lock_passwd: true
+  ssh_authorized_keys:
+    - #SSH-PUB-KEY#
+
+package_upgrade: true
+
+ssh_pwauth: false
+
+manage_etc_hosts: true
+
+power_state:
+ mode: reboot
+ timeout: 30
+ condition: True

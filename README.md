@@ -1,125 +1,46 @@
 # Kubernetes under the hood
-![](under-the-hood.jpg)
+<p align="center">
+  <img src="documentation/images/under-the-hood.jpg">
+</p>
 
-## Getting Started
+It even includes a SlideShare explaining the reasoning behid it [Kubernetes under the hood journey](https://pt.slideshare.net/MarcosVallim1/kubernetes-under-the-hood-journey/MarcosVallim1/kubernetes-under-the-hood-journey)
 
-### Prerequisites
-The premise is that you already have Virtualbox properly installed on your local machine.
+## Target Audience
+The target audience for this tutorial is someone planning to install a Kubernetes cluster and wants to understand how everything fits together.
 
-### Download base image
-To continue with this demo you need to download the base image and register it in Virtualbox.
+## Index
+***Atention**: the documentation for this project is being actively improved to explain the demonstrated concepts clearly. If you face any difficulties while following the steps described in the documentation, please open an issue, so we can keep improving it. The version of Kubernetes used here is **1.13.5***
 
-```
-$ cd ~/VirtualBox\ VMs/
-
-$ wget https://www.dropbox.com/s/v6h0sedqt3za9pl/image-base.tar.bz2?dl=0
-
-$ tar xvjf image-base.tar.bz2
-
-$ vboxmanage registervm ~/VirtualBox\ VMs/image-base/image-base.vbox
-```
-
-## Configuring
-
-You need to add the routes on your local machine to access the internal network of Virtualbox.
-
-```
-$ sudo ip route add 192.168.1.0/24 via 192.168.1.254
-$ sudo ip route add 192.168.2.0/24 via 192.168.2.254
-$ sudo ip route add 192.168.3.0/24 via 192.168.3.254
-$ sudo ip route add 192.168.4.0/24 via 192.168.4.254
-$ sudo ip route add 192.168.254.0/24 via 192.168.254.254
-```
-
-If you are a dnsmasq running on your local machine execute this to use private DNS of this DEMO to domain 'kube.local'
-
-```
-$ echo "server=/kube.local/192.168.254.254" | sudo tee -a /etc/dnsmasq.d/server
-$ sudo service dnsmasq restart
-```
-
-## Running
-
-Now let's create the images using a tool (create-image.sh) that will help us clone the base image and add the user-data, meta-data and network-config scripts that cloud-init will use to make the installation of the necessary packages and configurations.
-
-```
-$ ./create-image.sh \
-    -s or --ssh-pub-keyfile SSH_PUB_KEY_FILE \
-    -u or --user-data USER_DATA_FILE \
-    -m or --meta-data META_DATA_FILE \
-    -n or --network-interfaces NETWORK_INTERFACES_FILE \
-    -p or --post-config-interfaces POST_CONFIG_INTERFACES_FILE \
-    -o or --hostname HOSTNAME \
-    -b or --base-image BASE_IMAGE \
-    -a or --auto-start AUTO_START
-```
-
-### Parameters:
-* __`SSH_PUB_KEY_FILE`__: Path to an SSH public key.
-* __`USER_DATA_FILE`__: Path to an user data file. Default is '/data/user-data'.
-* __`META_DATA_FILE`__: Path to an meta data file. Default is '/data/meta-data'.
-* __`NETWORK_INTERFACES_FILE`__: Path to an network interface data file.
-* __`POST_CONFIG_INTERFACES_FILE`__: Path to an post config interface data file.
-* __`HOSTNAME`__: Hostname of new image.
-* __`BASE_IMAGE`__: Name of VirtualBox base image.
-* __`AUTO_START`__: Auto start vm. Default is true.
-
-For more information:
-```
-$ ./create-image.sh -h or --help
-```
-
-## Running Demo
-
-```
-./create-image.sh \
-    -s ~/.ssh/id_rsa.pub \
-    -u data/gate/user-data \
-    -n data/gate/network-config \
-    -p data/gate/post-config-interfaces \
-    -o gate-node01 \
-    -b image-base
-
-for instance in hapx-node01 hapx-node02; do
-    ./create-image.sh \
-        -s ~/.ssh/id_rsa.pub \
-        -u data/hapx/user-data \
-        -n data/hapx/network-config \
-        -p data/hapx/post-config-interfaces \
-        -o ${instance} \
-        -b image-base
-done
-
-for instance in kube-mast01 kube-mast02 kube-mast03; do
-    ./create-image.sh \
-        -s ~/.ssh/id_rsa.pub \
-        -u data/kube/user-data \
-        -n data/kube/network-config \
-        -p data/kube-mast/post-config-interfaces \
-        -o ${instance} \
-        -b image-base
-done
-
-for instance in kube-node01 kube-node02 kube-node03; do
-    ./create-image.sh \
-        -s ~/.ssh/id_rsa.pub \
-        -u data/kube/user-data \
-        -n data/kube/network-config \
-        -p data/kube-node/post-config-interfaces \
-        -o ${instance} \
-        -b image-base
-done
-
-for instance in kube-glus01 kube-glus02 kube-glus03; do
-    ./create-image.sh \
-        -s ~/.ssh/id_rsa.pub \
-        -u data/glus/user-data \
-        -n data/glus/network-config \
-        -p data/glus/post-config-interfaces \
-        -o ${instance} \
-        -b image-base
-done
-```
+1. Introdution
+   - [Kubernetes Journey - Up and running out of the cloud](documentation/objective.md)
+2. Planning
+   - [Architecture Overview](documentation/common-cluster.md)
+   - [Technology Stack](documentation/technologies.md)
+   - Networking
+     - [Services (DNS, DHCP, Gateway, NAT)](documentation/network-services.md)
+     - [Segmentation](documentation/network-segmentation.md)
+3. Preparation
+   - Linux Image
+     - [Creating the base image](documentation/create-linux-image.md)
+     - [cloud-init Bootstrap](documentation/cloud-init.md)
+   - [Configuring your station](documentation/configure-your-station.md)
+   - [Running VMs](documentation/running-vms.md)
+   - [Configuring hosts](documentation/configure-hosts.md)
+4. Putting all together
+   - [HAProxy Cluster](documentation/haproxy-cluster.md)
+   - [Kubernetes](documentation/kube.md)
+     - [flannel](documentation/kube-flannel.md)
+     - [etcd](documentation/kube-etcd.md)
+     - [Masters](documentation/kube-masters.md)
+     - [Workers](documentation/kube-workers.md)
+     - [Dashboard](documentation/kube-dashboard.md)
+     - [Demo Application](documentation/kube-demo-application.md)
+   - LoadBalancer
+     - [MetalLB](documentation/kube-metallb.md)
+   - Volumes
+     - [Gluster](documentation/gluster.md)
+     - [Heketi](documentation/kube-heketi.md)
+     - [Demo StorageClass](documentation/kube-demo-storageclass.md) (under construction)
 
 ## Contributing
 
@@ -135,8 +56,9 @@ We use [GitHub](https://github.com/mvallim/kubernetes-under-the-hood) for versio
 * **Fabio Franco Uechi** - *Validation demo* - [fabito](https://github.com/fabito)
 * **Dirceu Alves Silva** - *Validation demo* - [dirceusilva](https://github.com/dirceuSilva)
 * **Leandro Nunes Fantinatto** - *Validation demo* - [lnfnunes](https://github.com/lnfnunes)
-* **Marcos de Lima Goncalves** - *Validation demo, Presentation Organizer* - []()
-* **Murilo Woigt Miranda** - *Validation demo, Presentation Organizer* - []()
+* **Ivam dos Santos Luz** - *Validation demo, Articles* - [ivamluz](https://github.com/ivamluz)
+* **Marcos de Lima Goncalves** - *Validation demo, Presentation Organizer* - [marcoslimagon](https://github.com/marcoslimagon)
+* **Murilo Woigt Miranda** - *Validation demo, Presentation Organizer* - [woigt-ciandt](https://github.com/woigt-ciandt)
 
 See also the list of [contributors](CONTRIBUTORS.txt) who participated in this project.
 

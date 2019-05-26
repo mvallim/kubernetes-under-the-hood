@@ -2,5 +2,6 @@ Marcos Vallim <tischer@gmail.com>
 Fabio Franco Uechi <fabio.uechi@gmail.com>
 Dirceu Alves Silva <>
 Leandro Nunes Fantinatto <>
+Ivam dos Santos Luz <>
 Marcos de Lima Goncalves <>
 Murilo Woigt Miranda <>

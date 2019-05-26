@@ -1,0 +1,55 @@
+#cloud-config
+apt:
+  sources_list: |
+    deb http://deb.debian.org/debian/ $RELEASE main contrib non-free
+    deb-src http://deb.debian.org/debian/ $RELEASE main contrib non-free
+
+    deb http://deb.debian.org/debian/ $RELEASE-updates main contrib non-free
+    deb-src http://deb.debian.org/debian/ $RELEASE-updates main contrib non-free
+
+    deb http://deb.debian.org/debian-security $RELEASE/updates main
+    deb-src http://deb.debian.org/debian-security $RELEASE/updates main
+  conf: |
+    APT {
+      Get {
+        Assume-Yes "true";
+        Fix-Broken "true";
+      };
+    };
+
+packages: 
+  - apt-transport-https
+  - software-properties-common
+  - thin-provisioning-tools
+  - xfsprogs
+
+runcmd:
+  - wget -qO - https://download.gluster.org/pub/gluster/glusterfs/5/rsa.pub | apt-key add -
+  - echo 'deb https://download.gluster.org/pub/gluster/glusterfs/5/LATEST/Debian/9/amd64/apt/ stretch main' > /etc/apt/sources.list.d/gluster.list
+  - [ apt-get, update ]
+  - [ apt-get, install, -y, glusterfs-server ]
+  - [ apt-mark, hold, glusterfs-common, glusterfs-client, glusterfs-server ]
+
+users:
+- name: debian
+  gecos: Debian User
+  sudo: ALL=(ALL) NOPASSWD:ALL
+  shell: /bin/bash
+  lock_passwd: true
+  ssh_authorized_keys:
+    - #SSH-PUB-KEY#
+- name: root
+  lock_passwd: true
+  ssh_authorized_keys:
+    - #SSH-PUB-KEY#
+
+package_upgrade: true
+
+ssh_pwauth: false
+
+manage_etc_hosts: true
+
+power_state:
+  mode: reboot
+  timeout: 30
+  condition: true

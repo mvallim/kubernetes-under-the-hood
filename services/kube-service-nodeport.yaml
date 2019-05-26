@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:  
+  name: nodeport-service
+spec:
+  selector:    
+    app: guestbook
+    tier: frontend
+  type: NodePort 
+  ports:  
+  - nodePort: 32767 
+    name: http
+    port: 80
+    targetPort: 80
+    protocol: TCP
