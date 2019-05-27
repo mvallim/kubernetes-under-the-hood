@@ -16,9 +16,7 @@ The target audience for this tutorial is someone planning to install a Kubernete
 2. Planning
    - [Architecture Overview](documentation/common-cluster.md)
    - [Technology Stack](documentation/technologies.md)
-   - Networking
-     - [Services (DNS, DHCP, Gateway, NAT)](documentation/network-services.md)
-     - [Segmentation](documentation/network-segmentation.md)
+   - [Networking](documentation/networking.md)
 3. Preparation
    - Linux Image
      - [Creating the base image](documentation/create-linux-image.md)
