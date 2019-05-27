@@ -143,6 +143,11 @@ Classes **A**, **B**, and **C** were reserved for networks (standardized by [RFC
 
 ## Our Network Topology
 
+<p align="center">
+  <img src="images/networking-diagram.png"><br>
+  Network diagram concept
+</p>
+
 ### Network
 This is the IP address range for our main network. It provides us with up to 65534 addresses, allowing us to segment it into smaller, specialized blocks.
 
