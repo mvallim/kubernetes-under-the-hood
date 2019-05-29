@@ -98,11 +98,11 @@ Reference: https://en.wikipedia.org/wiki/Network_segmentation
 
 ## Network classes
 
-* **Class A** — Every IP with the first octet having its value in the 1–127 range is a **Class A** address.
-* **Class B** — Every IP with the first octet having its value in the 128–191 range is a **Class B** address.
-* **Class C** — Every IP with the first octet having its value in the 192–223 range is a **Class C** address.
+* **Class A** — Every IP with the first octet having its value in the 1–127 range is a **Class A** address.
+* **Class B** — Every IP with the first octet having its value in the 128–191 range is a **Class B** address.
+* **Class C** — Every IP with the first octet having its value in the 192–223 range is a **Class C** address.
 * **Class D** — Every IP with the first octet having its value in the 224–239 range is a **Class D** address.
-* **Class E** — Every IP with the first octet having its value in the 240–255 range is a **Class E** address.
+* **Class E** — Every IP with the first octet having its value in the 240–255 range is a **Class E** address.
 
 ## CIDR Notation
 The **Classless Inter-Domain Routing**, or **CIDR**, is an alternative to traditional subnetting.
