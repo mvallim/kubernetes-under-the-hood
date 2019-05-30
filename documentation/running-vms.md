@@ -115,3 +115,21 @@ $ for instance in glus-node01 glus-node02 glus-node03; do
         -b debian-base-image
 done
 ```
+
+### Configure your local routing
+
+You need to add the routes on your local machine to access the internal network of Virtualbox.
+
+```
+sudo ip route add 192.168.1.0/24 via 192.168.1.254 dev vboxnet0
+
+sudo ip route add 192.168.2.0/25 via 192.168.2.254 dev vboxnet0
+
+sudo ip route add 192.168.2.128/25 via 192.168.2.254 dev vboxnet0
+
+sudo ip route add 192.168.3.0/24 via 192.168.3.254 dev vboxnet0
+
+sudo ip route add 192.168.4.0/25 via 192.168.4.254 dev vboxnet0
+
+sudo ip route add 192.168.4.128/25 via 192.168.4.254 dev vboxnet0
+```
