@@ -23,7 +23,6 @@ The target audience for this tutorial is someone planning to install a Kubernete
      - [cloud-init Bootstrap](documentation/cloud-init.md)
    - [Configuring your station](documentation/configure-your-station.md)
    - [Running VMs](documentation/running-vms.md)
-   - [Configuring hosts](documentation/configure-hosts.md)
 4. Putting all together
    - [HAProxy Cluster](documentation/haproxy-cluster.md)
    - [Kubernetes](documentation/kube.md)
