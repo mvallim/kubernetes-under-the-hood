@@ -44,4 +44,5 @@ config:
   - type: physical
     name: enp0s17
     subnets:
-      - type: dhcp
+      - type: static
+        address: 192.168.254.254/16
