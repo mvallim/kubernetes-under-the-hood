@@ -79,8 +79,4 @@ Create a Host-Only adpter on Virtualbox
 vboxmanage hostonlyif create
 
 vboxmanage hostonlyif ipconfig vboxnet0 --ip 192.168.254.1 --netmask 255.255.0.0
-
-vboxmanage dhcpserver add --ifname vboxnet0 --ip 192.168.254.2 --netmask 255.255.0.0 --lowerip 192.168.254.3 --upperip 192.168.254.254
-
-vboxmanage dhcpserver modify --ifname vboxnet0 --enable
 ```
