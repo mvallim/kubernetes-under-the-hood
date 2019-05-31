@@ -58,7 +58,13 @@ sudo sed -i '/^\[main\]/a dns=dnsmasq' /etc/NetworkManager/NetworkManager.conf
 
 sudo sed -i '/^\[main\]/a rc-manager=resolvconf' /etc/NetworkManager/NetworkManager.conf
 
-echo "server=/kube.local/192.168.1.254" | sudo tee -a /etc/NetworkManager/dnsmasq.d/server
+echo "server=/kube.local/192.168.1.1" | sudo tee -a /etc/NetworkManager/dnsmasq.d/server
+
+echo "server=/kube.local/192.168.2.1" | sudo tee -a /etc/NetworkManager/dnsmasq.d/server
+
+echo "server=/kube.local/192.168.3.1" | sudo tee -a /etc/NetworkManager/dnsmasq.d/server
+
+echo "server=/kube.local/192.168.4.1" | sudo tee -a /etc/NetworkManager/dnsmasq.d/server
 
 echo "cache-size=10000" | sudo tee -a /etc/NetworkManager/dnsmasq.d/cache
 
