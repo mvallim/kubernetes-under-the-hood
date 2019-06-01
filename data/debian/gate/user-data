@@ -18,6 +18,7 @@ write_files:
     listen-address=192.168.4.1
     domain=kube.local
     local=/kube.local/
+    address=/#HOSTNAME#.kube.local/192.168.254.254
 
 - path: /etc/dnsmasq.d/cache
   permissions: '0644'
@@ -54,6 +55,8 @@ write_files:
 
 runcmd:
   - [ sysctl, --system ]
+  - [ systemctl, stop, systemd-resolved ]
+  - [ systemctl, disable, systemd-resolved ]
 
 bootcmd:
   - iptables -A FORWARD -i enp0s8 -j ACCEPT

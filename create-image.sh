@@ -201,7 +201,7 @@ UUID=`${UUIDGEN}`
 FILES="${SCRIPT_DIR}/vms/${HOSTNAME}/user-data ${SCRIPT_DIR}/vms/${HOSTNAME}/meta-data"
 
 ${SED} -e "s|#HOSTNAME#|${HOSTNAME}|g" -e "s|#UUID#|${UUID}|g" ${META_DATA_FILE} > ${SCRIPT_DIR}/vms/${HOSTNAME}/meta-data
-${SED} -e "s|#SSH-PUB-KEY#|${SSH_PUB_KEY_FILE_CONTENT}|g" ${USER_DATA_FILE} > ${SCRIPT_DIR}/vms/${HOSTNAME}/user-data
+${SED} -e "s|#SSH-PUB-KEY#|${SSH_PUB_KEY_FILE_CONTENT}|g" -e "s|#HOSTNAME#|${HOSTNAME}|g" ${USER_DATA_FILE} > ${SCRIPT_DIR}/vms/${HOSTNAME}/user-data
 
 if [[ -f ${NETWORK_INTERFACES_FILE} ]]; then
   ${SED} -e "s|#HOSTNAME#|${HOSTNAME}|g" -e "s|#UUID#|${UUID}|g" ${NETWORK_INTERFACES_FILE} > ${SCRIPT_DIR}/vms/${HOSTNAME}/network-config
