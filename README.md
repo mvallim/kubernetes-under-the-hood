@@ -18,7 +18,7 @@ The target audience for this tutorial is someone planning to install a Kubernete
    - [Technology Stack](documentation/technologies.md)
    - [Networking](documentation/networking.md)
 3. Kubernetes
-   - [Overview](documentation/kubernetes-overview.md)
+   - [Overview](documentation/kube-overview.md)
 3. Preparation
    - Linux Image
      - [Creating the base image](documentation/create-linux-image.md)
