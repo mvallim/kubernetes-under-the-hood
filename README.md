@@ -19,27 +19,24 @@ The target audience for this tutorial is someone planning to install a Kubernete
    - [Networking](documentation/networking.md)
 3. Kubernetes
    - [Overview](documentation/kube-overview.md)
-4. Preparation
-   - Linux Image
-     - [Creating the base image](documentation/create-linux-image.md)
-     - [cloud-init Bootstrap](documentation/cloud-init.md)
+4. Putting all together
+   - [Creating the base image](documentation/create-linux-image.md)
+   - [cloud-init Bootstrap](documentation/cloud-init.md)
    - [Configuring your station](documentation/configure-your-station.md)
    - [Running VMs](documentation/running-vms.md)
-5. Putting all together
    - [HAProxy Cluster](documentation/haproxy-cluster.md)
-   - [Kubernetes](documentation/kube.md)
-     - [flannel](documentation/kube-flannel.md)
-     - [etcd](documentation/kube-etcd.md)
-     - [Masters](documentation/kube-masters.md)
-     - [Workers](documentation/kube-workers.md)
-     - [Dashboard](documentation/kube-dashboard.md)
-     - [Demo Application](documentation/kube-demo-application.md)
-   - LoadBalancer
-     - [MetalLB](documentation/kube-metallb.md)
-   - Volumes
-     - [Gluster](documentation/gluster.md)
-     - [Heketi](documentation/kube-heketi.md)
-     - [Demo StorageClass](documentation/kube-demo-storageclass.md) (under construction)
+   - [Masters](documentation/kube-masters.md)
+   - [Workers](documentation/kube-workers.md)
+   - [Network](documentation/kube-network.md)
+   - [etcd](documentation/kube-etcd.md)
+   - [Dashboard](documentation/kube-dashboard.md)
+   - [Demo Application](documentation/kube-demo-application.md)
+   1. LoadBalancer
+      - [MetalLB](documentation/kube-metallb.md)
+   2. Volumes
+      - [Gluster](documentation/gluster.md)
+      - [Heketi](documentation/kube-heketi.md)
+      - [Demo StorageClass](documentation/kube-demo-storageclass.md) (under construction)
 
 ## Contributing
 
