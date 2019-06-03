@@ -85,7 +85,7 @@ Container management takes place at a higher and more refined level, without som
 ## Kubernetes’ main objects
 
 <p align="center">
-  <img src="images/networking-dns.gif"><br>
+  <img src="images/kube-keywords.png"><br>
 </p>
 
 Following is a brief definition of each of the main objects managed by Kubernetes. We’ll get into more detail about them in the next articles in this series:
@@ -93,19 +93,19 @@ Following is a brief definition of each of the main objects managed by Kubernete
 * **Pod**: The smallest and simplest Kubernetes object. A Pod represents a set of running [**containers**](https://kubernetes.io/docs/concepts/overview/what-is-kubernetes/#why-containers) on your cluster. A Pod is typically set up to run a single primary container. It can also run optional sidecar containers that add supplementary features like logging. Pods are commonly managed by a **Deployment**.
 
 <p align="center">
-  <img src="images/networking-dns.gif"><br>
+  <img src="images/kube-pods.png"><br>
 </p>
 
 * **Deployment**: An API object that manages a replicated application. Each replica is represented by a Pod, and the Pods are distributed among the worker nodes of a cluster.
 
 <p align="center">
-  <img src="images/networking-dns.gif"><br>
+  <img src="images/kube-deployment.png"><br>
 </p>
 
 * **Service**: An API object that describes how to access applications, such as a set of [**Pods**](https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/), and can describe ports and load-balancers. The access point can be internal or external to the cluster.
 
 <p align="center">
-  <img src="images/networking-dns.gif"><br>
+  <img src="images/kube-services.png"><br>
 </p>
 
 * **Volume**: A directory containing data, accessible to the containers in a Pod. A Kubernetes volume lives as long as the Pod that encloses it. Consequently, a volume outlives any containers that run within the Pod, and data is preserved across container restarts. 
@@ -114,13 +114,13 @@ Following is a brief definition of each of the main objects managed by Kubernete
   - **Persistent Volume**: The Kubernetes has persistent volumes. Persistent volumes are long-term stores within the Kubernetes cluster. Persistent volumes go beyond containers, Pods, and worker nodes, they exist as long as the Kubernetes cluster exists. A Pod claims the use of a persistent volume for reading or writing or for reading and writing.
 
 <p align="center">
-  <img src="images/networking-dns.gif"><br>
+  <img src="images/kube-volumes.png"><br>
 </p>
 
 * **Namespace**: An abstraction used by Kubernetes to support multiple virtual clusters on the same physical cluster. Namespaces are used to organize objects in a cluster and provide a way to divide cluster resources. Resource names need to be unique within a namespace but not across namespaces.
 
 <p align="center">
-  <img src="images/networking-dns.gif"><br>
+  <img src="images/kube-namespace.png"><br>
 </p>
 
 > Reference: https://kubernetes.io/docs/reference/glossary/?fundamental=true
