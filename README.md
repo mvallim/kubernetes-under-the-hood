@@ -19,13 +19,13 @@ The target audience for this tutorial is someone planning to install a Kubernete
    - [Networking](documentation/networking.md)
 3. Kubernetes
    - [Overview](documentation/kube-overview.md)
-3. Preparation
+4. Preparation
    - Linux Image
      - [Creating the base image](documentation/create-linux-image.md)
      - [cloud-init Bootstrap](documentation/cloud-init.md)
    - [Configuring your station](documentation/configure-your-station.md)
    - [Running VMs](documentation/running-vms.md)
-4. Putting all together
+5. Putting all together
    - [HAProxy Cluster](documentation/haproxy-cluster.md)
    - [Kubernetes](documentation/kube.md)
      - [flannel](documentation/kube-flannel.md)
