@@ -1,5 +1,9 @@
 # Kubernetes Overview
 
+<p align="center">
+  <img src="images/kube-logo.png"><br>
+</p>
+
 *"Kubernetes is a portable, extensible open-source platform for managing containerized workloads and services, that facilitates both declarative configuration and automation. It has a large, rapidly growing ecosystem. Kubernetes services, support, and tools are widely available."*
 
 *"Google open-sourced the Kubernetes project in 2014. Kubernetes builds upon a decade and a half of experience that Google has with running production workloads at scale, combined with best-of-breed ideas and practices from the community."*
@@ -31,7 +35,10 @@ In order for **Kubernetes** to reach its full capacity, it depends on and makes 
 
 ## Kubernetes at a glance
 
-Kubernetes Architecture Diagram
+<p align="center">
+  <img src="images/kube-architecture-diagram.png"><br>
+  Kubernetes Architecture Diagram
+</p>
 
 A cluster managed by **Kubernetes** basically has two large operational units: **Master node(s)** and **Worker nodes**.
 
@@ -60,29 +67,60 @@ Container management takes place at a higher and more refined level, without som
 
 ### Kubectl
 
-Image from Rising Stack
+<p align="center">
+  <img src="images/kube-kubectl.png"><br>
+  Image from Rising Stack
+</p>
 
 **kubectl** is a command line tool for communicating with a **Kubernetes API** server. You can use **kubectl** to create, inspect, update, and delete **Kubernetes** objects.
 
 ### What about Docker?
 
+<p align="center">
+  <img src="images/docker-logo.png"><br>
+</p>
+
 **Docker** keeps its original function. What changes is that when **Kubernetes** configures a Pod, it sends instructions to the **kubelet** of the selected worker node with instructions for Docker to start (or stop) a container with the given specification. **kubelet**, in turn, continues collecting information from **Docker** and its **containers** and aggregating all this information in the master. The big difference here is that all of this happens in an automated way, without the need of an administrator having to do all this configuration and information gathering manually.
 
 ## Kubernetes’ main objects
+
+<p align="center">
+  <img src="images/networking-dns.gif"><br>
+</p>
 
 Following is a brief definition of each of the main objects managed by Kubernetes. We’ll get into more detail about them in the next articles in this series:
 
 * **Pod**: The smallest and simplest Kubernetes object. A Pod represents a set of running [**containers**](https://kubernetes.io/docs/concepts/overview/what-is-kubernetes/#why-containers) on your cluster. A Pod is typically set up to run a single primary container. It can also run optional sidecar containers that add supplementary features like logging. Pods are commonly managed by a **Deployment**.
 
+<p align="center">
+  <img src="images/networking-dns.gif"><br>
+</p>
+
 * **Deployment**: An API object that manages a replicated application. Each replica is represented by a Pod, and the Pods are distributed among the worker nodes of a cluster.
 
+<p align="center">
+  <img src="images/networking-dns.gif"><br>
+</p>
+
 * **Service**: An API object that describes how to access applications, such as a set of [**Pods**](https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/), and can describe ports and load-balancers. The access point can be internal or external to the cluster.
+
+<p align="center">
+  <img src="images/networking-dns.gif"><br>
+</p>
 
 * **Volume**: A directory containing data, accessible to the containers in a Pod. A Kubernetes volume lives as long as the Pod that encloses it. Consequently, a volume outlives any containers that run within the Pod, and data is preserved across container restarts. 
   - **Filesystem**: In Kubernetes, each container can read and write in its own filesystem. But the data written into this filesystem is destroyed when the container is restarted or removed.
   - **Volume**: Kubernetes has volumes. Volumes that are in a Pod will exist as long as the Pod exists. Volumes can be shared among the same Pod containers. When a Pod is restarted or removed the volume is destroyed.
   - **Persistent Volume**: The Kubernetes has persistent volumes. Persistent volumes are long-term stores within the Kubernetes cluster. Persistent volumes go beyond containers, Pods, and worker nodes, they exist as long as the Kubernetes cluster exists. A Pod claims the use of a persistent volume for reading or writing or for reading and writing.
 
+<p align="center">
+  <img src="images/networking-dns.gif"><br>
+</p>
+
 * **Namespace**: An abstraction used by Kubernetes to support multiple virtual clusters on the same physical cluster. Namespaces are used to organize objects in a cluster and provide a way to divide cluster resources. Resource names need to be unique within a namespace but not across namespaces.
+
+<p align="center">
+  <img src="images/networking-dns.gif"><br>
+</p>
 
 > Reference: https://kubernetes.io/docs/reference/glossary/?fundamental=true
