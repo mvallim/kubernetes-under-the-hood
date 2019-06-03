@@ -65,6 +65,8 @@ Container management takes place at a higher and more refined level, without som
 
 > Reference: https://kubernetes.io/docs/reference/glossary/?fundamental=true
 
+---
+
 ### Kubectl
 
 <p align="center">
@@ -74,6 +76,8 @@ Container management takes place at a higher and more refined level, without som
 
 **kubectl** is a command line tool for communicating with a **Kubernetes API** server. You can use **kubectl** to create, inspect, update, and delete **Kubernetes** objects.
 
+---
+
 ### What about Docker?
 
 <p align="center">
@@ -81,6 +85,8 @@ Container management takes place at a higher and more refined level, without som
 </p>
 
 **Docker** keeps its original function. What changes is that when **Kubernetes** configures a Pod, it sends instructions to the **kubelet** of the selected worker node with instructions for Docker to start (or stop) a container with the given specification. **kubelet**, in turn, continues collecting information from **Docker** and its **containers** and aggregating all this information in the master. The big difference here is that all of this happens in an automated way, without the need of an administrator having to do all this configuration and information gathering manually.
+
+---
 
 ## Kubernetes’ main objects
 
