@@ -132,6 +132,4 @@ sudo ip route add 192.168.3.0/24 via 192.168.3.254 dev vboxnet0
 sudo ip route add 192.168.4.0/25 via 192.168.4.254 dev vboxnet0
 
 sudo ip route add 192.168.4.128/25 via 192.168.4.254 dev vboxnet0
-
-sudo systemctl restart network-manager
 ```
