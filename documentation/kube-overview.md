@@ -51,7 +51,7 @@ Container management takes place at a higher and more refined level, without som
 
 ### Master and Work components
 
-* **Container network interface (CNI)**: This plugin is a type of Network plugin that adheres to the appc/CNI specification.
+* **Container network interface (CNI)**: This plugin is a type of Network plugin that adheres to the appc/CNI specification. This is what enables connecting Pods running on different nodes and flexibility to integrate different kind of network solutions (overlays, pure L3, etc).
   - For information on Kubernetes and CNI refer to [**this**](https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/#cni).
   - For information on Kubernetes and CNI, see "[**Network plugins**](https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/#cni)".
 * **etcd**: Consistent and highly-available key-value store used as **Kubernetes’** backing store for all cluster data. If your **Kubernetes** cluster uses **etcd** as its backing store, make sure you have a back up plan for those data.
