@@ -54,6 +54,8 @@ sudo touch /etc/resolvconf/resolv.conf.d/original
 
 sudo truncate -s 0 /etc/resolv.conf
 
+sudo sed -i -r 's/^(hosts\:.*)\[NOTFOUND=return\] (.*)/\1\2/g' /etc/nsswitch.conf
+
 sudo sed -i '/^\[main\]/a dns=dnsmasq' /etc/NetworkManager/NetworkManager.conf
 
 sudo sed -i '/^\[main\]/a rc-manager=resolvconf' /etc/NetworkManager/NetworkManager.conf
