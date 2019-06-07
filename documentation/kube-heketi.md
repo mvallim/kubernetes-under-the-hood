@@ -39,7 +39,7 @@ Patch file [`kube-controller-manager-patch`](https://raw.githubusercontent.com/m
 1. Apply patch `/etc/kubernetes/manifests/kube-controller-manager.yaml` on master nodes. This will change the [static pod](https://kubernetes.io/docs/tasks/administer-cluster/static-pod/) `kube-controller-manager` configuration by adding `dnsPolicy`.
 
    ```
-   ssh debian@kube-mast01.kube.local
+   ssh debian@kube-mast01.kube.demo
 
    sudo su -
 
@@ -48,7 +48,7 @@ Patch file [`kube-controller-manager-patch`](https://raw.githubusercontent.com/m
    patch --no-backup-if-mismatch /etc/kubernetes/manifests/kube-controller-manager.yaml < kube-controller-manager-patch
    ```
    ```
-   ssh debian@kube-mast02.kube.local
+   ssh debian@kube-mast02.kube.demo
 
    sudo su -
    
@@ -57,7 +57,7 @@ Patch file [`kube-controller-manager-patch`](https://raw.githubusercontent.com/m
    patch --no-backup-if-mismatch /etc/kubernetes/manifests/kube-controller-manager.yaml < kube-controller-manager-patch
    ```
    ```
-   ssh debian@kube-mast03.kube.local
+   ssh debian@kube-mast03.kube.demo
 
    sudo su -
    
@@ -105,22 +105,22 @@ Patch file [`kube-controller-manager-patch`](https://raw.githubusercontent.com/m
    
    2. Resolve hostnames of Gluster Nodes:
       ```
-      host glus-node01.kube.local
+      host glus-node01.kube.demo
    
-      host glus-node02.kube.local
+      host glus-node02.kube.demo
    
-      host glus-node03.kube.local
+      host glus-node03.kube.demo
       ```
       
       The responses should be:
       ```
-      glus-node01.kube.local has address 192.168.3.182
+      glus-node01.kube.demo has address 192.168.3.182
       ```
       ```
-      glus-node02.kube.local has address 192.168.3.96
+      glus-node02.kube.demo has address 192.168.3.96
       ```
       ```
-      glus-node03.kube.local has address 192.168.3.103
+      glus-node03.kube.demo has address 192.168.3.103
       ```
 
    3. Change copy file `topology.json` like that:
@@ -133,7 +133,7 @@ Patch file [`kube-controller-manager-patch`](https://raw.githubusercontent.com/m
                 "node": {
                   "hostnames": {
                     "manage": [
-                      "glus-node01.kube.local"
+                      "glus-node01.kube.demo"
                     ],
                     "storage": [
                       "192.168.3.182"
@@ -149,7 +149,7 @@ Patch file [`kube-controller-manager-patch`](https://raw.githubusercontent.com/m
                 "node": {
                   "hostnames": {
                     "manage": [
-                      "glus-node02.kube.local"
+                      "glus-node02.kube.demo"
                     ],
                     "storage": [
                       "192.168.3.96"
@@ -165,7 +165,7 @@ Patch file [`kube-controller-manager-patch`](https://raw.githubusercontent.com/m
                 "node": {
                   "hostnames": {
                     "manage": [
-                      "glus-node03.kube.local"
+                      "glus-node03.kube.demo"
                     ],
                     "storage": [
                       "192.168.3.103"
@@ -236,11 +236,11 @@ Patch file [`kube-controller-manager-patch`](https://raw.githubusercontent.com/m
    Creating cluster ... ID: d266913187b2c860384a45c701ac16f4
    Allowing file volumes on cluster.
    Allowing block volumes on cluster.
-   Creating node glus-node01.kube.local ... ID: 90d62b5813ec436a06a55369179afbc4
+   Creating node glus-node01.kube.demo ... ID: 90d62b5813ec436a06a55369179afbc4
    Adding device /dev/sdb ... OK
-   Creating node glus-node02.kube.local ... ID: 54459c9f00d63b3f7c7b498e1230092c
+   Creating node glus-node02.kube.demo ... ID: 54459c9f00d63b3f7c7b498e1230092c
    Adding device /dev/sdb ... OK
-   Creating node glus-node03.kube.local ... ID: 22b73b9fc98664bf5c4308274b919e71
+   Creating node glus-node03.kube.demo ... ID: 22b73b9fc98664bf5c4308274b919e71
    Adding device /dev/sdb ... OK
    heketi topology loaded.
    Saving /tmp/heketi-storage.json

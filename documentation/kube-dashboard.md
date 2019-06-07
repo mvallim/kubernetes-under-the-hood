@@ -11,7 +11,7 @@ Dashboard also provides information on the state of Kubernetes resources in your
 
 1. Create the dashboard from the `kubernetes-dashboard.yaml` file:
    ```
-   ssh debian@kube-mast01.kube.local
+   ssh debian@kube-mast01.kube.demo
    
    sudo su -
    
@@ -179,7 +179,7 @@ Now we need configure kubectl in your local station.
    ```
    mkdir ~/.kube
    
-   ssh debian@kube-mast01.kube.local 'sudo cat /root/.kube/config' > ~/.kube/config
+   ssh debian@kube-mast01.kube.demo 'sudo cat /root/.kube/config' > ~/.kube/config
    ```
 
 2. Start `kubectl proxy`
