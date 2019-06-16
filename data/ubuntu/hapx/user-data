@@ -84,7 +84,7 @@ write_files:
       errorfile 504 /etc/haproxy/errors/504.http
 
     resolvers dns
-      nameserver dns-01 192.168.4.254:53
+      nameserver dns-01 192.168.4.1:53
       resolve_retries 3
       timeout retry 1s
       hold other 30s
