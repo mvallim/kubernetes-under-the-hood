@@ -16,9 +16,9 @@ write_files:
     listen-address=192.168.2.1
     listen-address=192.168.3.1
     listen-address=192.168.4.1
-    domain=kube.local
-    local=/kube.local/
-    address=/#HOSTNAME#.kube.local/192.168.254.254
+    domain=kube.demo
+    local=/kube.demo/
+    address=/#HOSTNAME#.kube.demo/192.168.254.254
 
 - path: /etc/dnsmasq.d/cache
   permissions: '0644'
@@ -38,10 +38,10 @@ write_files:
     dhcp-option=enp0s10,option:dns-server,192.168.3.1
     dhcp-option=enp0s16,option:dns-server,192.168.4.1
 
-    dhcp-option=enp0s8,option:domain-name,kube.local
-    dhcp-option=enp0s9,option:domain-name,kube.local
-    dhcp-option=enp0s10,option:domain-name,kube.local
-    dhcp-option=enp0s16,option:domain-name,kube.local
+    dhcp-option=enp0s8,option:domain-name,kube.demo
+    dhcp-option=enp0s9,option:domain-name,kube.demo
+    dhcp-option=enp0s10,option:domain-name,kube.demo
+    dhcp-option=enp0s16,option:domain-name,kube.demo
 
     dhcp-option=enp0s8,option:router,192.168.1.254
     dhcp-option=enp0s9,option:router,192.168.2.254

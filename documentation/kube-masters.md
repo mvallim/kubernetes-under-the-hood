@@ -54,7 +54,7 @@ This approach requires less infrastructure. The etcd members and control plane n
 
 1. Run the following commands to init master node:
    ```
-   ssh debian@kube-mast01.kube.local
+   ssh debian@kube-mast01.kube.demo
    
    sudo su -
    
@@ -99,7 +99,7 @@ This approach requires less infrastructure. The etcd members and control plane n
 
 1. Run the following commands to init flannel network component:
    ```
-   ssh debian@kube-mast01.kube.local
+   ssh debian@kube-mast01.kube.demo
    
    sudo su -
    
@@ -170,7 +170,7 @@ The copied certificate is:
 #### Copy certificates
 1. Run the following commands to copy certificates to master replicas:
    ```
-   ssh debian@kube-mast01.kube.local
+   ssh debian@kube-mast01.kube.demo
    
    sudo su -
    
@@ -186,7 +186,7 @@ The copied certificate is:
 #### Print Join Command
 1. Run the following commands to print join command master replicas on cluster:
    ```
-   ssh debian@kube-mast01.kube.local
+   ssh debian@kube-mast01.kube.demo
    
    sudo su -
    
@@ -203,7 +203,7 @@ The copied certificate is:
 #### Join second Kube Master
 1. Run the following commands to move certificates of 1° master node to correct place:
    ```
-   ssh debian@kube-mast02.kube.local
+   ssh debian@kube-mast02.kube.demo
    
    sudo su -
    
@@ -223,7 +223,7 @@ The copied certificate is:
 #### Join third Kube Master
 1. Run the following commands to move certificates of 1° master node to correct place:
    ```
-   ssh debian@kube-mast03.kube.local
+   ssh debian@kube-mast03.kube.demo
    
    sudo su -
    
@@ -244,7 +244,7 @@ The copied certificate is:
 
 1. Query the state of etcd
    ```
-   ssh debian@kube-mast01.kube.local
+   ssh debian@kube-mast01.kube.demo
    
    sudo su -
    
@@ -280,7 +280,7 @@ The copied certificate is:
 ### View stats K8S Cluster
 1. Query the state of nodes and pods
    ```
-   ssh debian@kube-mast01.kube.local
+   ssh debian@kube-mast01.kube.demo
    
    sudo su -
    

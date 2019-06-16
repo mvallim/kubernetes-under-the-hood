@@ -140,7 +140,7 @@ The `redis-slave` and `redis-master` Services you applied are only accessible wi
    ```
 
 #### Viewing the Frontend Service via **`NodePort`**
-Open your browser with address [http://kube-node01.kube.local:30551](http://kube-node01.kube.local:30551)
+Open your browser with address [http://kube-node01.kube.demo:30551](http://kube-node01.kube.demo:30551)
 
 > Keep attention on port **`30551`**, you should change correspondent port show in your on output above.
 

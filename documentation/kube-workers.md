@@ -18,7 +18,7 @@ A node is a worker machine in Kubernetes, previously known as a minion. A node m
 #### Print Join Command
 1. Run the following commands to print join command master replicas on cluster:
    ```
-   ssh debian@kube-mast01.kube.local
+   ssh debian@kube-mast01.kube.demo
    
    sudo su -
    
@@ -35,7 +35,7 @@ A node is a worker machine in Kubernetes, previously known as a minion. A node m
 #### Join first Kube Worker
 1. Run the following command to join worker on cluster using the join command execute on the step [**`Print Join Command`**](#print-join-command):
    ```
-   ssh debian@kube-node01.kube.local
+   ssh debian@kube-node01.kube.demo
    
    sudo su -
    
@@ -47,7 +47,7 @@ A node is a worker machine in Kubernetes, previously known as a minion. A node m
 #### Join second Kube Worker
 1. Run the following command to join worker on cluster using the join command execute on the step [**`Print Join Command`**](#print-join-command):
    ```
-   ssh debian@kube-node02.kube.local
+   ssh debian@kube-node02.kube.demo
    
    sudo su -
    
@@ -59,7 +59,7 @@ A node is a worker machine in Kubernetes, previously known as a minion. A node m
 #### Join third Kube Worker
 1. Run the following command to join worker on cluster using the join command execute on the step [**`Print Join Command`**](#print-join-command):
    ```
-   ssh debian@kube-node03.kube.local
+   ssh debian@kube-node03.kube.demo
    
    sudo su -
    
@@ -71,7 +71,7 @@ A node is a worker machine in Kubernetes, previously known as a minion. A node m
 ### View stats K8S Cluster
 1. Query the state of nodes and pods
    ```
-   ssh debian@kube-mast01.kube.local
+   ssh debian@kube-mast01.kube.demo
    
    sudo su -
    

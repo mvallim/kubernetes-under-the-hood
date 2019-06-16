@@ -52,7 +52,7 @@ order ord inf: virtual-ip-resource haproxy-resource
 #### `crm configure`
 
 ```
-ssh debian@hapx-node01.kube.local
+ssh debian@hapx-node01.kube.demo
 
 sudo crm configure
 
