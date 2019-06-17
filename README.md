@@ -19,6 +19,7 @@ The target audience for this tutorial is someone planning to install a Kubernete
    - [Networking](documentation/networking.md)
 3. Kubernetes
    - [Overview](documentation/kube-overview.md)
+   - [Masters and Workers](documentation/kube-masters-and-workers.md)
 4. Putting all together
    - [Creating the base image](documentation/create-linux-image.md)
    - [cloud-init Bootstrap](documentation/cloud-init.md)
