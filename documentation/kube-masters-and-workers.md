@@ -87,9 +87,9 @@ However, this topology requires twice the number of hosts as the stacked HA topo
 
 * **DNS cluster add-on**: Kubernetes DNS schedules a DNS Pod and Service on the cluster, and configures the kubelets to tell individual containers to use the DNS Service's IP to resolve DNS names.
 
-Every Service defined in the cluster (including the DNS server itself) is assigned a DNS name. By default, a client Pod's DNS search list will include the Pod's own namespace and the cluster's default domain. This is best illustrated by example:
+  Every Service defined in the cluster (including the DNS server itself) is assigned a DNS name. By default, a client Pod's DNS search list will include the Pod's own namespace and the cluster's default domain. This is best illustrated by example:
 
-Assume a Service named **foo** in the Kubernetes namespace **bar**. A Pod running in namespace **bar** can look up this service by simply doing a DNS query for **foo**. A Pod running in namespace **quux** can look up this service by doing a DNS query for **foo.bar**.
+  Assume a Service named **foo** in the Kubernetes namespace **bar**. A Pod running in namespace **bar** can look up this service by simply doing a DNS query for **foo**. A Pod running in namespace **quux** can look up this service by doing a DNS query for **foo.bar**.
 
 * **cni-plugins**: This plugin is a type of Network plugin that adheres to the appc/CNI specification. This is what enables connecting Pods running on different nodes and flexibility to integrate different kind of network solutions (overlays, pure L3, etc).
   - For information on Kubernetes and CNI refer to [this](https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/#cni).
