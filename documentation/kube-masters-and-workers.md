@@ -98,10 +98,9 @@ However, this topology requires twice the number of hosts as the stacked HA topo
   - For information on Kubernetes and CNI, see "[Network plugins](https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/#cni)".
 
 > References
->
-> https://kubernetes.io/docs/reference/glossary/?fundamental=true
->
-> https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#introduction
+  https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm/
+  https://kubernetes.io/docs/reference/glossary/?fundamental=true
+  https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#introduction
 
 ## Worker
 Workers are the machines (nodes, which can be physical or VMs) where the containers managed by **Kubernetes** effectively run. In order for worker nodes to be managed by **Kubernetes**, they must have **Kubelet** agents installed on them. It is through this agent that all communication with the master happens and, as a consequence, the cluster operations are performed.
