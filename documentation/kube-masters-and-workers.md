@@ -6,7 +6,7 @@ Masters are responsible for orchestrating all activities related to the containe
 ###  Some approaches for configuring Master nodes
 
 <p align="center">
-  <img src="images/kube-architecture-diagram.png">
+  <img src="images/kube-approaches-master.png">
 </p>
 
 ### Stacked control plane and etcd nodes
@@ -24,7 +24,7 @@ However, a stacked cluster runs into the risk of failed coupling. If one node go
 You should therefore run a minimum of three stacked control plane nodes for an HA cluster.
 
 <p align="center">
-  <img src="images/kube-architecture-diagram.png"><br>
+  <img src="images/kube-kubeadm-ha-topology-stacked-etcd.png"><br>
   kubeadm HA topology - stacked etcd
 </p>
 
@@ -43,7 +43,7 @@ This topology decouples the control plane and etcd member. It therefore provides
 However, this topology requires twice the number of hosts as the stacked HA topology. A minimum of three hosts for control plane nodes and three hosts for etcd nodes are required for an HA cluster with this topology.
 
 <p align="center">
-  <img src="images/kube-architecture-diagram.png"><br>
+  <img src="images/kube-kubeadm-ha-topology-external-etcd.png"><br>
   kubeadm HA topology - external etcd
 </p>
 
@@ -62,7 +62,7 @@ This topology runs api-server, controller-manager and scheduler as standalone se
 However, this topology requires twice the number of hosts as the stacked HA topology. A minimum of three hosts for control plane nodes and three hosts for etcd nodes are required for an HA cluster with this topology. **Also, you must install and configure the services one-by-one**.
 
 <p align="center">
-  <img src="images/kube-architecture-diagram.png"><br>
+  <img src="images/kube-control-plane-services-external-etcd.png"><br>
   Kubernetes Control Plane Services external etcd
 </p>
 
