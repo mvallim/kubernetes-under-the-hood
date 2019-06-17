@@ -70,7 +70,9 @@ However, this topology requires twice the number of hosts as the stacked HA topo
 ***Stacked control plane and etcd nodes**, because doing so will require us to do less configuration and require fewer instances to be used.*
 
 ### Components
-* **kubeadm**: A tool for quickly installing **Kubernetes** and setting up a secure cluster. You can use **kubeadm** to install both the control plane and the worker node components.
+* **kubeadm**: A tool built to provide **kubeadm init** and **kubeadm join** as best-practice "fast paths" for creating Kubernetes clusters.
+  **kubeadm** performs the actions necessary to get a minimum viable cluster up and running. By design, it cares only about bootstrapping, not about provisioning machines. Likewise, installing various nice-to-have addons, like the Kubernetes Dashboard, monitoring solutions, and cloud-specific addons, is not in scope.
+  Using **kubeadm** as the basis of all deployments will make it easier to create conformant clusters.
 * **kubelet**: A service ran on the worker nodes that reads Pod manifests and ensures that their defined containers have been started and are running.
 * **etcd**: Consistent and highly-available key-value store used as Kubernetes' backing store for all cluster data. If your **Kubernetes** cluster uses **etcd** as its backing store, [make sure you have a back up plan for those data](https://kubernetes.io/docs/tasks/administer-cluster/configure-upgrade-etcd/#backing-up-an-etcd-cluster).
 * **containerd**: A container runtime with an emphasis on simplicity, robustness and portability. **containerd** is a container runtime that runs as a daemon on Linux or Windows. **containerd** takes care of fetching and storing container images, executing containers, providing network access, and more. (In our solution we'll use **Docker** for this purpose)
