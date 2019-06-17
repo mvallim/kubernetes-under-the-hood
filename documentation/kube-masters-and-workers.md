@@ -79,7 +79,7 @@ However, this topology requires twice the number of hosts as the stacked HA topo
 * **scheduler**: Component on the master that watches newly created Pods that have no worker node assigned, and selects a worker node for them to run into. Factors taken into account for scheduling decisions include individual and collective resource requirements, hardware/software/policy constraints, affinity and anti-affinity specifications, data locality, inter-workload interference and deadlines.
 
 <p align="center">
-  <img src="images/kube-architecture-diagram.png"><br>
+  <img src="images/kube-pod-creation-flow.png"><br>
   Pod creation flow ([heptio.com](https://heptio.com))
 </p>
 
@@ -107,7 +107,7 @@ Workers are the machines (nodes, which can be physical or VMs) where the contain
 ### Some approaches for configuring Worker nodes
 
 <p align="center">
-  <img src="images/kube-architecture-diagram.png">
+  <img src="images/kube-approaches-worker.png">
 </p>
 
 ### Stacked worker nodes
