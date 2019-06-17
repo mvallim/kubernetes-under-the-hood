@@ -15,7 +15,7 @@ Masters are responsible for orchestrating all activities related to the containe
 
 A stacked HA cluster is a topology (see the image below) where the distributed data storage cluster provided by etcd is stacked on top of the cluster formed by the nodes managed by **kubeadm** that run control plane components.
 
-Each control plane node runs an instance of the **api-server**, **scheduler**, and **controller-manager**. The **api-server** is exposed to worker nodes using a load balancer (([we'll be using HA Proxy in our solution]()). It also creates a local etcd member and this etcd member communicates only with the **api-server** running on this same node. The same applies to the local **controller-manager** and **scheduler** instances.
+Each control plane node runs an instance of the **api-server**, **scheduler**, and **controller-manager**. The **api-server** is exposed to worker nodes using a load balancer ([we'll be using HA Proxy in our solution](/documentation/technologies.md#haproxy)). It also creates a local etcd member and this etcd member communicates only with the **api-server** running on this same node. The same applies to the local **controller-manager** and **scheduler** instances.
 
 This topology couples the control planes and etcd members on the same node where they run. It is simpler to set up than a cluster with external etcd nodes, and simpler to manage for replication.
 
@@ -80,7 +80,7 @@ However, this topology requires twice the number of hosts as the stacked HA topo
 
 <p align="center">
   <img src="images/kube-pod-creation-flow.png"><br>
-  Pod creation flow ([heptio.com](https://heptio.com))
+  Pod creation flow <a href="https://heptio.com">heptio.com</a>
 </p>
 
 * **kube-proxy**: It is a network proxy that runs on each worker node in the cluster. **kube-proxy** is responsible for request forwarding. **kube-proxy** allows TCP and UDP stream forwarding or round-robin TCP and UDP forwarding across a set of backend functions.
