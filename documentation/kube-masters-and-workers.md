@@ -11,7 +11,7 @@ Masters are responsible for orchestrating all activities related to the containe
 
 ### Stacked control plane and etcd nodes
 
->> In this approach, the services run as containers and are automatically set up by kubeadm.
+> In this approach, the services run as containers and are automatically set up by kubeadm.
 
 A stacked HA cluster is a topology (see the image below) where the distributed data storage cluster provided by etcd is stacked on top of the cluster formed by the nodes managed by **kubeadm** that run control plane components.
 
