@@ -96,9 +96,9 @@ However, this topology requires twice the number of hosts as the stacked HA topo
   - For information on Kubernetes and CNI, see "[Network plugins](https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/#cni)".
 
 > References
-
+>
 > https://kubernetes.io/docs/reference/glossary/?fundamental=true
-
+>
 > https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#introduction
 
 ## Worker
