@@ -22,6 +22,10 @@ Communication with **etcd** is done through API calls, using JSON over HTTP. The
 
 *"It is recommended to have an odd number of members in a cluster. Having an odd cluster size doesn’t change the number needed for majority, but you gain a higher tolerance for failure by adding the extra member. You can see this in practice when comparing even and odd sized clusters"*
 
+<p align="center">
+  <img src="images/etcd-failure-tolerance.png">
+</p>
+
 > Reference: https://coreos.com/etcd/docs/latest/v2/admin_guide.html
 
 ## Replication
