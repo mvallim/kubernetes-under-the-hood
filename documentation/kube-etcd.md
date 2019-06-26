@@ -81,7 +81,7 @@ This part of the story illustrates a scenario of network partitioning, for examp
   - Performance (distribute load among thousands of clients);
 
 <p align="center">
-  <img src="images/kube-etcd.png">
+  <img src="images/kube-etcd.git">
 </p>
 
 ## How does etcd fit inside the Kubernetes Cluster?
