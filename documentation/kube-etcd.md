@@ -27,9 +27,12 @@ In computer science, state machine replication or state machine approach is a ge
 > Reference: https://en.wikipedia.org/wiki/State_machine_replication
 
 * **Active Replication**
+
   All nodes implement a finite state machine
   - They agree with each other (quorum) on the order of operations and perform them locally;
+
 * **Passive Replication**
+
   A node is designated a the leader (see the animation below), which receives all writing commands
   - The leader node effectively performs quorum operations with most replicas;
   - The leader node is responsible for replicating state to the other replicas;
