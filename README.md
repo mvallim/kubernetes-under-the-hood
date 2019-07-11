@@ -30,7 +30,6 @@ The target audience for this tutorial is someone planning to install a Kubernete
    - [Masters](documentation/kube-masters.md)
    - [Workers](documentation/kube-workers.md)
    - [Network](documentation/kube-network.md)
-   - [etcd](documentation/kube-etcd.md)
    - [Dashboard](documentation/kube-dashboard.md)
    - [Demo Application](documentation/kube-demo-application.md)
    1. LoadBalancer
