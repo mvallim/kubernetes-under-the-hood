@@ -45,7 +45,7 @@ On Kubernetes, all this configuration and management is made through a CNI (Cont
 
 ## What is CNI?
 
-**CNI** is short for **Container Networking Interface**, which is basically an external software (module) that implements an interface well defined by a specification, which allows **Kubernetes** to perform actions to provide network functionality.
+**CNI** is short for **Container Networking Interface**, which is basically an external software (module) that implements an [interface well defined by a specification](https://github.com/containernetworking/cni/blob/master/SPEC.md#container-network-interface-specification), which allows **Kubernetes** to perform actions to provide network functionality.
 
 *"Each CNI plugin must be implemented as an executable that is invoked by the container management system (e.g. rkt or Kubernetes).
 A CNI plugin is responsible for inserting a network interface into the container network namespace (e.g. one end of a veth pair) and making any necessary changes on the host (e.g. attaching the other end of the veth into a bridge). It should then assign the IP to the interface and setup the routes consistent with the IP Address Management section by invoking appropriate IPAM plugin."*
@@ -100,7 +100,7 @@ Flannel runs a small, single binary agent called **flanneld** on each host, and 
 ## Backends
 
 *"Flannel may be paired with several different backends. Once set, the backend should not be changed at runtime.
-VXLAN is the recommended choice. host-gw is recommended for more experienced users who want the performance improvement and whose infrastructure support it (typically it can't be used in cloud environments). UDP is suggested for debugging only or for very old kernels that don't support VXLAN."*
+[VXLAN](https://github.com/coreos/flannel/blob/master/Documentation/backends.md#vxlan) is the recommended choice. [host-gw](https://github.com/coreos/flannel/blob/master/Documentation/backends.md#host-gw) is recommended for more experienced users who want the performance improvement and whose infrastructure support it (typically it can't be used in cloud environments). [UDP](https://github.com/coreos/flannel/blob/master/Documentation/backends.md#udp) is suggested for debugging only or for very old kernels that don't support VXLAN."*
 
 > Reference: https://github.com/coreos/flannel/blob/master/Documentation/backends.md
 
@@ -168,7 +168,7 @@ data:
 
 ## VXLAN Device - flannel.\<vni\>
 
-*"Virtual Extensible LAN (VXLAN) is a network virtualization technology that attempts to address the scalability problems associated with large cloud computing deployments. It uses a VLAN-like encapsulation technique to encapsulate OSI layer 2 Ethernet frames within layer 4 UDP datagrams, using 4789 as the default IANA-assigned destination UDP port number.[1] VXLAN endpoints, which terminate VXLAN tunnels and may be either virtual or physical switch ports, are known as VXLAN tunnel endpoints (VTEPs)."*
+*"Virtual Extensible LAN (VXLAN) is a [network virtualization](https://en.wikipedia.org/wiki/Network_virtualization) technology that attempts to address the [scalability](https://en.wikipedia.org/wiki/Scalability) problems associated with large [cloud computing](https://en.wikipedia.org/wiki/Cloud_computing) deployments. It uses a [VLAN](https://en.wikipedia.org/wiki/Virtual_LAN)-like encapsulation technique to encapsulate [OSI](https://en.wikipedia.org/wiki/OSI_model) [layer 2](https://en.wikipedia.org/wiki/Data_link_layer) [Ethernet frames](https://en.wikipedia.org/wiki/Ethernet_frame) within [layer 4](https://en.wikipedia.org/wiki/Transport_layer) [UDP](https://en.wikipedia.org/wiki/User_Datagram_Protocol) datagrams, using 4789 as the default [IANA](https://en.wikipedia.org/wiki/Internet_Assigned_Numbers_Authority)-assigned destination UDP port number. VXLAN endpoints, which terminate VXLAN tunnels and may be either virtual or physical [switch ports](https://en.wikipedia.org/wiki/Network_switch), are known as VXLAN tunnel endpoints (VTEPs)."*
 
 > Reference: https://en.wikipedia.org/wiki/Virtual_Extensible_LAN
 
