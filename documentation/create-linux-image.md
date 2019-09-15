@@ -26,7 +26,7 @@ Partitions may be increased later but this is how our volumes will be initially 
 
 The installation of software packages that make up the base image is necessary to avoid repetition of work in the other VMs that will be created based on it.
 
-Since we are using VirtualBox as our virtualization system, an important software that should compose every image is  VirtualBox Guest Additions, as well as its dependencies.
+Since we are using VirtualBox as our virtualization system, an important software that should compose every image is  [VirtualBox Guest Additions](https://docs.oracle.com/cd/E36500_01/E36502/html/qs-guest-additions.html), as well as its dependencies.
 
 The softwares to be installed are the following:
 
