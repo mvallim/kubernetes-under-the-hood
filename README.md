@@ -1,4 +1,5 @@
 # Kubernetes under the hood
+
 <p align="center">
   <img src="documentation/images/under-the-hood.jpg">
 </p>
@@ -6,9 +7,11 @@
 It even includes a SlideShare explaining the reasoning behid it [Kubernetes under the hood journey](https://pt.slideshare.net/MarcosVallim1/kubernetes-under-the-hood-journey/MarcosVallim1/kubernetes-under-the-hood-journey)
 
 ## Target Audience
+
 The target audience for this tutorial is someone planning to install a Kubernetes cluster and wants to understand how everything fits together.
 
 ## Index
+
 ***Atention**: the documentation for this project is being actively improved to explain the demonstrated concepts clearly. If you face any difficulties while following the steps described in the documentation, please open an issue, so we can keep improving it. The version of Kubernetes used here is **1.13.5***
 
 1. Introdution
@@ -23,7 +26,7 @@ The target audience for this tutorial is someone planning to install a Kubernete
    - [etcd](documentation/kube-etcd.md)
    - [flannel](documentation/kube-flannel.md)
 4. Putting all together
-   - [Creating the base image](documentation/create-linux-image.md)
+   - [Linux image](documentation/create-linux-image.md)
    - [cloud-init Bootstrap](documentation/cloud-init.md)
    - [Configuring your station](documentation/configure-your-station.md)
    - [Running VMs](documentation/running-vms.md)
@@ -46,7 +49,7 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduc
 
 ## Versioning
 
-We use [GitHub](https://github.com/mvallim/kubernetes-under-the-hood) for versioning. For the versions available, see the [tags on this repository](https://github.com/mvallim/kubernetes-under-the-hood/tags). 
+We use [GitHub](https://github.com/mvallim/kubernetes-under-the-hood) for versioning. For the versions available, see the [tags on this repository](https://github.com/mvallim/kubernetes-under-the-hood/tags).
 
 ## Authors
 
