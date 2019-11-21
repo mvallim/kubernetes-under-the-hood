@@ -9,4 +9,4 @@ config:
     name: enp0s8
     subnets:
       - type: static
-        address: 192.168.254.254/24
+        address: 192.168.253.254/24

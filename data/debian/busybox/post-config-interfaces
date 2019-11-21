@@ -7,4 +7,4 @@ nic1:
 nic2:
   id: 2
   type: hostonly
-  adapter: vboxnet0
+  adapter: vboxnet1
