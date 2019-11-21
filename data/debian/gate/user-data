@@ -1,4 +1,5 @@
 #cloud-config
+
 write_files:
 
 - path: /etc/sysctl.d/10-gateway.conf
@@ -100,6 +101,12 @@ users:
     - #SSH-PUB-KEY#
 - name: root
   lock_passwd: true
+
+locale: en_US.UTF-8
+
+timezone: UTC
+
+ssh_deletekeys: 1
 
 package_upgrade: true
 

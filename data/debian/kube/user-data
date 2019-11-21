@@ -95,6 +95,12 @@ users:
 - name: root
   lock_passwd: true
 
+locale: en_US.UTF-8
+
+timezone: UTC
+
+ssh_deletekeys: 1
+
 package_upgrade: true
 
 ssh_pwauth: true
