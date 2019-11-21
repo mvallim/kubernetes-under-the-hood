@@ -8,6 +8,12 @@ users:
   ssh_authorized_keys:
     - #SSH-PUB-KEY#
 
+locale: en_US.UTF-8
+
+timezone: UTC
+
+ssh_deletekeys: 1
+
 package_upgrade: true
 
 ssh_pwauth: false
