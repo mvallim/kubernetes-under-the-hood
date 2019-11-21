@@ -1,0 +1,10 @@
+---
+nic1:
+  id: 1
+  type: intnet
+  name: dmz
+
+nic2:
+  id: 2
+  type: hostonly
+  adapter: vboxnet0

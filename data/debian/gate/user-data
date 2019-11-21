@@ -19,7 +19,6 @@ write_files:
     listen-address=192.168.4.1
     domain=kube.demo
     local=/kube.demo/
-    address=/#HOSTNAME#.kube.demo/192.168.254.254
 
 - path: /etc/dnsmasq.d/cache
   permissions: '0644'

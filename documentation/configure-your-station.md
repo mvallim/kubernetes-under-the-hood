@@ -1,82 +1,47 @@
-## Configuring your station
+# Configuring your station
 
 ## Prerequisites (GNU/Linux Debian/Ubuntu)
 
 The premise is that you already have Virtualbox properly installed on your local machine.
 
 ### Add your user on `vboxusers`
-```
+
+```shell
 sudo usermod -a -G vboxusers $USER
 ```
+
 ---
 
 ### Install `shyaml`
-```
+
+```shell
 sudo apt-get install python3-pip
 
 sudo pip3 install shyaml
 ```
+
 ---
 
 ### Install `genisoimage`
-```
+
+```shell
 sudo apt-get install genisoimage
 ```
+
 ---
 
 ### Install `uuid-runtime`
-```
+
+```shell
 sudo apt-get install uuid-runtime
 ```
----
-
-### Install `resolvconf`
-```
-sudo apt-get install resolvconf
-```
----
-
-### Install `dnsmasq-base`
-```
-sudo apt-get install dnsmasq-base
-```
----
-
-### Configure `dnsmasq` on NetworkManager
-```
-sudo systemctl disable systemd-resolved.service
-
-sudo systemctl stop systemd-resolved.service
-
-sudo rm -rf /etc/resolvconf/resolv.conf.d/original
-
-sudo touch /etc/resolvconf/resolv.conf.d/original
-
-sudo truncate -s 0 /etc/resolv.conf
-
-sudo sed -i '/^\[main\]/a dns=dnsmasq' /etc/NetworkManager/NetworkManager.conf
-
-sudo sed -i '/^\[main\]/a rc-manager=resolvconf' /etc/NetworkManager/NetworkManager.conf
-
-echo "server=/kube.demo/192.168.1.1" | sudo tee -a /etc/NetworkManager/dnsmasq.d/server
-
-echo "server=/kube.demo/192.168.2.1" | sudo tee -a /etc/NetworkManager/dnsmasq.d/server
-
-echo "server=/kube.demo/192.168.3.1" | sudo tee -a /etc/NetworkManager/dnsmasq.d/server
-
-echo "server=/kube.demo/192.168.4.1" | sudo tee -a /etc/NetworkManager/dnsmasq.d/server
-
-echo "cache-size=10000" | sudo tee -a /etc/NetworkManager/dnsmasq.d/cache
-
-sudo systemctl restart network-manager
-```
----
 
 ### Configure Host Adapter VirtualBox
+
 Create a Host-Only adpter on Virtualbox
 
-```
+```shell
 vboxmanage hostonlyif create
 
-vboxmanage hostonlyif ipconfig vboxnet0 --ip 192.168.254.1 --netmask 255.255.0.0
+vboxmanage hostonlyif ipconfig vboxnet0 --ip 192.168.254.1 --netmask 255.255.255.0
 ```
