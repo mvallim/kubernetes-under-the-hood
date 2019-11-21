@@ -1,9 +1,9 @@
-## Running
+# Running
 
 Now let's create the images using a tool ([`create-image.sh`](/create-image.sh)) that will help us clone the base image and add the user-data, meta-data and network-config scripts that cloud-init will use to make the installation of the necessary packages and configurations.
 
-```
-$ ./create-image.sh \
+``` Shell
+./create-image.sh \
     -k or --ssh-pub-keyfile SSH_PUB_KEY_FILE \
     -u or --user-data USER_DATA_FILE \
     -m or --meta-data META_DATA_FILE \
@@ -17,7 +17,8 @@ $ ./create-image.sh \
     -a or --auto-start AUTO_START
 ```
 
-### Parameters:
+## Parameters
+
 * __`SSH_PUB_KEY_FILE`__: Path to an SSH public key.
 * __`USER_DATA_FILE`__: Path to an user data file. Default is '/data/user-data'.
 * __`META_DATA_FILE`__: Path to an meta data file. Default is '/data/meta-data'.
@@ -31,8 +32,9 @@ $ ./create-image.sh \
 * __`AUTO_START`__: Auto start vm. Default is true.
 
 For more information:
-```
-$ ./create-image.sh -h or --help
+
+```shell
+./create-image.sh -h
 ```
 
 ## Running Demo
@@ -40,8 +42,9 @@ $ ./create-image.sh -h or --help
 All VM initializations and configurations use [**`cloud-init`**](/documentation/cloud-init.md), all YAML scripts are in the [data](/data) directory for the linux distribution used by VMs.
 
 ### Create gateway
-```
-$ ./create-image.sh \
+
+```shell
+./create-image.sh \
     -k ~/.ssh/id_rsa.pub \
     -u gate/user-data \
     -n gate/network-config \
@@ -54,10 +57,24 @@ $ ./create-image.sh \
 
 > Wait the gate-node01 finish the configuration and start VM, to the next steps.
 
+### Create BusyBox
+
+```shell
+./create-image.sh \
+    -k ~/.ssh/id_rsa.pub \
+    -u busybox/user-data \
+    -n busybox/network-config \
+    -i busybox/post-config-interfaces \
+    -r busybox/post-config-resources \
+    -o busybox \
+    -l debian \
+    -b debian-base-image
+```
+
 ### Create HAProxy Cluster
 
-```
-$ for instance in hapx-node01 hapx-node02; do
+```shell
+for instance in hapx-node01 hapx-node02; do
     ./create-image.sh \
         -k ~/.ssh/id_rsa.pub \
         -u hapx/user-data \
@@ -71,8 +88,9 @@ done
 ```
 
 ### Create Kubernete Masters
-```
-$ for instance in kube-mast01 kube-mast02 kube-mast03; do
+
+```shell
+for instance in kube-mast01 kube-mast02 kube-mast03; do
     ./create-image.sh \
         -k ~/.ssh/id_rsa.pub \
         -u kube/user-data \
@@ -86,8 +104,9 @@ done
 ```
 
 ### Create Kube Workers
-```
-$ for instance in kube-node01 kube-node02 kube-node03; do
+
+```shell
+for instance in kube-node01 kube-node02 kube-node03; do
     ./create-image.sh \
         -k ~/.ssh/id_rsa.pub \
         -u kube/user-data \
@@ -101,8 +120,9 @@ done
 ```
 
 ### Create Gluster Nodes
-```
-$ for instance in glus-node01 glus-node02 glus-node03; do
+
+```shell
+for instance in glus-node01 glus-node02 glus-node03; do
     ./create-image.sh \
         -k ~/.ssh/id_rsa.pub \
         -u glus/user-data \
@@ -118,18 +138,8 @@ done
 
 ### Configure your local routing
 
-You need to add the routes on your local machine to access the internal network of Virtualbox.
+You need to add the route on your local machine to access the internal network of Virtualbox.
 
-```
-sudo ip route add 192.168.1.0/24 via 192.168.1.254 dev vboxnet0
-
-sudo ip route add 192.168.2.0/25 via 192.168.2.254 dev vboxnet0
-
-sudo ip route add 192.168.2.128/25 via 192.168.2.254 dev vboxnet0
-
-sudo ip route add 192.168.3.0/24 via 192.168.3.254 dev vboxnet0
-
-sudo ip route add 192.168.4.0/25 via 192.168.4.254 dev vboxnet0
-
-sudo ip route add 192.168.4.128/25 via 192.168.4.254 dev vboxnet0
+```shell
+sudo ip route add 192.168.4.0/25 via 192.168.254.254 dev vboxnet0
 ```
