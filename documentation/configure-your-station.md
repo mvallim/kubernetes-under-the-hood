@@ -36,6 +36,8 @@ sudo apt-get install genisoimage
 sudo apt-get install uuid-runtime
 ```
 
+---
+
 ### Configure Host Adapter VirtualBox
 
 Create a Host-Only adpter on Virtualbox
