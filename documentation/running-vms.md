@@ -1,6 +1,6 @@
 ## Running
 
-Now let's create the images using a tool ([`create-image.sh`](/create-image.sh)) that will help us clone the base image and add the user-data, meta-data and network-config scripts that cloud-init will use to make the installation of the necessary packages and configurations.
+Now let's create the images using a tool ([`create-image.sh`](/create-image.sh)) that will help us clone the base image and add the user-data, meta-data and network-config scripts that cloud-init will use to install the necessary packages and configurations.
 
 ```
 $ ./create-image.sh \
@@ -18,17 +18,19 @@ $ ./create-image.sh \
 ```
 
 ### Parameters:
-* __`SSH_PUB_KEY_FILE`__: Path to an SSH public key.
-* __`USER_DATA_FILE`__: Path to an user data file. Default is '/data/user-data'.
-* __`META_DATA_FILE`__: Path to an meta data file. Default is '/data/meta-data'.
-* __`NETWORK_INTERFACES_FILE`__: Path to an network interface data file.
-* __`POST_CONFIG_INTERFACES_FILE`__: Path to an post config interface data file.
-* __`POST_CONFIG_STORAGES_FILE`__: Path to an post config storage data file.
-* __`POST_CONFIG_RESOURCES_FILE`__: Path to an post config resources data file.
-* __`HOSTNAME`__: Hostname of new image.
-* __`BASE_IMAGE`__: Name of VirtualBox base image.
-* __`LINUX_DISTRIBUTION`__: Name of Linux distribution. Default is 'debian'.
-* __`AUTO_START`__: Auto start vm. Default is true.
+
+* `-k` is used to copy the public key from your host inside the newly created VM.
+* `-u` is used to specify the user-data file that will be passed as a parameter to the command that creates the cloud-init ISO file we mentioned before (check the source code of the script for a better understanding of how it's used). Default is **'/data/user-data'**.
+* `-m` is used to specify the meta-data file that will be passed as a parameter to the command that creates the cloud-init ISO file we mentioned before (check the source code of the script for a better understanding of how it's used).Default is **'/data/meta-data'**.
+* `-n` is used to pass a configuration file that will be used by cloud-init to configure the network for the instance.
+* `-i` is used to pass a configuration file that our script will use to modify the network interface managed by VirtualBox that is attached to the instance that will be created from this image.
+* `-r` is used to pass a configuration file that our script will use to configure the number of processors and amount of memory that is allocated to our instance by VirtualBox.
+* `-o` is used to pass the hostname that will be assigned to our instance. This will also be the name used by VirtualBox to reference our instance.
+* `-l` is used to inform which Linux distribution (`debian` or `ubuntu`) configuration files we want to use (notice this is used to specify which folder under [data](/data) is referenced). Default is **'debian'**.
+* `-b` is used to specify which base image should be used. This is the image name that was created on VirtualBox when we executed the installation steps from our [last article](create-linux-image.md).
+* `-s` is used to pass a configuration file that our script will use to configure virtual disks on VirtualBox. You'll notice this is used only on the Gluster configuration step.
+* `-a` whether or not our instance should be initialized after it's created. Default is **true**.
+
 
 For more information:
 ```
@@ -37,7 +39,9 @@ $ ./create-image.sh -h or --help
 
 ## Running Demo
 
-All VM initializations and configurations use [**`cloud-init`**](/documentation/cloud-init.md), all YAML scripts are in the [data](/data) directory for the linux distribution used by VMs.
+To initialize and configure our instances using [**`cloud-init`**](/documentation/cloud-init.md), we'll use the configuration files versioned at the [data](/data) directory from our repository.
+
+Note: pay attention that, for each step, we pass the specific configuration files of the component being configured (gate, hapx, glus etc.)
 
 ### Create gateway
 ```
