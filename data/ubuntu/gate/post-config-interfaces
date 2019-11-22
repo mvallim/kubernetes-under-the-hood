@@ -22,3 +22,8 @@ nic5:
   id: 5
   type: intnet
   name: dmz
+
+nic6:
+  id: 6
+  type: hostonly
+  adapter: vboxnet0

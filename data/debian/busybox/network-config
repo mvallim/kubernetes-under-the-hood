@@ -5,8 +5,3 @@ config:
     name: enp0s3
     subnets:
       - type: dhcp
-  - type: physical
-    name: enp0s8
-    subnets:
-      - type: static
-        address: 192.168.253.254/24
