@@ -43,15 +43,7 @@ sudo apt-get install uuid-runtime
 Create a Host-Only adpter on Virtualbox
 
 ```shell
-# Gateway - vboxnet0
 vboxmanage hostonlyif create
 
-# Gateway - vboxnet0 configuration
 vboxmanage hostonlyif ipconfig vboxnet0 --ip 192.168.254.1 --netmask 255.255.0.0
-
-# BusyBox - vboxnet1
-vboxmanage hostonlyif create
-
-# BusyBox - vboxnet1 configuration
-vboxmanage hostonlyif ipconfig vboxnet1 --ip 192.168.253.1 --netmask 255.255.255.0
 ```
