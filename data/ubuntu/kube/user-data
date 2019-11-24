@@ -80,7 +80,7 @@ runcmd:
   - echo 'deb https://apt.kubernetes.io/ kubernetes-xenial main' > /etc/apt/sources.list.d/kubernetes.list
   - [ apt-get, update ]
   - [ apt-get, install, -y, 'docker-ce=18.06.0~ce~3-0~debian', containerd.io ]
-  - [ apt-get, install, -y, 'kubelet=1.13.5-00', 'kubectl=1.13.5-00', 'kubeadm=1.13.5-00' ]
+  - [ apt-get, install, -y, 'kubelet=1.15.6-00', 'kubectl=1.15.6-00', 'kubeadm=1.15.6-00' ]
   - [ apt-mark, hold, kubelet, kubectl, kubeadm, docker-ce, containerd.io ]
 
 users:
@@ -106,6 +106,10 @@ package_upgrade: true
 ssh_pwauth: true
 
 manage_etc_hosts: true
+
+fqdn: #HOSTNAME#.kube.demo
+
+hostname: #HOSTNAME#
 
 power_state:
   mode: reboot

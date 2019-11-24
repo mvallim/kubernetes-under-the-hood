@@ -18,6 +18,22 @@ apt:
       };
     };
 
+packages: 
+  - apt-transport-https
+  - software-properties-common
+  - ca-certificates
+  - gnupg2
+  - glusterfs-client
+  - dnsutils
+  - screen
+
+runcmd:
+  - wget -qO - https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+  - echo 'deb https://apt.kubernetes.io/ kubernetes-xenial main' > /etc/apt/sources.list.d/kubernetes.list
+  - [ apt-get, update ]
+  - [ apt-get, install, -y, 'kubectl=1.15.6-00' ]
+  - [ apt-mark, hold, kubectl ]  
+
 users:
 - name: ubuntu
   gecos: Ubuntu User
@@ -40,6 +56,10 @@ package_upgrade: true
 ssh_pwauth: false
 
 manage_etc_hosts: true
+
+fqdn: #HOSTNAME#.kube.demo
+
+hostname: #HOSTNAME#
 
 power_state:
   mode: reboot

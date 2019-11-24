@@ -57,6 +57,10 @@ ssh_pwauth: false
 
 manage_etc_hosts: true
 
+fqdn: #HOSTNAME#.kube.demo
+
+hostname: #HOSTNAME#
+
 power_state:
   mode: reboot
   timeout: 30

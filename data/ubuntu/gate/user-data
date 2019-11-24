@@ -1,4 +1,5 @@
 #cloud-config
+
 write_files:
 
 - path: /etc/sysctl.d/10-gateway.conf
@@ -112,6 +113,10 @@ package_upgrade: true
 ssh_pwauth: false
 
 manage_etc_hosts: true
+
+fqdn: #HOSTNAME#.kube.demo
+
+hostname: #HOSTNAME#
 
 power_state:
   mode: reboot
