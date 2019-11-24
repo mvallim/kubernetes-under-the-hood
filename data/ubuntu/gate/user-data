@@ -10,6 +10,7 @@ write_files:
 - path: /etc/dnsmasq.d/dns
   permissions: '0644'
   content: |
+    no-hosts
     domain-needed
     bogus-priv
     listen-address=127.0.0.1
