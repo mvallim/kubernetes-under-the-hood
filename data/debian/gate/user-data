@@ -17,9 +17,8 @@ write_files:
     listen-address=127.0.0.1
     listen-address=192.168.1.1
     listen-address=192.168.2.1
-    listen-address=192.168.2.129
     listen-address=192.168.3.1
-    listen-address=192.168.4.1
+    listen-address=192.168.4.33
     listen-address=192.168.4.129
     domain=kube.demo
     local=/kube.demo/
@@ -34,32 +33,28 @@ write_files:
   permissions: '0644'
   content: |
     dhcp-range=enp0s8,192.168.1.2,192.168.1.253,255.255.255.0,192.168.1.255,12h
-    dhcp-range=enp0s9.21,192.168.2.2,192.168.2.125,255.255.255.128,192.168.4.127,12h
-    dhcp-range=enp0s9.22,192.168.2.130,192.168.2.253,255.255.255.128,192.168.4.255,12h    
+    dhcp-range=enp0s9,192.168.2.130,192.168.2.253,255.255.255.0,192.168.2.255,12h
     dhcp-range=enp0s10,192.168.3.2,192.168.3.253,255.255.255.0,192.168.3.255,12h
-    dhcp-range=enp0s16.41,192.168.4.2,192.168.4.125,255.255.255.128,192.168.4.127,12h
-    dhcp-range=enp0s16.42,192.168.4.130,192.168.4.253,255.255.255.128,192.168.4.255,12h
+    dhcp-range=enp0s16.42,192.168.4.34,192.168.4.61,255.255.255.224,192.168.4.63,12h
+    dhcp-range=enp0s16.43,192.168.4.130,192.168.4.253,255.255.255.128,192.168.4.128,12h
 
     dhcp-option=enp0s8,option:dns-server,192.168.1.1
-    dhcp-option=enp0s9.21,option:dns-server,192.168.2.1
-    dhcp-option=enp0s9.22,option:dns-server,192.168.2.129
+    dhcp-option=enp0s9,option:dns-server,192.168.2.1
     dhcp-option=enp0s10,option:dns-server,192.168.3.1
-    dhcp-option=enp0s16.41,option:dns-server,192.168.4.1
-    dhcp-option=enp0s16.42,option:dns-server,192.168.4.129
+    dhcp-option=enp0s16.42,option:dns-server,192.168.4.33
+    dhcp-option=enp0s16.43,option:dns-server,192.168.4.129
 
     dhcp-option=enp0s8,option:domain-name,kube.demo
-    dhcp-option=enp0s9.21,option:domain-name,kube.demo
-    dhcp-option=enp0s9.22,option:domain-name,kube.demo
+    dhcp-option=enp0s9,option:domain-name,kube.demo
     dhcp-option=enp0s10,option:domain-name,kube.demo
-    dhcp-option=enp0s16.41,option:domain-name,kube.demo
     dhcp-option=enp0s16.42,option:domain-name,kube.demo
+    dhcp-option=enp0s16.43,option:domain-name,kube.demo
 
     dhcp-option=enp0s8,option:router,192.168.1.254
-    dhcp-option=enp0s9.21,option:router,192.168.2.126
-    dhcp-option=enp0s9.22,option:router,192.168.2.254
+    dhcp-option=enp0s9,option:router,192.168.2.254
     dhcp-option=enp0s10,option:router,192.168.3.254
-    dhcp-option=enp0s16.41,option:router,192.168.4.126
-    dhcp-option=enp0s16.42,option:router,192.168.4.254
+    dhcp-option=enp0s16.42,option:router,192.168.4.62
+    dhcp-option=enp0s16.43,option:router,192.168.4.254
 
 runcmd:
   - [ sysctl, --system ]

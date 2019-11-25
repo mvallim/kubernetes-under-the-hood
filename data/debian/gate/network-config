@@ -14,26 +14,11 @@ config:
         address: 192.168.1.254/24
   - type: physical
     name: enp0s9
-  - id: enp0s9.21
-    name: enp0s9.21
     subnets:
       - type: static
-        address: 192.168.2.1/25
+        address: 192.168.2.1/24
       - type: static
-        address: 192.168.2.126/25
-    type: vlan
-    vlan_id: 21
-    vlan_link: enp0s9
-  - id: enp0s9.22
-    name: enp0s9.22
-    subnets:
-      - type: static
-        address: 192.168.2.129/25
-      - type: static
-        address: 192.168.2.254/25
-    type: vlan
-    vlan_id: 22
-    vlan_link: enp0s9
+        address: 192.168.2.254/24
   - type: physical
     name: enp0s10
     subnets:
@@ -43,26 +28,33 @@ config:
         address: 192.168.3.254/24
   - type: physical
     name: enp0s16
-  - id: enp0s16.41
+  - type: vlan
+    vlan_link: enp0s16
+    vlan_id: 41
     name: enp0s16.41
     subnets:
       - type: static
-        address: 192.168.4.1/25
+        address: 192.168.4.1/27
       - type: static
-        address: 192.168.4.126/25
-    type: vlan
-    vlan_id: 41
+        address: 192.168.4.30/27
+  - type: vlan
     vlan_link: enp0s16
-  - id: enp0s16.42
+    vlan_id: 42
     name: enp0s16.42
+    subnets:
+      - type: static
+        address: 192.168.4.33/27
+      - type: static
+        address: 192.168.4.62/27
+  - type: vlan
+    vlan_link: enp0s16
+    vlan_id: 43
+    name: enp0s16.43
     subnets:
       - type: static
         address: 192.168.4.129/25
       - type: static
         address: 192.168.4.254/25
-    type: vlan
-    vlan_id: 42
-    vlan_link: enp0s16
   - type: physical
     name: enp0s17
     subnets:
