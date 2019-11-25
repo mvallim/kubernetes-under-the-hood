@@ -21,7 +21,7 @@ write_files:
       crypto_hash: sha256
       interface {
         ringnumber: 0
-        bindnetaddr: 192.168.4.128
+        bindnetaddr: 192.168.4.31
         mcastaddr: 239.255.1.1
         mcastport: 5405
         ttl: 1

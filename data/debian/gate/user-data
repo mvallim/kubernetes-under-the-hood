@@ -2,12 +2,13 @@
 
 write_files:
 
+# Enable IP Forward
 - path: /etc/sysctl.d/10-gateway.conf
   permissions: '0644'
   content: |
     net.ipv4.ip_forward=1
-    net.ipv4.conf.all.rp_filter=0
 
+# DNS server configuration
 - path: /etc/dnsmasq.d/dns
   permissions: '0644'
   content: |
@@ -18,17 +19,20 @@ write_files:
     listen-address=192.168.1.1
     listen-address=192.168.2.1
     listen-address=192.168.3.1
+    listen-address=192.168.4.1
     listen-address=192.168.4.33
     listen-address=192.168.4.129
     domain=kube.demo
     local=/kube.demo/
     address=/#HOSTNAME#.kube.demo/192.168.254.254
 
+# Enable cache 10000 entries
 - path: /etc/dnsmasq.d/cache
   permissions: '0644'
   content: |
     cache-size=10000
 
+# DHCP server configuration per interfaces
 - path: /etc/dnsmasq.d/dhcp
   permissions: '0644'
   content: |
@@ -61,6 +65,7 @@ runcmd:
   - [ systemctl, stop, systemd-resolved ]
   - [ systemctl, disable, systemd-resolved ]
 
+# NAT enable
 bootcmd:
   - iptables -A FORWARD -i enp0s8 -j ACCEPT
   - iptables -A FORWARD -o enp0s8 -j ACCEPT

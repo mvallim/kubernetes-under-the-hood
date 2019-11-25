@@ -137,5 +137,8 @@ done
 You need to add the route on your local machine to access the internal network of Virtualbox.
 
 ```shell
-sudo ip route add 192.168.4.0/24 via 192.168.254.254 dev vboxnet0
+# Floating IP
+sudo ip route add 192.168.4.0/27 via 192.168.4.30 dev vboxnet0
+# BusyBox
+sudo ip route add 192.168.4.32/27 via 192.168.4.62 dev vboxnet0
 ```
