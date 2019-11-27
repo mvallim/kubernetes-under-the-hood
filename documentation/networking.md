@@ -105,13 +105,14 @@ Reference: https://en.wikipedia.org/wiki/Network_segmentation
 * **Class E** — Every IP with the first octet having its value in the 240–255 range is a **Class E** address.
 
 ## CIDR Notation
+
 The **Classless Inter-Domain Routing**, or **CIDR**, is an alternative to traditional subnetting.
 
 IP addresses are described with two groups of bits at the address: the most significant bits are the network prefix, which identifies the entire network or subnet, and the least significant set, the host identifier, which specifies a particular interface of a host on that network. This division is used as the basis for routing traffic between IP networks and for address allocation policies.
 
 The basic idea here is to group the most significant bits at the beginning of the address. See the table below.
 
-```
+```text
 +-------------------------+----------------+
 | Subnet/Netmask          | Notation CIDR  |
 +-------------------------+----------------+
@@ -124,14 +125,16 @@ The basic idea here is to group the most significant bits at the beginning of th
 Reference: https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing
 
 ## Localhost
+
 The 127.0.0.0–127.255.255.255 IP range (or 127.0.0.0/8 in **CIDR** notation) is reserved for communication within the localhost. Any packets sent to these addresses won’t leave the computer that generated them. Still, they will be treated just like any other packets received from the network.
 
 ## Reserved Private Ranges
+
 Of the 4,294,967,296 (0.0.0.0/0 - 2³²) addresses available, three ranges are reserved for private networks. The IP addresses contained in these ranges cannot be routed out of the private network and are not routable from public networks.
 
 Classes **A**, **B**, and **C** were reserved for networks (standardized by [RFC 1918](http://www.ietf.org/rfc/rfc1918.txt) and also by RFCs [3330](http://www.ietf.org/rfc/rfc3330.txt) and [3927](http://www.ietf.org/rfc/Frfc3927.txt)) which are known as private network addresses. See the table below.
 
-```
+```text
 +-------+-------------------------------+----------------+
 | Class | Range                         | Notation CIDR  |
 +-------+-------------------------------+----------------+
@@ -149,9 +152,10 @@ Classes **A**, **B**, and **C** were reserved for networks (standardized by [RFC
 </p>
 
 ### Network
+
 This is the IP address range for our main network. It provides us with up to 65534 addresses, allowing us to segment it into smaller, specialized blocks.
 
-```
+```text
 +---------------+----------------+-------+-----------+
 | Name          | Range          | Class | Addresses |
 +---------------+----------------+-------+-----------+
@@ -160,13 +164,14 @@ This is the IP address range for our main network. It provides us with up to 655
 ```
 
 ### Subnets
+
 Here, we define how our subnetworks will be segregated, allowing us to separate each resource category from the others. The main network will be an /16, while the smaller networks will be /24 and /25.
 
 To simplify this concept, imagine we have a commercial building with many floors, with each floor dedicated to a professional specialization. For example, software developers would stay on the 1st floor, cooks on the 2nd, doctors on the 3rd and so on.
 
 Basically, what we did was to get our building (the main network) and assign an address to each floor, specifying the maximum number of professionals (hosts) that each floor supports.
 
-```
+```text
 +--------------+-------------+------------------+-------+-------+
 | Type         | Subnet Name | Range            | Class |  IPs  |
 +--------------+-------------+------------------+-------+-------+
@@ -174,34 +179,40 @@ Basically, what we did was to get our building (the main network) and assign an 
 | MetalLB      | node        | 192.168.2.0/25   |   C   |   126 |
 | Kube Worker  | node        | 192.168.2.128/25 |   C   |   126 |
 | Gluster      | glus        | 192.168.3.0/24   |   C   |   254 |
-| Floating IPs | dmz         | 192.168.4.0/25   |   C   |   126 |
+| Floating IPs | dmz         | 192.168.4.0/27   |   C   |    30 |
+| BusyBox      | dmz         | 192.168.4.32/27  |   C   |    30 |
 | HAProxy      | dmz         | 192.168.4.128/25 |   C   |   126 |
 +--------------+-------------+------------------+-------+-------+
 ```
+
 The subnets will be segmented to accommodate 254 (/24) and 126 (/25) addresses, which are sufficient sizes to accommodate the number of instances, load balancers (**MetalLB**) and the **Floating IP**, for the complete deployment of our **Kubernetes** cluster.
 
 You may be asking why these numbers aren’t 256 (2⁸ — (32–24)) and 128 (2⁷ — (32 -25)). The reason for this is that the first and last addresses are reserved for the network and broadcast, respectively.
 
 ### DNS
+
 As explained above, it’s common practice to assign the first available address to the DNS server. Thus:
 
-```
-+------------+-------------+
-| Name       | Ip          |
-+------------+-------------+
-| DNS - mast | 192.168.1.1 |
-| DNS - node | 192.168.2.1 |
-| DNS - glus | 192.168.3.1 |
-| DNS - dmz  | 192.168.4.1 |
-+------------+-------------+
+```text
++------------+---------------+
+| Name       | Ip            |
++------------+---------------+
+| DNS - mast |   192.168.1.1 |
+| DNS - node |   192.168.2.1 |
+| DNS - glus |   192.168.3.1 |
+| DNS - dmz  |   192.168.4.1 |
+| DNS - dmz  |  192.168.4.33 |
+| DNS - dmz  | 192.168.4.129 |
++------------+---------------+
 ```
 
 ### DHCP
+
 Here we define what our IP distribution range should be, guaranteeing that each subnetwork defined above will have enough IPs available to be assigned to the hosts that are launched into them.
 
 Looking closer to it, we can see each IP range supports up 252 and 124 IPs. If the number of hosts in a given network is higher than this, we’ll face an IP exhaustion scenario. This means a new host trying to join the subnetwork won’t be able to receive an IP and, as a consequence, won’t be able to join the network.
 
-```
+```text
 +-------------+-------------------------------+-------+
 | Name        | Range                         | Hosts |
 +-------------+-------------------------------+-------+
@@ -217,29 +228,33 @@ Looking closer to it, we can see each IP range supports up 252 and 124 IPs. If t
 If you don’t remember what a **DHCP** is, please refer back to our [Technology Stack](/documentation/technologies.md#dnsmasq).
 
 ### Gateways
+
 It’s a common practice to reserve the first or last IP in a subnetwork as the gateway address. It’s technically possible to assign a different IP address to your gateway. Keep in mind though that this can make DHCP configuration harder.
 
 For example, in a subnetwork with CIDR 192.168.5.0/24, if we arbitrarily assign the IP 192.168.5.127 to our gateway, our IP distribution range would have to be defined as either 192.168.5.1–192.168.5.126 or 192.168.5.128–192.168.5.254, making things less intuitive.
 
 To make our lives easier, we will be using the last IP (notice we use 254 because 255 is reserved for broadcast) address of our subnetworks for our gateways.
 
-```
+```text
 +----------------+---------------+
 | Name           | Address       |
 +----------------+---------------+
 | Gateway - mast | 192.168.1.254 |
 | Gateway - node | 192.168.2.254 |
 | Gateway - glus | 192.168.3.254 |
+| Gateway - dmz  |  192.168.4.30 |
+| Gateway - dmz  |  192.168.4.62 |
 | Gateway - dmz  | 192.168.4.254 |
 +----------------+---------------+
 ```
 
 ### Floating IP
+
 Our **Floating IP** address could be any IP address in our DMZ subnetwork 192.168.4.0/25. Thus, we will be using 192.168.4.20.
 
 If you don’t remember what a **Floating IP** is, please refer back to our [Architecture Overview](/documentation/common-cluster.md#haproxy-cluster).
 
-```
+```text
 +---------------+--------------+
 | Name          | Address      |
 +---------------+--------------+
@@ -248,9 +263,10 @@ If you don’t remember what a **Floating IP** is, please refer back to our [Arc
 ```
 
 ### LoadBalancer
+
 If you don’t remember what a **Load Balancing** is, please refer back to our [Architecture Overview](/documentation/common-cluster.md#load-balancing).
 
-```
+```text
 +---------+-----------------------------+---------------+
 | Name    | Range                       | LoadBalancers | 
 +---------+-----------------------------+---------------+

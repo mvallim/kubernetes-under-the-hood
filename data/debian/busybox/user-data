@@ -10,6 +10,7 @@ apt:
 
     deb http://deb.debian.org/debian-security $RELEASE/updates main
     deb-src http://deb.debian.org/debian-security $RELEASE/updates main
+    
   conf: |
     APT {
       Get {
@@ -26,6 +27,7 @@ packages:
   - glusterfs-client
   - dnsutils
   - screen
+  - curl
 
 runcmd:
   - wget -qO - https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
