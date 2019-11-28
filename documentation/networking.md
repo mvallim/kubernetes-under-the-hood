@@ -250,7 +250,7 @@ To make our lives easier, we will be using the last IP (notice we use 254 becaus
 
 ### Floating IP
 
-Our **Floating IP** address could be any IP address in our DMZ subnetwork 192.168.4.0/25. Thus, we will be using 192.168.4.20.
+Our **Floating IP** address could be any IP address in our DMZ subnetwork 192.168.4.0/27. Thus, we will be using 192.168.4.20.
 
 If you don’t remember what a **Floating IP** is, please refer back to our [Architecture Overview](/documentation/common-cluster.md#haproxy-cluster).
 
@@ -268,7 +268,7 @@ If you don’t remember what a **Load Balancing** is, please refer back to our [
 
 ```text
 +---------+-----------------------------+---------------+
-| Name    | Range                       | LoadBalancers | 
+| Name    | Range                       | LoadBalancers |
 +---------+-----------------------------+---------------+
 | MetalLB | 192.168.2.2 - 192.168.2.126 |           125 |
 +---------+-----------------------------+---------------+
