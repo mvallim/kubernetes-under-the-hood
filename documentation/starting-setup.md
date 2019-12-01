@@ -9,11 +9,11 @@ We created the base image, for both Ubuntu and Debian, that we will use as the b
 * **Kubernetes Worker** (three instances)
 * **Gluster nodes** (three instances)
 
-Check our [Architecture Overview](documentation/common-cluster.md) for a better understanding of how these components interact with each other.
+Check our [Architecture Overview](common-cluster.md) for a better understanding of how these components interact with each other.
 
 To avoid getting too long, we will focus on the configuration of the **Gateway** and **Busybox** components.
 
-As we have seen on our [Networking](documentation/networking.md), the gateway instance will provide the following services: **DNS**, **NAT**, **DHCP** and **Gateway**. Please refer to it for more information about what each component is responsible for.
+As we have seen on our [Networking](networking.md), the gateway instance will provide the following services: **DNS**, **NAT**, **DHCP** and **Gateway**. Please refer to it for more information about what each component is responsible for.
 
 To configure our instances, we'll make use of cloud-init as well as a custom parameterized shell script that will help us to create each custom image using the base custom image we created in our last article.
 
@@ -92,7 +92,7 @@ Now let's create the images using a custom tool we created (create-image.sh) tha
 * **`-r`** is used to pass a configuration file that our script will use to configure the **number of processors and amount of memory** that is allocated to our instance by **VirtualBox**.
 * **`-o`** is used to pass the **hostname** that will be assigned to our instance. This will also be the name used by **VirtualBox** to reference our instance.
 * **`-l`** is used to inform which Linux distribution (**debian** or **ubuntu**) configuration files we want to use (notice this is used to specify which folder under data is referenced). Default is **`debian`**.
-* **`-b`** is used to specify which **base image** should be used. This is the image name that was created on **VirtualBox** when we executed the installation steps from our [linux image](documentation/create-linux-image.md).
+* **`-b`** is used to specify which **base image** should be used. This is the image name that was created on **VirtualBox** when we executed the installation steps from our [linux image](create-linux-image.md).
 * **`-s`** is used to pass a configuration file that our script will use to configure **virtual disks** on **VirtualBox**. You'll notice this is used only on the **Gluster** configuration step.
 * **`-a`** whether or not our instance **should be initialized** after it's created. Default is **`true`**.
 
@@ -103,7 +103,7 @@ Now let's create the images using a custom tool we created (create-image.sh) tha
   Gateway diagram
 </p>
 
-Full explanation in our [Network](documentation/networking.md).
+Full explanation in our [Network](networking.md).
 
 ### user-data
 
