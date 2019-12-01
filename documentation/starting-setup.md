@@ -20,7 +20,7 @@ To configure our instances, we'll make use of cloud-init as well as a custom par
 ## cloud-init
 
 <p align="center">
-  <img src="documentation/images/cloud-init.png">
+  <img src="images/cloud-init.png">
 </p>
 
 *"cloud-init is developed and released as free software under both the GPLv3 open source license and Apache License version 2.0. It was originally designed for the Ubuntu distribution of Linux in Amazon EC2, but is now supported on many Linux and UNIX distributions in every major cloud."*
@@ -99,7 +99,7 @@ Now let's create the images using a custom tool we created (create-image.sh) tha
 ## Gateway configuration
 
 <p align="center">
-  <img src="documentation/images/gateway-diagram.png">
+  <img src="images/gateway-diagram.png">
   Gateway diagram
 </p>
 
@@ -108,6 +108,8 @@ Full explanation in our [Network](documentation/networking.md).
 ### user-data
 
 This is the user-data file that is passed with the **`-u`** flag to our create-image.sh script. The specific file below is the user-data file that is used to configure our gateway. You can check the configuration for each component under **`/data/{distribution}/{component}/user-data`** in our repo. Check the comments in the file to better understand what each section represents.
+
+<script src="https://gist.github.com/mvallim/45265e94f89bc0400671bfcc9b490940.js"></script>
 
 ## BusyBox
 
