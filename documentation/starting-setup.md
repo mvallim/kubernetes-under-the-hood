@@ -65,6 +65,10 @@ You can observe this procedure in the create-image.sh script, which is detailed 
 
 ## create-image.sh
 
+<p align="center">
+  <img src="images/create-image.jpeg">
+</p>
+
 Now let's create the images using a custom tool we created (create-image.sh) that will help us clone the base image and add the user-data, meta-data and network-config scripts that cloud-init will use to install the necessary packages and configurations.
 
 ```shell
@@ -107,9 +111,140 @@ Full explanation in our [Network](networking.md).
 
 ### user-data
 
-This is the user-data file that is passed with the **`-u`** flag to our create-image.sh script. The specific file below is the user-data file that is used to configure our gateway. You can check the configuration for each component under **`/data/{distribution}/{component}/user-data`** in our repo. Check the comments in the file to better understand what each section represents.
+This is the user-data file that is passed with the **`-u`** flag to our [create-image.sh](../create-image.sh) script. The specific file below is the user-data file that is used to configure our gateway. You can check the configuration for each component under **`/data/{distribution}/{component}/user-data`** in our repo. Check the comments in the file to better understand what each section represents.
 
-<script src="https://gist.github.com/mvallim/45265e94f89bc0400671bfcc9b490940.js"></script>
+```yaml
+#cloud-config
+
+write_files:
+
+# Enable IP Forward
+- path: /etc/sysctl.d/10-gateway.conf
+  permissions: '0644'
+  content: |
+    net.ipv4.ip_forward=1
+
+# DNS server configuration
+- path: /etc/dnsmasq.d/dns
+  permissions: '0644'
+  content: |
+    no-hosts
+    domain-needed
+    bogus-priv
+    listen-address=127.0.0.1
+    listen-address=192.168.1.1
+    listen-address=192.168.2.1
+    listen-address=192.168.3.1
+    listen-address=192.168.4.1
+    listen-address=192.168.4.33
+    listen-address=192.168.4.129
+    domain=kube.demo
+    local=/kube.demo/
+    address=/#HOSTNAME#.kube.demo/192.168.254.254
+
+# Enable cache 10000 entries
+- path: /etc/dnsmasq.d/cache
+  permissions: '0644'
+  content: |
+    cache-size=10000
+
+# DHCP server configuration per interfaces
+- path: /etc/dnsmasq.d/dhcp
+  permissions: '0644'
+  content: |
+    dhcp-range=enp0s8,192.168.1.2,192.168.1.253,255.255.255.0,192.168.1.255,12h
+    dhcp-range=enp0s9,192.168.2.130,192.168.2.253,255.255.255.0,192.168.2.255,12h
+    dhcp-range=enp0s10,192.168.3.2,192.168.3.253,255.255.255.0,192.168.3.255,12h
+    dhcp-range=enp0s16.42,192.168.4.34,192.168.4.61,255.255.255.224,192.168.4.63,12h
+    dhcp-range=enp0s16.43,192.168.4.130,192.168.4.253,255.255.255.128,192.168.4.128,12h
+
+    dhcp-option=enp0s8,option:dns-server,192.168.1.1
+    dhcp-option=enp0s9,option:dns-server,192.168.2.1
+    dhcp-option=enp0s10,option:dns-server,192.168.3.1
+    dhcp-option=enp0s16.42,option:dns-server,192.168.4.33
+    dhcp-option=enp0s16.43,option:dns-server,192.168.4.129
+
+    dhcp-option=enp0s8,option:domain-name,kube.demo
+    dhcp-option=enp0s9,option:domain-name,kube.demo
+    dhcp-option=enp0s10,option:domain-name,kube.demo
+    dhcp-option=enp0s16.42,option:domain-name,kube.demo
+    dhcp-option=enp0s16.43,option:domain-name,kube.demo
+
+    dhcp-option=enp0s8,option:router,192.168.1.254
+    dhcp-option=enp0s9,option:router,192.168.2.254
+    dhcp-option=enp0s10,option:router,192.168.3.254
+    dhcp-option=enp0s16.42,option:router,192.168.4.62
+    dhcp-option=enp0s16.43,option:router,192.168.4.254
+runcmd:
+  - [ sysctl, --system ]
+  - [ systemctl, stop, systemd-resolved ]
+  - [ systemctl, disable, systemd-resolved ]
+
+# NAT rules enable
+bootcmd:
+  - iptables -A FORWARD -i enp0s8 -j ACCEPT
+  - iptables -A FORWARD -o enp0s8 -j ACCEPT
+  - iptables -A FORWARD -i enp0s9 -j ACCEPT
+  - iptables -A FORWARD -o enp0s9 -j ACCEPT
+  - iptables -A FORWARD -i enp0s10 -j ACCEPT
+  - iptables -A FORWARD -o enp0s10 -j ACCEPT
+  - iptables -A FORWARD -i enp0s16 -j ACCEPT
+  - iptables -A FORWARD -o enp0s16 -j ACCEPT
+  - iptables -t nat -A POSTROUTING -o enp0s3 -j MASQUERADE
+
+apt:
+  sources_list: |
+    deb http://deb.debian.org/debian/ $RELEASE main contrib non-free
+    deb-src http://deb.debian.org/debian/ $RELEASE main contrib non-free
+
+    deb http://deb.debian.org/debian/ $RELEASE-updates main contrib non-free
+    deb-src http://deb.debian.org/debian/ $RELEASE-updates main contrib non-free
+
+    deb http://deb.debian.org/debian-security $RELEASE/updates main
+    deb-src http://deb.debian.org/debian-security $RELEASE/updates main
+  conf: |
+    APT {
+      Get {
+        Assume-Yes "true";
+        Fix-Broken "true";
+      };
+    };
+
+packages:
+  - dnsmasq
+
+users:
+- name: debian
+  gecos: Debian User
+  sudo: ALL=(ALL) NOPASSWD:ALL
+  shell: /bin/bash
+  lock_passwd: true
+  ssh_authorized_keys:
+    - #SSH-PUB-KEY#
+- name: root
+  lock_passwd: true
+
+locale: en_US.UTF-8
+
+timezone: UTC
+
+ssh_deletekeys: 1
+
+package_upgrade: true
+
+ssh_pwauth: false
+
+manage_etc_hosts: true
+
+fqdn: #HOSTNAME#.kube.demo
+
+hostname: #HOSTNAME#
+
+power_state:
+  mode: reboot
+  timeout: 30
+  condition: true
+```
 
 ## BusyBox
 
