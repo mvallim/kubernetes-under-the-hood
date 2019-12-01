@@ -61,7 +61,9 @@ write_files:
     dhcp-option=enp0s16.43,option:router,192.168.4.254
 
 runcmd:
+  # Apply kernel parameters
   - [ sysctl, --system ]
+  # Disable systemd resolve
   - [ systemctl, stop, systemd-resolved ]
   - [ systemctl, disable, systemd-resolved ]
 
