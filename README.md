@@ -28,9 +28,6 @@ The target audience for this tutorial is someone planning to install a Kubernete
 4. Putting all together
    - [Linux image](documentation/create-linux-image.md)
    - [Starting the actual setup](documentation/starting-setup.md)
-   - [cloud-init Bootstrap](documentation/cloud-init.md)
-   - [Configuring your station](documentation/configure-your-station.md)
-   - [Running VMs](documentation/running-vms.md)
    - [HAProxy Cluster](documentation/haproxy-cluster.md)
    - [Masters](documentation/kube-masters.md)
    - [Workers](documentation/kube-workers.md)
