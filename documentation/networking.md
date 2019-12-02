@@ -1,6 +1,7 @@
 # Networking
 
 ## DNS
+
 *“An Internet resource, for example, a Web site, can be identified in two ways: by its domain name, for example, “kubernetes.io” or by the IP address of the hosts that host it (for example, 45.54.44.102 is the IP associated with the kubernetes.io domain). IP addresses are used by the network layer to determine the physical and virtual location of the equipment. Domain names, however, are more mnemonic for user and businesses. We then need a mechanism to resolve a domain name to an IP address. This is the main function of DNS.*
 
 *Occasionally, it is assumed that DNS serves only the purpose of mapping Internet host names to data (TXT, MX, etc) and map addresses to hostnames. However, DNS can store a wide variety of data types, for almost any purpose.”*
@@ -23,6 +24,7 @@ In the above example, the teacher knows the exact address of **John Gow**. The s
 You can also find more information about **DNS** in our [Technology Stack](/documentation/technologies.md#dnsmasq).
 
 ## NAT
+
 *“In computer networks, Network Address Translation (NAT), also known as masquerading, is a technique that consists of rewriting, using a hash table, the source IP addresses of a packet passing through a router or firewall in a manner that a computer on an internal network has access to the outside or World Wide Web (public network).”*
 
 Reference: https://en.wikipedia.org/wiki/Network_address_translation
@@ -46,6 +48,7 @@ Reference: https://en.wikipedia.org/wiki/Dynamic_Host_Configuration_Protocol
 If you don’t remember what a **DHCP** is, please refer back to our [Technology Stack](/documentation/technologies.md#dnsmasq).
 
 ## Gateway
+
 *“Gateways, also called protocol converters, can operate on any network layer. The responsibilities of a gateway are more complex than those of a router or switch since they communicate using more than one protocol.*
 
 *The computers of Internet users and the computers that serve pages for users are network nodes, and the nodes that connect the networks between them are gateways. For example, computers that control traffic between enterprise networks or computers used by Internet Service Providers (ISPs) to connect users to the Internet are gateway nodes.*
@@ -62,6 +65,7 @@ To simplify this concept, **Gateway** is the access point to/from computers outs
 </p>
 
 ## IP Address
+
 The length of an IP address is 32 bits and is divided into 4 octets (8 bits). Each octet may be represented in a decimal format, separated by a dot.
 
 ```
@@ -76,21 +80,21 @@ Network segmentation in a computer network is the practice of separating compute
 
 ### Benefits
 
-**Traffic reduction**
+#### Traffic reduction
 
 * It causes network traffic to be isolated to each network segment, which means that each network segment has its own traffic volume, not influencing the entire network.
 
-**Safety**
+#### Safety
 
 * Broadcast is restricted only to that network segment and not the entire network.
 * The resources present in a network segment may be isolated from other networks or restricted from one subnet to another.
 * Common attacks are restricted to each subnet, not the entire network. Given this, it is important to segment the network by type of resources (database, NFS, web, etc).
 
-**Isolation of problems**
+#### Isolation of problems
 
 * Any network problem in one subnet is restricted to that subnet without affecting the entire network.
 
-**Accesses**
+#### Accesses
 
 * Limitation of access into and between each of the subnets (**subnet-a** can only access **subnet-b**, for example).
 
