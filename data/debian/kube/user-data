@@ -1,5 +1,25 @@
 #cloud-config
 write_files:
+
+# CA ssh pub certificate
+- path: /etc/ssh/ca.pub
+  permissions: '0644'
+  encoding: b64
+  content: |
+    c3NoLXJzYSBBQUFBQjNOemFDMXljMkVBQUFBREFRQUJBQUFDQVFERGozaTNSODZvQzNzZ0N3ZVRh
+    R1dHZVZHRFpLbFdiOHM4QWVJVE9hOTB3NHl5UndSUWtBTWNGaWFNWGx5OEVOSDd0MHNpM0tFYnRZ
+    M1B1ekpTNVMwTHY0MVFkaHlYMHJhUGxobTZpNnVDV3BvYWsycEF6K1ZFazhLbW1kZjdqMm5OTHlG
+    Y3NQeVg0b0t0SlQrajh6R2QxWHRBWDBuS0JWOXFkOGNTTFFBZGpQVkdNZGxYdTNCZzdsNml3OHhK
+    Ti9ld1l1Qm5DODZ5TlNiWFlDVVpLOE1oQUNLV2FMVWVnOSt0dXNyNTBSbGVRcGI0a2NKRE45LzFa
+    MjhneUtORTRCVENYanEyTzVqRE1MRDlDU3hqNXJoNXRPUUlKREFvblIrMnljUlVnZTltc2hIQ05D
+    VWU2WG16OFVJUFJ2UVpPNERFaHpHZ2N0cFJnWlhQajRoMGJoeGVMekUxcFROMHI2Q29GMDVpOFB0
+    QXd1czl1K0tjUHVoQlgrVm9UbW1JNmRBTStUQkxRUnJ3SUorNnhtM29nWEMwYVpjdkdCVUVTcVll
+    QjUyU0xjZEwyNnBKUlBrVjZYQ0Qyc3RleG5uOFREUEdjYnlZelFnaGNlYUYrb0psdWE4UDZDSzV2
+    VStkNlBGK2o1aEE2NGdHbDQrWmw0TUNBcXdNcnBySEhpd2E3bzF0MC9JTmdoYlFvUUdSU3haQXMz
+    UHdYcklMQ0xUeGN6V29UWHZIWUxuRXRTWW42MVh3SElldWJrTVhJamJBSysreStKWCswcm02aHRN
+    N2h2R2QzS0ZvU1N4aDlFY1FONTNXWEhMYXBHQ0o0NGVFU3NqbVgzN1NwWElUYUhEOHJQRXBia0E0
+    WWJzaVVoTXZPZ0VCLy9MZ1d0R2kvRVRxalVSUFkvWGRTVTR5dFE9PSBjYUBrdWJlLmRlbW8K
+    
 - path: /etc/modules-load.d/bridge.conf
   permissions: '0644'
   content: |
@@ -94,14 +114,15 @@ runcmd:
   - [ apt-get, install, -y, 'docker-ce=18.06.0~ce~3-0~debian', containerd.io ]
   - [ apt-get, install, -y, 'kubelet=1.15.6-00', 'kubectl=1.15.6-00', 'kubeadm=1.15.6-00' ]
   - [ apt-mark, hold, kubelet, kubectl, kubeadm, docker-ce, containerd.io ]
+    # SSH server to trust the CA
+  - echo '\nTrustedUserCAKeys /etc/ssh/ca.pub' | tee -a /etc/ssh/sshd_config
 
 users:
 - name: debian
   gecos: Debian User
   sudo: ALL=(ALL) NOPASSWD:ALL
   shell: /bin/bash
-  lock_passwd: false
-  passwd: $6$iM6OIg9u$xCPf.UWJf5cOI1rwAivy4Zr7Xkh9Fj7W2bWqmUwr0ZY.2fZ41NHr1AFDpNIDRuMwMUqD9oJTg0p3IZGhnBm0l/
+  lock_passwd: true
   ssh_authorized_keys:
     - #SSH-PUB-KEY#
 - name: root
