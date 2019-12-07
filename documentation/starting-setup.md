@@ -612,4 +612,4 @@ permitted by applicable law.
 
 ## Conclusion
 
-We have configured our Gateway instance as well as a BusyBox instance that will allow us to connect into all the instances that compose our solution, which reside in a network different than our host machine.
+We have configured our **Gateway** instance as well as a **BusyBox** instance that will allow us to connect into all the instances that compose our solution, which reside in a network different than our host machine.
