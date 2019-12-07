@@ -561,7 +561,7 @@ $ curl -v google.com
 > Host: google.com
 > User-Agent: curl/7.52.1
 > Accept: */*
-> 
+>
 < HTTP/1.1 301 Moved Permanently
 < Location: http://www.google.com/
 < Content-Type: text/html; charset=UTF-8
@@ -572,7 +572,7 @@ $ curl -v google.com
 < Content-Length: 219
 < X-XSS-Protection: 0
 < X-Frame-Options: SAMEORIGIN
-< 
+<
 <HTML><HEAD><meta http-equiv="content-type" content="text/html;charset=utf-8">
 <TITLE>301 Moved</TITLE></HEAD><BODY>
 <H1>301 Moved</H1>
@@ -589,3 +589,27 @@ Let's check **`kubectl`** version
 $ kubectl version
 Client Version: version.Info{Major:"1", Minor:"15", GitVersion:"v1.15.6", GitCommit:"7015f71e75f670eb9e7ebd4b5749639d42e20079", GitTreeState:"clean", BuildDate:"2019-11-13T11:20:18Z", GoVersion:"go1.12.12", Compiler:"gc", Platform:"linux/amd64"}
 ```
+
+Let's check access `gate-node01`
+
+```shell
+ssh debian@gate-node01
+```
+
+The responses should look similar to this:
+
+```text
+Linux gate-node01 4.9.0-11-amd64 #1 SMP Debian 4.9.189-3+deb9u2 (2019-11-11) x86_64
+
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+Last login: Sat Dec  7 19:23:21 2019 from 192.168.4.44
+```
+
+## Conclusion
+
+We have configured our Gateway instance as well as a BusyBox instance that will allow us to connect into all the instances that compose our solution, which reside in a network different than our host machine.
