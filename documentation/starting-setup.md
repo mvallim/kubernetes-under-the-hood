@@ -608,7 +608,6 @@ individual files in /usr/share/doc/*/copyright.
 
 Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
 permitted by applicable law.
-Last login: Sat Dec  7 19:23:21 2019 from 192.168.4.44
 ```
 
 ## Conclusion
