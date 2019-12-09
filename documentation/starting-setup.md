@@ -47,6 +47,8 @@ cloud-config files are special scripts designed to be processed by the cloud-ini
 * **perform upgrade**: upgrade all packages.
 * **reboot**: reboot or shut down when finished with cloud-init.
 
+> For a complete list of cloud-init modules, refer to the [documentation](https://cloudinit.readthedocs.io/en/latest/topics/modules.html).
+
 ### Seed ISO
 
 The initialization of the data source used here will be [nocloud](https://cloudinit.readthedocs.io/en/latest/topics/datasources/nocloud.html). To boot the system in this way, you need to create an ISO file with a **meta-data** file and a **user-data** file, as shown below.
