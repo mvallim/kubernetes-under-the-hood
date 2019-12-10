@@ -3,5 +3,13 @@ version: 1
 config:
   - type: physical
     name: enp0s3
+  - type: vlan
+    name: enp0s3.41
+    vlan_link: enp0s3
+    vlan_id: 41
+  - type: vlan
+    name: enp0s3.43
+    vlan_link: enp0s3
+    vlan_id: 43
     subnets:
       - type: dhcp

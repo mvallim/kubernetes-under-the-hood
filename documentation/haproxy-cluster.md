@@ -43,7 +43,7 @@ Using this confing [`pacemaker.config`](../pacemaker/pacemaker.config):
 property stonith-enabled=no
 property no-quorum-policy=ignore
 property default-resource-stickiness=100
-primitive virtual-ip-resource ocf:heartbeat:IPaddr2 params ip="192.168.4.20" broadcast=192.168.4.127 nic=enp0s3 cidr_netmask=25 meta migration-threshold=2 op monitor interval=20 timeout=60 on-fail=restart
+primitive virtual-ip-resource ocf:heartbeat:IPaddr2 params ip="192.168.4.20" broadcast=192.168.4.31 nic=enp0s3.41 cidr_netmask=27 meta migration-threshold=2 op monitor interval=20 timeout=60 on-fail=restart
 primitive haproxy-resource ocf:heartbeat:haproxy op monitor interval=20 timeout=60 on-fail=restart
 colocation loc inf: virtual-ip-resource haproxy-resource
 order ord inf: virtual-ip-resource haproxy-resource
@@ -59,7 +59,7 @@ sudo crm configure
 property stonith-enabled=no
 property no-quorum-policy=ignore
 property default-resource-stickiness=100
-primitive virtual-ip-resource ocf:heartbeat:IPaddr2 params ip="192.168.4.20" broadcast=192.168.4.127 nic=enp0s3 cidr_netmask=25 meta migration-threshold=2 op monitor interval=20 timeout=60 on-fail=restart
+primitive virtual-ip-resource ocf:heartbeat:IPaddr2 params ip="192.168.4.20" broadcast=192.168.4.31 nic=enp0s3.41 cidr_netmask=27 meta migration-threshold=2 op monitor interval=20 timeout=60 on-fail=restart
 primitive haproxy-resource ocf:heartbeat:haproxy op monitor interval=20 timeout=60 on-fail=restart
 colocation loc inf: virtual-ip-resource haproxy-resource
 order ord inf: virtual-ip-resource haproxy-resource

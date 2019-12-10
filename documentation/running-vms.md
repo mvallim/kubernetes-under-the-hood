@@ -1,9 +1,9 @@
-## Running
+# Running
 
 Now let's create the images using a tool ([`create-image.sh`](/create-image.sh)) that will help us clone the base image and add the user-data, meta-data and network-config scripts that cloud-init will use to install the necessary packages and configurations.
 
-```
-$ ./create-image.sh \
+``` Shell
+./create-image.sh \
     -k or --ssh-pub-keyfile SSH_PUB_KEY_FILE \
     -u or --user-data USER_DATA_FILE \
     -m or --meta-data META_DATA_FILE \
@@ -17,7 +17,7 @@ $ ./create-image.sh \
     -a or --auto-start AUTO_START
 ```
 
-### Parameters:
+## Parameters
 
 * `-k` is used to copy the public key from your host inside the newly created VM.
 * `-u` is used to specify the user-data file that will be passed as a parameter to the command that creates the cloud-init ISO file we mentioned before (check the source code of the script for a better understanding of how it's used). Default is **'/data/user-data'**.
@@ -31,12 +31,6 @@ $ ./create-image.sh \
 * `-s` is used to pass a configuration file that our script will use to configure virtual disks on VirtualBox. You'll notice this is used only on the Gluster configuration step.
 * `-a` whether or not our instance should be initialized after it's created. Default is **true**.
 
-
-For more information:
-```
-$ ./create-image.sh -h or --help
-```
-
 ## Running Demo
 
 To initialize and configure our instances using [**`cloud-init`**](/documentation/cloud-init.md), we'll use the configuration files versioned at the [data](/data) directory from our repository.
@@ -44,8 +38,9 @@ To initialize and configure our instances using [**`cloud-init`**](/documentatio
 Note: pay attention that, for each step, we pass the specific configuration files of the component being configured (gate, hapx, glus etc.)
 
 ### Create gateway
-```
-$ ./create-image.sh \
+
+```shell
+./create-image.sh \
     -k ~/.ssh/id_rsa.pub \
     -u gate/user-data \
     -n gate/network-config \
@@ -58,10 +53,24 @@ $ ./create-image.sh \
 
 > Wait the gate-node01 finish the configuration and start VM, to the next steps.
 
+### Create BusyBox
+
+```shell
+./create-image.sh \
+    -k ~/.ssh/id_rsa.pub \
+    -u busybox/user-data \
+    -n busybox/network-config \
+    -i busybox/post-config-interfaces \
+    -r busybox/post-config-resources \
+    -o busybox \
+    -l debian \
+    -b debian-base-image
+```
+
 ### Create HAProxy Cluster
 
-```
-$ for instance in hapx-node01 hapx-node02; do
+```shell
+for instance in hapx-node01 hapx-node02; do
     ./create-image.sh \
         -k ~/.ssh/id_rsa.pub \
         -u hapx/user-data \
@@ -75,8 +84,9 @@ done
 ```
 
 ### Create Kubernete Masters
-```
-$ for instance in kube-mast01 kube-mast02 kube-mast03; do
+
+```shell
+for instance in kube-mast01 kube-mast02 kube-mast03; do
     ./create-image.sh \
         -k ~/.ssh/id_rsa.pub \
         -u kube/user-data \
@@ -90,8 +100,9 @@ done
 ```
 
 ### Create Kube Workers
-```
-$ for instance in kube-node01 kube-node02 kube-node03; do
+
+```shell
+for instance in kube-node01 kube-node02 kube-node03; do
     ./create-image.sh \
         -k ~/.ssh/id_rsa.pub \
         -u kube/user-data \
@@ -105,8 +116,9 @@ done
 ```
 
 ### Create Gluster Nodes
-```
-$ for instance in glus-node01 glus-node02 glus-node03; do
+
+```shell
+for instance in glus-node01 glus-node02 glus-node03; do
     ./create-image.sh \
         -k ~/.ssh/id_rsa.pub \
         -u glus/user-data \
@@ -122,18 +134,11 @@ done
 
 ### Configure your local routing
 
-You need to add the routes on your local machine to access the internal network of Virtualbox.
+You need to add the route on your local machine to access the internal network of Virtualbox.
 
-```
-sudo ip route add 192.168.1.0/24 via 192.168.1.254 dev vboxnet0
-
-sudo ip route add 192.168.2.0/25 via 192.168.2.254 dev vboxnet0
-
-sudo ip route add 192.168.2.128/25 via 192.168.2.254 dev vboxnet0
-
-sudo ip route add 192.168.3.0/24 via 192.168.3.254 dev vboxnet0
-
-sudo ip route add 192.168.4.0/25 via 192.168.4.254 dev vboxnet0
-
-sudo ip route add 192.168.4.128/25 via 192.168.4.254 dev vboxnet0
+```shell
+# Floating IP
+sudo ip route add 192.168.4.0/27 via 192.168.4.30 dev vboxnet0
+# BusyBox
+sudo ip route add 192.168.4.32/27 via 192.168.4.62 dev vboxnet0
 ```
