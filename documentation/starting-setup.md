@@ -47,6 +47,10 @@ cloud-config files are special scripts designed to be processed by the cloud-ini
 * **perform upgrade**: upgrade all packages.
 * **reboot**: reboot or shut down when finished with cloud-init.
 
+### What about Chef, Puppet and Salt?
+
+One of the issues with tools like **Chef**/**Puppet**/**Salt** is that they need an agent to be deployed on the VM before they can start managing those servers. Cloud-init can come to the rescue in these scenarios, as there are modules in cloud-init to deploy the agents for **Chef**/**Puppet**/**Salt**.
+
 > For a complete list of cloud-init modules, refer to the [documentation](https://cloudinit.readthedocs.io/en/latest/topics/modules.html).
 
 ### Seed ISO
