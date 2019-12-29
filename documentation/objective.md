@@ -1,4 +1,4 @@
-## Kubernetes Journey - Up and running out of the cloud
+## Up and running out of the cloud
 
 Hello there!
 
