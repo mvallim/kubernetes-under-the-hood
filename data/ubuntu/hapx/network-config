@@ -7,6 +7,8 @@ config:
     name: enp0s3.41
     vlan_link: enp0s3
     vlan_id: 41
+    subnets:
+      - type: manual
   - type: vlan
     name: enp0s3.43
     vlan_link: enp0s3
