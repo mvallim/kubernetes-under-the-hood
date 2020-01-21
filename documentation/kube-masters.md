@@ -36,10 +36,10 @@ The **SAN**, **Plane Control EndPoint** and **POD Subnet** information is requir
 
 Based on the above information we will have a [`kubeadm-config.yml`](../master/kubeadm-config.yaml) as below:
 
-```
+```yaml
 apiVersion: kubeadm.k8s.io/v1beta1
 kind: ClusterConfiguration
-kubernetesVersion: stable-1.13
+kubernetesVersion: stable-1.15
 apiServer:
   certSANs:
   - "192.168.4.20"
@@ -53,43 +53,46 @@ networking:
 This approach requires less infrastructure. The etcd members and control plane nodes are co-located.
 
 1. Run the following commands to init master node:
-   ```
+
+   ```bash
    ssh debian@kube-mast01.kube.demo
-   
+
    sudo su -
-   
+
    wget https://raw.githubusercontent.com/mvallim/kubernetes-under-the-hood/master/master/kubeadm-config.yaml -q
-   
+
    kubeadm init --config=kubeadm-config.yaml
    ```
 
 2. Query the state of node and pods
-   ```
+
+   ```bash
    mkdir -p $HOME/.kube
-   
+
    cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-   
+
    chown $(id -u):$(id -g) $HOME/.kube/config
-   
+
    kubectl get nodes -o wide
-   
+
    kubectl get pods -o wide --all-namespaces
    ```
 
    The responses should look similar to this:
-   ```
+
+   ```text
    NAME          STATUS     ROLES    AGE   VERSION   INTERNAL-IP    EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION   CONTAINER-RUNTIME
-   kube-mast01   NotReady   master   53s   v1.13.5   192.168.1.72   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-9-amd64    docker://18.6.0
+   kube-mast01   NotReady   master   53s   v1.15.6   192.168.1.72   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-11-amd64   docker://18.6.0
    ```
-   
-   ```
+
+   ```text
    NAMESPACE     NAME                                  READY   STATUS    RESTARTS   AGE   IP             NODE          NOMINATED NODE   READINESS GATES
    kube-system   coredns-86c58d9df4-6gzrk              0/1     Pending   0          89s   <none>         <none>        <none>           <none>
    kube-system   coredns-86c58d9df4-fxj5r              0/1     Pending   0          89s   <none>         <none>        <none>           <none>
    kube-system   etcd-kube-mast01                      1/1     Running   0          46s   192.168.1.72   kube-mast01   <none>           <none>
    kube-system   kube-apiserver-kube-mast01            1/1     Running   0          43s   192.168.1.72   kube-mast01   <none>           <none>
    kube-system   kube-controller-manager-kube-mast01   1/1     Running   0          44s   192.168.1.72   kube-mast01   <none>           <none>
-   kube-system   kube-proxy-8kb86                      1/1     Running   0          89s   192.168.1.72   kube-mast01   <none>           <none>c
+   kube-system   kube-proxy-8kb86                      1/1     Running   0          89s   192.168.1.72   kube-mast01   <none>           <none>
    kube-system   kube-scheduler-kube-mast01            1/1     Running   0          27s   192.168.1.72   kube-mast01   <none>           <none>
    ```
 
@@ -98,16 +101,18 @@ This approach requires less infrastructure. The etcd members and control plane n
 #### Deploy flannel
 
 1. Run the following commands to init flannel network component:
-   ```
+
+   ```bash
    ssh debian@kube-mast01.kube.demo
-   
+
    sudo su -
-   
-   kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/a70459be0084506e4ec919aa1c114638878db11b/Documentation/kube-flannel.yml
+
+   kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.11.0/Documentation/kube-flannel.yml
    ```
 
    The response should look similar to this:
-   ```
+
+   ```text
    clusterrole.rbac.authorization.k8s.io/flannel created
    clusterrolebinding.rbac.authorization.k8s.io/flannel created
    serviceaccount/flannel created
@@ -120,19 +125,21 @@ This approach requires less infrastructure. The etcd members and control plane n
    ```
 
 2. Query the state of node and pods after flannel deployed
-   ```
+
+   ```bash
    kubectl get nodes -o wide
-   
+
    kubectl get pods -o wide --all-namespaces
    ```
 
    The responses should look similar to this:
-   ```
+
+   ```text
    NAME          STATUS   ROLES    AGE     VERSION   INTERNAL-IP    EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION   CONTAINER-RUNTIME
-   kube-mast01   Ready    master   4m30s   v1.13.5   192.168.1.72   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-9-amd64    docker://18.6.0
+   kube-mast01   Ready    master   4m30s   v1.15.6   192.168.1.72   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-11-amd64   docker://18.6.0
    ```
-   
-   ```
+
+   ```text
    NAMESPACE     NAME                                  READY   STATUS    RESTARTS   AGE     IP             NODE          NOMINATED NODE   READINESS GATES
    kube-system   coredns-86c58d9df4-6gzrk              1/1     Running   0          6m4s    10.244.0.4     kube-mast01   <none>           <none>
    kube-system   coredns-86c58d9df4-fxj5r              1/1     Running   0          6m4s    10.244.0.5     kube-mast01   <none>           <none>
@@ -153,152 +160,174 @@ Now we need to join the other nodes to our K8S cluster. For this we need the cer
 The installation and configuration of these VMs were done through the cloud-init that already makes available ([here](/data/debian/kube/user-data)) a copy and move script of certificates.
 
 The copied certificate is:
+
 * Kubernetes general
-  - /etc/kubernetes/pki/ca.crt
-  - /etc/kubernetes/pki/ca.key
-  - /etc/kubernetes/pki/sa.key
-  - /etc/kubernetes/pki/sa.pub
+  * /etc/kubernetes/pki/ca.crt
+  * /etc/kubernetes/pki/ca.key
+  * /etc/kubernetes/pki/sa.key
+  * /etc/kubernetes/pki/sa.pub
+
 * For the front-end proxy
-  - /etc/kubernetes/pki/front-proxy-ca.crt
-  - /etc/kubernetes/pki/front-proxy-ca.key
+  * /etc/kubernetes/pki/front-proxy-ca.crt
+  * /etc/kubernetes/pki/front-proxy-ca.key
+
 * For all etcd-related functions
-  - /etc/kubernetes/pki/etcd/ca.crt
-  - /etc/kubernetes/pki/etcd/ca.key
+  * /etc/kubernetes/pki/etcd/ca.crt
+  * /etc/kubernetes/pki/etcd/ca.key
+
 * Admin configuration of cluster
-  - /etc/kubernetes/admin.conf
+  * /etc/kubernetes/admin.conf
 
 #### Copy certificates
+
 1. Run the following commands to copy certificates to master replicas:
-   ```
+
+   ```bash
    ssh debian@kube-mast01.kube.demo
-   
+
    sudo su -
-   
+
    ssh-keygen -t rsa -b 4096
-   
+
    ssh-copy-id debian@kube-mast02 #(default password: debian)
-   
+
    ssh-copy-id debian@kube-mast03 #(default password: debian)
-   
+
    ~/bin/copy-certificates.sh
    ```
 
 #### Print Join Command
+
 1. Run the following commands to print join command master replicas on cluster:
-   ```
+
+   ```bash
    ssh debian@kube-mast01.kube.demo
-   
+
    sudo su -
-   
+
    kubeadm token create --print-join-command
    ```
 
    The response should look similar to this:
-   ```
+
+   ```bash
    kubeadm join 192.168.4.20:6443 --token y5uii4.5myd468ieaavd0g6 --discovery-token-ca-cert-hash sha256:d4990d904f85ad8fb2d2bbb2e56b35a8cd0714092b40e3778209a0f1d4fa38b9
    ```
 
 > The last command print the command to you join nodes on cluster, you will use this command to join master on cluster
 
 #### Join second Kube Master
+
 1. Run the following commands to move certificates of 1° master node to correct place:
-   ```
+
+   ```bash
    ssh debian@kube-mast02.kube.demo
-   
+
    sudo su -
-   
+
    ~/bin/move-certificates.sh
    ```
 
 2. Run the following command to join master replica on cluster using the join command execute on the step [**`Print Join Command`**](#print-join-command):
-   ```
+
+   ```bash
    kubeadm join 192.168.4.20:6443 \
        --token y5uii4.5myd468ieaavd0g6 \
        --discovery-token-ca-cert-hash sha256:d4990d904f85ad8fb2d2bbb2e56b35a8cd0714092b40e3778209a0f1d4fa38b9 \
-       --experimental-control-plane
+       --control-plane
    ```
 
-> Add the `--experimental-control-plane` at the end of command
+> Add the `--control-plane` at the end of command
 
 #### Join third Kube Master
+
 1. Run the following commands to move certificates of 1° master node to correct place:
-   ```
+
+   ```bash
    ssh debian@kube-mast03.kube.demo
-   
+
    sudo su -
-   
+
    ~/bin/move-certificates.sh
    ```
 
 2. Run the following command to join master replica on cluster using the join command execute on the step [**`Print Join Command`**](#print-join-command):
-   ```
+
+   ```bash
    kubeadm join 192.168.4.20:6443 \
        --token y5uii4.5myd468ieaavd0g6 \
        --discovery-token-ca-cert-hash sha256:d4990d904f85ad8fb2d2bbb2e56b35a8cd0714092b40e3778209a0f1d4fa38b9 \
-       --experimental-control-plane
+       --control-plane
    ```
 
-> Add the `--experimental-control-plane` at the end of command
+> Add the `--control-plane` at the end of command
 
 ### View stats of etcd
 
 1. Query the state of etcd
-   ```
+
+   ```bash
    ssh debian@kube-mast01.kube.demo
-   
+
    sudo su -
-   
+
    docker run --rm -it \
        --net host \
        -v /etc/kubernetes:/etc/kubernetes quay.io/coreos/etcd:v3.2.24 etcdctl \
        --cert-file /etc/kubernetes/pki/etcd/peer.crt \
        --key-file /etc/kubernetes/pki/etcd/peer.key \
        --ca-file /etc/kubernetes/pki/etcd/ca.crt \
-       --endpoints https://kube-mast01:2379 cluster-health
-   
+       --endpoints https://127.0.0.1:2379 cluster-health
+
    docker run --rm -it \
        --net host \
        -v /etc/kubernetes:/etc/kubernetes quay.io/coreos/etcd:v3.2.24 etcdctl \
        --cert-file /etc/kubernetes/pki/etcd/peer.crt \
        --key-file /etc/kubernetes/pki/etcd/peer.key \
        --ca-file /etc/kubernetes/pki/etcd/ca.crt \
-       --endpoints https://kube-mast01:2379 member list
+       --endpoints https://127.0.0.1:2379 member list
    ```
 
    The responses should look similar to this:
-   ```
+
+   ```text
    member 5c81b5ea448e2eb is healthy: got healthy result from https://192.168.1.72:2379
    member 1d7ec3729980eebe is healthy: got healthy result from https://192.168.1.68:2379
    member ea93a1a33cffaceb is healthy: got healthy result from https://192.168.1.81:2379
    ```
-   ```
+
+   ```text
    5c81b5ea448e2eb: name=kube-mast01 peerURLs=https://192.168.1.72:2380 clientURLs=https://192.168.1.72:2379 isLeader=false
    1d7ec3729980eebe: name=kube-mast02 peerURLs=https://192.168.1.68:2380 clientURLs=https://192.168.1.68:2379 isLeader=true
    ea93a1a33cffaceb: name=kube-mast03 peerURLs=https://192.168.1.81:2380 clientURLs=https://192.168.1.81:2379 isLeader=false
    ```
 
 ### View stats K8S Cluster
+
 1. Query the state of nodes and pods
-   ```
+
+   ```bash
    ssh debian@kube-mast01.kube.demo
-   
+
    sudo su -
-   
+
    kubectl get nodes -o wide
-   
+
    kubectl get pods -o wide --all-namespaces
    ```
-   
+
    The responses should look similar to this:
-   ```
+
+   ```text
    NAME          STATUS   ROLES    AGE     VERSION   INTERNAL-IP    EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION   CONTAINER-RUNTIME
-   kube-mast01   Ready    master   34m     v1.13.5   192.168.1.72   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-9-amd64    docker://18.6.0
-   kube-mast02   Ready    master   4m34s   v1.13.5   192.168.1.68   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-9-amd64    docker://18.6.0
-   kube-mast03   Ready    master   2m54s   v1.13.5   192.168.1.81   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-9-amd64    docker://18.6.0
+   kube-mast01   Ready    master   34m     v1.15.6   192.168.1.72   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-11-amd64   docker://18.6.0
+   kube-mast02   Ready    master   4m34s   v1.15.6   192.168.1.68   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-11-amd64   docker://18.6.0
+   kube-mast03   Ready    master   2m54s   v1.15.6   192.168.1.81   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-11-amd64   docker://18.6.0
    ```
-   > All master nodes **Ready** 
-   
-   ```
+
+   > All master nodes **Ready**
+
+   ```text
    NAMESPACE     NAME                                  READY   STATUS    RESTARTS   AGE     IP             NODE          NOMINATED NODE   READINESS GATES
    kube-system   coredns-86c58d9df4-6gzrk              1/1     Running   0          34m     10.244.0.4     kube-mast01   <none>           <none>
    kube-system   coredns-86c58d9df4-fxj5r              1/1     Running   0          34m     10.244.0.5     kube-mast01   <none>           <none>
@@ -321,9 +350,11 @@ The copied certificate is:
    kube-system   kube-scheduler-kube-mast02            1/1     Running   0          5m22s   192.168.1.68   kube-mast02   <none>           <none>
    kube-system   kube-scheduler-kube-mast03            1/1     Running   0          3m42s   192.168.1.81   kube-mast03   <none>           <none>
    ```
-   > All master pods **Running** 
+
+   > All master pods **Running**
 
 ### View stats HAProxy Cluster
+
 Open your browser with address [http://192.168.4.20:32700](http://192.168.4.20:32700)
 
 User: admin
@@ -333,6 +364,7 @@ It will show:
 ![](images/haproxy-cluster-stats-masters.png)
 
 All Control Plane EndPoints **UP**
+
 * kube-mast01:6443
 * kube-mast02:6443
 * kube-mast03:6443
