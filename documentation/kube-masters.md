@@ -61,7 +61,7 @@ This approach requires less infrastructure. The etcd members and control plane n
 
    sudo su -
 
-   wget https://raw.githubusercontent.com/mvallim/kubernetes-under-the-hood/master/master/kubeadm-config.yaml -q
+   curl https://raw.githubusercontent.com/mvallim/kubernetes-under-the-hood/master/master/kubeadm-config.yaml -o kubeadm-config.yaml
 
    kubeadm init --config=kubeadm-config.yaml
    ```
