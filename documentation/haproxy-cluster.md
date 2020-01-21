@@ -39,13 +39,13 @@ This particular set of agents conform to the Open Cluster Framework (OCF) specif
 
 This Linux-specific resource manages IP alias IP addresses. It can add an IP alias, or remove one. In addition, it can implement Cluster Alias IP functionality if invoked as a clone resource.
 
-> More info about `ocf:heartbeat:IPaddr2`: http://linux-ha.org/doc/man-pages/re-ra-IPaddr2.html
+> More info http://linux-ha.org/doc/man-pages/re-ra-IPaddr2.html
 
 #### `ocf:heartbeat:haproxy`
 
 Manages haproxy daemon as an OCF resource in an High Availability setup.
 
-> More info about `ocf:heartbeat:haproxy`: https://raw.githubusercontent.com/russki/cluster-agents/master/haproxy
+> More info https://raw.githubusercontent.com/russki/cluster-agents/master/haproxy
 
 ### Configure
 
