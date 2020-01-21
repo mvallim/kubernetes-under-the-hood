@@ -21,7 +21,11 @@ Full explanation in our [Technology Stack](technologies.md#Corosync).
 
 ## Pacemaker
 
-Pacemaker is an Open Source, High Availability resource manager suitable for both small and large clusters.
+Pacemaker is an advanced, scalable high-availability cluster resource manager.
+
+It supports "N-node" clusters with significant capabilities for managing resources and dependencies.
+
+It will run scripts at initialization, when machines go up or down, when related resources fail and can be configured to periodically check resource health.
 
 Full explanation in our [Technology Stack](technologies.md#Pacemaker).
 
