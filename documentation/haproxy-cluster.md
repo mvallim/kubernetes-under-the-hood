@@ -1,32 +1,46 @@
+# HA Cluster
+
 ## HAProxy
+
 HAProxy is a free, very fast and reliable solution offering high availability, load balancing, and proxying for TCP and HTTP-based applications. It is particularly suited for very high traffic web sites and powers quite a number of the world's most visited ones. Over the years it has become the de-facto standard opensource load balancer, is now shipped with most mainstream Linux distributions, and is often deployed by default in cloud platforms. Since it does not advertise itself, we only know it's used when the admins report it :-)
-> More details: http://www.haproxy.org/
+
+Full explanation in our [Technology Stack](technologies.md#HAProxy).
+
+### Configuration
 
 ## Corosync
+
 The Corosync Cluster Engine is a Group Communication System with additional features for implementing high availability within applications. The project provides four C Application Programming Interface features:
+
 * A closed process group communication model with extended virtual synchrony guarantees for creating replicated state machines.
 * A simple availability manager that restarts the application process when it has failed.
 * A configuration and statistics in-memory database that provide the ability to set, retrieve, and receive change notifications of information.
 * A quorum system that notifies applications when quorum is achieved or lost.
-> More details: http://corosync.github.io/corosync/
+
+Full explanation in our [Technology Stack](technologies.md#Corosync).
 
 ## Pacemaker
+
 Pacemaker is an Open Source, High Availability resource manager suitable for both small and large clusters.
-> More details: https://clusterlabs.org/pacemaker/
 
-## Solution
-<p align="center">
-  <img src="images/haproxy-cluster.gif">
-</p>
+Full explanation in our [Technology Stack](technologies.md#Pacemaker).
 
-## Definitions and Configure
+### Resource Agents
 
-### `ocf:heartbeat:IPaddr2`
+Resource agents are the abstraction that allows Pacemaker to manage services it knows nothing about. They contain the logic for what to do when the cluster wishes to start, stop or check the health of a service.
+
+This particular set of agents conform to the Open Cluster Framework (OCF) specification. A guide to writing agents is also available.
+
+#### `ocf:heartbeat:IPaddr2`
+
 This Linux-specific resource manages IP alias IP addresses. It can add an IP alias, or remove one. In addition, it can implement Cluster Alias IP functionality if invoked as a clone resource.
+
 > More info about `ocf:heartbeat:IPaddr2`: http://linux-ha.org/doc/man-pages/re-ra-IPaddr2.html
 
-### `ocf:heartbeat:haproxy`
+#### `ocf:heartbeat:haproxy`
+
 Manages haproxy daemon as an OCF resource in an High Availability setup.
+
 > More info about `ocf:heartbeat:haproxy`: https://raw.githubusercontent.com/russki/cluster-agents/master/haproxy
 
 ### Configure
@@ -39,7 +53,7 @@ At this point we will configure the features of our HAProxy Cluster using [crmsh
 
 Using this confing [`pacemaker.config`](../pacemaker/pacemaker.config):
 
-```
+```config
 property stonith-enabled=no
 property no-quorum-policy=ignore
 property default-resource-stickiness=100
@@ -51,7 +65,7 @@ order ord inf: virtual-ip-resource haproxy-resource
 
 #### `crm configure`
 
-```
+```bash
 ssh debian@hapx-node01.kube.demo
 
 sudo crm configure
@@ -68,6 +82,7 @@ bye
 ```
 
 ### View stats HAProxy
+
 Open your browser with address [http://192.168.4.20:32700](http://192.168.4.20:32700)
 
 User: admin
