@@ -74,7 +74,55 @@ Note: pay attention that, for each step, we pass the specific configuration file
   done
   ```
 
-### Configure
+### Configure your local routing
+
+You need to add the route on your local machine to access the internal network of **Virtualbox**.
+
+```shell
+sudo ip route add 192.168.4.0/27 via 192.168.4.30 dev vboxnet0
+sudo ip route add 192.168.4.32/27 via 192.168.4.62 dev vboxnet0
+```
+
+### Access BusyBox
+
+We need to get the **BusyBox IP** to access it via ssh
+
+```shell
+vboxmanage guestproperty get busybox "/VirtualBox/GuestInfo/Net/0/V4/IP"
+```
+
+The responses should look similar to this:
+
+```shell
+Value: 192.168.4.57
+```
+
+Use the returned value to access.
+
+```shell
+ssh debian@192.168.4.57
+```
+
+The responses should look similar to this:
+
+```text
+Linux busybox 4.9.0-11-amd64 #1 SMP Debian 4.9.189-3+deb9u2 (2019-11-11) x86_64
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+```
+
+### Access HAProxy Node
+
+After having accessed the BusyBox and being inside a ssh session, just access the instances by name, in our case we want to access hapx-node01.
+
+```shell
+ssh debian@hapx-node01
+```
+
+### Configure Pacemaker
 
 We will define here that our Virtual IP will be 192.168.4.20, ip of the K8S cluster (Control Plane EndPoint).
 
@@ -97,8 +145,6 @@ order ord inf: virtual-ip-resource haproxy-resource
 #### `crm configure`
 
 ```bash
-ssh debian@hapx-node01.kube.demo
-
 sudo crm configure
 
 property stonith-enabled=no
