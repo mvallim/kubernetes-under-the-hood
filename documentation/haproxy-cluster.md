@@ -1,4 +1,4 @@
-# HA Cluster
+# HAProxy Cluster
 
 ## HAProxy
 
