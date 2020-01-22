@@ -6,8 +6,6 @@ HAProxy is a free, very fast and reliable solution offering high availability, l
 
 > Full explanation in our [Technology Stack](technologies.md#HAProxy).
 
-### Configuration
-
 ## Corosync
 
 The Corosync Cluster Engine is a Group Communication System with additional features for implementing high availability within applications. The project provides four C Application Programming Interface features:
@@ -44,6 +42,28 @@ This Linux-specific resource manages IP alias IP addresses. It can add an IP ali
 Manages haproxy daemon as an OCF resource in an High Availability setup.
 
 > More info https://raw.githubusercontent.com/russki/cluster-agents/master/haproxy
+
+## Create VM's
+
+To initialize and configure our instances using cloud-init, we'll use the configuration files versioned at the data directory from our repository.
+
+Note: pay attention that, for each step, we pass the specific configuration files of the component being configured (gate, hapx, glus etc.)
+
+* **Create HAProxy Cluster**
+
+  ```shell
+  for instance in hapx-node01 hapx-node02; do
+      ./create-image.sh \
+          -k ~/.ssh/id_rsa.pub \
+          -u hapx/user-data \
+          -n hapx/network-config \
+          -i hapx/post-config-interfaces \
+          -r hapx/post-config-resources \
+          -o ${instance} \
+          -l debian \
+          -b debian-base-image
+  done
+  ```
 
 ### Configure
 
@@ -99,5 +119,6 @@ All Control Plane EndPoints *DOWN*
 * kube-mast02:6443
 * kube-mast03:6443
 
-### Test High Availability 
+### Test High Availability
+
 Shutdown one of the two VMs (hapx-node01 or hapx-node02) and press F5 in your browser, where you have opened the HAProxy statistics. No difference or error should occur. :)
