@@ -4,7 +4,7 @@
 
 HAProxy is a free, very fast and reliable solution offering high availability, load balancing, and proxying for TCP and HTTP-based applications. It is particularly suited for very high traffic web sites and powers quite a number of the world's most visited ones. Over the years it has become the de-facto standard opensource load balancer, is now shipped with most mainstream Linux distributions, and is often deployed by default in cloud platforms. Since it does not advertise itself, we only know it's used when the admins report it :-)
 
-Full explanation in our [Technology Stack](technologies.md#HAProxy).
+> Full explanation in our [Technology Stack](technologies.md#HAProxy).
 
 ### Configuration
 
@@ -17,7 +17,7 @@ The Corosync Cluster Engine is a Group Communication System with additional feat
 * A configuration and statistics in-memory database that provide the ability to set, retrieve, and receive change notifications of information.
 * A quorum system that notifies applications when quorum is achieved or lost.
 
-Full explanation in our [Technology Stack](technologies.md#Corosync).
+> Full explanation in our [Technology Stack](technologies.md#Corosync).
 
 ## Pacemaker
 
@@ -27,13 +27,11 @@ It supports "N-node" clusters with significant capabilities for managing resourc
 
 It will run scripts at initialization, when machines go up or down, when related resources fail and can be configured to periodically check resource health.
 
-Full explanation in our [Technology Stack](technologies.md#Pacemaker).
+> Full explanation in our [Technology Stack](technologies.md#Pacemaker).
 
 ### Resource Agents
 
 Resource agents are the abstraction that allows Pacemaker to manage services it knows nothing about. They contain the logic for what to do when the cluster wishes to start, stop or check the health of a service.
-
-This particular set of agents conform to the Open Cluster Framework (OCF) specification. A guide to writing agents is also available.
 
 #### `ocf:heartbeat:IPaddr2`
 
