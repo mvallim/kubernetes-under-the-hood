@@ -82,9 +82,6 @@ write_files:
 runcmd:
   # Apply kernel parameters
   - [ sysctl, --system ]
-  # Disable systemd resolve
-  - [ systemctl, stop, systemd-resolved ]
-  - [ systemctl, disable, systemd-resolved ]
   # SSH server to trust the CA
   - echo '\nTrustedUserCAKeys /etc/ssh/ca.pub' | tee -a /etc/ssh/sshd_config
 

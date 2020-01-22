@@ -32,7 +32,7 @@ write_files:
   content: |
     totem {
       version: 2
-      cluster_name: debian
+      cluster_name: haproxy-cluster
       token: 3000
       token_retransmits_before_loss_const: 10
       clear_node_high_bit: yes
@@ -40,7 +40,7 @@ write_files:
       crypto_hash: sha256
       interface {
         ringnumber: 0
-        bindnetaddr: 192.168.4.31
+        bindnetaddr: 192.168.4.255
         mcastaddr: 239.255.1.1
         mcastport: 5405
         ttl: 1
