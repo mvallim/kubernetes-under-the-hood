@@ -25,8 +25,8 @@ The target audience for this tutorial is someone planning to install a Kubernete
    - [Masters and Workers](documentation/kube-masters-and-workers.md)
    - [etcd](documentation/kube-etcd.md)
    - [flannel](documentation/kube-flannel.md)
-4. Putting all together
    - [Linux image](documentation/create-linux-image.md)
+4. Putting all together
    - [Starting the actual setup](documentation/starting-setup.md)
    - [HAProxy Cluster](documentation/haproxy-cluster.md)
    - [Masters](documentation/kube-masters.md)
@@ -51,13 +51,13 @@ We use [GitHub](https://github.com/mvallim/kubernetes-under-the-hood) for versio
 
 ## Authors
 
-* **Marcos Vallim** - *Initial work, Development, Test, Documentation* - [mvallim](https://github.com/mvallim)
-* **Fabio Franco Uechi** - *Validation demo* - [fabito](https://github.com/fabito)
-* **Dirceu Alves Silva** - *Validation demo* - [dirceusilva](https://github.com/dirceuSilva)
-* **Leandro Nunes Fantinatto** - *Validation demo* - [lnfnunes](https://github.com/lnfnunes)
-* **Ivam dos Santos Luz** - *Validation demo, Articles* - [ivamluz](https://github.com/ivamluz)
-* **Marcos de Lima Goncalves** - *Validation demo, Presentation Organizer* - [marcoslimagon](https://github.com/marcoslimagon)
-* **Murilo Woigt Miranda** - *Validation demo, Presentation Organizer* - [woigt-ciandt](https://github.com/woigt-ciandt)
+- **Marcos Vallim** - *Initial work, Development, Test, Documentation* - [mvallim](https://github.com/mvallim)
+- **Fabio Franco Uechi** - *Validation demo* - [fabito](https://github.com/fabito)
+- **Dirceu Alves Silva** - *Validation demo* - [dirceusilva](https://github.com/dirceuSilva)
+- **Leandro Nunes Fantinatto** - *Validation demo* - [lnfnunes](https://github.com/lnfnunes)
+- **Ivam dos Santos Luz** - *Validation demo, Articles* - [ivamluz](https://github.com/ivamluz)
+- **Marcos de Lima Goncalves** - *Validation demo, Presentation Organizer* - [marcoslimagon](https://github.com/marcoslimagon)
+- **Murilo Woigt Miranda** - *Validation demo, Presentation Organizer* - [woigt-ciandt](https://github.com/woigt-ciandt)
 
 See also the list of [contributors](CONTRIBUTORS.txt) who participated in this project.
 
