@@ -1,14 +1,16 @@
-## Kube Master
+# Kube Master
+
 Master components provide the cluster’s control plane. Master components make global decisions about the cluster (for example, scheduling), and detecting and responding to cluster events (starting up a new pod when a replication controller’s ‘replicas’ field is unsatisfied).
 
 Master components can be run on any machine in the cluster. However, for simplicity, set up scripts typically start all master components on the same machine, and do not run user containers on this machine.
 
-### Overview
+## Overview
+
 <p align="center">
   <img src="images/kube-master-overview.png">
 </p>
 
-### Components
+## Components
 
 * **Kubelet** - Kubelet gets the configuration of a pod from the API Server and ensures that the described containers are up and running.
 * **Docker** - It takes care of downloading the images and starting the containers.
@@ -59,7 +61,7 @@ This approach requires less infrastructure. The etcd members and control plane n
 
    sudo su -
 
-   wget https://raw.githubusercontent.com/mvallim/kubernetes-under-the-hood/master/master/kubeadm-config.yaml -q
+   curl https://raw.githubusercontent.com/mvallim/kubernetes-under-the-hood/master/master/kubeadm-config.yaml -o kubeadm-config.yaml
 
    kubeadm init --config=kubeadm-config.yaml
    ```
