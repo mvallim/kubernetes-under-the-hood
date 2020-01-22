@@ -59,11 +59,9 @@ This approach requires less infrastructure. The etcd members and control plane n
    ```bash
    ssh debian@kube-mast01.kube.demo
 
-   sudo su -
-
    curl https://raw.githubusercontent.com/mvallim/kubernetes-under-the-hood/master/master/kubeadm-config.yaml -o kubeadm-config.yaml
 
-   kubeadm init --config=kubeadm-config.yaml
+   sudo kubeadm init --config=kubeadm-config.yaml
    ```
 
 2. Query the state of node and pods
@@ -71,9 +69,9 @@ This approach requires less infrastructure. The etcd members and control plane n
    ```bash
    mkdir -p $HOME/.kube
 
-   cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+   sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 
-   chown $(id -u):$(id -g) $HOME/.kube/config
+   sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
    kubectl get nodes -o wide
 
@@ -106,8 +104,6 @@ This approach requires less infrastructure. The etcd members and control plane n
 
    ```bash
    ssh debian@kube-mast01.kube.demo
-
-   sudo su -
 
    kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.11.0/Documentation/kube-flannel.yml
    ```
@@ -205,9 +201,7 @@ The copied certificate is:
    ```bash
    ssh debian@kube-mast01.kube.demo
 
-   sudo su -
-
-   kubeadm token create --print-join-command
+   sudo kubeadm token create --print-join-command
    ```
 
    The response should look similar to this:
@@ -233,7 +227,7 @@ The copied certificate is:
 2. Run the following command to join master replica on cluster using the join command execute on the step [**`Print Join Command`**](#print-join-command):
 
    ```bash
-   kubeadm join 192.168.4.20:6443 \
+   sudo kubeadm join 192.168.4.20:6443 \
        --token y5uii4.5myd468ieaavd0g6 \
        --discovery-token-ca-cert-hash sha256:d4990d904f85ad8fb2d2bbb2e56b35a8cd0714092b40e3778209a0f1d4fa38b9 \
        --control-plane
@@ -256,7 +250,7 @@ The copied certificate is:
 2. Run the following command to join master replica on cluster using the join command execute on the step [**`Print Join Command`**](#print-join-command):
 
    ```bash
-   kubeadm join 192.168.4.20:6443 \
+   sudo kubeadm join 192.168.4.20:6443 \
        --token y5uii4.5myd468ieaavd0g6 \
        --discovery-token-ca-cert-hash sha256:d4990d904f85ad8fb2d2bbb2e56b35a8cd0714092b40e3778209a0f1d4fa38b9 \
        --control-plane
@@ -271,9 +265,7 @@ The copied certificate is:
    ```bash
    ssh debian@kube-mast01.kube.demo
 
-   sudo su -
-
-   docker run --rm -it \
+   sudo docker run --rm -it \
        --net host \
        -v /etc/kubernetes:/etc/kubernetes quay.io/coreos/etcd:v3.2.24 etcdctl \
        --cert-file /etc/kubernetes/pki/etcd/peer.crt \
@@ -281,7 +273,7 @@ The copied certificate is:
        --ca-file /etc/kubernetes/pki/etcd/ca.crt \
        --endpoints https://127.0.0.1:2379 cluster-health
 
-   docker run --rm -it \
+   sudo docker run --rm -it \
        --net host \
        -v /etc/kubernetes:/etc/kubernetes quay.io/coreos/etcd:v3.2.24 etcdctl \
        --cert-file /etc/kubernetes/pki/etcd/peer.crt \
@@ -310,8 +302,6 @@ The copied certificate is:
 
    ```bash
    ssh debian@kube-mast01.kube.demo
-
-   sudo su -
 
    kubectl get nodes -o wide
 

@@ -90,14 +90,42 @@ runcmd:
 
 # NAT enable
 bootcmd:
+  # Clean up
+  - iptables -t nat -F
+  - iptables -t mangle -F
+  - iptables -F
+  - iptables -X
+
+  # Default policy to drop all incoming packages
+  - iptables -P INPUT DROP 
+  - iptables -P FORWARD DROP 
+  - iptables -P OUTPUT ACCEPT 
+
+  # Accept incoming packages from localhost and the LAN interfaces
+  - iptables -A INPUT -i lo -j ACCEPT
+  - iptables -A INPUT -i enp0s8 -j ACCEPT
+  - iptables -A INPUT -i enp0s9 -j ACCEPT
+  - iptables -A INPUT -i enp0s10 -j ACCEPT
+  - iptables -A INPUT -i enp0s16.41 -j ACCEPT
+  - iptables -A INPUT -i enp0s16.42 -j ACCEPT
+  - iptables -A INPUT -i enp0s16.43 -j ACCEPT
+
+  # Accept incoming paclages from WAN if router initiated the connection
+  - iptables -A INPUT -i enp0s3 -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+
+  # Forward LAN packages to the WAN
   - iptables -A FORWARD -i enp0s8 -j ACCEPT
-  - iptables -A FORWARD -o enp0s8 -j ACCEPT
   - iptables -A FORWARD -i enp0s9 -j ACCEPT
-  - iptables -A FORWARD -o enp0s9 -j ACCEPT
   - iptables -A FORWARD -i enp0s10 -j ACCEPT
-  - iptables -A FORWARD -o enp0s10 -j ACCEPT
-  - iptables -A FORWARD -i enp0s16 -j ACCEPT
-  - iptables -A FORWARD -o enp0s16 -j ACCEPT
+  - iptables -A FORWARD -i enp0s16.41 -j ACCEPT
+  - iptables -A FORWARD -i enp0s16.42 -j ACCEPT
+  - iptables -A FORWARD -i enp0s16.43 -j ACCEPT
+  - iptables -A FORWARD -i enp0s17 -j ACCEPT
+
+  # Forward WAN packages to the LAN if the LAN initiated the connection
+  - iptables -A FORWARD -i enp0s3 -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+
+  # NAT traffic going out the WAN interface
   - iptables -t nat -A POSTROUTING -o enp0s3 -j MASQUERADE
 
 apt:
