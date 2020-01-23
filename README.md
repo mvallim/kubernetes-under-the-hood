@@ -31,7 +31,6 @@ The target audience for this tutorial is someone planning to install a Kubernete
    - [HAProxy Cluster](documentation/haproxy-cluster.md)
    - [Masters](documentation/kube-masters.md)
    - [Workers](documentation/kube-workers.md)
-   - [Network](documentation/kube-network.md)
    - [Dashboard](documentation/kube-dashboard.md)
    - [Demo Application](documentation/kube-demo-application.md)
    1. LoadBalancer
