@@ -102,7 +102,7 @@ runcmd:
   - [ apt-get, update ]
   - [ apt-get, install, -y, 'kubectl=1.15.6-00' ]
   - [ apt-mark, hold, kubectl ]
-  - chown -R debian:debian /home/debian/.ssh
+  - [ chown, -R, 'debian:debian', '/home/debian' ]
 
 users:
 - name: debian

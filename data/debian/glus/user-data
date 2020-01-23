@@ -51,6 +51,7 @@ runcmd:
   - [ apt-get, update ]
   - [ apt-get, install, -y, glusterfs-server ]
   - [ apt-mark, hold, glusterfs-common, glusterfs-client, glusterfs-server ]
+  - [ chown, -R, 'debian:debian', '/home/debian' ]
     # SSH server to trust the CA
   - echo '\nTrustedUserCAKeys /etc/ssh/ca.pub' | tee -a /etc/ssh/sshd_config
 

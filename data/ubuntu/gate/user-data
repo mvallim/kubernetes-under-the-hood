@@ -86,6 +86,7 @@ runcmd:
   - [ systemctl, stop, systemd-resolved ]
   - [ systemctl, disable, systemd-resolved ]
   - [ systemctl, mask, systemd-resolved ]
+  - [ chown, -R, 'ubuntu:ubuntu', '/home/ubuntu' ]
   # SSH server to trust the CA
   - echo '\nTrustedUserCAKeys /etc/ssh/ca.pub' | tee -a /etc/ssh/sshd_config
 
