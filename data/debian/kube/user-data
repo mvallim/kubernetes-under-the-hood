@@ -101,6 +101,7 @@ packages:
   - software-properties-common
   - glusterfs-client
   - bridge-utils
+  - curl
 
 runcmd:
   - [ modprobe, br_netfilter ]

@@ -61,7 +61,7 @@ This approach requires less infrastructure. The etcd members and control plane n
 
    curl https://raw.githubusercontent.com/mvallim/kubernetes-under-the-hood/master/master/kubeadm-config.yaml -o kubeadm-config.yaml
 
-   sudo kubeadm init --config=kubeadm-config.yaml
+   sudo kubeadm init --config=kubeadm-config.yaml --upload-certs
    ```
 
 2. Query the state of node and pods
