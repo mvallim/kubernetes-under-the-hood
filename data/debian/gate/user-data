@@ -85,6 +85,8 @@ runcmd:
   # Disable systemd resolve
   - [ systemctl, stop, systemd-resolved ]
   - [ systemctl, disable, systemd-resolved ]
+  - [ systemctl, mask, systemd-resolved ]
+  - [ chown, -R, 'debian:debian', '/home/debian' ]
   # SSH server to trust the CA
   - echo '\nTrustedUserCAKeys /etc/ssh/ca.pub' | tee -a /etc/ssh/sshd_config
 

@@ -114,6 +114,7 @@ runcmd:
   - [ apt-get, install, -y, 'docker-ce=18.06.0~ce~3-0~debian', containerd.io ]
   - [ apt-get, install, -y, 'kubelet=1.15.6-00', 'kubectl=1.15.6-00', 'kubeadm=1.15.6-00' ]
   - [ apt-mark, hold, kubelet, kubectl, kubeadm, docker-ce, containerd.io ]
+  - [ chown, -R, 'debian:debian', '/home/debian' ]
     # SSH server to trust the CA
   - echo '\nTrustedUserCAKeys /etc/ssh/ca.pub' | tee -a /etc/ssh/sshd_config
 

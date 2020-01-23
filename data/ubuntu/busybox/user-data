@@ -101,7 +101,7 @@ runcmd:
   - [ apt-get, update ]
   - [ apt-get, install, -y, 'kubectl=1.15.6-00' ]
   - [ apt-mark, hold, kubectl ]
-  - chown -R ubuntu:ubuntu /home/ubuntu/.ssh
+  - [ chown, -R, 'ubuntu:ubuntu', '/home/ubuntu' ]
 
 users:
 - name: ubuntu
