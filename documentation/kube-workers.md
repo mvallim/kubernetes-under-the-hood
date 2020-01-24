@@ -1,21 +1,25 @@
-## Kube Workers
+# Kube Workers
+
 A node is a worker machine in Kubernetes, previously known as a minion. A node may be a VM or physical machine, depending on the cluster. Each node contains the services necessary to run pods and is managed by the master components. The services on a node include the container runtime, kubelet and kube-proxy. 
 
-### Overview
+## Overview
+
 <p align="center">
   <img src="images/kube-worker-overview.png">
 </p>
 
-### Components
+## Components
+
 * **Kubelet** - Kubelet gets the configuration of a pod from the API Server and ensures that the described containers are up and running.
 * **Docker** - It takes care of downloading the images and starting the containers.
 * **Kube Proxy** - Kube Proxy acts as a network proxy and a load balancer for a service on a single worker node. It takes care of the network routing for TCP and UDP packets.
 * **Flannel** - It is a layer 3 network fabric designed for Kubernetes.
+
 > * More info about **Flannel**: https://github.com/coreos/flannel
 
-### Configure
+## Configure
 
-#### Print Join Command
+### Print Join Command
 
 1. Run the following commands to print join command master replicas on cluster:
 
@@ -35,7 +39,7 @@ A node is a worker machine in Kubernetes, previously known as a minion. A node m
 
 > The last command print the command to you join nodes on cluster, you will use this command to join wokers on cluster
 
-#### Join first Kube Worker
+### Join first Kube Worker
 
 1. Run the following command to join worker on cluster using the join command execute on the step [**`Print Join Command`**](#print-join-command):
 
@@ -49,7 +53,7 @@ A node is a worker machine in Kubernetes, previously known as a minion. A node m
        --discovery-token-ca-cert-hash sha256:d4990d904f85ad8fb2d2bbb2e56b35a8cd0714092b40e3778209a0f1d4fa38b9
    ```
 
-#### Join second Kube Worker
+### Join second Kube Worker
 
 1. Run the following command to join worker on cluster using the join command execute on the step [**`Print Join Command`**](#print-join-command):
 
@@ -63,7 +67,7 @@ A node is a worker machine in Kubernetes, previously known as a minion. A node m
        --discovery-token-ca-cert-hash sha256:d4990d904f85ad8fb2d2bbb2e56b35a8cd0714092b40e3778209a0f1d4fa38b9
    ```
 
-#### Join third Kube Worker
+### Join third Kube Worker
 
 1. Run the following command to join worker on cluster using the join command execute on the step [**`Print Join Command`**](#print-join-command):
 

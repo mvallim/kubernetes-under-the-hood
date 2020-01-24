@@ -1,13 +1,15 @@
-## MetalLB
+# MetalLB
+
 *“MetalLB is a load-balancer implementation for bare metal Kubernetes clusters, using standard routing protocols.”*
 > Reference: https://metallb.universe.tf/
 
-### Why?
+## Why?
+
 *Kubernetes does not offer an implementation of network load-balancers (Services of type LoadBalancer) for bare metal clusters. The implementations of Network LB that Kubernetes does ship with are all glue code that calls out to various IaaS platforms (GCP, AWS, Azure…). If you’re not running on a supported IaaS platform (GCP, AWS, Azure…), Load Balancers will remain in the “pending” state indefinitely when created.*
 
-### Install
+## Install
 
-#### `kube-service-load-balancer`
+### `kube-service-load-balancer`
 
 LoadBalancer manifest:
 
@@ -49,7 +51,7 @@ spec:
 
 > If you look at the status on the `EXTERNAL-IP` it is **`<pending>`** because we need configure MetalLB to provide IP to `LoadBalancer` service.
 
-#### Deploy
+### Deploy
 
 1. Apply the MetalLB deploy from the `metallb.yaml` file:
 
@@ -72,7 +74,7 @@ spec:
 
 > If you look at the status on the `controller` it is **NotReady (0/1)** because we need configure MetalLB to provide on range of IP to `LoadBalancer` service.
 
-#### Configure
+### Configure
 
 Based on the planed network configuration ([here](/documentation/network-segmentation.md#loadbalancer)) we will have a [`metallb-config.yaml`](../metallb/metallb-config.yaml) as below:
 
