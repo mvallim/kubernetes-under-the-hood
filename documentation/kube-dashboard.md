@@ -1,4 +1,5 @@
-## Kubernetes Dashboard
+# Kubernetes Dashboard
+
 Dashboard is a web-based Kubernetes user interface. You can use Dashboard to deploy containerized applications to a Kubernetes cluster, troubleshoot your containerized application, and manage the cluster resources. You can use Dashboard to get an overview of applications running on your cluster, as well as for creating or modifying individual Kubernetes resources (such as Deployments, Jobs, DaemonSets, etc). For example, you can scale a Deployment, initiate a rolling update, restart a pod or deploy new applications using a deploy wizard.
 
 Dashboard also provides information on the state of Kubernetes resources in your cluster and on any errors that may have occurred.
@@ -7,19 +8,21 @@ Dashboard also provides information on the state of Kubernetes resources in your
   <img src="images/kube-dashboard.png">
 </p>
 
-### Deploy
+## Deploy
 
 1. Create the dashboard from the `kubernetes-dashboard.yaml` file:
-   ```
+
+   ```shell
    ssh debian@kube-mast01.kube.demo
-   
+
    sudo su -
-   
-   kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/master/aio/deploy/recommended/kubernetes-dashboard.yaml
+
+   kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta8/aio/deploy/recommended.yaml
    ```
-   
+
    The response should look similar to this:
-   ```
+
+   ```text
    secret/kubernetes-dashboard-certs created
    secret/kubernetes-dashboard-csrf created
    serviceaccount/kubernetes-dashboard created
@@ -30,12 +33,14 @@ Dashboard also provides information on the state of Kubernetes resources in your
    ```
 
 2. Checking the state of pods after dashboard deployed
-   ```
+
+   ```shell
    kubectl get pods -o wide -n kube-system
    ```
-   
+
    The response should look similar to this:
-   ```
+
+   ```text
    NAME                                   READY   STATUS    RESTARTS   AGE    IP              NODE          NOMINATED NODE   READINESS GATES
    coredns-86c58d9df4-6gzrk               1/1     Running   0          171m   10.244.0.4      kube-mast01   <none>           <none>
    coredns-86c58d9df4-fxj5r               1/1     Running   0          171m   10.244.0.5      kube-mast01   <none>           <none>
@@ -65,19 +70,20 @@ Dashboard also provides information on the state of Kubernetes resources in your
    kube-scheduler-kube-mast03             1/1     Running   0          140m   192.168.1.81    kube-mast03   <none>           <none>
    kubernetes-dashboard-57df4db6b-pcwn2   1/1     Running   0          75s    10.244.3.2      kube-node01   <none>           <none>
    ```
-   
+
    > Now you can see the dashboard pod `kubernetes-dashboard-57df4db6b-pcwn2`
 
-### Configure
+## Configure
 
-#### `serviceaccount`
+### `serviceaccount`
 
 We need service account to access K8S Dashboard
 
 1. Create service account
-   ```
+
+   ```shell
    kubectl create serviceaccount cluster-admin-dashboard -n kube-system
-   
+
    kubectl create clusterrolebinding cluster-admin-dashboard \
        --clusterrole=cluster-admin \
        --serviceaccount=kube-system:cluster-admin-dashboard \
@@ -85,10 +91,12 @@ We need service account to access K8S Dashboard
    ```
 
    The responses should look similar to this:
-   ```
+
+   ```text
    serviceaccount/cluster-admin-dashboard created
    ```
-   ```
+
+   ```text
    clusterrolebinding.rbac.authorization.k8s.io/cluster-admin-dashboard created
    ```
 
@@ -99,12 +107,14 @@ We need service account to access K8S Dashboard
 We need get token of service account `cluster-admin-dashboard`
 
 1. Query secrets
-   ```
+
+   ```shell
    kubectl get secret -n kube-system
    ```
-   
+
    The response should look similar to this:
-   ```
+
+   ```text
    NAME                                             TYPE                                  DATA   AGE
    attachdetach-controller-token-m9c6n              kubernetes.io/service-account-token   3      179m
    bootstrap-signer-token-x6zb2                     kubernetes.io/service-account-token   3      179m
@@ -145,45 +155,50 @@ We need get token of service account `cluster-admin-dashboard`
    token-cleaner-token-tzdh2                        kubernetes.io/service-account-token   3      179m
    ttl-controller-token-q5p9n                       kubernetes.io/service-account-token   3      179m
    ```
-   
+
    > Now you can see the service account token of `cluster-admin-dashboard` with name `cluster-admin-dashboard-token-q89fp`
 
 2. Get token we describe `cluster-admin-dashboard-token-q89fp`
-   ```
+
+   ```shell
    kubectl describe secret cluster-admin-dashboard-token-q89fp -n kube-system
    ```
-   
+
    The response should look similar to this:
-   ```
+
+   ```text
    Name:         cluster-admin-dashboard-token-q89fp
    Namespace:    kube-system
    Labels:       <none>
    Annotations:  kubernetes.io/service-account.name: cluster-admin-dashboard
                  kubernetes.io/service-account.uid: 5e76dfe8-698d-11e9-8ce8-0800276f613b
-   
+
    Type:  kubernetes.io/service-account-token
-   
+
    Data
    ====
    ca.crt:     1025 bytes
    namespace:  11 bytes
    token:         eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlLXN5c3RlbSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJjbHVzdGVy   LWFkbWluLWRhc2hib2FyZC10b2tlbi1xODlmcCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJjbHVzdGVyLWFkbWluLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6IjVlNzZkZmU4LTY5OGQtMTFlOS04Y2U4LTA4MDAyNzZmNjEzYiIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDprdWJlLXN5c3RlbTpjbHVzdGVyLWFkbWluLWRhc2hib2FyZCJ9.QQ8YLxtkx5dotSI5Yo7xKrpdKpw9bTba_LYvkdYobe_UW8Gg2ldp6j1FUMXTK63_TTehl3QMjyGm7o0nnvycLrkbXtIhL72m6dDNr6bMgRKdIDScAtU9KOk05EPXbHmnCRuEdqJlA24vlgGc7-14lTCVt5O7-dwTvisPaX0pZJkkVk90X5EBsoY3wITtIrNiGpnXW8eQINWzxVk4Tmhq8UQbibOo-0C77dh0joWEnIN7ToKBp3fIwqp8-UvyUMvsDEhio12fWngvwjxssOpRg1a_AuH_Ib6yOa-E13s97vo-SHgDFTnhEPP5EVSbxBx75bOzbGIatNuSGNRg-UFHcQ
    ```
+
    > We are going to use token `eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9....SHgDFTnhEPP5EVSbxBx75bOzbGIatNuSGNRg-UFHcQ` (I show here first and last blocks, but you must use the full printed value)
 
-#### `kube proxy`
+### `kube proxy`
 
 Now we need configure kubectl in your local station.
 
 1. Copy config from master node
-   ```
+
+   ```shell
    mkdir ~/.kube
-   
+
    ssh debian@kube-mast01.kube.demo 'sudo cat /root/.kube/config' > ~/.kube/config
    ```
 
 2. Start `kubectl proxy`
-   ```
+
+   ```shell
    kubectl proxy
    ```
 
