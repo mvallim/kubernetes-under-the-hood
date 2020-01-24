@@ -8,4 +8,8 @@ allowVolumeExpansion: true
 reclaimPolicy: Retain
 parameters:
   resturl: "http://heketi.glusterfs.svc.cluster.local:8080"
+  restauthenabled: "true"
+  restuser: "admin"
+  secretNamespace: "default"
+  secretName: "heketi-secret"
   volumetype: "replicate:3"
