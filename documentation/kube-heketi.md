@@ -1,17 +1,18 @@
-## Heketi
+# Heketi
 
 *Heketi provides a RESTful management interface which can be used to manage the life cycle of GlusterFS volumes. With Heketi, cloud services like OpenStack Manila, Kubernetes, and OpenShift can dynamically provision GlusterFS volumes with any of the supported durability types. Heketi will automatically determine the location for bricks across the cluster, making sure to place bricks and its replicas across different failure domains. Heketi also supports any number of GlusterFS clusters, allowing cloud services to provide network file storage without being limited to a single GlusterFS cluster.”*
+
 > Reference: https://github.com/heketi/heketi
 
-### Overview
+## Overview
 
-#### Create Volume
+### Create Volume
 
 <p align="center">
   <img src="images/heketi-create-volume.gif">
 </p>
 
-#### Expand Volume
+### Expand Volume
 
 <p align="center">
   <img src="images/heketi-expand-volume.gif">
@@ -23,7 +24,7 @@
 
 Patch file [`kube-controller-manager-patch`](https://raw.githubusercontent.com/mvallim/kubernetes-under-the-hood/master/master/kube-controller-manager-patch):
 
-```
+```patch
 --- kube-controller-manager.yaml        2019-05-06 05:32:38.212961105 -0300
 +++ kube-controller-manager-patch.yaml  2019-05-06 05:32:14.380556753 -0300
 @@ -65,6 +65,7 @@
@@ -38,47 +39,53 @@ Patch file [`kube-controller-manager-patch`](https://raw.githubusercontent.com/m
 
 1. Apply patch `/etc/kubernetes/manifests/kube-controller-manager.yaml` on master nodes. This will change the [static pod](https://kubernetes.io/docs/tasks/administer-cluster/static-pod/) `kube-controller-manager` configuration by adding `dnsPolicy`.
 
-   ```
+   ```shell
    ssh debian@kube-mast01.kube.demo
 
    sudo su -
 
-   wget -q https://raw.githubusercontent.com/mvallim/kubernetes-under-the-hood/master/master/kube-controller-manager-patch
-   
+   curl https://raw.githubusercontent.com/mvallim/kubernetes-under-the-hood/master/master/kube-controller-manager-patch -o kube-controller-manager-patch
+
    patch --no-backup-if-mismatch /etc/kubernetes/manifests/kube-controller-manager.yaml < kube-controller-manager-patch
    ```
-   ```
+
+   ```shell
    ssh debian@kube-mast02.kube.demo
 
    sudo su -
-   
-   wget -q https://raw.githubusercontent.com/mvallim/kubernetes-under-the-hood/master/master/kube-controller-manager-patch
+
+   curl https://raw.githubusercontent.com/mvallim/kubernetes-under-the-hood/master/master/kube-controller-manager-patch -o kube-controller-manager-patch
 
    patch --no-backup-if-mismatch /etc/kubernetes/manifests/kube-controller-manager.yaml < kube-controller-manager-patch
    ```
-   ```
+
+   ```shell
    ssh debian@kube-mast03.kube.demo
 
    sudo su -
-   
-   wget -q https://raw.githubusercontent.com/mvallim/kubernetes-under-the-hood/master/master/kube-controller-manager-patch
+
+   curl https://raw.githubusercontent.com/mvallim/kubernetes-under-the-hood/master/master/kube-controller-manager-patch -o ube-controller-manager-patch
 
    patch --no-backup-if-mismatch /etc/kubernetes/manifests/kube-controller-manager.yaml < kube-controller-manager-patch
    ```
 
    > Reference: https://github.com/gluster/gluster-kubernetes/issues/570
 
-### Install
+## Install
+
 > Full reference: https://github.com/gluster/gluster-kubernetes
 
-### Deploy
+## Deploy
+
 1. Run
-   ```
-   git clone git@github.com:gluster/gluster-kubernetes.git
+
+   ```shell
+   git clone https://github.com/gluster/gluster-kubernetes.git
    ```
 
    The response should be:
-   ```
+
+   ```text
    Cloning into 'gluster-kubernetes'...
    remote: Enumerating objects: 16, done.
    remote: Counting objects: 100% (16/16), done.
@@ -91,40 +98,46 @@ Patch file [`kube-controller-manager-patch`](https://raw.githubusercontent.com/m
 2. Edit config
 
    This takes the form of a topology file, which describes the nodes present in the GlusterFS cluster and the block devices attached to them for use by heketi. A [sample topology file](https://raw.githubusercontent.com/gluster/gluster-kubernetes/master/deploy/topology.json.sample) is provided. When creating your own topology file:
-   
+
    * Make sure the topology file only lists block devices intended for heketi's use. heketi needs access to whole block devices (e.g. /dev/sdb, /dev/vdb) which it will partition and format.
-   
+
    * The `hostnames` array is a bit misleading. `manage` should be a list of hostnames for the node, but `storage` should be a list of IP addresses on the node for backend storage communications.
 
    1. Create a topology file:
-      ```
+
+      ```shell
       cd gluster-kubernetes/deploy
-      
+
       cp topology.json.sample topology.json
       ```
-   
+
    2. Resolve hostnames of Gluster Nodes:
-      ```
+
+      ```shell
       host glus-node01.kube.demo
-   
+
       host glus-node02.kube.demo
-   
+
       host glus-node03.kube.demo
       ```
-      
+
       The responses should be:
-      ```
+
+      ```text
       glus-node01.kube.demo has address 192.168.3.182
       ```
-      ```
+
+      ```text
       glus-node02.kube.demo has address 192.168.3.96
       ```
-      ```
+
+      ```text
       glus-node03.kube.demo has address 192.168.3.103
       ```
 
    3. Change copy file `topology.json` like that:
-      ```
+
+      ```json
       {
         "clusters": [
           {
@@ -184,12 +197,14 @@ Patch file [`kube-controller-manager-patch`](https://raw.githubusercontent.com/m
       ```
 
 3. Create namespace `glusterfs`:
-   ```
+
+   ```shell
    kubectl create namespace glusterfs
    ```
 
    The response should be:
-   ```
+
+   ```text
    namespace/glusterfs created
    ```
 
@@ -203,20 +218,24 @@ Patch file [`kube-controller-manager-patch`](https://raw.githubusercontent.com/m
    * If you use a pre-existing GlusterFS cluster, please note that any pre-existing volumes will not be detected by heketi, and thus not be under heketi's management.
 
    Run the following commands to deploy Heketi:
-   ```
+
+   ```shell
    ./gk-deploy \
-       --ssh-keyfile ~/.ssh/id_rsa \
-       --ssh-user root --cli kubectl \
-       --no-object \
-       --templates_dir ./kube-templates \
-       --namespace glusterfs \
-       topology.json
+      --user-key heketi \
+      --admin-key heketi \
+      --ssh-keyfile ~/.ssh/id_ed25519aaa \
+      --ssh-user debian \
+      --cli kubectl \
+      --no-object \
+      --templates_dir ./kube-templates \
+      --namespace glusterfs topology.json
    ```
 
    Confirm question `Y`
 
    The response should be (if you are using kubectl < 1.13. Otherwise ou get a error, but it doesn't affect the deploy Heketi. See [here](https://github.com/gluster/gluster-kubernetes/pull/576)):
-   ```
+
+   ```text
    Using Kubernetes CLI.
    Using namespace "glusterfs".
    Checking for pre-existing resources...
@@ -261,16 +280,16 @@ Patch file [`kube-controller-manager-patch`](https://raw.githubusercontent.com/m
 
    heketi is now running and accessible via http://10.244.5.9:8080 . To run
    administrative commands you can install 'heketi-cli' and use it as follows:
-   
+
      # heketi-cli -s http://10.244.5.9:8080 --user admin --secret '<ADMIN_KEY>' cluster list
-   
+
    You can find it at https://github.com/heketi/heketi/releases . Alternatively,
    use it from within the heketi pod:
-   
+
      # kubectl -n glusterfs exec -i heketi-74ddc88bd6-mv65m -- heketi-cli -s http://localhost:8080 --user admin --secret '<ADMIN_KEY>' cluster list
-   
+
    For dynamic provisioning, create a StorageClass similar to this:
-   
+
    ---
    apiVersion: storage.k8s.io/v1beta1
    kind: StorageClass
@@ -279,29 +298,33 @@ Patch file [`kube-controller-manager-patch`](https://raw.githubusercontent.com/m
    provisioner: kubernetes.io/glusterfs
    parameters:
      resturl: "http://10.244.5.9:8080"
-   
-   
-   Deployment complete!   
+
+
+   Deployment complete!
    ```
 
 5. Query the list of Pod of Heketi is running:
-   ```
+
+   ```shell
    kubectl get pods -n glusterfs
    ```
 
    The response should be:
-   ```
+
+   ```text
    NAME                      READY   STATUS    RESTARTS   AGE
    heketi-74ddc88bd6-mv65m   1/1     Running   0          3m37
    ```
 
 6. Query the list of Gluster Cluster is running:
-   ```
-   kubectl -n glusterfs exec -i heketi-74ddc88bd6-mv65m -- heketi-cli -s http://localhost:8080 cluster list
+
+   ```shell
+   kubectl -n glusterfs exec -i heketi-74ddc88bd6-mv65m -- heketi-cli --user admin --secret heketi -s http://localhost:8080 cluster list
    ```
 
    The response should be:
-   ```
+
+   ```text
    Clusters:
    Id:f9a5eaedce718d176f74e2bb7e3455c0 [file][block]
    ```
@@ -312,7 +335,7 @@ Patch file [`kube-controller-manager-patch`](https://raw.githubusercontent.com/m
 
 [`StorageClass`](https://kubernetes.io/docs/concepts/storage/storage-classes/) manifest:
 
-```
+```yaml
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
@@ -322,28 +345,48 @@ allowVolumeExpansion: true
 reclaimPolicy: Retain
 parameters:
   resturl: "http://heketi.glusterfs.svc.cluster.local:8080"
+  restauthenabled: "true"
+  restuser: "admin"
+  secretNamespace: "default"
+  secretName: "heketi-secret"
   volumetype: "replicate:3"
 ```
 
 1. Run the following commands to create storage class:
-   ```
+
+   ```shell
    kubectl create -f https://raw.githubusercontent.com/mvallim/kubernetes-under-the-hood/master/heketi/gluster-storage-class.yaml
    ```
 
    The response should be:
-   ```
+
+   ```text
    storageclass.storage.k8s.io/glusterfs-storage created
    ```
 
 2. Query the list of storage class:
-   ```
+
+   ```shell
    kubectl get storageclass
    ```
 
    The response should be:
-   ```
+
+   ```text
    NAME                PROVISIONER               AGE
    glusterfs-storage   kubernetes.io/glusterfs   17s
+   ```
+
+3. The provided secret must have type `kubernetes.io/glusterfs`, Created in this way:
+
+   ```shell
+   kubectl create secret generic heketi-secret --type="kubernetes.io/glusterfs" --from-literal=key='heketi' --namespace=default
+   ```
+
+   The response should be:
+
+   ```text
+   secret/heketi-secret created
    ```
 
 ---
@@ -351,7 +394,8 @@ parameters:
 ### Create Volume Claim
 
 [`PersistentVolumeClaim`](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#persistentvolumeclaims) manifest:
-```
+
+```yaml
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -367,33 +411,39 @@ spec:
 ```
 
 1. Run the following command to create PersistentVolumeClaim:
-   ```
+
+   ```shell
    kubectl create -f https://raw.githubusercontent.com/mvallim/kubernetes-under-the-hood/master/heketi/persistent-volume-claim.yaml
    ```
 
    The response should be:
-   ```
+
+   ```text
    persistentvolumeclaim/persistent-volume-0001 created
    ```
 
 2. Query the list of persistent volume claim:
-   ```
+
+   ```shell
    kubectl get persistentvolumeclaim
    ```
 
    The responses should be:
-   ```
+
+   ```text
    NAME                     STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS        AGE
    persistent-volume-0001   Bound    pvc-8dc0ce07-6e08-11e9-b6f1-0800276f613b   2Gi        RWX            glusterfs-storage   31s
    ```
 
 3. Query the list of persistent volume:
-   ```
+
+   ```shell
    kubectl get persistentvolume
    ```
 
    The responses should be:
-   ```
+
+   ```text
    NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                            STORAGECLASS        REASON   AGE
    pvc-8dc0ce07-6e08-11e9-b6f1-0800276f613b   2Gi        RWX            Retain           Bound    default/persistent-volume-0001   glusterfs-storage            31s
    ```
@@ -401,13 +451,16 @@ spec:
 ---
 
 ### Expand Volume
+
 1. Run the following command to get persistent volume claim manifest of `persistent-volume-0001`:
-   ```
+
+   ```shell
    kubectl get persistentvolumeclaim persistent-volume-0001 -o yaml > persistent-volume-claim.yaml
    ```
 
    The output file `persistent-volume-claim.yaml` should be:
-   ```
+
+   ```yaml
    apiVersion: v1
    kind: PersistentVolumeClaim
    metadata:
@@ -444,7 +497,8 @@ spec:
 2. Edit file and change `spec` resource storage to `10Gi`:
 
    Part of file `persistent-volume-claim.yaml`
-   ```
+
+   ```yaml
    spec:
      accessModes:
      - ReadWriteMany
@@ -455,67 +509,80 @@ spec:
    ```
 
 3. Apply the persistent volume claim from the following `persistent-volume-claim.yaml` file:
-   ```
+
+   ```shell
    kubectl apply -f persistent-volume-claim.yaml
    ```
 
    The response should be:
-   ```
+
+   ```text
    Warning: kubectl apply should be used on resource created by either kubectl create --save-config or kubectl apply
    persistentvolumeclaim/persistent-volume-0001 configured
    ```
 
 4. Query the list of persistent volume claim:
-   ```
+
+   ```shell
    kubectl get persistentvolumeclaim
    ```
-   
+
    The response should be:
-   ```
+
+   ```text
    NAME                     STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS        AGE
    persistent-volume-0001   Bound    pvc-8dc0ce07-6e08-11e9-b6f1-0800276f613b   10Gi       RWX            glusterfs-storage   4m2s
    ```
 
 5. Query the list of persistent volume:
-   ```
+
+   ```shell
    kubectl get persistentvolume
    ```
-   
+
    The response should be:
-   ```
+
+   ```text
    NAME                                       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                            STORAGECLASS        REASON   AGE
    pvc-8dc0ce07-6e08-11e9-b6f1-0800276f613b   10Gi       RWX            Retain           Bound    default/persistent-volume-0001   glusterfs-storage            5m6s
-   ```   
+   ```
 
 ---
 
 ### Cleaning up
+
 1. Run the following commands to delete `PersistentVolumeClaim` and `PersistentVolume`:
-   ```
+
+   ```shell
    kubectl delete persistentvolumeclaim persistent-volume-0001
 
    kubectl delete persistentvolume pvc-8dc0ce07-6e08-11e9-b6f1-0800276f613b
    ```
 
    The responses should be:
-   ```
+
+   ```text
    persistentvolumeclaim "persistent-volume-0001" deleted
    ```
-   ```
+
+   ```text
    persistentvolume "pvc-8dc0ce07-6e08-11e9-b6f1-0800276f613b" deleted
    ```
 
 2. Query the list of `PersistentVolumeClaim` and `PersistentVolume`:
-   ```
+
+   ```shell
    kubectl get persistentvolume
 
    kubectl get persistentvolumeclaim
    ```
-   
+
    The responses should be:
-   ```
+
+   ```text
    No resources found.
    ```
-   ```
+
+   ```text
    No resources found.
    ```

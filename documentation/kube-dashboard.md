@@ -82,12 +82,12 @@ We need service account to access K8S Dashboard
 1. Create service account
 
    ```shell
-   kubectl create serviceaccount cluster-admin-dashboard -n kube-system
+   kubectl create serviceaccount cluster-admin-dashboard -n kubernetes-dashboard
 
    kubectl create clusterrolebinding cluster-admin-dashboard \
        --clusterrole=cluster-admin \
-       --serviceaccount=kube-system:cluster-admin-dashboard \
-       -n kube-system
+       --serviceaccount=kubernetes-dashboard:cluster-admin-dashboard \
+       -n kubernetes-dashboard
    ```
 
    The responses should look similar to this:
@@ -109,100 +109,68 @@ We need get token of service account `cluster-admin-dashboard`
 1. Query secrets
 
    ```shell
-   kubectl get secret -n kube-system
+   kubectl get secret -n kubernetes-dashboard
    ```
 
    The response should look similar to this:
 
    ```text
-   NAME                                             TYPE                                  DATA   AGE
-   attachdetach-controller-token-m9c6n              kubernetes.io/service-account-token   3      179m
-   bootstrap-signer-token-x6zb2                     kubernetes.io/service-account-token   3      179m
-   bootstrap-token-o8qma9                           bootstrap.kubernetes.io/token         6      179m
-   bootstrap-token-y5uii4                           bootstrap.kubernetes.io/token         6      153m
-   certificate-controller-token-fc9jv               kubernetes.io/service-account-token   3      179m
-   cluster-admin-dashboard-token-q89fp              kubernetes.io/service-account-token   3      3m21s
-   clusterrole-aggregation-controller-token-bxc8k   kubernetes.io/service-account-token   3      179m
-   coredns-token-rpvwt                              kubernetes.io/service-account-token   3      179m
-   cronjob-controller-token-bmmkm                   kubernetes.io/service-account-token   3      179m
-   daemon-set-controller-token-ntjmx                kubernetes.io/service-account-token   3      179m
-   default-token-xh9s2                              kubernetes.io/service-account-token   3      179m
-   deployment-controller-token-vdfh6                kubernetes.io/service-account-token   3      179m
-   disruption-controller-token-qr2q9                kubernetes.io/service-account-token   3      179m
-   endpoint-controller-token-6nhjc                  kubernetes.io/service-account-token   3      179m
-   expand-controller-token-fpcpk                    kubernetes.io/service-account-token   3      179m
-   flannel-token-vrqmt                              kubernetes.io/service-account-token   3      173m
-   generic-garbage-collector-token-mfz56            kubernetes.io/service-account-token   3      179m
-   horizontal-pod-autoscaler-token-r2v2h            kubernetes.io/service-account-token   3      179m
-   job-controller-token-d8q6h                       kubernetes.io/service-account-token   3      179m
-   kube-proxy-token-789vw                           kubernetes.io/service-account-token   3      179m
-   kubernetes-dashboard-certs                       Opaque                                0      9m11s
-   kubernetes-dashboard-csrf                        Opaque                                1      9m11s
-   kubernetes-dashboard-key-holder                  Opaque                                2      9m1s
-   kubernetes-dashboard-token-jgs6k                 kubernetes.io/service-account-token   3      9m11s
-   namespace-controller-token-tf6vw                 kubernetes.io/service-account-token   3      179m
-   node-controller-token-wfrbl                      kubernetes.io/service-account-token   3      179m
-   persistent-volume-binder-token-64sqb             kubernetes.io/service-account-token   3      179m
-   pod-garbage-collector-token-hdh2v                kubernetes.io/service-account-token   3      179m
-   pv-protection-controller-token-h2vn8             kubernetes.io/service-account-token   3      179m
-   pvc-protection-controller-token-hfkcx            kubernetes.io/service-account-token   3      179m
-   replicaset-controller-token-49tr6                kubernetes.io/service-account-token   3      179m
-   replication-controller-token-rbzfj               kubernetes.io/service-account-token   3      179m
-   resourcequota-controller-token-7r6ql             kubernetes.io/service-account-token   3      179m
-   service-account-controller-token-t89b9           kubernetes.io/service-account-token   3      179m
-   service-controller-token-j6jt2                   kubernetes.io/service-account-token   3      179m
-   statefulset-controller-token-g7bpf               kubernetes.io/service-account-token   3      179m
-   token-cleaner-token-tzdh2                        kubernetes.io/service-account-token   3      179m
-   ttl-controller-token-q5p9n                       kubernetes.io/service-account-token   3      179m
+   NAME                                  TYPE                                  DATA   AGE
+   cluster-admin-dashboard-token-zth9n   kubernetes.io/service-account-token   3      66s
+   default-token-9lnss                   kubernetes.io/service-account-token   3      86m
+   kubernetes-dashboard-certs            Opaque                                0      86m
+   kubernetes-dashboard-csrf             Opaque                                1      86m
+   kubernetes-dashboard-key-holder       Opaque                                2      86m
+   kubernetes-dashboard-token-k48sq      kubernetes.io/service-account-token   3      86m
    ```
 
-   > Now you can see the service account token of `cluster-admin-dashboard` with name `cluster-admin-dashboard-token-q89fp`
+   > Now you can see the service account token of `cluster-admin-dashboard` with name `cluster-admin-dashboard-token-zth9n`
 
-2. Get token we describe `cluster-admin-dashboard-token-q89fp`
+2. Get token we describe `cluster-admin-dashboard-token-zth9n`
 
    ```shell
-   kubectl describe secret cluster-admin-dashboard-token-q89fp -n kube-system
+   kubectl describe secret cluster-admin-dashboard-token-zth9n -n kubernetes-dashboard
    ```
 
    The response should look similar to this:
 
    ```text
-   Name:         cluster-admin-dashboard-token-q89fp
-   Namespace:    kube-system
+   Name:         cluster-admin-dashboard-token-zth9n
+   Namespace:    kubernetes-dashboard
    Labels:       <none>
    Annotations:  kubernetes.io/service-account.name: cluster-admin-dashboard
-                 kubernetes.io/service-account.uid: 5e76dfe8-698d-11e9-8ce8-0800276f613b
+                 kubernetes.io/service-account.uid: b724e475-775e-4c43-9395-d95603b02221
 
    Type:  kubernetes.io/service-account-token
 
    Data
    ====
    ca.crt:     1025 bytes
-   namespace:  11 bytes
-   token:         eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlLXN5c3RlbSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJjbHVzdGVy   LWFkbWluLWRhc2hib2FyZC10b2tlbi1xODlmcCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJjbHVzdGVyLWFkbWluLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6IjVlNzZkZmU4LTY5OGQtMTFlOS04Y2U4LTA4MDAyNzZmNjEzYiIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDprdWJlLXN5c3RlbTpjbHVzdGVyLWFkbWluLWRhc2hib2FyZCJ9.QQ8YLxtkx5dotSI5Yo7xKrpdKpw9bTba_LYvkdYobe_UW8Gg2ldp6j1FUMXTK63_TTehl3QMjyGm7o0nnvycLrkbXtIhL72m6dDNr6bMgRKdIDScAtU9KOk05EPXbHmnCRuEdqJlA24vlgGc7-14lTCVt5O7-dwTvisPaX0pZJkkVk90X5EBsoY3wITtIrNiGpnXW8eQINWzxVk4Tmhq8UQbibOo-0C77dh0joWEnIN7ToKBp3fIwqp8-UvyUMvsDEhio12fWngvwjxssOpRg1a_AuH_Ib6yOa-E13s97vo-SHgDFTnhEPP5EVSbxBx75bOzbGIatNuSGNRg-UFHcQ
+   namespace:  20 bytes
+   token:      eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlcm5ldGVzLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJjbHVzdGVyLWFkbWluLWRhc2hib2FyZC10b2tlbi16dGg5biIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJjbHVzdGVyLWFkbWluLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6ImI3MjRlNDc1LTc3NWUtNGM0My05Mzk1LWQ5NTYwM2IwMjIyMSIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDprdWJlcm5ldGVzLWRhc2hib2FyZDpjbHVzdGVyLWFkbWluLWRhc2hib2FyZCJ9.cJrZQCZPXVwg5xV871EbnTiuxB0KtIyZZyDanthEXyJl9Wcj8xs11GCiKPQAodwDZtF693WCP0-xGn8M16vBQI9mEbevtkpTbj021p5OahxJnxhfdkQFW1gLIM4OwBkBn5tHMhs9D54_G4XrtHR5dt3VEL36NoKZiT3iaZovDGyg03_VpB3VviuUrQJnt0RJx4ZkoN-109EozIaV_55bromtKR-cR0d8iuctHlT8v4SgGp9CyDyYL4Ko3Y_RO4HTf2VAj-d6htv0LPToabo1-jSuC0DXjX8f-mmgIWNI0tq_jbVX96D48HMghJKF0p31pBH-0u802ePmFI3W38ZEZA
    ```
 
    > We are going to use token `eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9....SHgDFTnhEPP5EVSbxBx75bOzbGIatNuSGNRg-UFHcQ` (I show here first and last blocks, but you must use the full printed value)
 
 ### `kube proxy`
 
-Now we need configure kubectl in your local station.
+Now we need configure kubectl in busybox.
 
 1. Copy config from master node
 
    ```shell
    mkdir ~/.kube
 
-   ssh debian@kube-mast01.kube.demo 'sudo cat /root/.kube/config' > ~/.kube/config
+   ssh debian@kube-mast01 'sudo cat /etc/kubernetes/admin.conf' > ~/.kube/config
    ```
 
 2. Start `kubectl proxy`
 
    ```shell
-   kubectl proxy
+   kubectl proxy --address=0.0.0.0 --accept-hosts=^*
    ```
 
-3. To view dashboard ui open your browser with address [http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/](http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/)
+3. To view dashboard ui open your browser with address [http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/](http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/)
 
 4. Now copy the token and paste it into Enter token field on log in screen.
    ![](images/kube-dashboard-auth.png)
