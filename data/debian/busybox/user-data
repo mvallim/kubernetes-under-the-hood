@@ -3,7 +3,7 @@
 write_files:
 
 # Private ED25519 key
-- path: /home/debian/.ssh/id_ed25519
+- path: /run/.ssh/id_ed25519
   permissions: '0600'
   encoding: b64
   content: |
@@ -17,7 +17,7 @@ write_files:
     VEUgS0VZLS0tLS0K
 
 # Public ED25519 key
-- path: /home/debian/.ssh/id_ed25519.pub
+- path: /run/.ssh/id_ed25519.pub
   permissions: '0644'
   encoding: b64
   content: |
@@ -25,7 +25,7 @@ write_files:
     NXdicFp5b1JsWlh6cnQ4K0IrN2g5TnUgZGViaWFuQGt1YmUuZGVtbwo=
 
 # Signed ED25519 public key
-- path: /home/debian/.ssh/id_ed25519-cert.pub
+- path: /run/.ssh/id_ed25519-cert.pub
   permissions: '0644'
   encoding: b64
   content: |
@@ -74,7 +74,7 @@ apt:
 
     deb http://deb.debian.org/debian-security $RELEASE/updates main
     deb-src http://deb.debian.org/debian-security $RELEASE/updates main
-    
+
   conf: |
     APT {
       Get {
@@ -99,6 +99,7 @@ runcmd:
   - [ apt-get, update ]
   - [ apt-get, install, -y, 'kubectl=1.15.6-00' ]
   - [ apt-mark, hold, kubectl ]
+  - mv -u /run/.ssh/* /home/debian/.ssh/.
   - [ chown, -R, 'debian:debian', '/home/debian' ]
 
 users:
