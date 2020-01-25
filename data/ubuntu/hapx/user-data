@@ -135,7 +135,7 @@ write_files:
 runcmd:
   - [ systemctl, stop, haproxy, pacemaker, corosync ]
   - [ systemctl, disable, haproxy, pacemaker, corosync ]
-  - [ wget, "https://raw.githubusercontent.com/russki/cluster-agents/master/haproxy", -q, -O, /usr/lib/ocf/resource.d/heartbeat/haproxy ]
+  - [ curl, -s, "https://raw.githubusercontent.com/russki/cluster-agents/master/haproxy", -o, /usr/lib/ocf/resource.d/heartbeat/haproxy ]
   - [ chmod, "0755", /usr/lib/ocf/resource.d/heartbeat/haproxy ]
   - [ systemctl, restart, pacemaker, corosync ]
   - [ systemctl, enable, pacemaker, corosync ]
@@ -166,6 +166,7 @@ packages:
   - corosync
   - crmsh
   - haproxy
+  - curl
 
 users:
 - name: ubuntu
