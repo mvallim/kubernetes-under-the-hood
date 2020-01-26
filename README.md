@@ -27,7 +27,7 @@ The target audience for this tutorial is someone planning to install a Kubernete
    - [flannel](documentation/kube-flannel.md)
    - [Linux image](documentation/create-linux-image.md)
 4. Putting all together
-   - [Starting the actual setup](documentation/starting-setup.md)
+   - [How to setup the Gateway and Busybox components](documentation/starting-setup.md)
    - [HAProxy Cluster](documentation/haproxy-cluster.md)
    - [Masters](documentation/kube-masters.md)
    - [Workers](documentation/kube-workers.md)
