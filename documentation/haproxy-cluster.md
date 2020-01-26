@@ -177,11 +177,13 @@ Password: admin
 It will show:
 ![](images/haproxy-cluster-stats.png)
 
-All Control Plane EndPoints *DOWN*
+Notice all Control Plane EndPoints are *DOWN*
 
 * kube-mast01:6443
 * kube-mast02:6443
 * kube-mast03:6443
+
+This will be fixed once we setup our Kubernetes Master nodes.
 
 ### Test High Availability
 
