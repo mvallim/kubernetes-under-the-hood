@@ -142,7 +142,7 @@ We need get token of service account `cluster-admin-dashboard`
 
 ### Access dashboard
 
-1. Try view dashboard ui open your browser with address [https://192.168.4.20:6443/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/](https://192.168.4.20:6443/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/)
+1. Try view dashboard ui open your browser via **API Server** with address [https://192.168.4.20:6443/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/](https://192.168.4.20:6443/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/)
 
    Probaly you get the error to access because don't have permission
 
