@@ -10,68 +10,56 @@ Dashboard also provides information on the state of Kubernetes resources in your
 
 ## Deploy
 
-1. Create the dashboard from the `kubernetes-dashboard.yaml` file:
+1. Copy config from master node
+
+   Now we need configure kubectl in busybox.
 
    ```shell
-   ssh debian@kube-mast01.kube.demo
+   mkdir ~/.kube
 
-   sudo su -
+   ssh kube-mast01 'sudo cat /etc/kubernetes/admin.conf' > ~/.kube/config
+   ```
 
+2. Create the dashboard from the `kubernetes-dashboard.yaml` file:
+
+   ```shell
    kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta8/aio/deploy/recommended.yaml
    ```
 
    The response should look similar to this:
 
    ```text
+   namespace/kubernetes-dashboard created
+   serviceaccount/kubernetes-dashboard created
+   service/kubernetes-dashboard created
    secret/kubernetes-dashboard-certs created
    secret/kubernetes-dashboard-csrf created
-   serviceaccount/kubernetes-dashboard created
-   role.rbac.authorization.k8s.io/kubernetes-dashboard-minimal created
-   rolebinding.rbac.authorization.k8s.io/kubernetes-dashboard-minimal created
+   secret/kubernetes-dashboard-key-holder created
+   configmap/kubernetes-dashboard-settings created
+   role.rbac.authorization.k8s.io/kubernetes-dashboard created
+   clusterrole.rbac.authorization.k8s.io/kubernetes-dashboard created
+   rolebinding.rbac.authorization.k8s.io/kubernetes-dashboard created
+   clusterrolebinding.rbac.authorization.k8s.io/kubernetes-dashboard created
    deployment.apps/kubernetes-dashboard created
-   service/kubernetes-dashboard created
+   service/dashboard-metrics-scraper created
+   deployment.apps/dashboard-metrics-scraper created
    ```
 
-2. Checking the state of pods after dashboard deployed
+3. Checking the state of pods after dashboard deployed
 
    ```shell
-   kubectl get pods -o wide -n kube-system
+   kubectl get pods -o wide -n kubernetes-dashboard
    ```
 
    The response should look similar to this:
 
    ```text
-   NAME                                   READY   STATUS    RESTARTS   AGE    IP              NODE          NOMINATED NODE   READINESS GATES
-   coredns-86c58d9df4-6gzrk               1/1     Running   0          171m   10.244.0.4      kube-mast01   <none>           <none>
-   coredns-86c58d9df4-fxj5r               1/1     Running   0          171m   10.244.0.5      kube-mast01   <none>           <none>
-   etcd-kube-mast01                       1/1     Running   0          170m   192.168.1.72    kube-mast01   <none>           <none>
-   etcd-kube-mast02                       1/1     Running   0          141m   192.168.1.68    kube-mast02   <none>           <none>
-   etcd-kube-mast03                       1/1     Running   0          140m   192.168.1.81    kube-mast03   <none>           <none>
-   kube-apiserver-kube-mast01             1/1     Running   0          170m   192.168.1.72    kube-mast01   <none>           <none>
-   kube-apiserver-kube-mast02             1/1     Running   1          141m   192.168.1.68    kube-mast02   <none>           <none>
-   kube-apiserver-kube-mast03             1/1     Running   0          139m   192.168.1.81    kube-mast03   <none>           <none>
-   kube-controller-manager-kube-mast01    1/1     Running   1          170m   192.168.1.72    kube-mast01   <none>           <none>
-   kube-controller-manager-kube-mast02    1/1     Running   1          141m   192.168.1.68    kube-mast02   <none>           <none>
-   kube-controller-manager-kube-mast03    1/1     Running   0          140m   192.168.1.81    kube-mast03   <none>           <none>
-   kube-flannel-ds-amd64-4dmxn            1/1     Running   0          11m    192.168.2.188   kube-node02   <none>           <none>
-   kube-flannel-ds-amd64-545vl            1/1     Running   0          165m   192.168.1.72    kube-mast01   <none>           <none>
-   kube-flannel-ds-amd64-gnngz            1/1     Running   0          140m   192.168.1.81    kube-mast03   <none>           <none>
-   kube-flannel-ds-amd64-lqfqp            1/1     Running   0          10m    192.168.2.144   kube-node03   <none>           <none>
-   kube-flannel-ds-amd64-trxc2            1/1     Running   0          141m   192.168.1.68    kube-mast02   <none>           <none>
-   kube-flannel-ds-amd64-zhd6c            1/1     Running   0          11m    192.168.2.185   kube-node01   <none>           <none>
-   kube-proxy-2zvvb                       1/1     Running   0          11m    192.168.2.185   kube-node01   <none>           <none>
-   kube-proxy-8kb86                       1/1     Running   0          171m   192.168.1.72    kube-mast01   <none>           <none>
-   kube-proxy-9blvj                       1/1     Running   0          11m    192.168.2.188   kube-node02   <none>           <none>
-   kube-proxy-cpspc                       1/1     Running   0          140m   192.168.1.81    kube-mast03   <none>           <none>
-   kube-proxy-hmqpn                       1/1     Running   0          10m    192.168.2.144   kube-node03   <none>           <none>
-   kube-proxy-j6sch                       1/1     Running   0          141m   192.168.1.68    kube-mast02   <none>           <none>
-   kube-scheduler-kube-mast01             1/1     Running   1          170m   192.168.1.72    kube-mast01   <none>           <none>
-   kube-scheduler-kube-mast02             1/1     Running   0          141m   192.168.1.68    kube-mast02   <none>           <none>
-   kube-scheduler-kube-mast03             1/1     Running   0          140m   192.168.1.81    kube-mast03   <none>           <none>
-   kubernetes-dashboard-57df4db6b-pcwn2   1/1     Running   0          75s    10.244.3.2      kube-node01   <none>           <none>
+   NAME                                         READY   STATUS    RESTARTS   AGE    IP           NODE          NOMINATED NODE   READINESS GATES
+   dashboard-metrics-scraper-6c554969c6-4mmth   1/1     Running   0          2m1s   10.244.5.2   kube-node03   <none>           <none>
+   kubernetes-dashboard-56c5f95c6b-ptcw6        1/1     Running   0          2m2s   10.244.3.2   kube-node01   <none>           <none>
    ```
 
-   > Now you can see the dashboard pod `kubernetes-dashboard-57df4db6b-pcwn2`
+   > Now you can see the dashboard pod `kubernetes-dashboard-56c5f95c6b-ptcw6`
 
 ## Configure
 
@@ -152,28 +140,114 @@ We need get token of service account `cluster-admin-dashboard`
 
    > We are going to use token `eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9....SHgDFTnhEPP5EVSbxBx75bOzbGIatNuSGNRg-UFHcQ` (I show here first and last blocks, but you must use the full printed value)
 
-### `kube proxy`
+### Access dashboard
 
-Now we need configure kubectl in busybox.
+1. Try view dashboard ui open your browser with address [https://192.168.4.20:6443/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/](https://192.168.4.20:6443/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/)
 
-1. Copy config from master node
+   Probaly you get the error to access because don't have permission
 
-   ```shell
-   mkdir ~/.kube
+   Output like this
 
-   ssh debian@kube-mast01 'sudo cat /etc/kubernetes/admin.conf' > ~/.kube/config
+   ```json
+   {
+     "kind": "Status",
+     "apiVersion": "v1",
+     "metadata": {},
+     "status": "Failure",
+     "message": "services \"https:kubernetes-dashboard:\" is forbidden: User \"system:anonymous\" cannot get resource \"services/proxy\" in API group \"\" in the namespace \"kubernetes-dashboard\"",
+     "reason": "Forbidden",
+     "details": {
+       "name": "https:kubernetes-dashboard:",
+       "kind": "services"
+     },
+     "code": 403
+   }
    ```
 
-2. Start `kubectl proxy`
+2. Create role to access resources in `kubernetes-dashboard`
 
-   ```shell
-   kubectl proxy --address=0.0.0.0 --accept-hosts=^*
+   ```yaml
+   kind: ClusterRole
+   apiVersion: rbac.authorization.k8s.io/v1
+   metadata:
+     name: kubernetes-dashboard-anonymous
+   rules:
+   - apiGroups: [""]
+     resources: ["services/proxy"]
+     resourceNames: ["https:kubernetes-dashboard:"]
+     verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+   - nonResourceURLs: ["/ui", "/ui/*", "/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/*"]
+     verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
    ```
 
-3. To view dashboard ui open your browser with address [http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/](http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/)
+   ```shell
+   cat <<EOF | kubectl apply -f -
+   kind: ClusterRole
+   apiVersion: rbac.authorization.k8s.io/v1
+   metadata:
+     name: kubernetes-dashboard-anonymous
+   rules:
+   - apiGroups: [""]
+     resources: ["services/proxy"]
+     resourceNames: ["https:kubernetes-dashboard:"]
+     verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+   - nonResourceURLs: ["/ui", "/ui/*", "/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/*"]
+     verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+   EOF
+   ```
 
-4. Now copy the token and paste it into Enter token field on log in screen.
-   ![](images/kube-dashboard-auth.png)
+   Output
+
+   ```text
+   clusterrole.rbac.authorization.k8s.io/kubernetes-dashboard-anonymous created
+   ```
+
+3. Create role binding to anonymous (`system:anonymous`)
+
+   ```yaml
+   apiVersion: rbac.authorization.k8s.io/v1
+   kind: ClusterRoleBinding
+   metadata:
+     name: kubernetes-dashboard-anonymous
+   roleRef:
+     apiGroup: rbac.authorization.k8s.io
+     kind: ClusterRole
+     name: kubernetes-dashboard-anonymous
+   subjects:
+   - kind: User
+     name: system:anonymous
+   ```
+
+   ```shell
+   cat <<EOF | kubectl apply -f -
+   apiVersion: rbac.authorization.k8s.io/v1
+   kind: ClusterRoleBinding
+   metadata:
+     name: kubernetes-dashboard-anonymous
+   roleRef:
+     apiGroup: rbac.authorization.k8s.io
+     kind: ClusterRole
+     name: kubernetes-dashboard-anonymous
+   subjects:
+   - kind: User
+     name: system:anonymous
+   EOF
+   ```
+
+   Output
+
+   ```text
+   clusterrolebinding.rbac.authorization.k8s.io/kubernetes-dashboard-anonymous created
+   ```
+
+4. Now copy the [token](#bearer-token) and paste it into Enter token field on log in screen.
+
+   <p align="center">
+      <img src="images/kube-dashboard-auth.png">
+   </p>
 
 5. Click Sign in button and that's it. You are now logged in as an admin.
-   ![](images/kube-dashboard-singin.png)
+
+   <p align="center">
+      <img src="images/kube-dashboard-singin.png">
+   </p>
