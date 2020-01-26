@@ -1,4 +1,4 @@
-# Starting the actual setup
+# How to setup the Gateway and Busybox components
 
 We created the base image, for both Ubuntu and Debian, that we will use as the basis for creating the specific images for the following components of our solution:
 
