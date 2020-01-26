@@ -58,7 +58,7 @@ This approach requires less infrastructure. The etcd members and control plane n
 1. Run the following commands to init master node:
 
    ```bash
-   ssh debian@kube-mast01.kube.demo
+   ssh kube-mast01
 
    curl --progress-bar https://raw.githubusercontent.com/mvallim/kubernetes-under-the-hood/master/master/kubeadm-config.yaml -o kubeadm-config.yaml
 
@@ -186,7 +186,7 @@ This approach requires less infrastructure. The etcd members and control plane n
 1. Run the following commands to init flannel network component:
 
    ```bash
-   ssh debian@kube-mast01.kube.demo
+   ssh kube-mast01
 
    kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.11.0/Documentation/kube-flannel.yml
    ```
@@ -344,7 +344,7 @@ Now we need to join the other nodes to our K8S cluster. For this we need the cer
 1. Query the state of nodes and pods
 
    ```bash
-   ssh debian@kube-mast01.kube.demo
+   ssh kube-mast01
 
    kubectl get nodes -o wide
 
