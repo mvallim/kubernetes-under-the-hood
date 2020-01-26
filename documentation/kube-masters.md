@@ -60,9 +60,91 @@ This approach requires less infrastructure. The etcd members and control plane n
    ```bash
    ssh debian@kube-mast01.kube.demo
 
-   curl https://raw.githubusercontent.com/mvallim/kubernetes-under-the-hood/master/master/kubeadm-config.yaml -o kubeadm-config.yaml
+   curl --progress-bar https://raw.githubusercontent.com/mvallim/kubernetes-under-the-hood/master/master/kubeadm-config.yaml -o kubeadm-config.yaml
 
    sudo kubeadm init --config=kubeadm-config.yaml --upload-certs
+   ```
+
+   The responses should look similar to this:
+
+   ```text
+   [init] Using Kubernetes version: v1.15.9
+   [preflight] Running pre-flight checks
+   [preflight] Pulling images required for setting up a Kubernetes cluster
+   [preflight] This might take a minute or two, depending on the speed of your internet connection
+   [preflight] You can also perform this action in beforehand using 'kubeadm config images pull'
+   [kubelet-start] Writing kubelet environment file with flags to file "/var/lib/kubelet/kubeadm-flags.env"
+   [kubelet-start] Writing kubelet configuration to file "/var/lib/kubelet/config.yaml"
+   [kubelet-start] Activating the kubelet service
+   [certs] Using certificateDir folder "/etc/kubernetes/pki"
+   [certs] Generating "ca" certificate and key
+   [certs] Generating "apiserver-kubelet-client" certificate and key
+   [certs] Generating "apiserver" certificate and key
+   [certs] apiserver serving cert is signed for DNS names [kube-mast01 kubernetes kubernetes.default kubernetes.default.svc kubernetes.default.svc.cluster.local] and IPs [10.96.0.1 192.168.1.82 192.168.4.20 192.168.4.20]
+   [certs] Generating "front-proxy-ca" certificate and key
+   [certs] Generating "front-proxy-client" certificate and key
+   [certs] Generating "etcd/ca" certificate and key
+   [certs] Generating "etcd/server" certificate and key
+   [certs] etcd/server serving cert is signed for DNS names [kube-mast01 localhost] and IPs [192.168.1.82 127.0.0.1 ::1]
+   [certs] Generating "apiserver-etcd-client" certificate and key
+   [certs] Generating "etcd/peer" certificate and key
+   [certs] etcd/peer serving cert is signed for DNS names [kube-mast01 localhost] and IPs [192.168.1.82 127.0.0.1 ::1]
+   [certs] Generating "etcd/healthcheck-client" certificate and key
+   [certs] Generating "sa" key and public key
+   [kubeconfig] Using kubeconfig folder "/etc/kubernetes"
+   [kubeconfig] Writing "admin.conf" kubeconfig file
+   [kubeconfig] Writing "kubelet.conf" kubeconfig file
+   [kubeconfig] Writing "controller-manager.conf" kubeconfig file
+   [kubeconfig] Writing "scheduler.conf" kubeconfig file
+   [control-plane] Using manifest folder "/etc/kubernetes/manifests"
+   [control-plane] Creating static Pod manifest for "kube-apiserver"
+   [control-plane] Creating static Pod manifest for "kube-controller-manager"
+   [control-plane] Creating static Pod manifest for "kube-scheduler"
+   [etcd] Creating static Pod manifest for local etcd in "/etc/kubernetes/manifests"
+   [wait-control-plane] Waiting for the kubelet to boot up the control plane as static Pods from directory "/etc/kubernetes/manifests". This can take up to 4m0s
+   [apiclient] All control plane components are healthy after 25.521661 seconds
+   [upload-config] Storing the configuration used in ConfigMap "kubeadm-config" in the "kube-system" Namespace
+   [kubelet] Creating a ConfigMap "kubelet-config-1.15" in namespace kube-system with the configuration for the kubelets in the cluster
+   [upload-certs] Storing the certificates in Secret "kubeadm-certs" in the "kube-system" Namespace
+   [upload-certs] Using certificate key:
+   039bae4efd18d7692139f1101fedc877f68c1b4f3a7aa247d4703a764cc98131
+   [mark-control-plane] Marking the node kube-mast01 as control-plane by adding the label "node-role.kubernetes.io/master=''"
+   [mark-control-plane] Marking the node kube-mast01 as control-plane by adding the taints [node-role.kubernetes.io/master:NoSchedule]
+   [bootstrap-token] Using token: 5e7aaq.ejvnu55qqxst7czz
+   [bootstrap-token] Configuring bootstrap tokens, cluster-info ConfigMap, RBAC Roles
+   [bootstrap-token] configured RBAC rules to allow Node Bootstrap tokens to post CSRs in order for nodes to get long term certificate credentials
+   [bootstrap-token] configured RBAC rules to allow the csrapprover controller automatically approve CSRs from a Node Bootstrap Token
+   [bootstrap-token] configured RBAC rules to allow certificate rotation for all node client certificates in the cluster
+   [bootstrap-token] Creating the "cluster-info" ConfigMap in the "kube-public" namespace
+   [addons] Applied essential addon: CoreDNS
+   [addons] Applied essential addon: kube-proxy
+
+   Your Kubernetes control-plane has initialized successfully!
+
+   To start using your cluster, you need to run the following as a regular user:
+
+     mkdir -p $HOME/.kube
+     sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+     sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+   You should now deploy a pod network to the cluster.
+   Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:
+     https://kubernetes.io/docs/concepts/cluster-administration/addons/
+
+   You can now join any number of the control-plane node running the following command on each as root:
+
+     kubeadm join 192.168.4.20:6443 --token 5e7aaq.ejvnu55qqxst7czz \
+       --discovery-token-ca-cert-hash sha256:457f6e849077f9c0a6ed8ad6517c91bfa4f48080c141dda34c3650fc3b1a99fd \
+       --control-plane --certificate-key 039bae4efd18d7692139f1101fedc877f68c1b4f3a7aa247d4703a764cc98131
+
+   Please note that the certificate-key gives access to cluster sensitive data, keep it secret!
+   As a safeguard, uploaded-certs will be deleted in two hours; If necessary, you can use
+    "kubeadm init phase upload-certs --upload-certs" to reload certs afterward.
+
+   Then you can join any number of worker nodes by running the following on each as root:
+
+   kubeadm join 192.168.4.20:6443 --token 5e7aaq.ejvnu55qqxst7czz \
+       --discovery-token-ca-cert-hash sha256:457f6e849077f9c0a6ed8ad6517c91bfa4f48080c141dda34c3650fc3b1a99fd
    ```
 
 2. Query the state of node and pods
@@ -156,115 +238,75 @@ This approach requires less infrastructure. The etcd members and control plane n
 
 Now we need to join the other nodes to our K8S cluster. For this we need the certificates that were generated in the previous steps.
 
-The installation and configuration of these VMs were done through the cloud-init that already makes available ([here](/data/debian/kube/user-data)) a copy and move script of certificates.
-
-The copied certificate is:
-
-* Kubernetes general
-  * /etc/kubernetes/pki/ca.crt
-  * /etc/kubernetes/pki/ca.key
-  * /etc/kubernetes/pki/sa.key
-  * /etc/kubernetes/pki/sa.pub
-
-* For the front-end proxy
-  * /etc/kubernetes/pki/front-proxy-ca.crt
-  * /etc/kubernetes/pki/front-proxy-ca.key
-
-* For all etcd-related functions
-  * /etc/kubernetes/pki/etcd/ca.crt
-  * /etc/kubernetes/pki/etcd/ca.key
-
-* Admin configuration of cluster
-  * /etc/kubernetes/admin.conf
-
-#### Copy certificates
+#### Print Certificate Key
 
 1. Run the following commands to copy certificates to master replicas:
 
    ```bash
-   ssh debian@kube-mast01.kube.demo
-
-   sudo su -
-
-   ssh-keygen -t rsa -b 4096
-
-   ssh-copy-id debian@kube-mast02 #(default password: debian)
-
-   ssh-copy-id debian@kube-mast03 #(default password: debian)
-
-   ~/bin/copy-certificates.sh
+   sudo kubeadm init phase upload-certs --upload-certs
    ```
+
+   The response should look similar to this:
+
+   ```text
+   I0126 20:48:17.259139    5983 version.go:248] remote version is much newer: v1.17.2; falling back to: stable-1.15
+   [upload-certs] Storing the certificates in Secret "kubeadm-certs" in the "kube-system" Namespace
+   [upload-certs] Using certificate key:
+   f385dc122fcaefb52a2c9c748b399b502026ac1c8134cb9b9aa79144d004d95c
+   ```
+
+   Now we'll use the certificate key `f385dc122fcaefb52a2c9c748b399b502026ac1c8134cb9b9aa79144d004d95c`
 
 #### Print Join Command
 
 1. Run the following commands to print join command master replicas on cluster:
 
    ```bash
-   ssh debian@kube-mast01.kube.demo
-
    sudo kubeadm token create --print-join-command
    ```
 
    The response should look similar to this:
 
    ```bash
-   kubeadm join 192.168.4.20:6443 --token y5uii4.5myd468ieaavd0g6 --discovery-token-ca-cert-hash sha256:d4990d904f85ad8fb2d2bbb2e56b35a8cd0714092b40e3778209a0f1d4fa38b9
+   kubeadm join 192.168.4.20:6443 --token uziz9q.5n9r0rbempgyupvg --discovery-token-ca-cert-hash sha256:457f6e849077f9c0a6ed8ad6517c91bfa4f48080c141dda34c3650fc3b1a99fd
    ```
 
 > The last command print the command to you join nodes on cluster, you will use this command to join master on cluster
 
 #### Join second Kube Master
 
-1. Run the following commands to move certificates of 1° master node to correct place:
+1. Run the following command to join master replica on cluster using the join command execute on the step [**`Print Join Command`**](#print-join-command) and certificate key on the step [**Print Certificate Key**](#print-certificate-key):
 
    ```bash
-   ssh debian@kube-mast02.kube.demo
+   ssh kube-mast02
 
-   sudo su -
-
-   ~/bin/move-certificates.sh
-   ```
-
-2. Run the following command to join master replica on cluster using the join command execute on the step [**`Print Join Command`**](#print-join-command):
-
-   ```bash
    sudo kubeadm join 192.168.4.20:6443 \
-       --token y5uii4.5myd468ieaavd0g6 \
-       --discovery-token-ca-cert-hash sha256:d4990d904f85ad8fb2d2bbb2e56b35a8cd0714092b40e3778209a0f1d4fa38b9 \
-       --control-plane
+      --token uziz9q.5n9r0rbempgyupvg \
+      --discovery-token-ca-cert-hash sha256:457f6e849077f9c0a6ed8ad6517c91bfa4f48080c141dda34c3650fc3b1a99fd \
+      --certificate-key f385dc122fcaefb52a2c9c748b399b502026ac1c8134cb9b9aa79144d004d95c \
+      --control-plane
    ```
-
-> Add the `--control-plane` at the end of command
 
 #### Join third Kube Master
 
-1. Run the following commands to move certificates of 1° master node to correct place:
+1. Run the following command to join master replica on cluster using the join command execute on the step [**`Print Join Command`**](#print-join-command) and certificate key on the step [**Print Certificate Key**](#print-certificate-key):
 
    ```bash
-   ssh debian@kube-mast03.kube.demo
+   ssh kube-mast03
 
-   sudo su -
-
-   ~/bin/move-certificates.sh
-   ```
-
-2. Run the following command to join master replica on cluster using the join command execute on the step [**`Print Join Command`**](#print-join-command):
-
-   ```bash
    sudo kubeadm join 192.168.4.20:6443 \
-       --token y5uii4.5myd468ieaavd0g6 \
-       --discovery-token-ca-cert-hash sha256:d4990d904f85ad8fb2d2bbb2e56b35a8cd0714092b40e3778209a0f1d4fa38b9 \
-       --control-plane
+      --token uziz9q.5n9r0rbempgyupvg \
+      --discovery-token-ca-cert-hash sha256:457f6e849077f9c0a6ed8ad6517c91bfa4f48080c141dda34c3650fc3b1a99fd \
+      --certificate-key f385dc122fcaefb52a2c9c748b399b502026ac1c8134cb9b9aa79144d004d95c \
+      --control-plane
    ```
-
-> Add the `--control-plane` at the end of command
 
 ### View stats of etcd
 
 1. Query the state of etcd
 
    ```bash
-   ssh debian@kube-mast01.kube.demo
+   ssh kube-mast01
 
    sudo docker run --rm -it \
        --net host \
@@ -354,7 +396,9 @@ User: admin
 Password: admin
 
 It will show:
-![](images/haproxy-cluster-stats-masters.png)
+<p align="center">
+  <img src="images/haproxy-cluster-stats-masters.png">
+</p>
 
 All Control Plane EndPoints **UP**
 

@@ -44,9 +44,10 @@ packages:
   - software-properties-common
   - thin-provisioning-tools
   - xfsprogs
+  - curl
 
 runcmd:
-  - wget -qO - https://download.gluster.org/pub/gluster/glusterfs/5/rsa.pub | apt-key add -
+  - curl -s https://download.gluster.org/pub/gluster/glusterfs/5/rsa.pub | apt-key add -
   - echo 'deb https://download.gluster.org/pub/gluster/glusterfs/5/LATEST/Debian/9/amd64/apt/ stretch main' > /etc/apt/sources.list.d/gluster.list
   - [ apt-get, update ]
   - [ apt-get, install, -y, glusterfs-server ]

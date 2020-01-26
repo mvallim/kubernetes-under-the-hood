@@ -24,11 +24,9 @@ A node is a worker machine in Kubernetes, previously known as a minion. A node m
 1. Run the following commands to print join command master replicas on cluster:
 
    ```bash
-   ssh debian@kube-mast01.kube.demo
+   ssh kube-mast01
 
-   sudo su -
-
-   kubeadm token create --print-join-command
+   sudo kubeadm token create --print-join-command
    ```
 
    The response should look similar to this:
@@ -44,11 +42,9 @@ A node is a worker machine in Kubernetes, previously known as a minion. A node m
 1. Run the following command to join worker on cluster using the join command execute on the step [**`Print Join Command`**](#print-join-command):
 
    ```bash
-   ssh debian@kube-node01.kube.demo
+   ssh kube-node01
 
-   sudo su -
-
-   kubeadm join 192.168.4.20:6443 \
+   sudo kubeadm join 192.168.4.20:6443 \
        --token y5uii4.5myd468ieaavd0g6 \
        --discovery-token-ca-cert-hash sha256:d4990d904f85ad8fb2d2bbb2e56b35a8cd0714092b40e3778209a0f1d4fa38b9
    ```
@@ -58,11 +54,9 @@ A node is a worker machine in Kubernetes, previously known as a minion. A node m
 1. Run the following command to join worker on cluster using the join command execute on the step [**`Print Join Command`**](#print-join-command):
 
    ```bash
-   ssh debian@kube-node02.kube.demo
+   ssh kube-node02
 
-   sudo su -
-
-   kubeadm join 192.168.4.20:6443 \
+   sudo kubeadm join 192.168.4.20:6443 \
        --token y5uii4.5myd468ieaavd0g6 \
        --discovery-token-ca-cert-hash sha256:d4990d904f85ad8fb2d2bbb2e56b35a8cd0714092b40e3778209a0f1d4fa38b9
    ```
@@ -72,11 +66,9 @@ A node is a worker machine in Kubernetes, previously known as a minion. A node m
 1. Run the following command to join worker on cluster using the join command execute on the step [**`Print Join Command`**](#print-join-command):
 
    ```bash
-   ssh debian@kube-node03.kube.demo
+   ssh kube-node03
 
-   sudo su -
-
-   kubeadm join 192.168.4.20:6443 \
+   sudo kubeadm join 192.168.4.20:6443 \
        --token y5uii4.5myd468ieaavd0g6 \
        --discovery-token-ca-cert-hash sha256:d4990d904f85ad8fb2d2bbb2e56b35a8cd0714092b40e3778209a0f1d4fa38b9
    ```
@@ -86,9 +78,7 @@ A node is a worker machine in Kubernetes, previously known as a minion. A node m
 1. Query the state of nodes and pods
 
    ```bash
-   ssh debian@kube-mast01.kube.demo
-
-   sudo su -
+   ssh kube-mast01
 
    kubectl get nodes -o wide
 
