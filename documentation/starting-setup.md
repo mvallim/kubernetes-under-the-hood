@@ -320,9 +320,8 @@ Besides acting as an access point to our deployment, this machine will also have
 write_files:
 
 # Private ED25519 key
-- path: /home/debian/.ssh/id_ed25519
+- path: /run/.ssh/id_ed25519
   permissions: '0600'
-  owner: debian:debian
   encoding: b64
   content: |
     LS0tLS1CRUdJTiBPUEVOU1NIIFBSSVZBVEUgS0VZLS0tLS0KYjNCbGJuTnphQzFyWlhrdGRqRUFB
@@ -335,18 +334,16 @@ write_files:
     VEUgS0VZLS0tLS0K
 
 # Public ED25519 key
-- path: /home/debian/.ssh/id_ed25519.pub
+- path: /run/.ssh/id_ed25519.pub
   permissions: '0644'
-  owner: debian:debian
   encoding: b64
   content: |
     c3NoLWVkMjU1MTkgQUFBQUMzTnphQzFsWkRJMU5URTVBQUFBSUZ4ZXNjZ3dtRE5wcHVrcHZRNkVP
     NXdicFp5b1JsWlh6cnQ4K0IrN2g5TnUgZGViaWFuQGt1YmUuZGVtbwo=
 
 # Signed ED25519 public key
-- path: /home/debian/.ssh/id_ed25519-cert.pub
+- path: /run/.ssh/id_ed25519-cert.pub
   permissions: '0644'
-  owner: debian:debian
   encoding: b64
   content: |
     c3NoLWVkMjU1MTktY2VydC12MDFAb3BlbnNzaC5jb20gQUFBQUlITnphQzFsWkRJMU5URTVMV05s
@@ -412,14 +409,16 @@ packages:
   - dnsutils
   - screen
   - curl
+  - git
 
 runcmd:
-  - wget -qO - https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+  - curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
   - echo 'deb https://apt.kubernetes.io/ kubernetes-xenial main' > /etc/apt/sources.list.d/kubernetes.list
   - [ apt-get, update ]
   - [ apt-get, install, -y, 'kubectl=1.15.6-00' ]
   - [ apt-mark, hold, kubectl ]
-  - chown -R debian:debian /home/debian/.ssh
+  - mv -u /run/.ssh/* /home/debian/.ssh/.
+  - [ chown, -R, 'debian:debian', '/home/debian' ]
 
 users:
 - name: debian
