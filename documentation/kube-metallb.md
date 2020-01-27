@@ -1,6 +1,7 @@
-# MetalLB
+# How to setup the MetalLB
 
 *“MetalLB is a load-balancer implementation for bare metal Kubernetes clusters, using standard routing protocols.”*
+
 > Reference: https://metallb.universe.tf/
 
 ## Why?
@@ -19,7 +20,7 @@ kind: Service
 metadata:  
   name: load-balancer-service
 spec:
-  selector:    
+  selector:
     app: guestbook
     tier: frontend
   type: LoadBalancer
@@ -34,6 +35,12 @@ spec:
 
    ```shell
    kubectl apply -f https://raw.githubusercontent.com/mvallim/kubernetes-under-the-hood/master/services/kube-service-load-balancer.yaml
+   ```
+
+   The response should look similar to this:
+
+   ```text
+   service/load-balancer-service created
    ```
 
 2. Query the state of service `load-balancer-service`
@@ -57,6 +64,23 @@ spec:
 
    ```shell
    kubectl apply -f https://raw.githubusercontent.com/google/metallb/v0.8.3/manifests/metallb.yaml
+   ```
+
+   The response should look similar to this:
+
+   ```text
+   namespace/metallb-system created
+   podsecuritypolicy.policy/speaker created
+   serviceaccount/controller created
+   serviceaccount/speaker created
+   clusterrole.rbac.authorization.k8s.io/metallb-system:controller created
+   clusterrole.rbac.authorization.k8s.io/metallb-system:speaker created
+   role.rbac.authorization.k8s.io/config-watcher created
+   clusterrolebinding.rbac.authorization.k8s.io/metallb-system:controller created
+   clusterrolebinding.rbac.authorization.k8s.io/metallb-system:speaker created
+   rolebinding.rbac.authorization.k8s.io/config-watcher created
+   daemonset.apps/speaker created
+   deployment.apps/controller created
    ```
 
 2. Query the state of deploy
