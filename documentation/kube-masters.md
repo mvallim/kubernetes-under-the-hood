@@ -61,6 +61,37 @@ Notice we also make use of our `create-image.sh` helper script, passing some fil
 * **`-s`** is used to pass a configuration file that our script will use to configure **virtual disks** on **VirtualBox**. You'll notice this is used only on the **Gluster** configuration step.
 * **`-a`** whether or not our instance **should be initialized** after it's created. Default is **`true`**.
 
+### Access the BusyBox
+
+We need to get the **BusyBox IP** to access it via ssh
+
+```shell
+vboxmanage guestproperty get busybox "/VirtualBox/GuestInfo/Net/0/V4/IP"
+```
+
+The responses should look similar to this:
+
+```shell
+Value: 192.168.4.57
+```
+
+Use the returned value to access.
+
+```shell
+ssh debian@192.168.4.57
+```
+
+The responses should look similar to this:
+
+```text
+Linux busybox 4.9.0-11-amd64 #1 SMP Debian 4.9.189-3+deb9u2 (2019-11-11) x86_64
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+```
+
 ### Configure
 
 #### `kubeadm-config`
