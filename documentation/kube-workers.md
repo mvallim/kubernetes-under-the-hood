@@ -17,9 +17,45 @@ A node is a worker machine in Kubernetes, previously known as a minion. A node m
 
 > * More info about **Flannel**: https://github.com/coreos/flannel
 
-## Configure
+## Create the VMs
 
-### Print Join Command
+To initialize and configure our instances using cloud-init, we'll use the configuration files versioned at the data directory from our repository.
+
+Notice we also make use of our `create-image.sh` helper script, passing some files from inside the `data/kube/` directory as parameters.
+
+* **Create the Masters**
+
+  ```shell
+  for instance in kube-node01 kube-node02 kube-node03; do
+      ./create-image.sh \
+          -k ~/.ssh/id_rsa.pub \
+          -u kube/user-data \
+          -n kube-node/network-config \
+          -i kube-node/post-config-interfaces \
+          -r kube-node/post-config-resources \
+          -o ${instance} \
+          -l debian \
+          -b debian-base-image
+  done
+  ```
+
+### Parameters
+
+* **`-k`** is used to copy the **public key** from your host to the newly created VM.
+* **`-u`** is used to specify the **user-data** file that will be passed as a parameter to the command that creates the cloud-init ISO file we mentioned before (check the source code of the script for a better understanding of how it's used). Default is **`/data/user-data`**.
+* **`-m`** is used to specify the **meta-data** file that will be passed as a parameter to the command that creates the cloud-init ISO file we mentioned before (check the source code of the script for a better understanding of how it's used). Default is **`/data/meta-data`**.
+* **`-n`** is used to pass a configuration file that will be used by cloud-init to configure the **network** for the instance.
+* **`-i`** is used to pass a configuration file that our script will use to modify the **network interface** managed by **VirtualBox** that is attached to the instance that will be created from this image.
+* **`-r`** is used to pass a configuration file that our script will use to configure the **number of processors and amount of memory** that is allocated to our instance by **VirtualBox**.
+* **`-o`** is used to pass the **hostname** that will be assigned to our instance. This will also be the name used by **VirtualBox** to reference our instance.
+* **`-l`** is used to inform which Linux distribution (**debian** or **ubuntu**) configuration files we want to use (notice this is used to specify which folder under data is referenced). Default is **`debian`**.
+* **`-b`** is used to specify which **base image** should be used. This is the image name that was created on **VirtualBox** when we executed the installation steps from our [linux image](create-linux-image.md).
+* **`-s`** is used to pass a configuration file that our script will use to configure **virtual disks** on **VirtualBox**. You'll notice this is used only on the **Gluster** configuration step.
+* **`-a`** whether or not our instance **should be initialized** after it's created. Default is **`true`**.
+
+### Configure
+
+#### Print Join Command
 
 1. Run the following commands to print join command master replicas on cluster:
 
@@ -37,7 +73,7 @@ A node is a worker machine in Kubernetes, previously known as a minion. A node m
 
 > The last command print the command to you join nodes on cluster, you will use this command to join wokers on cluster
 
-### Join first Kube Worker
+#### Join first Kube Worker
 
 1. Run the following command to join worker on cluster using the join command execute on the step [**`Print Join Command`**](#print-join-command):
 
@@ -49,7 +85,7 @@ A node is a worker machine in Kubernetes, previously known as a minion. A node m
        --discovery-token-ca-cert-hash sha256:d4990d904f85ad8fb2d2bbb2e56b35a8cd0714092b40e3778209a0f1d4fa38b9
    ```
 
-### Join second Kube Worker
+#### Join second Kube Worker
 
 1. Run the following command to join worker on cluster using the join command execute on the step [**`Print Join Command`**](#print-join-command):
 
@@ -61,7 +97,7 @@ A node is a worker machine in Kubernetes, previously known as a minion. A node m
        --discovery-token-ca-cert-hash sha256:d4990d904f85ad8fb2d2bbb2e56b35a8cd0714092b40e3778209a0f1d4fa38b9
    ```
 
-### Join third Kube Worker
+#### Join third Kube Worker
 
 1. Run the following command to join worker on cluster using the join command execute on the step [**`Print Join Command`**](#print-join-command):
 
@@ -73,7 +109,7 @@ A node is a worker machine in Kubernetes, previously known as a minion. A node m
        --discovery-token-ca-cert-hash sha256:d4990d904f85ad8fb2d2bbb2e56b35a8cd0714092b40e3778209a0f1d4fa38b9
    ```
 
-### View stats K8S Cluster
+#### View stats K8S Cluster
 
 1. Query the state of nodes and pods
 
