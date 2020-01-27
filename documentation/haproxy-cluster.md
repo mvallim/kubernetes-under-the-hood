@@ -146,6 +146,8 @@ At this point, we will configure the features of our HAProxy Cluster using the [
 
 #### `crm configure`
 
+The following step can be run on any (one) Node, because right now corosync should keep the Cluster Configuration in Sync.
+
 **Note:** each line below represents a command that should be entered separately in the command line.
 
 ```bash
@@ -162,8 +164,35 @@ commit
 bye
 ```
 
-**TODO:** add explanation for each command above
+#### Parameters TL;TD
 
+* `property stonith-enabled=no`
+
+  `stonith-enabled` (Shoot The Other Node In The Head) parameter indicates that failed nodes and nodes with resources that cannot be stopped should be fenced. Since we are only managing a floating IP address and a service (HAProxy). The goal of this functionnality is to avoid split-brain and isolate the corrupt node. This will completely physically shutdown the server (shutdown or restart) or shutdown the power. This is applicable for a 3 nodes configuration.
+
+* `property no-quorum-policy=ignore`
+
+  `no-quorum-policy` parameter defines the actions to take when the cluster does not have a quorum. One of the most common ways to deploy Pacemaker is in a 2-node configuration. However quorum as a concept makes no sense in this scenario (because you only have it when more than half the nodes are available), so we'll disable it too. When you create a cluster, there is ideally 3 nodes for the high-availability purpose but it’s not mandatory. Three nodes are needed for a good communication between the nodes, for checking the healthstate of the others nodes and eventually taking the lead or managing the membership. Usually the quorum value is the name of the node, in our setup we only have 2 nodes, if one node goes down (the one the quorum policy/checksum), the whole cluster will fall. At the end, the quorum policy manages the node coordination, we need 3 nodes minimum.
+
+* `property default-resource-stickiness=100`
+
+  In order to prevent constent failover and failback, we often choose to disable the recovery and the failback of the resource. For instance, if the primary node goes down, the resource will be move on the secondary node. We went to prevent node from moving after recovery for this we gave it a major cost (weight). In fact moving a resource requires a little down time, this is why we will definitly use this option.
+
+* `primitive virtual-ip-resource ocf:heartbeat:IPaddr2 params ip="192.168.4.20" broadcast=192.168.4.31 nic=enp0s3.41 cidr_netmask=27 meta migration-threshold=2 op monitor interval=20 timeout=60 on-fail=restart`
+
+  Lorem ip sum
+
+* `primitive haproxy-resource ocf:heartbeat:haproxy op monitor interval=20 timeout=60 on-fail=restart`
+
+  Lorem ip sum
+
+* `colocation loc inf: virtual-ip-resource haproxy-resource`
+
+  Lorem ip sum
+
+* `order ord inf: virtual-ip-resource haproxy-resource`
+
+  Lorem ip sum
 
 ### View HAProxy stats page
 
