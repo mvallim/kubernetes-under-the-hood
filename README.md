@@ -29,8 +29,8 @@ The target audience for this tutorial is someone planning to install a Kubernete
 4. Putting all together
    - [How to setup the Gateway and Busybox components](documentation/starting-setup.md)
    - [How to setup the HAProxy Cluster with high availability](documentation/haproxy-cluster.md)
-   - [How to setup the Masters using kubeadm bootstrap](documentation/kube-masters.md)
-   - [How to setup the Workers using kubeadm bootstrap](documentation/kube-workers.md)
+   - [How to setup the Masters using `kubeadm` bootstrap](documentation/kube-masters.md)
+   - [How to setup the Workers using `kubeadm` bootstrap](documentation/kube-workers.md)
    - [How to setup the Dashboard](documentation/kube-dashboard.md)
    - [Demo Application](documentation/kube-demo-application.md)
    1. LoadBalancer
