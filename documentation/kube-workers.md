@@ -53,6 +53,15 @@ Notice we also make use of our `create-image.sh` helper script, passing some fil
 * **`-s`** is used to pass a configuration file that our script will use to configure **virtual disks** on **VirtualBox**. You'll notice this is used only on the **Gluster** configuration step.
 * **`-a`** whether or not our instance **should be initialized** after it's created. Default is **`true`**.
 
+### Configure your local routing
+
+You need to add a route to your local machine to access the internal network of **Virtualbox**.
+
+```shell
+sudo ip route add 192.168.4.0/27 via 192.168.4.30 dev vboxnet0
+sudo ip route add 192.168.4.32/27 via 192.168.4.62 dev vboxnet0
+```
+
 ### Access the BusyBox
 
 We need to get the **BusyBox IP** to access it via ssh
