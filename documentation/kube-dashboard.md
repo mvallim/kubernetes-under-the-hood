@@ -8,6 +8,15 @@ Dashboard also provides information on the state of Kubernetes resources in your
   <img src="images/kube-dashboard.png">
 </p>
 
+### Configure your local routing
+
+You need to add a route to your local machine to access the internal network of **Virtualbox**.
+
+```shell
+sudo ip route add 192.168.4.0/27 via 192.168.4.30 dev vboxnet0
+sudo ip route add 192.168.4.32/27 via 192.168.4.62 dev vboxnet0
+```
+
 ### Access the BusyBox
 
 We need to get the **BusyBox IP** to access it via ssh
