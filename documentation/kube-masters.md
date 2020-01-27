@@ -25,6 +25,42 @@ Master components can be run on any machine in the cluster. However, for simplic
 > * More info about **Flannel**: https://github.com/coreos/flannel
 > * More info about **CoreDNS**: https://github.com/coredns/coredns
 
+## Create the VMs
+
+To initialize and configure our instances using cloud-init, we'll use the configuration files versioned at the data directory from our repository.
+
+Notice we also make use of our `create-image.sh` helper script, passing some files from inside the `data/kube/` directory as parameters.
+
+* **Create the Masters**
+
+  ```shell
+  for instance in kube-mast01 kube-mast02 kube-mast03; do
+      ./create-image.sh \
+          -k ~/.ssh/id_rsa.pub \
+          -u kube/user-data \
+          -n kube-mast/network-config \
+          -i kube-mast/post-config-interfaces \
+          -r kube-mast/post-config-resources \
+          -o ${instance} \
+          -l debian \
+          -b debian-base-image
+  done
+  ```
+
+### Parameters
+
+* **`-k`** is used to copy the **public key** from your host to the newly created VM.
+* **`-u`** is used to specify the **user-data** file that will be passed as a parameter to the command that creates the cloud-init ISO file we mentioned before (check the source code of the script for a better understanding of how it's used). Default is **`/data/user-data`**.
+* **`-m`** is used to specify the **meta-data** file that will be passed as a parameter to the command that creates the cloud-init ISO file we mentioned before (check the source code of the script for a better understanding of how it's used). Default is **`/data/meta-data`**.
+* **`-n`** is used to pass a configuration file that will be used by cloud-init to configure the **network** for the instance.
+* **`-i`** is used to pass a configuration file that our script will use to modify the **network interface** managed by **VirtualBox** that is attached to the instance that will be created from this image.
+* **`-r`** is used to pass a configuration file that our script will use to configure the **number of processors and amount of memory** that is allocated to our instance by **VirtualBox**.
+* **`-o`** is used to pass the **hostname** that will be assigned to our instance. This will also be the name used by **VirtualBox** to reference our instance.
+* **`-l`** is used to inform which Linux distribution (**debian** or **ubuntu**) configuration files we want to use (notice this is used to specify which folder under data is referenced). Default is **`debian`**.
+* **`-b`** is used to specify which **base image** should be used. This is the image name that was created on **VirtualBox** when we executed the installation steps from our [linux image](create-linux-image.md).
+* **`-s`** is used to pass a configuration file that our script will use to configure **virtual disks** on **VirtualBox**. You'll notice this is used only on the **Gluster** configuration step.
+* **`-a`** whether or not our instance **should be initialized** after it's created. Default is **`true`**.
+
 ### Configure
 
 #### `kubeadm-config`
