@@ -23,7 +23,7 @@ To initialize and configure our instances using cloud-init, we'll use the config
 
 Notice we also make use of our `create-image.sh` helper script, passing some files from inside the `data/kube/` directory as parameters.
 
-* **Create the Masters**
+* **Create the Workers**
 
   ```shell
   for instance in kube-node01 kube-node02 kube-node03; do
@@ -109,7 +109,7 @@ Notice we also make use of our `create-image.sh` helper script, passing some fil
        --discovery-token-ca-cert-hash sha256:d4990d904f85ad8fb2d2bbb2e56b35a8cd0714092b40e3778209a0f1d4fa38b9
    ```
 
-#### View stats K8S Cluster
+### View stats K8S Cluster
 
 1. Query the state of nodes and pods
 
