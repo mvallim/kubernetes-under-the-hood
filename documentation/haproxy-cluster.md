@@ -171,7 +171,7 @@ bye
 
 * `property no-quorum-policy=ignore`
 
-  The `no-quorum-policy` parameter determines how the cluster behaves when there aren't enough nodes to compose it. To avoid a [split-brain](https://en.wikipedia.org/wiki/Split-brain_(computing)) scenario, the cluster will only respond if quorum is achieved. To illustrate, imagine a cluster with five nodes where, due to a network failure, two separate groups are created: one group with three nodes, and another group with two nodes. In this scenario, only the group with three nodes is able to achieve a majority (of votes?). Thus, only the group with three nodes can make use of cluster resources. This configuration is very important, because there would be a risk of resources corruption if the group with only two nodes was also able to use them. The default value for the `no-quorum-policy` parameter is `stop`.
+  The `no-quorum-policy` parameter determines how the cluster behaves when there aren't enough nodes to compose it. To avoid a [split-brain](https://en.wikipedia.org/wiki/Split-brain_(computing)) scenario, the cluster will only respond if quorum is achieved. To illustrate, imagine a cluster with five nodes where, due to a network failure, two separate groups are created: one group with three nodes, and another group with two nodes. In this scenario, only the group with three nodes is able to achieve a majority of votes. Thus, only the group with three nodes can make use of cluster resources. This configuration is very important, because there would be a risk of resources corruption if the group with only two nodes was also able to use them. The default value for the `no-quorum-policy` parameter is `stop`.
 
   We only have two nodes in our example. Thus, if one of they got offline for any reason, our whole cluster would be take down for lack of quorum (>50%). To avoid this situation, we configure our policy to `ignore` and nothing else needs to be done. In a production scenario, it would be a good idea to have at least 3 nodes for higher availability.
 
@@ -179,7 +179,7 @@ bye
 
   The `default-resource-stickiness` determines where the cluster resources will be allocated. The default behavior is to get the resources back to the original nodes where they were allocated. This means that, after a failure, the resource wil be allocated in another node from the cluster and, when the original node is back to a healthy state, the resource is moved back to it. This is not ideal, because the users will be exposed to a inconsistent scenario twice. To avoid this situation, you can set a weight (between -1.000.000 and 1.000.000) to the `default-resource-stickiness` parameter: a `0` means the resource will be moved back to its original node; a positive value tells the resource should be kept where it is.
   
-  In our case, we set it to `100`.
+  In our case, we arbitrarily set it to `100`.
 
 * `primitive virtual-ip-resource ocf:heartbeat:IPaddr2 params ip="192.168.4.20" broadcast=192.168.4.31 nic=enp0s3.41 cidr_netmask=27 meta migration-threshold=2 op monitor interval=20 timeout=60 on-fail=restart`
 
