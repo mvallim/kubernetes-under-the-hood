@@ -133,7 +133,7 @@ permitted by applicable law.
 After having accessed the BusyBox and being inside a ssh session, just access the instances by name, in our case we want to access hapx-node01.
 
 ```shell
-ssh debian@hapx-node01
+ssh hapx-node01
 ```
 
 ### Configure Pacemaker
@@ -168,15 +168,18 @@ bye
 
 * `property stonith-enabled=no`
 
-  `stonith-enabled` (Shoot The Other Node In The Head) parameter indicates that failed nodes and nodes with resources that cannot be stopped should be fenced. Since we are only managing a floating IP address and a service (HAProxy). The goal of this functionnality is to avoid split-brain and isolate the corrupt node. This will completely physically shutdown the server (shutdown or restart) or shutdown the power. This is applicable for a 3 nodes configuration.
 
 * `property no-quorum-policy=ignore`
 
-  `no-quorum-policy` parameter defines the actions to take when the cluster does not have a quorum. One of the most common ways to deploy Pacemaker is in a 2-node configuration. However quorum as a concept makes no sense in this scenario (because you only have it when more than half the nodes are available), so we'll disable it too. When you create a cluster, there is ideally 3 nodes for the high-availability purpose but it’s not mandatory. Three nodes are needed for a good communication between the nodes, for checking the healthstate of the others nodes and eventually taking the lead or managing the membership. Usually the quorum value is the name of the node, in our setup we only have 2 nodes, if one node goes down (the one the quorum policy/checksum), the whole cluster will fall. At the end, the quorum policy manages the node coordination, we need 3 nodes minimum.
+  The `no-quorum-policy` parameter determines how the cluster behaves when there aren't enough nodes to compose it. To avoid a [split-brain](https://en.wikipedia.org/wiki/Split-brain_(computing)) scenario, the cluster will only respond if quorum is achieved. To illustrate, imagine a cluster with five nodes where, due to a network failure, two separate groups are created: one group with three nodes, and another group with two nodes. In this scenario, only the group with three nodes is able to achieve a majority (of votes?). Thus, only the group with three nodes can make use of cluster resources. This configuration is very important, because there would be a risk of resources corruption if the group with only two nodes was also able to use them. The default value for the `no-quorum-policy` parameter is `stop`.
+
+  We only have two nodes in our example. Thus, if one of they got offline for any reason, our whole cluster would be take down for lack of quorum (>50%). To avoid this situation, we configure our policy to `ignore` and nothing else needs to be done. In a production scenario, it would be a good idea to have at least 3 nodes for higher availability.
 
 * `property default-resource-stickiness=100`
 
-  `default-resource-stickiness` In order to prevent constent failover and failback, we often choose to disable the recovery and the failback of the resource. For instance, if the primary node goes down, the resource will be move on the secondary node. We went to prevent node from moving after recovery for this we gave it a major cost (weight). In fact moving a resource requires a little down time, this is why we will definitly use this option.
+  The `default-resource-stickiness` determines where the cluster resources will be allocated. The default behavior is to get the resources back to the original nodes where they were allocated. This means that, after a failure, the resource wil be allocated in another node from the cluster and, when the original node is back to a healthy state, the resource is moved back to it. This is not ideal, because the users will be exposed to a inconsistent scenario twice. To avoid this situation, you can set a weight (between -1.000.000 and 1.000.000) to the `default-resource-stickiness` parameter: a `0` means the resource will be moved back to its original node; a positive value tells the resource should be kept where it is.
+  
+  In our case, we set it to `100`.
 
 * `primitive virtual-ip-resource ocf:heartbeat:IPaddr2 params ip="192.168.4.20" broadcast=192.168.4.31 nic=enp0s3.41 cidr_netmask=27 meta migration-threshold=2 op monitor interval=20 timeout=60 on-fail=restart`
 
