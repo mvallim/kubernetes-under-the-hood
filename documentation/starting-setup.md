@@ -659,7 +659,7 @@ The document has moved
 Let's check **`kubectl`** version
 
 ```console
-debian@busybox:~$ kubectl version
+debian@busybox:~$ kubectl version --client
 
 Client Version: version.Info{Major:"1", Minor:"15", GitVersion:"v1.15.6", GitCommit:"7015f71e75f670eb9e7ebd4b5749639d42e20079", GitTreeState:"clean", BuildDate:"2019-11-13T11:20:18Z", GoVersion:"go1.12.12", Compiler:"gc", Platform:"linux/amd64"}
 ```
