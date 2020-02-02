@@ -60,8 +60,8 @@ Notice we also make use of our `create-image.sh` helper script, passing some fil
 
 * **Create the HAProxy Cluster**
 
-  ```shell
-  for instance in hapx-node01 hapx-node02; do
+  ```console
+  ~/kubernetes-under-the-hood$ for instance in hapx-node01 hapx-node02; do
       ./create-image.sh \
           -k ~/.ssh/id_rsa.pub \
           -u hapx/user-data \
@@ -72,6 +72,27 @@ Notice we also make use of our `create-image.sh` helper script, passing some fil
           -l debian \
           -b debian-base-image
   done
+
+  Total translation table size: 0
+  Total rockridge attributes bytes: 417
+  Total directory bytes: 0
+  Path table size(bytes): 10
+  Max brk space used 0
+  187 extents written (0 MB)
+  0%...10%...20%...30%...40%...50%...60%...70%...80%...90%...100%
+  Machine has been successfully cloned as "hapx-node01"
+  Waiting for VM "hapx-node01" to power on...
+  VM "hapx-node01" has been successfully started.
+  Total translation table size: 0
+  Total rockridge attributes bytes: 417
+  Total directory bytes: 0
+  Path table size(bytes): 10
+  Max brk space used 0
+  187 extents written (0 MB)
+  0%...10%...20%...30%...40%...50%...60%...70%...80%...90%...100%
+  Machine has been successfully cloned as "hapx-node02"
+  Waiting for VM "hapx-node02" to power on...
+  VM "hapx-node02" has been successfully started.
   ```
 
 ### Parameters
@@ -92,38 +113,36 @@ Notice we also make use of our `create-image.sh` helper script, passing some fil
 
 You need to add a route to your local machine to access the internal network of **Virtualbox**.
 
-```shell
-sudo ip route add 192.168.4.0/27 via 192.168.4.30 dev vboxnet0
-sudo ip route add 192.168.4.32/27 via 192.168.4.62 dev vboxnet0
+```console
+~$ sudo ip route add 192.168.4.0/27 via 192.168.4.30 dev vboxnet0
+~$ sudo ip route add 192.168.4.32/27 via 192.168.4.62 dev vboxnet0
 ```
 
 ### Access the BusyBox
 
 We need to get the **BusyBox IP** to access it via ssh
 
-```shell
-vboxmanage guestproperty get busybox "/VirtualBox/GuestInfo/Net/0/V4/IP"
+```console
+~$ vboxmanage guestproperty get busybox "/VirtualBox/GuestInfo/Net/0/V4/IP"
 ```
 
 The responses should look similar to this:
 
-```shell
+```console
 Value: 192.168.4.57
 ```
 
 Use the returned value to access.
 
-```shell
-ssh debian@192.168.4.57
-```
+```console
+~$ ssh debian@192.168.4.57
 
-The responses should look similar to this:
-
-```text
 Linux busybox 4.9.0-11-amd64 #1 SMP Debian 4.9.189-3+deb9u2 (2019-11-11) x86_64
+
 The programs included with the Debian GNU/Linux system are free software;
 the exact distribution terms for each program are described in the
 individual files in /usr/share/doc/*/copyright.
+
 Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
 permitted by applicable law.
 ```
@@ -132,8 +151,8 @@ permitted by applicable law.
 
 After having accessed the BusyBox and being inside a ssh session, just access the instances by name, in our case we want to access hapx-node01.
 
-```shell
-ssh hapx-node01
+```console
+debian@busybox:~$ ssh hapx-node01
 ```
 
 ### user-data TL;DR

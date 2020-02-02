@@ -387,8 +387,8 @@ apt:
     deb http://deb.debian.org/debian/ $RELEASE-updates main contrib non-free
     deb-src http://deb.debian.org/debian/ $RELEASE-updates main contrib non-free
 
-    deb http://deb.debian.org/debian-security $RELEASE/updates main
-    deb-src http://deb.debian.org/debian-security $RELEASE/updates main
+    deb http://deb.debian.org/debian-security $RELEASE/updates main contrib non-free
+    deb-src http://deb.debian.org/debian-security $RELEASE/updates main contrib non-free
 
   conf: |
     APT {
@@ -398,7 +398,7 @@ apt:
       };
     };
 
-packages: 
+packages:
   - apt-transport-https
   - software-properties-common
   - ca-certificates
@@ -408,6 +408,8 @@ packages:
   - screen
   - curl
   - git
+  - vim
+  - less
 
 runcmd:
   - curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
@@ -523,14 +525,25 @@ Note: pay attention that, for each step, we pass the specific configuration file
     -o gate-node01 \
     -l debian \
     -b debian-base-image
+
+  Total translation table size: 0
+  Total rockridge attributes bytes: 417
+  Total directory bytes: 0
+  Path table size(bytes): 10
+  Max brk space used 0
+  186 extents written (0 MB)
+  0%...10%...20%...30%...40%...50%...60%...70%...80%...90%...100%
+  Machine has been successfully cloned as "gate-node01"
+  Waiting for VM "gate-node01" to power on...
+  VM "gate-node01" has been successfully started.
   ```
 
   > ***NOTICE: Wait the gate-node01 finish the configuration and the VM to be started to execute the next step.***
 
 * **Create BusyBox**
 
-   ```console
-   ~/kubernetes-under-the-hood$ ./create-image.sh \
+  ```console
+  ~/kubernetes-under-the-hood$ ./create-image.sh \
     -k ~/.ssh/id_rsa.pub \
     -u busybox/user-data \
     -n busybox/network-config \
@@ -539,6 +552,17 @@ Note: pay attention that, for each step, we pass the specific configuration file
     -o busybox \
     -l debian \
     -b debian-base-image
+
+  Total translation table size: 0
+  Total rockridge attributes bytes: 417
+  Total directory bytes: 0
+  Path table size(bytes): 10
+  Max brk space used 0
+  186 extents written (0 MB)
+  0%...10%...20%...30%...40%...50%...60%...70%...80%...90%...100%
+  Machine has been successfully cloned as "busybox"
+  Waiting for VM "busybox" to power on...
+  VM "busybox" has been successfully started.
    ```
 
 ### Configure your local routing
