@@ -25,8 +25,8 @@ Notice we also make use of our `create-image.sh` helper script, passing some fil
 
 * **Create the Workers**
 
-  ```shell
-  for instance in kube-node01 kube-node02 kube-node03; do
+  ```console
+  ~/kubernetes-under-the-hood$ for instance in kube-node01 kube-node02 kube-node03; do
       ./create-image.sh \
           -k ~/.ssh/id_rsa.pub \
           -u kube/user-data \
@@ -37,6 +37,41 @@ Notice we also make use of our `create-image.sh` helper script, passing some fil
           -l debian \
           -b debian-base-image
   done
+  ```
+
+  The responses should look similar to this:
+  
+  ```console
+  Total translation table size: 0
+  Total rockridge attributes bytes: 417
+  Total directory bytes: 0
+  Path table size(bytes): 10
+  Max brk space used 0
+  186 extents written (0 MB)
+  0%...10%...20%...30%...40%...50%...60%...70%...80%...90%...100%
+  Machine has been successfully cloned as "kube-node01"
+  Waiting for VM "kube-node01" to power on...
+  VM "kube-node01" has been successfully started.
+  Total translation table size: 0
+  Total rockridge attributes bytes: 417
+  Total directory bytes: 0
+  Path table size(bytes): 10
+  Max brk space used 0
+  186 extents written (0 MB)
+  0%...10%...20%...30%...40%...50%...60%...70%...80%...90%...100%
+  Machine has been successfully cloned as "kube-node02"
+  Waiting for VM "kube-node02" to power on...
+  VM "kube-node02" has been successfully started.
+  Total translation table size: 0
+  Total rockridge attributes bytes: 417
+  Total directory bytes: 0
+  Path table size(bytes): 10
+  Max brk space used 0
+  186 extents written (0 MB)
+  0%...10%...20%...30%...40%...50%...60%...70%...80%...90%...100%
+  Machine has been successfully cloned as "kube-node03"
+  Waiting for VM "kube-node03" to power on...
+  VM "kube-node03" has been successfully started.
   ```
 
 ### Parameters
@@ -57,38 +92,40 @@ Notice we also make use of our `create-image.sh` helper script, passing some fil
 
 You need to add a route to your local machine to access the internal network of **Virtualbox**.
 
-```shell
-sudo ip route add 192.168.4.0/27 via 192.168.4.30 dev vboxnet0
-sudo ip route add 192.168.4.32/27 via 192.168.4.62 dev vboxnet0
+```console
+~$ sudo ip route add 192.168.4.0/27 via 192.168.4.30 dev vboxnet0
+~$ sudo ip route add 192.168.4.32/27 via 192.168.4.62 dev vboxnet0
 ```
 
 ### Access the BusyBox
 
 We need to get the **BusyBox IP** to access it via ssh
 
-```shell
-vboxmanage guestproperty get busybox "/VirtualBox/GuestInfo/Net/0/V4/IP"
+```console
+~$ vboxmanage guestproperty get busybox "/VirtualBox/GuestInfo/Net/0/V4/IP"
 ```
 
 The responses should look similar to this:
 
-```shell
+```console
 Value: 192.168.4.57
 ```
 
 Use the returned value to access.
 
-```shell
-ssh debian@192.168.4.57
+```console
+~$ ssh debian@192.168.4.57
 ```
 
 The responses should look similar to this:
 
-```text
+```console
 Linux busybox 4.9.0-11-amd64 #1 SMP Debian 4.9.189-3+deb9u2 (2019-11-11) x86_64
+
 The programs included with the Debian GNU/Linux system are free software;
 the exact distribution terms for each program are described in the
 individual files in /usr/share/doc/*/copyright.
+
 Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
 permitted by applicable law.
 ```
@@ -99,15 +136,15 @@ permitted by applicable law.
 
 1. Run the following commands to print join command master replicas on cluster:
 
-   ```bash
-   ssh kube-mast01
+   ```console
+   debian@busybox:~$ ssh kube-mast01
 
-   sudo kubeadm token create --print-join-command
+   debian@kube-mast01:~$ sudo kubeadm token create --print-join-command
    ```
 
    The response should look similar to this:
 
-   ```bash
+   ```console
    kubeadm join 192.168.4.20:6443 --token y5uii4.5myd468ieaavd0g6 --discovery-token-ca-cert-hash sha256:d4990d904f85ad8fb2d2bbb2e56b35a8cd0714092b40e3778209a0f1d4fa38b9
    ```
 
@@ -117,10 +154,10 @@ permitted by applicable law.
 
 1. Run the following command to join worker on cluster using the join command execute on the step [**`Print Join Command`**](#print-join-command):
 
-   ```bash
-   ssh kube-node01
+   ```console
+   debian@busybox:~$ ssh kube-node01
 
-   sudo kubeadm join 192.168.4.20:6443 \
+   debian@kube-node01:~$ sudo kubeadm join 192.168.4.20:6443 \
        --token y5uii4.5myd468ieaavd0g6 \
        --discovery-token-ca-cert-hash sha256:d4990d904f85ad8fb2d2bbb2e56b35a8cd0714092b40e3778209a0f1d4fa38b9
    ```
@@ -129,10 +166,10 @@ permitted by applicable law.
 
 1. Run the following command to join worker on cluster using the join command execute on the step [**`Print Join Command`**](#print-join-command):
 
-   ```bash
-   ssh kube-node02
+   ```console
+   debian@busybox:~$ ssh kube-node02
 
-   sudo kubeadm join 192.168.4.20:6443 \
+   debian@kube-node02:~$ sudo kubeadm join 192.168.4.20:6443 \
        --token y5uii4.5myd468ieaavd0g6 \
        --discovery-token-ca-cert-hash sha256:d4990d904f85ad8fb2d2bbb2e56b35a8cd0714092b40e3778209a0f1d4fa38b9
    ```
@@ -141,10 +178,10 @@ permitted by applicable law.
 
 1. Run the following command to join worker on cluster using the join command execute on the step [**`Print Join Command`**](#print-join-command):
 
-   ```bash
-   ssh kube-node03
+   ```console
+   debian@busybox:~$ ssh kube-node03
 
-   sudo kubeadm join 192.168.4.20:6443 \
+   debian@kube-node03:~$ sudo kubeadm join 192.168.4.20:6443 \
        --token y5uii4.5myd468ieaavd0g6 \
        --discovery-token-ca-cert-hash sha256:d4990d904f85ad8fb2d2bbb2e56b35a8cd0714092b40e3778209a0f1d4fa38b9
    ```
@@ -153,17 +190,17 @@ permitted by applicable law.
 
 1. Query the state of nodes and pods
 
-   ```bash
-   ssh kube-mast01
+   ```console
+   debian@busybox:~$ ssh kube-mast01
 
-   kubectl get nodes -o wide
+   debian@kube-mast01:~$ kubectl get nodes -o wide
 
-   kubectl get pods -o wide --all-namespaces
+   debian@kube-mast01:~$ kubectl get pods -o wide --all-namespaces
    ```
 
    The responses should look similar to this:
 
-   ```text
+   ```console
    NAME          STATUS   ROLES    AGE   VERSION   INTERNAL-IP     EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION   CONTAINER-RUNTIME
    kube-mast01   Ready    master   37m   v1.15.6   192.168.1.241   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-11-amd64   docker://18.6.0
    kube-mast02   Ready    master   15m   v1.15.6   192.168.1.95    <none>        Debian GNU/Linux 9 (stretch)   4.9.0-11-amd64   docker://18.6.0
@@ -175,7 +212,7 @@ permitted by applicable law.
 
    > All nodes **Ready**
 
-   ```text
+   ```console
    NAMESPACE     NAME                                  READY   STATUS    RESTARTS   AGE   IP              NODE          NOMINATED NODE   READINESS GATES
    kube-system   coredns-5c98db65d4-mv7lk              1/1     Running   0          36m   10.244.0.2      kube-mast01   <none>           <none>
    kube-system   coredns-5c98db65d4-x4g8r              1/1     Running   0          36m   10.244.0.4      kube-mast01   <none>           <none>

@@ -72,7 +72,11 @@ Notice we also make use of our `create-image.sh` helper script, passing some fil
           -l debian \
           -b debian-base-image
   done
+  ```
 
+  The responses should look similar to this:
+  
+  ```console
   Total translation table size: 0
   Total rockridge attributes bytes: 417
   Total directory bytes: 0

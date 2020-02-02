@@ -33,8 +33,8 @@ Notice we also make use of our `create-image.sh` helper script, passing some fil
 
 * **Create the Masters**
 
-  ```shell
-  for instance in kube-mast01 kube-mast02 kube-mast03; do
+  ```console
+  ~/kubernetes-under-the-hood$ for instance in kube-mast01 kube-mast02 kube-mast03; do
       ./create-image.sh \
           -k ~/.ssh/id_rsa.pub \
           -u kube/user-data \
@@ -45,6 +45,41 @@ Notice we also make use of our `create-image.sh` helper script, passing some fil
           -l debian \
           -b debian-base-image
   done
+  ```
+
+  The responses should look similar to this:
+  
+  ```console
+  Total translation table size: 0
+  Total rockridge attributes bytes: 417
+  Total directory bytes: 0
+  Path table size(bytes): 10
+  Max brk space used 0
+  186 extents written (0 MB)
+  0%...10%...20%...30%...40%...50%...60%...70%...80%...90%...100%
+  Machine has been successfully cloned as "kube-mast01"
+  Waiting for VM "kube-mast01" to power on...
+  VM "kube-mast01" has been successfully started.
+  Total translation table size: 0
+  Total rockridge attributes bytes: 417
+  Total directory bytes: 0
+  Path table size(bytes): 10
+  Max brk space used 0
+  186 extents written (0 MB)
+  0%...10%...20%...30%...40%...50%...60%...70%...80%...90%...100%
+  Machine has been successfully cloned as "kube-mast02"
+  Waiting for VM "kube-mast02" to power on...
+  VM "kube-mast02" has been successfully started.
+  Total translation table size: 0
+  Total rockridge attributes bytes: 417
+  Total directory bytes: 0
+  Path table size(bytes): 10
+  Max brk space used 0
+  186 extents written (0 MB)
+  0%...10%...20%...30%...40%...50%...60%...70%...80%...90%...100%
+  Machine has been successfully cloned as "kube-mast03"
+  Waiting for VM "kube-mast03" to power on...
+  VM "kube-mast03" has been successfully started.
   ```
 
 ### Parameters
@@ -65,38 +100,40 @@ Notice we also make use of our `create-image.sh` helper script, passing some fil
 
 You need to add a route to your local machine to access the internal network of **Virtualbox**.
 
-```shell
-sudo ip route add 192.168.4.0/27 via 192.168.4.30 dev vboxnet0
-sudo ip route add 192.168.4.32/27 via 192.168.4.62 dev vboxnet0
+```console
+~$ sudo ip route add 192.168.4.0/27 via 192.168.4.30 dev vboxnet0
+~$ sudo ip route add 192.168.4.32/27 via 192.168.4.62 dev vboxnet0
 ```
 
 ### Access the BusyBox
 
 We need to get the **BusyBox IP** to access it via ssh
 
-```shell
-vboxmanage guestproperty get busybox "/VirtualBox/GuestInfo/Net/0/V4/IP"
+```console
+~$ vboxmanage guestproperty get busybox "/VirtualBox/GuestInfo/Net/0/V4/IP"
 ```
 
 The responses should look similar to this:
 
-```shell
+```console
 Value: 192.168.4.57
 ```
 
 Use the returned value to access.
 
-```shell
-ssh debian@192.168.4.57
+```cosole
+~$ ssh debian@192.168.4.57
 ```
 
 The responses should look similar to this:
 
-```text
+```console
 Linux busybox 4.9.0-11-amd64 #1 SMP Debian 4.9.189-3+deb9u2 (2019-11-11) x86_64
+
 The programs included with the Debian GNU/Linux system are free software;
 the exact distribution terms for each program are described in the
 individual files in /usr/share/doc/*/copyright.
+
 Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
 permitted by applicable law.
 ```
@@ -134,16 +171,16 @@ This approach requires less infrastructure. The etcd members and control plane n
 1. Run the following commands to init master node:
 
    ```bash
-   ssh kube-mast01
+   debian@busybox:~$ ssh kube-mast01
 
-   curl --progress-bar https://raw.githubusercontent.com/mvallim/kubernetes-under-the-hood/master/master/kubeadm-config.yaml -o kubeadm-config.yaml
+   debian@kube-mast01:~$ curl --progress-bar https://raw.githubusercontent.com/mvallim/kubernetes-under-the-hood/master/master/kubeadm-config.yaml -o kubeadm-config.yaml
 
-   sudo kubeadm init --config=kubeadm-config.yaml --upload-certs
+   debian@kube-mast01:~$ sudo kubeadm init --config=kubeadm-config.yaml --upload-certs
    ```
 
    The responses should look similar to this:
 
-   ```text
+   ```console
    [init] Using Kubernetes version: v1.15.9
    [preflight] Running pre-flight checks
    [preflight] Pulling images required for setting up a Kubernetes cluster
@@ -226,25 +263,25 @@ This approach requires less infrastructure. The etcd members and control plane n
 2. Query the state of node and pods
 
    ```bash
-   mkdir -p $HOME/.kube
+   debian@kube-mast01:~$ mkdir -p $HOME/.kube
 
-   sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+   debian@kube-mast01:~$ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 
-   sudo chown $(id -u):$(id -g) $HOME/.kube/config
+   debian@kube-mast01:~$ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
-   kubectl get nodes -o wide
+   debian@kube-mast01:~$ kubectl get nodes -o wide
 
-   kubectl get pods -o wide --all-namespaces
+   debian@kube-mast01:~$ kubectl get pods -o wide --all-namespaces
    ```
 
    The responses should look similar to this:
 
-   ```text
+   ```console
    NAME          STATUS     ROLES    AGE   VERSION   INTERNAL-IP    EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION   CONTAINER-RUNTIME
    kube-mast01   NotReady   master   53s   v1.15.6   192.168.1.72   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-11-amd64   docker://18.6.0
    ```
 
-   ```text
+   ```console
    NAMESPACE     NAME                                  READY   STATUS    RESTARTS   AGE   IP             NODE          NOMINATED NODE   READINESS GATES
    kube-system   coredns-86c58d9df4-6gzrk              0/1     Pending   0          89s   <none>         <none>        <none>           <none>
    kube-system   coredns-86c58d9df4-fxj5r              0/1     Pending   0          89s   <none>         <none>        <none>           <none>
@@ -261,15 +298,13 @@ This approach requires less infrastructure. The etcd members and control plane n
 
 1. Run the following commands to init flannel network component:
 
-   ```bash
-   ssh kube-mast01
-
-   kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.11.0/Documentation/kube-flannel.yml
+   ```console
+   debian@kube-mast01:~$ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.11.0/Documentation/kube-flannel.yml
    ```
 
    The response should look similar to this:
 
-   ```text
+   ```console
    clusterrole.rbac.authorization.k8s.io/flannel created
    clusterrolebinding.rbac.authorization.k8s.io/flannel created
    serviceaccount/flannel created
@@ -283,20 +318,20 @@ This approach requires less infrastructure. The etcd members and control plane n
 
 2. Query the state of node and pods after flannel deployed
 
-   ```bash
-   kubectl get nodes -o wide
+   ```console
+   debian@kube-mast01:~$ kubectl get nodes -o wide
 
-   kubectl get pods -o wide --all-namespaces
+   debian@kube-mast01:~$ kubectl get pods -o wide --all-namespaces
    ```
 
    The responses should look similar to this:
 
-   ```text
+   ```console
    NAME          STATUS   ROLES    AGE     VERSION   INTERNAL-IP    EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION   CONTAINER-RUNTIME
    kube-mast01   Ready    master   4m30s   v1.15.6   192.168.1.72   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-11-amd64   docker://18.6.0
    ```
 
-   ```text
+   ```console
    NAMESPACE     NAME                                  READY   STATUS    RESTARTS   AGE     IP             NODE          NOMINATED NODE   READINESS GATES
    kube-system   coredns-86c58d9df4-6gzrk              1/1     Running   0          6m4s    10.244.0.4     kube-mast01   <none>           <none>
    kube-system   coredns-86c58d9df4-fxj5r              1/1     Running   0          6m4s    10.244.0.5     kube-mast01   <none>           <none>
@@ -318,13 +353,13 @@ Now we need to join the other nodes to our K8S cluster. For this we need the cer
 
 1. Run the following commands to copy certificates to master replicas:
 
-   ```bash
-   sudo kubeadm init phase upload-certs --upload-certs
+   ```console
+   debian@kube-mast01:~$ sudo kubeadm init phase upload-certs --upload-certs
    ```
 
    The response should look similar to this:
 
-   ```text
+   ```console
    I0126 20:48:17.259139    5983 version.go:248] remote version is much newer: v1.17.2; falling back to: stable-1.15
    [upload-certs] Storing the certificates in Secret "kubeadm-certs" in the "kube-system" Namespace
    [upload-certs] Using certificate key:
@@ -337,13 +372,13 @@ Now we need to join the other nodes to our K8S cluster. For this we need the cer
 
 1. Run the following commands to print join command master replicas on cluster:
 
-   ```bash
-   sudo kubeadm token create --print-join-command
+   ```console
+   debian@kube-mast01:~$ sudo kubeadm token create --print-join-command
    ```
 
    The response should look similar to this:
 
-   ```bash
+   ```console
    kubeadm join 192.168.4.20:6443 --token uziz9q.5n9r0rbempgyupvg --discovery-token-ca-cert-hash sha256:457f6e849077f9c0a6ed8ad6517c91bfa4f48080c141dda34c3650fc3b1a99fd
    ```
 
@@ -353,10 +388,10 @@ Now we need to join the other nodes to our K8S cluster. For this we need the cer
 
 1. Run the following command to join master replica on cluster using the join command execute on the step [**`Print Join Command`**](#print-join-command) and certificate key on the step [**Print Certificate Key**](#print-certificate-key):
 
-   ```bash
-   ssh kube-mast02
+   ```console
+   debian@busybox:~$ ssh kube-mast02
 
-   sudo kubeadm join 192.168.4.20:6443 \
+   debian@kube-mast02:~$ sudo kubeadm join 192.168.4.20:6443 \
       --token uziz9q.5n9r0rbempgyupvg \
       --discovery-token-ca-cert-hash sha256:457f6e849077f9c0a6ed8ad6517c91bfa4f48080c141dda34c3650fc3b1a99fd \
       --certificate-key f385dc122fcaefb52a2c9c748b399b502026ac1c8134cb9b9aa79144d004d95c \
@@ -368,9 +403,9 @@ Now we need to join the other nodes to our K8S cluster. For this we need the cer
 1. Run the following command to join master replica on cluster using the join command execute on the step [**`Print Join Command`**](#print-join-command) and certificate key on the step [**Print Certificate Key**](#print-certificate-key):
 
    ```bash
-   ssh kube-mast03
+   debian@busybox:~$ ssh kube-mast03
 
-   sudo kubeadm join 192.168.4.20:6443 \
+   debian@kube-mast03:~$ sudo kubeadm join 192.168.4.20:6443 \
       --token uziz9q.5n9r0rbempgyupvg \
       --discovery-token-ca-cert-hash sha256:457f6e849077f9c0a6ed8ad6517c91bfa4f48080c141dda34c3650fc3b1a99fd \
       --certificate-key f385dc122fcaefb52a2c9c748b399b502026ac1c8134cb9b9aa79144d004d95c \
@@ -381,10 +416,10 @@ Now we need to join the other nodes to our K8S cluster. For this we need the cer
 
 1. Query the state of etcd
 
-   ```bash
-   ssh kube-mast01
+   ```console
+   debian@busybox:~$ ssh kube-mast01
 
-   sudo docker run --rm -it \
+   debian@kube-mast01:~$ sudo docker run --rm -it \
        --net host \
        -v /etc/kubernetes:/etc/kubernetes quay.io/coreos/etcd:v3.2.24 etcdctl \
        --cert-file /etc/kubernetes/pki/etcd/peer.crt \
@@ -392,7 +427,7 @@ Now we need to join the other nodes to our K8S cluster. For this we need the cer
        --ca-file /etc/kubernetes/pki/etcd/ca.crt \
        --endpoints https://127.0.0.1:2379 cluster-health
 
-   sudo docker run --rm -it \
+   debian@kube-mast01:~$ sudo docker run --rm -it \
        --net host \
        -v /etc/kubernetes:/etc/kubernetes quay.io/coreos/etcd:v3.2.24 etcdctl \
        --cert-file /etc/kubernetes/pki/etcd/peer.crt \
@@ -403,13 +438,13 @@ Now we need to join the other nodes to our K8S cluster. For this we need the cer
 
    The responses should look similar to this:
 
-   ```text
+   ```console
    member 5c81b5ea448e2eb is healthy: got healthy result from https://192.168.1.72:2379
    member 1d7ec3729980eebe is healthy: got healthy result from https://192.168.1.68:2379
    member ea93a1a33cffaceb is healthy: got healthy result from https://192.168.1.81:2379
    ```
 
-   ```text
+   ```console
    5c81b5ea448e2eb: name=kube-mast01 peerURLs=https://192.168.1.72:2380 clientURLs=https://192.168.1.72:2379 isLeader=false
    1d7ec3729980eebe: name=kube-mast02 peerURLs=https://192.168.1.68:2380 clientURLs=https://192.168.1.68:2379 isLeader=true
    ea93a1a33cffaceb: name=kube-mast03 peerURLs=https://192.168.1.81:2380 clientURLs=https://192.168.1.81:2379 isLeader=false
@@ -419,17 +454,17 @@ Now we need to join the other nodes to our K8S cluster. For this we need the cer
 
 1. Query the state of nodes and pods
 
-   ```bash
-   ssh kube-mast01
+   ```console
+   debian@busybox:~$ ssh kube-mast01
 
-   kubectl get nodes -o wide
+   debian@kube-mast01:~$ kubectl get nodes -o wide
 
-   kubectl get pods -o wide --all-namespaces
+   debian@kube-mast01:~$ kubectl get pods -o wide --all-namespaces
    ```
 
    The responses should look similar to this:
 
-   ```text
+   ```console
    NAME          STATUS   ROLES    AGE     VERSION   INTERNAL-IP    EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION   CONTAINER-RUNTIME
    kube-mast01   Ready    master   34m     v1.15.6   192.168.1.72   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-11-amd64   docker://18.6.0
    kube-mast02   Ready    master   4m34s   v1.15.6   192.168.1.68   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-11-amd64   docker://18.6.0
@@ -438,7 +473,7 @@ Now we need to join the other nodes to our K8S cluster. For this we need the cer
 
    > All master nodes **Ready**
 
-   ```text
+   ```console
    NAMESPACE     NAME                                  READY   STATUS    RESTARTS   AGE     IP             NODE          NOMINATED NODE   READINESS GATES
    kube-system   coredns-86c58d9df4-6gzrk              1/1     Running   0          34m     10.244.0.4     kube-mast01   <none>           <none>
    kube-system   coredns-86c58d9df4-fxj5r              1/1     Running   0          34m     10.244.0.5     kube-mast01   <none>           <none>
