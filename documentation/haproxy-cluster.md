@@ -434,7 +434,10 @@ User: admin
 Password: admin
 
 It will show:
-![](images/haproxy-cluster-stats.png)
+
+<p align="center">
+  <img src="images/haproxy-cluster-stats.png">
+</p>
 
 Notice all Control Plane EndPoints are *DOWN*
 
