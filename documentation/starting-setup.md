@@ -115,7 +115,7 @@ Now let's create the images using a custom tool we created (create-image.sh) tha
 
 Full explanation in our [Network](networking.md).
 
-### user-data
+### user-data TL;DR
 
 This is the user-data file that is passed with the **`-u`** flag to our [create-image.sh](../create-image.sh) script. The specific file below is the user-data file that is used to configure our gateway. You can check the configuration for each component under **`/data/{distribution}/{component}/user-data`** in our repo. Check the comments in the file to better understand what each section represents.
 
@@ -279,8 +279,6 @@ users:
   sudo: ALL=(ALL) NOPASSWD:ALL
   shell: /bin/bash
   lock_passwd: true
-  ssh_authorized_keys:
-    - #SSH-PUB-KEY#
 - name: root
   lock_passwd: true
 
@@ -312,7 +310,7 @@ Since we have a whole specific virtualized network created inside the VirtualBox
 
 Besides acting as an access point to our deployment, this machine will also have network diagnosis tools and the kubectl installed on it, so we don't need to mess with any existing installation we may have on our host machine.
 
-### user-data
+### user-data TL;DR
 
 ```yaml
 #cloud-config
@@ -389,8 +387,8 @@ apt:
     deb http://deb.debian.org/debian/ $RELEASE-updates main contrib non-free
     deb-src http://deb.debian.org/debian/ $RELEASE-updates main contrib non-free
 
-    deb http://deb.debian.org/debian-security $RELEASE/updates main
-    deb-src http://deb.debian.org/debian-security $RELEASE/updates main
+    deb http://deb.debian.org/debian-security $RELEASE/updates main contrib non-free
+    deb-src http://deb.debian.org/debian-security $RELEASE/updates main contrib non-free
 
   conf: |
     APT {
@@ -400,7 +398,7 @@ apt:
       };
     };
 
-packages: 
+packages:
   - apt-transport-https
   - software-properties-common
   - ca-certificates
@@ -410,6 +408,8 @@ packages:
   - screen
   - curl
   - git
+  - vim
+  - less
 
 runcmd:
   - curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
@@ -461,43 +461,50 @@ The premise is that you already have **Virtualbox** properly installed on your l
 
 * Add your user on `vboxusers` group
 
-  ```shell
-  sudo usermod -a -G vboxusers $USER
+  ```console
+  ~$ sudo usermod -a -G vboxusers $USER
   ```
 
 * Install `shyaml`
 
-  ```shell
-  sudo apt-get install python3-pip
-
-  sudo pip3 install shyaml
+  ```console
+  ~$ sudo apt-get install python3-pip
+  ~$ sudo pip3 install shyaml
   ```
 
 * Install `genisoimage`
 
-  ```shell
-  sudo apt-get install genisoimage
+  ```console
+  ~$ sudo apt-get install genisoimage
   ```
 
 * Install `uuid-runtime`
 
-  ```shell
-  sudo apt-get install uuid-runtime
+  ```console
+  ~$ sudo apt-get install uuid-runtime
   ```
 
 * Configure Host Adapter VirtualBox
 
-  ```shell
-  vboxmanage hostonlyif create
-  vboxmanage hostonlyif ipconfig vboxnet0 --ip 192.168.254.1 --netmask 255.255.0.0
+  ```console
+  ~$ vboxmanage hostonlyif create
+  ~$ vboxmanage hostonlyif ipconfig vboxnet0 --ip 192.168.254.1 --netmask 255.255.0.0
   ```
 
 ### Clone repository
 
-```shell
-git clone git@github.com:mvallim/kubernetes-under-the-hood.git
+```console
+~$ git clone git@github.com:mvallim/kubernetes-under-the-hood.git
 
-cd kubernetes-under-the-hood
+Cloning into 'kubernetes-under-the-hood'...
+remote: Enumerating objects: 190, done.
+remote: Counting objects: 100% (190/190), done.
+remote: Compressing objects: 100% (141/141), done.
+remote: Total 2527 (delta 117), reused 86 (delta 45), pack-reused 2337
+Receiving objects: 100% (2527/2527), 47.89 MiB | 8.61 MiB/s, done.
+Resolving deltas: 100% (1662/1662), done.
+
+~$ cd kubernetes-under-the-hood
 ```
 
 ### Create VM's
@@ -508,8 +515,8 @@ Note: pay attention that, for each step, we pass the specific configuration file
 
 * **Create Gateway**
 
-  ```shell
-  ./create-image.sh \
+  ```console
+  ~/kubernetes-under-the-hood$ ./create-image.sh \
     -k ~/.ssh/id_rsa.pub \
     -u gate/user-data \
     -n gate/network-config \
@@ -518,14 +525,25 @@ Note: pay attention that, for each step, we pass the specific configuration file
     -o gate-node01 \
     -l debian \
     -b debian-base-image
+
+  Total translation table size: 0
+  Total rockridge attributes bytes: 417
+  Total directory bytes: 0
+  Path table size(bytes): 10
+  Max brk space used 0
+  186 extents written (0 MB)
+  0%...10%...20%...30%...40%...50%...60%...70%...80%...90%...100%
+  Machine has been successfully cloned as "gate-node01"
+  Waiting for VM "gate-node01" to power on...
+  VM "gate-node01" has been successfully started.
   ```
 
   > ***NOTICE: Wait the gate-node01 finish the configuration and the VM to be started to execute the next step.***
 
 * **Create BusyBox**
 
-   ```shell
-   ./create-image.sh \
+  ```console
+  ~/kubernetes-under-the-hood$ ./create-image.sh \
     -k ~/.ssh/id_rsa.pub \
     -u busybox/user-data \
     -n busybox/network-config \
@@ -534,51 +552,61 @@ Note: pay attention that, for each step, we pass the specific configuration file
     -o busybox \
     -l debian \
     -b debian-base-image
+
+  Total translation table size: 0
+  Total rockridge attributes bytes: 417
+  Total directory bytes: 0
+  Path table size(bytes): 10
+  Max brk space used 0
+  186 extents written (0 MB)
+  0%...10%...20%...30%...40%...50%...60%...70%...80%...90%...100%
+  Machine has been successfully cloned as "busybox"
+  Waiting for VM "busybox" to power on...
+  VM "busybox" has been successfully started.
    ```
 
 ### Configure your local routing
 
 You need to add the route on your local machine to access the internal network of **Virtualbox**.
 
-```shell
-sudo ip route add 192.168.4.32/27 via 192.168.4.62 dev vboxnet0
+```console
+~$ sudo ip route add 192.168.4.32/27 via 192.168.4.62 dev vboxnet0
 ```
 
 ### Access BusyBox
 
 We need to get the **BusyBox IP** to access it via ssh
 
-```shell
-vboxmanage guestproperty get busybox "/VirtualBox/GuestInfo/Net/0/V4/IP"
+```console
+~$ vboxmanage guestproperty get busybox "/VirtualBox/GuestInfo/Net/0/V4/IP"
 ```
 
 The responses should look similar to this:
 
-```shell
+```console
 Value: 192.168.4.57
 ```
 
 Use the returned value to access.
 
-```shell
-ssh debian@192.168.4.57
-```
+```console
+~$ ssh debian@192.168.4.57
 
-The responses should look similar to this:
-
-```text
 Linux busybox 4.9.0-11-amd64 #1 SMP Debian 4.9.189-3+deb9u2 (2019-11-11) x86_64
+
 The programs included with the Debian GNU/Linux system are free software;
 the exact distribution terms for each program are described in the
 individual files in /usr/share/doc/*/copyright.
+
 Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
 permitted by applicable law.
 ```
 
 Let's check **DNS** configuration, using **`nslookup`**
 
-```text
-$ nslookup gate-node01
+```console
+debian@busybox:~$ nslookup gate-node01
+
 Server:         192.168.4.1
 Address:        192.168.4.1#53
 Name:   gate-node01.kube.demo
@@ -587,8 +615,9 @@ Address: 192.168.254.254
 
 Let's check access internet using **`curl`**
 
-```text
-$ curl -v google.com
+```console
+debian@busybox:~$ curl -v google.com
+
 * Rebuilt URL to: google.com/
 *   Trying 172.217.29.142...
 * TCP_NODELAY set
@@ -621,20 +650,17 @@ The document has moved
 
 Let's check **`kubectl`** version
 
-```text
-$ kubectl version
+```console
+debian@busybox:~$ kubectl version
+
 Client Version: version.Info{Major:"1", Minor:"15", GitVersion:"v1.15.6", GitCommit:"7015f71e75f670eb9e7ebd4b5749639d42e20079", GitTreeState:"clean", BuildDate:"2019-11-13T11:20:18Z", GoVersion:"go1.12.12", Compiler:"gc", Platform:"linux/amd64"}
 ```
 
 Let's check access `gate-node01`
 
-```shell
-ssh debian@gate-node01
-```
+```console
+debian@busybox:~$ ssh debian@gate-node01
 
-The responses should look similar to this:
-
-```text
 Linux gate-node01 4.9.0-11-amd64 #1 SMP Debian 4.9.189-3+deb9u2 (2019-11-11) x86_64
 
 The programs included with the Debian GNU/Linux system are free software;

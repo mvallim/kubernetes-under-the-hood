@@ -20,13 +20,22 @@ write_files:
     N2h2R2QzS0ZvU1N4aDlFY1FONTNXWEhMYXBHQ0o0NGVFU3NqbVgzN1NwWElUYUhEOHJQRXBia0E0
     WWJzaVVoTXZPZ0VCLy9MZ1d0R2kvRVRxalVSUFkvWGRTVTR5dFE9PSBjYUBrdWJlLmRlbW8K
 
+# We want to configure corosync to use cryptographic techniques to ensure the
+# authenticity and privacy of messages. We generate a private key.
+#
+#  For more details read corosync-keygen man page on Linux: $ man 8 corosync-keygen
 - path: /etc/corosync/authkey
   permissions: '0400'
   content: !!binary |
     oazyUUgBg/bkG5cmzZAunHkKozJQ4AKUVTUHcn0tGBXR8OLKsZi3KUWy2bKjeWY6Y44ZFjvuC4sj
     1xCt67CRDkHHNuVViK79TCghbfczL6jnkkQNoWfmeMzX2axgp+Wp5tU3jBjGP5X7JMq0eu4RZ2vS
     y8iZqL5kYaRqRn3ElD0=
-    
+
+# The corosync.conf instructs the corosync executive about various parameters
+# needed to control the corosync executive. Empty lines and lines starting with
+# '#' character are ignored.
+#
+#  For more details read corosync.conf man page on Linux: $ man 5 corosync.conf
 - path: /etc/corosync/corosync.conf
   permissions: '0644'
   content: |
@@ -68,6 +77,18 @@ write_files:
       expected_votes: 2
     }
 
+# HAProxy's configuration process involves 3 major sources of parameters :
+#
+#  - the arguments from the command-line, which always take precedence
+#  - the "global" section, which sets process-wide parameters
+#  - the proxies sections which can take form of "defaults", "listen",
+#    "frontend" and "backend".
+#
+# The configuration file syntax consists in lines beginning with a keyword
+# referenced in this manual, optionally followed by one or several parameters
+# delimited by spaces.
+#
+# For more details read haproxy.cfg page https://www.haproxy.org/download/1.7/doc/configuration.txt
 - path: /etc/haproxy/haproxy.cfg
   permissions: '0644'  
   content: |
@@ -174,8 +195,6 @@ users:
   sudo: ALL=(ALL) NOPASSWD:ALL
   shell: /bin/bash
   lock_passwd: true
-  ssh_authorized_keys:
-    - #SSH-PUB-KEY#
 - name: root
   lock_passwd: true
 
