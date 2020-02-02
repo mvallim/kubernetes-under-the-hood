@@ -369,18 +369,38 @@ Before carrying out the configuration, it is worth making some observations.
 
 1. Let's check IP configuration, using `ip addr`
 
-    ```console
-    debian@hapx-node01:~$ ip addr show enp0s3.41
+   ```console
+   debian@hapx-node01:~$ ip addr show enp0s3.41
 
-    3: enp0s3.41@enp0s3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
-        link/ether 08:00:27:a4:ce:07 brd ff:ff:ff:ff:ff:ff
-        inet6 fe80::a00:27ff:fea4:ce07/64 scope link
-          valid_lft forever preferred_lft forever
-    ```
+   3: enp0s3.41@enp0s3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+       link/ether 08:00:27:a4:ce:07 brd ff:ff:ff:ff:ff:ff
+       inet6 fe80::a00:27ff:fea4:ce07/64 scope link
+         valid_lft forever preferred_lft forever
+   ```
 
-    As you can see we still don't have our cluster's ip configured (192.168.4.20) on any of the network interfaces.
+   As you can see we still don't have our cluster's ip configured (192.168.4.20) on any of the network interfaces.
 
-2. Let configure Pacemaker, using `crm configure`
+2. Let's check configuration Pacemaker, using `crm status`
+
+   ```console
+   debian@hapx-node01:~$ sudo crm status
+
+   Stack: corosync
+   Current DC: hapx-node02 (version 1.1.16-94ff4df) - partition with quorum
+   Last updated: Sun Feb  2 19:53:25 2020
+   Last change: Sun Feb  2 19:51:43 2020 by hacluster via crmd on hapx-node02
+
+   2 nodes configured
+   0 resources configured
+
+   Online: [ hapx-node01 hapx-node02 ]
+
+   No resources
+   ```
+
+   Here we notice that we have only two active and configured nodes (`hapx-node01` and `hapx-node02`), but no resources that will make up our cluster (`virtual-ip-resource` and `haproxy-resource`) .
+
+3. Let's configure resources on Pacemaker, using `crm configure`
 
    Here we define our Virtual IP as 192.168.4.20. This will be the IP address of our K8S cluster (Control Plane EndPoint).
 
@@ -419,7 +439,7 @@ Before carrying out the configuration, it is worth making some observations.
 
    Voilá, now our cluster's ip is properly configured in the `enp0s3.41` interface and managed.
 
-3. Let's get some more information from our cluster, using `crm status`
+4. Let's get some more information from our cluster, using `crm status`
 
    ```console
    debian@hapx-node01:~$ sudo crm status
@@ -444,7 +464,7 @@ Before carrying out the configuration, it is worth making some observations.
 
    If we look more closely, we will see that the `hapx-node01` node is the one that has these two allocated resources (`virtual-ip-resource` and `haproxy-resource`), which makes perfect sense, as we configure these resources they must always be allocated on the same node.
 
-#### Parameters TL;DR
+#### Pacemaker parameters TL;DR
 
 * `property stonith-enabled=no`
 
