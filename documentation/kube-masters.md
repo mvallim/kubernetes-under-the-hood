@@ -48,7 +48,7 @@ Notice we also make use of our `create-image.sh` helper script, passing some fil
   ```
 
   The responses should look similar to this:
-  
+
   ```console
   Total translation table size: 0
   Total rockridge attributes bytes: 417
@@ -170,7 +170,7 @@ This approach requires less infrastructure. The etcd members and control plane n
 
 1. Run the following commands to init master node:
 
-   ```bash
+   ```console
    debian@busybox:~$ ssh kube-mast01
 
    debian@kube-mast01:~$ curl --progress-bar https://raw.githubusercontent.com/mvallim/kubernetes-under-the-hood/master/master/kubeadm-config.yaml -o kubeadm-config.yaml
@@ -262,7 +262,7 @@ This approach requires less infrastructure. The etcd members and control plane n
 
 2. Query the state of node and pods
 
-   ```bash
+   ```console
    debian@kube-mast01:~$ mkdir -p $HOME/.kube
 
    debian@kube-mast01:~$ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
@@ -402,7 +402,7 @@ Now we need to join the other nodes to our K8S cluster. For this we need the cer
 
 1. Run the following command to join master replica on cluster using the join command execute on the step [**`Print Join Command`**](#print-join-command) and certificate key on the step [**Print Certificate Key**](#print-certificate-key):
 
-   ```bash
+   ```console
    debian@busybox:~$ ssh kube-mast03
 
    debian@kube-mast03:~$ sudo kubeadm join 192.168.4.20:6443 \
