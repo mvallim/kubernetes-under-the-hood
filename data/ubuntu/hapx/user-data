@@ -195,8 +195,6 @@ users:
   sudo: ALL=(ALL) NOPASSWD:ALL
   shell: /bin/bash
   lock_passwd: true
-  ssh_authorized_keys:
-    - #SSH-PUB-KEY#
 - name: root
   lock_passwd: true
 
