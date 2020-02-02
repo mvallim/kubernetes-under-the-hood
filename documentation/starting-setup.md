@@ -525,7 +525,11 @@ Note: pay attention that, for each step, we pass the specific configuration file
     -o gate-node01 \
     -l debian \
     -b debian-base-image
+  ```
 
+  The responses should look similar to this:
+  
+  ```console
   Total translation table size: 0
   Total rockridge attributes bytes: 417
   Total directory bytes: 0
@@ -552,7 +556,11 @@ Note: pay attention that, for each step, we pass the specific configuration file
     -o busybox \
     -l debian \
     -b debian-base-image
+  ```
 
+  The responses should look similar to this:
+  
+  ```console
   Total translation table size: 0
   Total rockridge attributes bytes: 417
   Total directory bytes: 0
@@ -563,7 +571,7 @@ Note: pay attention that, for each step, we pass the specific configuration file
   Machine has been successfully cloned as "busybox"
   Waiting for VM "busybox" to power on...
   VM "busybox" has been successfully started.
-   ```
+  ```
 
 ### Configure your local routing
 
