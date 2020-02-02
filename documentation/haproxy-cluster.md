@@ -136,7 +136,7 @@ After having accessed the BusyBox and being inside a ssh session, just access th
 ssh hapx-node01
 ```
 
-### user-data
+### user-data TL;DR
 
 The cloud-init HAProxy configuration file can be found [here](/data/debian/hapx/user-data). This sets up a Load Balance for the Kube Master Nodes.
 
@@ -338,8 +338,6 @@ users:
   sudo: ALL=(ALL) NOPASSWD:ALL
   shell: /bin/bash
   lock_passwd: true
-  ssh_authorized_keys:
-    - #SSH-PUB-KEY#
 - name: root
   lock_passwd: true
 
@@ -367,29 +365,84 @@ power_state:
 
 ### Configure Pacemaker
 
-Here we define our Virtual IP as 192.168.4.20. This will be the IP address of our K8S cluster (Control Plane EndPoint).
+Before carrying out the configuration, it is worth making some observations.
 
-At this point, we will configure the features of our HAProxy Cluster using the [crmsh](https://crmsh.github.io/) tool. crmsh is a cluster management shell for the Pacemaker High Availability stack.
+1. Let's check IP configuration, using `ip addr`
 
-#### `crm configure`
+    ```console
+    debian@hapx-node01:~$ ip addr show enp0s3.41
 
-The following step can be run on any (one) Node, because right now corosync should keep the Cluster Configuration in Sync.
+    3: enp0s3.41@enp0s3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+        link/ether 08:00:27:a4:ce:07 brd ff:ff:ff:ff:ff:ff
+        inet6 fe80::a00:27ff:fea4:ce07/64 scope link
+          valid_lft forever preferred_lft forever
+    ```
 
-**Note:** each line below represents a command that should be entered separately in the command line.
+    As you can see we still don't have our cluster's ip configured (192.168.4.20) on any of the network interfaces.
 
-```bash
-sudo crm configure
+2. Let configure Pacemaker, using `crm configure`
 
-property stonith-enabled=no
-property no-quorum-policy=ignore
-property default-resource-stickiness=100
-primitive virtual-ip-resource ocf:heartbeat:IPaddr2 params ip="192.168.4.20" broadcast=192.168.4.31 nic=enp0s3.41 cidr_netmask=27 meta migration-threshold=2 op monitor interval=20 timeout=60 on-fail=restart
-primitive haproxy-resource ocf:heartbeat:haproxy op monitor interval=20 timeout=60 on-fail=restart
-colocation loc inf: virtual-ip-resource haproxy-resource
-order ord inf: virtual-ip-resource haproxy-resource
-commit
-bye
-```
+   Here we define our Virtual IP as 192.168.4.20. This will be the IP address of our K8S cluster (Control Plane EndPoint).
+
+   At this point, we will configure the features of our HAProxy Cluster using the [crmsh](https://crmsh.github.io/) tool. crmsh is a cluster management shell for the Pacemaker High Availability stack.
+
+   The following step can be run on any (one) Node, because right now corosync should keep the Cluster Configuration in Sync.
+
+   **Note:** each line below represents a command that should be entered separately in the command line.
+
+   ```console
+   debian@hapx-node01:~$ sudo crm configure
+
+   crm(live)configure# property stonith-enabled=no
+   crm(live)configure# property no-quorum-policy=ignore
+   crm(live)configure# property default-resource-stickiness=100
+   crm(live)configure# primitive virtual-ip-resource ocf:heartbeat:IPaddr2 params ip="192.168.4.20" broadcast=192.168.4.31 nic=enp0s3.41 cidr_netmask=27 meta migration-threshold=2 op monitor interval=20 timeout=60 on-fail=restart
+   crm(live)configure# primitive haproxy-resource ocf:heartbeat:haproxy op monitor interval=20 timeout=60 on-fail=restart
+   crm(live)configure# colocation loc inf: virtual-ip-resource haproxy-resource
+   crm(live)configure# order ord inf: virtual-ip-resource haproxy-resource
+   crm(live)configure# commit
+   crm(live)configure# bye
+   ```
+
+   Let's check again IP configuration, using `ip addr`
+
+   ```console
+   debian@hapx-node01:~$ ip addr show enp0s3.41
+
+   3: enp0s3.41@enp0s3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+       link/ether 08:00:27:a4:ce:07 brd ff:ff:ff:ff:ff:ff
+       inet 192.168.4.20/27 brd 192.168.4.31 scope global enp0s3.41
+         valid_lft forever preferred_lft forever
+       inet6 fe80::a00:27ff:fea4:ce07/64 scope link
+         valid_lft forever preferred_lft forever
+   ```
+
+   Voilá, now our cluster's ip is properly configured in the `enp0s3.41` interface and managed.
+
+3. Let's get some more information from our cluster, using `crm status`
+
+   ```console
+   debian@hapx-node01:~$ sudo crm status
+
+   Stack: corosync
+   Current DC: hapx-node01 (version 1.1.16-94ff4df) - partition with quorum
+   Last updated: Sun Feb  2 19:19:16 2020
+   Last change: Sun Feb  2 19:04:37 2020 by root via cibadmin on hapx-node01
+
+   2 nodes configured
+   2 resources configured
+
+   Online: [ hapx-node01 hapx-node02 ]
+
+   Full list of resources:
+
+   virtual-ip-resource    (ocf::heartbeat:IPaddr2):       Started hapx-node01
+   haproxy-resource       (ocf::heartbeat:haproxy):       Started hapx-node01
+   ```
+
+   Here we can see that both nodes and resources are active and configured.
+
+   If we look more closely, we will see that the `hapx-node01` node is the one that has these two allocated resources (`virtual-ip-resource` and `haproxy-resource`), which makes perfect sense, as we configure these resources they must always be allocated on the same node.
 
 #### Parameters TL;DR
 
