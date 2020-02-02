@@ -391,7 +391,7 @@ commit
 bye
 ```
 
-#### Parameters TL;TD
+#### Parameters TL;DR
 
 * `property stonith-enabled=no`
 
