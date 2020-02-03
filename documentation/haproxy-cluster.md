@@ -526,8 +526,8 @@ Now that everything is set up, you can access the HAProxy stats through the Virt
 
 Open your browser at [http://192.168.4.20:32700](http://192.168.4.20:32700)
 
-User: admin
-Password: admin
+User: `admin`  
+Password: `admin`
 
 It will show:
 
