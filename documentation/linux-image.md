@@ -618,11 +618,11 @@ e2fsck 1.44.5 (15-Dec-2018)
 3. Prepare raw disk image to use in VirtualBox VMs
 
    ```bash
-   ~/debian-image-from-scratch$ vboxmanage convertfromraw debian-image.raw "$HOME/VirtualBox VMs/debian-base-image/debian-base-image.vdi"
+   ~/$ vboxmanage convertfromraw ~/debian-image-from-scratch/debian-image.raw "$HOME/VirtualBox VMs/debian-base-image/debian-base-image.vdi"
    ```
 
    ```console
-   Converting from raw image file="debian-image.raw" to file="/home/mvallim/VirtualBox VMs/debian-base-image/debian-base-image.vdi"...
+   Converting from raw image file="/home/mvallim/debian-image-from-scratch/debian-image.raw" to file="/home/mvallim/VirtualBox VMs/debian-base-image/debian-base-image.vdi"...
    Creating dynamic image with size 32212254720 bytes (30720MB)...
    ```
 
