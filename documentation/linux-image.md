@@ -6,32 +6,26 @@ This procedure shows how to create a cloud image Ubuntu from scratch to run on C
 
 Install applications we need to build the environment.
 
-```console
+```bash
 ~$ sudo apt-get install debootstrap
 ```
 
-```console
+```bash
 ~$ mkdir $HOME/debian-image-from-scratch
 ```
 
 ## Create loop device
 
-1. Access build directory
+1. Create empty virtual hard drive file (`30Gb`)
 
-   ```console
-   ~$ cd $HOME/debian-image-from-scratch
+   ```bash
+   ~$ dd if=/dev/zero of=~/debian-image-from-scratch/debian-image.raw bs=1 count=0 seek=32212254720 status=progress
    ```
 
-2. Create empty virtual hard drive file (`30Gb`)
+2. Create partitions on file
 
-   ```console
-   ~/debian-image-from-scratch$ dd if=/dev/zero of=debian-image.raw bs=1 count=0 seek=32212254720 status=progress
-   ```
-
-3. Create partitions on file
-
-   ```console
-   ~/debian-image-from-scratch$ sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | sudo fdisk debian-image.raw
+   ```bash
+   ~$ sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | sudo fdisk ~/debian-image-from-scratch/debian-image.raw
    o # clear the in memory partition table
    n # new partition
    p # primary partition
@@ -51,16 +45,16 @@ Install applications we need to build the environment.
    EOF
    ```
 
-4. Start loop device
+3. Start loop device
 
-   ```console
-   ~/debian-image-from-scratch$ sudo losetup -fP debian-image.raw
+   ```bash
+   ~$ sudo losetup -fP ~/debian-image-from-scratch/debian-image.raw
    ```
 
    Check loop device
 
-   ```console
-   ~/debian-image-from-scratch$ sudo losetup -a
+   ```bash
+   ~$ sudo losetup -a
    ```
 
    Output
@@ -69,10 +63,10 @@ Install applications we need to build the environment.
    /dev/loop0: [64775]:26084892 (/home/mvallim/debian-image-from-scratch/debian-image.raw)
    ```
 
-5. Check partitions on loop device
+4. Check partitions on loop device
 
-   ```console
-   ~/debian-image-from-scratch$ sudo fdisk -l /dev/loop0
+   ```bash
+   ~$ sudo fdisk -l /dev/loop0
    ```
 
    Output
@@ -94,8 +88,8 @@ Install applications we need to build the environment.
 
    1. Format device loop0p1 (/boot)
 
-      ```console
-      ~/debian-image-from-scratch$ sudo mkfs.ext4 /dev/loop0p1
+      ```bash
+      ~$ sudo mkfs.ext4 /dev/loop0p1
       ```
 
       Output
@@ -116,8 +110,8 @@ Install applications we need to build the environment.
 
    2. Format device loop0p2 (/)
 
-      ```console
-      ~/debian-image-from-scratch$ sudo mkfs.ext4 /dev/loop0p2
+      ```bash
+      ~$ sudo mkfs.ext4 /dev/loop0p2
       ```
 
       Output
@@ -139,44 +133,38 @@ Install applications we need to build the environment.
 
 ## Mount loop devices
 
-1. Access build directory
+1. Create `chroot` directory
 
-   ```console
-   ~$ cd $HOME/debian-image-from-scratch
+   ```bash
+   ~$ mkdir ~/debian-image-from-scratch/chroot
    ```
 
-2. Create `chroot` directory
+2. Mount `root` partition
 
-   ```console
-   ~/debian-image-from-scratch$ mkdir chroot
+   ```bash
+   ~$ sudo mount /dev/loop0p2 ~/debian-image-from-scratch/chroot/
    ```
 
-3. Mount `root` partition
-
-   ```console
-   ~/debian-image-from-scratch$ sudo mount /dev/loop0p2 chroot/
-   ```
-
-4. Mount `boot` partition
+3. Mount `boot` partition
 
    First you need create directory...
 
-   ```console
-   ~/debian-image-from-scratch$ sudo mkdir chroot/boot
+   ```bash
+   ~$ sudo mkdir ~/debian-image-from-scratch/chroot/boot
    ```
 
    ... and mount `boot` partition
 
-   ```console
-   ~/debian-image-from-scratch$ sudo mount /dev/loop0p1 chroot/boot
+   ```bash
+   ~$ sudo mount /dev/loop0p1 ~/debian-image-from-scratch/chroot/boot
    ```
 
 ## Bootstrap and Configure Debian
 
 * Checkout bootstrap
 
-  ```console
-  ~/debian-image-from-scratch$ sudo debootstrap \
+  ```bash
+  ~$ sudo debootstrap \
      --arch=amd64 \
      --variant=minbase \
      --components "main" \
@@ -190,10 +178,10 @@ Install applications we need to build the environment.
 
 * Configure external mount points
 
-  ```console
-  ~/debian-image-from-scratch$ sudo mount --bind /dev $HOME/debian-image-from-scratch/chroot/dev
+  ```bash
+  ~$ sudo mount --bind /dev $HOME/debian-image-from-scratch/chroot/dev
   
-  ~/debian-image-from-scratch$ sudo mount --bind /run $HOME/debian-image-from-scratch/chroot/run
+  ~$ sudo mount --bind /run $HOME/debian-image-from-scratch/chroot/run
   ```
 
   As we will be updating and installing packages (grub among them), these mount points are necessary inside the chroot environment, so we are able to finish the installation without errors.
@@ -206,13 +194,13 @@ Install applications we need to build the environment.
 
 1. **Access chroot environment**
 
-   ```console
-   ~/debian-image-from-scratch$ sudo chroot $HOME/debian-image-from-scratch/chroot
+   ```bash
+   ~$ sudo chroot $HOME/debian-image-from-scratch/chroot
    ```
 
 2. **Configure mount points, home and locale**
 
-   ```console
+   ```bash
    mount none -t proc /proc
 
    mount none -t sysfs /sys
@@ -228,13 +216,13 @@ Install applications we need to build the environment.
 
 3. **Set a custom hostname**
 
-   ```console
+   ```bash
    echo "debian-image" > /etc/hostname
    ```
 
 4. **Configure apt sources.list**
 
-   ```console
+   ```bash
    cat <<EOF > /etc/apt/sources.list
    deb http://deb.debian.org/debian/ stretch main contrib non-free
    deb-src http://deb.debian.org/debian/ stretch main contrib non-free
@@ -249,7 +237,7 @@ Install applications we need to build the environment.
 
 5. **Configure `fstab`**
 
-   ```console
+   ```bash
    cat <<EOF > /etc/fstab
    # /etc/fstab: static file system information.
    #
@@ -265,13 +253,13 @@ Install applications we need to build the environment.
 
 6. **Update indexes packages**
 
-   ```console
+   ```bash
    apt-get update
    ```
 
 7. **Install systemd**
 
-   ```console
+   ```bash
    apt-get install -y systemd-sysv
    ```
 
@@ -279,7 +267,7 @@ Install applications we need to build the environment.
 
 8. **Configure machine-id and divert**
 
-   ```console
+   ```bash
    dbus-uuidgen > /etc/machine-id
 
    ln -fs /etc/machine-id /var/lib/dbus/machine-id
@@ -287,7 +275,7 @@ Install applications we need to build the environment.
 
    > The `/etc/machine-id` file contains the unique machine ID of the local system that is set during installation or boot. The machine ID is a single newline-terminated, hexadecimal, 32-character, lowercase ID. When decoded from hexadecimal, this corresponds to a 16-byte/128-bit value. This ID may not be all zeros.
 
-   ```console
+   ```bash
    dpkg-divert --local --rename --add /sbin/initctl
 
    ln -s /bin/true /sbin/initctl
@@ -297,7 +285,7 @@ Install applications we need to build the environment.
 
 9. **Install packages needed for system**
 
-   ```console
+   ```bash
    apt-get install -y \
        os-prober \
        ifupdown \
@@ -332,7 +320,7 @@ Install applications we need to build the environment.
 
 10. **Configure `interfaces`**
 
-    ```console
+    ```bash
     cat <<EOF > /etc/network/interfaces
     # This file describes the network interfaces available on your system
     # and how to activate them. For more information, see interfaces(5).
@@ -349,7 +337,7 @@ Install applications we need to build the environment.
 
     1. Generate locales
 
-       ```console
+       ```bash
        dpkg-reconfigure locales
        ```
 
@@ -365,7 +353,7 @@ Install applications we need to build the environment.
 
     2. Reconfigure resolvconf
 
-       ```console
+       ```bash
        dpkg-reconfigure resolvconf
        ```
 
@@ -384,7 +372,7 @@ Install applications we need to build the environment.
 
     3. Configure network-manager
 
-       ```console
+       ```bash
        cat <<EOF > /etc/NetworkManager/NetworkManager.conf
        [main]
        rc-manager=resolvconf
@@ -398,7 +386,7 @@ Install applications we need to build the environment.
 
     4. Reconfigure network-manager
 
-       ```console
+       ```bash
        dpkg-reconfigure network-manager
        ```
 
@@ -406,7 +394,7 @@ Install applications we need to build the environment.
 
     1. Install
 
-       ```console
+       ```bash
        grub-install /dev/loop0
        ```
 
@@ -419,7 +407,7 @@ Install applications we need to build the environment.
 
     2. Update grub configuration
 
-       ```console
+       ```bash
        update-grub
        ```
 
@@ -439,19 +427,19 @@ If you plan to use this image in **VirtualBox**, install **VirtualBox Guest Addi
 
    1. Download VirtualBox Guest Additions
 
-       ```console
+       ```bash
        curl --progress-bar https://download.virtualbox.org/virtualbox/6.0.6/VBoxGuestAdditions_6.0.6.iso -o VBoxGuestAdditions_6.0.6.iso
        ```
 
    2. Mount ISO
 
-       ```console
+       ```bash
        mount -o loop VBoxGuestAdditions_6.0.6.iso /mnt
        ```
 
    3. Install
 
-       ```console
+       ```bash
        /mnt/VBoxLinuxAdditions.run
        ```
 
@@ -482,7 +470,7 @@ If you plan to use this image in **VirtualBox**, install **VirtualBox Guest Addi
 
    4. Generate modules inside `chroot` environment
 
-       ```console
+       ```bash
        ls -al /lib/modules
        ```
 
@@ -497,7 +485,7 @@ If you plan to use this image in **VirtualBox**, install **VirtualBox Guest Addi
 
        Use the same name listed before `4.9.0-11-amd64`
 
-       ```console
+       ```bash
        rcvboxadd quicksetup 4.9.0-11-amd64
        ```
 
@@ -510,7 +498,7 @@ If you plan to use this image in **VirtualBox**, install **VirtualBox Guest Addi
 
    5. Umount and remove ISO
 
-       ```console
+       ```bash
        umount /mnt
 
        rm -rf VBoxGuestAdditions_6.0.6.iso
@@ -518,7 +506,7 @@ If you plan to use this image in **VirtualBox**, install **VirtualBox Guest Addi
 
    6. Fix `vboxadd-service`
 
-       ```console
+       ```bash
        sed -i -e 's/ systemd-timesyncd.service//g' /lib/systemd/system/vboxadd-service.service
        ```
 
@@ -526,13 +514,13 @@ If you plan to use this image in **VirtualBox**, install **VirtualBox Guest Addi
 
    1. If you installed software, be sure to run
 
-       ```console
+       ```bash
        truncate -s 0 /etc/machine-id
        ```
 
    2. Remove the diversion
 
-       ```console
+       ```bash
        rm /sbin/initctl
 
        dpkg-divert --rename --remove /sbin/initctl
@@ -540,7 +528,7 @@ If you plan to use this image in **VirtualBox**, install **VirtualBox Guest Addi
 
    3. Clean up
 
-       ```console
+       ```bash
        apt-get clean
 
        rm -rf /tmp/* ~/.bash_history
@@ -558,24 +546,24 @@ If you plan to use this image in **VirtualBox**, install **VirtualBox Guest Addi
 
 ## Unbind mount points
 
-```console
-~/debian-image-from-scratch$ sudo umount $HOME/debian-image-from-scratch/chroot/dev
+```bash
+~/$ sudo umount $HOME/debian-image-from-scratch/chroot/dev
 
-~/debian-image-from-scratch$ sudo umount $HOME/debian-image-from-scratch/chroot/run
+~/$ sudo umount $HOME/debian-image-from-scratch/chroot/run
 ```
 
 ## Umount loop partitions
 
-```console
-~/debian-image-from-scratch$ sudo umount $HOME/debian-image-from-scratch/chroot/boot
+```bash
+~$ sudo umount $HOME/debian-image-from-scratch/chroot/boot
 
-~/debian-image-from-scratch$ sudo umount $HOME/debian-image-from-scratch/chroot
+~$ sudo umount $HOME/debian-image-from-scratch/chroot
 ```
 
 ## Check disks
 
-```console
-~/debian-image-from-scratch$ sudo fsck.ext4 /dev/loop0p1
+```bash
+~$ sudo fsck.ext4 /dev/loop0p1
 ```
 
 ```console
@@ -583,8 +571,8 @@ e2fsck 1.44.5 (15-Dec-2018)
 /dev/loop0p1: clean, 337/32768 files, 14874/131072 blocks
 ```
 
-```console
-~/debian-image-from-scratch$ sudo fsck.ext4 /dev/loop0p2
+```bash
+~$ sudo fsck.ext4 /dev/loop0p2
 ```
 
 ```console
@@ -594,15 +582,15 @@ e2fsck 1.44.5 (15-Dec-2018)
 
 ## Leave loop device
 
-```shell
-~/debian-image-from-scratch$ sudo losetup -D
+```bash
+~$ sudo losetup -D
 ```
 
 ## Create base image VirtualBox
 
 1. Create VM
 
-   ```console
+   ```bash
    ~/$ vboxmanage createvm --name debian-base-image --ostype Debian_64 --register
    ```
 
@@ -614,7 +602,7 @@ e2fsck 1.44.5 (15-Dec-2018)
 
 2. Configure VM "hardware"
 
-   ```console
+   ```bash
    ~/$ vboxmanage modifyvm debian-base-image --memory 512 --ioapic on
    ~/$ vboxmanage modifyvm debian-base-image --audio none
    ~/$ vboxmanage modifyvm debian-base-image --usbcardreader off
@@ -629,7 +617,7 @@ e2fsck 1.44.5 (15-Dec-2018)
 
 3. Prepare raw disk image to use in VirtualBox VMs
 
-   ```console
+   ```bash
    ~/debian-image-from-scratch$ vboxmanage convertfromraw debian-image.raw "$HOME/VirtualBox VMs/debian-base-image/debian-base-image.vdi"
    ```
 
@@ -640,20 +628,12 @@ e2fsck 1.44.5 (15-Dec-2018)
 
 4. Attach disk on `debian-base-image` VM
 
-   ```console
+   ```bash
    ~/$ vboxmanage storageattach debian-base-image --storagectl "SATA" --port 0 --device 0 --type hdd --medium "$HOME/VirtualBox VMs/debian-base-image/debian-base-image.vdi"
    ```
 
 5. Clean up
 
-   ```console
-   ~/$ sudo rm -rf $HOME/debian-image-from-scratch
+   ```bash
+   ~/$ rm -rf $HOME/debian-image-from-scratch
    ```
-
-## Conclusion
-
-At the end the image produced is in `cloud-ubuntu-image.raw`.
-
-Now you can use this raw image and import it into your favorite cloud.
-
-Each cloud has a process for importing which we will not deal with here.
