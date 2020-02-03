@@ -493,8 +493,8 @@ Before carrying out the configuration, it is worth making some observations.
 
   `STONITH` has the function of protecting your data against corruption and the application becomes unavailable, due to simultaneous unintentional access by several nodes.
   For example, just because a node does not respond, does not mean that it has stopped accessing its data. The only way to be 100% sure that your data is secure is to ensure that the node is actually offline before allowing the data to be accessed by another node.  
-  `STONITH` also plays a role in the event that a service cannot be stopped. In this case, the cluster uses `STONITH` to force the node offline, making it safe to start the service elsewhere.
-  `STONITH`, an acronym for "**S**hoot **T**he **O**ther **N**ode **I**n **T**he **H**ead", and is the most popular form known.  
+  `STONITH` also plays a role in the event that a service cannot be stopped. In this case, the cluster uses `STONITH` to force the node offline, making it safe to start the service elsewhere.
+  `STONITH`, an acronym for "**S**hoot **T**he **O**ther **N**ode **I**n **T**he **H**ead", and is the most popular form known.  
   To ensure the security of your data, `STONITH` is activated by default.
 
   In our case, as we do not have access to data such as a database or files for example, it does not make sense to keep this `STONITH` active because, for this reason, we set parameters with `stonith-enabled=no`
