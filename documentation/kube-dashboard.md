@@ -33,8 +33,8 @@ Value: 192.168.4.57
 
 Use the returned value to access.
 
-```shell
-ssh debian@192.168.4.57
+```console
+~$ ssh debian@192.168.4.57
 ```
 
 The responses should look similar to this:
@@ -54,16 +54,16 @@ permitted by applicable law.
 
    Now we need configure kubectl in busybox.
 
-   ```shell
-   mkdir ~/.kube
+   ```console
+   debian@busybox:~$ mkdir ~/.kube
 
-   ssh kube-mast01 'sudo cat /etc/kubernetes/admin.conf' > ~/.kube/config
+   debian@busybox:~$ ssh kube-mast01 'sudo cat /etc/kubernetes/admin.conf' > ~/.kube/config
    ```
 
 2. Create the dashboard from the `kubernetes-dashboard.yaml` file:
 
-   ```shell
-   kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta8/aio/deploy/recommended.yaml
+   ```console
+   debian@busybox:~$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0-beta8/aio/deploy/recommended.yaml
    ```
 
    The response should look similar to this:
@@ -87,8 +87,8 @@ permitted by applicable law.
 
 3. Checking the state of pods after dashboard deployed
 
-   ```shell
-   kubectl get pods -o wide -n kubernetes-dashboard
+   ```console
+   debian@busybox:~$ kubectl get pods -o wide -n kubernetes-dashboard
    ```
 
    The response should look similar to this:
@@ -109,10 +109,10 @@ We need service account to access K8S Dashboard
 
 1. Create service account
 
-   ```shell
-   kubectl create serviceaccount cluster-admin-dashboard -n kubernetes-dashboard
+   ```console
+   debian@busybox:~$ kubectl create serviceaccount cluster-admin-dashboard -n kubernetes-dashboard
 
-   kubectl create clusterrolebinding cluster-admin-dashboard \
+   debian@busybox:~$ kubectl create clusterrolebinding cluster-admin-dashboard \
        --clusterrole=cluster-admin \
        --serviceaccount=kubernetes-dashboard:cluster-admin-dashboard \
        -n kubernetes-dashboard
@@ -136,8 +136,8 @@ We need get token of service account `cluster-admin-dashboard`
 
 1. Query secrets
 
-   ```shell
-   kubectl get secret -n kubernetes-dashboard
+   ```console
+   debian@busybox:~$ kubectl get secret -n kubernetes-dashboard
    ```
 
    The response should look similar to this:
@@ -156,8 +156,8 @@ We need get token of service account `cluster-admin-dashboard`
 
 2. Get token we describe `cluster-admin-dashboard-token-zth9n`
 
-   ```shell
-   kubectl describe secret cluster-admin-dashboard-token-zth9n -n kubernetes-dashboard
+   ```console
+   debian@busybox:~$ kubectl describe secret cluster-admin-dashboard-token-zth9n -n kubernetes-dashboard
    ```
 
    The response should look similar to this:
@@ -220,8 +220,8 @@ We need get token of service account `cluster-admin-dashboard`
      verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
    ```
 
-   ```shell
-   cat <<EOF | kubectl apply -f -
+   ```console
+   debian@busybox:~$ cat <<EOF | kubectl apply -f -
    kind: ClusterRole
    apiVersion: rbac.authorization.k8s.io/v1
    metadata:
@@ -258,8 +258,8 @@ We need get token of service account `cluster-admin-dashboard`
      name: system:anonymous
    ```
 
-   ```shell
-   cat <<EOF | kubectl apply -f -
+   ```console
+   debian@busybox:~$ cat <<EOF | kubectl apply -f -
    apiVersion: rbac.authorization.k8s.io/v1
    kind: ClusterRoleBinding
    metadata:
