@@ -514,11 +514,17 @@ Before carrying out the configuration, it is worth making some observations.
 
 * `colocation loc inf: virtual-ip-resource haproxy-resource`
 
-  Lorem ip sum
+  As restrições de `colocation` informam ao cluster que o local de um recurso depende do local de outro.  
+  A colocação tem um efeito colateral importante: afeta a ordem em que os recursos são atribuídos a um nó.  
+  Pense bem: você não pode colocar `A` em relação a `B`, a menos que saiba onde `B` está.
+  Portanto, ao criar restrições de `colocation`, é importante considerar se você deve colocar `A` com `B` ou `B` com `A`.  
+  Outro aspecto a ter em mente é que, assumindo que `A` esteja colocado em conjunto com `B`, o cluster levará em consideração as preferências de `A` ao decidir qual nó escolher para `B`.
 
+  Neste caso onde o `virtual-ip-resource` estiver o `haproxy-resource` estará.
+  
 * `order ord inf: virtual-ip-resource haproxy-resource`
 
-  Lorem ip sum
+  The `order` constraints tell the cluster the order in which resources should start, In this case we are informing that the order must always be followed, first the `virtual-ip-resource` then `haproxy-resource`. Ordering constraints affect only the ordering of resources they do not require that the resources be placed on the same node.
 
 ### View HAProxy stats page
 
