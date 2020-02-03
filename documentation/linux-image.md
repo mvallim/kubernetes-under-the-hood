@@ -74,7 +74,7 @@ In the following steps we will not adopt LVM and multiple volume partitioning, a
 
 ```shell
 ~$ cd ~/VirtualBox\ VMs/
-~$ wget https://www.dropbox.com/s/xcsk4matlzmjo2m/debian-base-image.tar.bz2?dl=0 -O - | tar xvjf -
+~$ curl -L --progress-bar "https://www.dropbox.com/s/lwgiifpludp4czh/debian-base-image.tar.bz2?dl=0" -o - | tar xjf -
 ~$ vboxmanage registervm ~/VirtualBox\ VMs/debian-base-image/debian-base-image.vbox
 ```
 
@@ -82,6 +82,6 @@ In the following steps we will not adopt LVM and multiple volume partitioning, a
 
 ```shell
 ~$ cd ~/VirtualBox\ VMs/
-~$ wget https://www.dropbox.com/s/hicmmy39gc3gog2/ubuntu-base-image.tar.bz2?dl=0 -O - | tar xvjf -
+~$ curl -L --progress-bar "https://www.dropbox.com/s/hicmmy39gc3gog2/ubuntu-base-image.tar.bz2?dl=0" -o - | tar xjf -
 ~$ vboxmanage registervm ~/VirtualBox\ VMs/ubuntu-base-image/ubuntu-base-image.vbox
 ```
