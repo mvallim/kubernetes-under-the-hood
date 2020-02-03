@@ -503,8 +503,8 @@ Now we need to join the other nodes to our K8S cluster. For this we need the cer
 
 Open your browser with address [http://192.168.4.20:32700](http://192.168.4.20:32700)
 
-User: admin
-Password: admin
+User: `admin`  
+Password: `admin`
 
 It will show:
 <p align="center">
