@@ -433,7 +433,7 @@ Before carrying out the configuration, it is worth making some observations.
 
    **Note:** each line below represents a command that should be entered separately in the command line.
 
-   ```bash
+   ```console
    debian@hapx-node01:~$ cat <<EOF | sudo crm configure
    property stonith-enabled=no
    property no-quorum-policy=ignore
