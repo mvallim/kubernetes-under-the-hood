@@ -27,16 +27,16 @@ The target audience for this tutorial is someone planning to install a Kubernete
    - [flannel](documentation/kube-flannel.md)
    - [Linux image](documentation/create-linux-image.md)
 4. Putting all together
-   - [How to setup the Debian Linux image from scratch](documentation/linux-image.md)
-   - [How to setup the Gateway and Busybox components](documentation/starting-setup.md)
-   - [How to setup the HAProxy Cluster with high availability](documentation/haproxy-cluster.md)
-   - [How to setup the Masters using `kubeadm` bootstrap](documentation/kube-masters.md)
-   - [How to setup the Workers using `kubeadm` bootstrap](documentation/kube-workers.md)
-   - [How to setup the Dashboard](documentation/kube-dashboard.md)
-   - [Demo Application](documentation/kube-demo-application.md)
-   1. LoadBalancer
+   1. [How to setup the Debian Linux image from scratch](documentation/linux-image.md)
+   2. [How to setup the Gateway and Busybox components](documentation/starting-setup.md)
+   3. [How to setup the HAProxy Cluster with high availability](documentation/haproxy-cluster.md)
+   4. [How to setup the Masters using `kubeadm` bootstrap](documentation/kube-masters.md)
+   5. [How to setup the Workers using `kubeadm` bootstrap](documentation/kube-workers.md)
+   6. [How to setup the Dashboard](documentation/kube-dashboard.md)
+   7. [Demo Application](documentation/kube-demo-application.md)
+   8. LoadBalancer
       - [How to setup the MetalLB](documentation/kube-metallb.md)
-   2. Volumes
+   9. Volumes
       - [Gluster](documentation/gluster.md)
       - [Heketi](documentation/kube-heketi.md)
       - [Demo StorageClass](documentation/kube-demo-storageclass.md) (under construction)
