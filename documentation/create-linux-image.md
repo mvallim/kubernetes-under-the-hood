@@ -2,6 +2,10 @@
 
 This procedure shows how to create a cloud image Ubuntu from scratch to run on Cloud environments (EC2, GCE, Azure, OpenStack, QEMU and VirtualBox).
 
+<p align="center">
+   <img src="images/linux-image.png">
+</p>
+
 ## Running TL;DR
 
 ### Prerequisites (GNU/Linux Debian/Ubuntu)
