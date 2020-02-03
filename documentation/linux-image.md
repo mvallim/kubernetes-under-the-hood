@@ -4,7 +4,7 @@ This procedure shows how to create a cloud image Ubuntu from scratch to run on C
 
 ## Prerequisites (GNU/Linux Debian/Ubuntu)
 
-Install applications we need to build the environment.
+* Install applications we need to build the environment.
 
 ```bash
 ~$ sudo apt-get install debootstrap
@@ -588,7 +588,15 @@ e2fsck 1.44.5 (15-Dec-2018)
 
 ## Create base image VirtualBox
 
-1. Create VM
+The premise is that you already have **Virtualbox** properly installed on your local machine.
+
+1. Add your user on `vboxusers` group
+
+   ```console
+   ~$ sudo usermod -a -G vboxusers $USER
+   ```
+
+2. Create VM
 
    ```bash
    ~/$ vboxmanage createvm --name debian-base-image --ostype Debian_64 --register
@@ -600,7 +608,7 @@ e2fsck 1.44.5 (15-Dec-2018)
    Settings file: '/home/mvallim/VirtualBox VMs/debian-base-image/debian-base-image.vbox'
    ```
 
-2. Configure VM "hardware"
+3. Configure VM "hardware"
 
    ```bash
    ~/$ vboxmanage modifyvm debian-base-image --memory 512 --ioapic on
@@ -615,7 +623,7 @@ e2fsck 1.44.5 (15-Dec-2018)
    ~/$ vboxmanage storageattach debian-base-image --storagectl "IDE" --port 0 --device 0 --type dvddrive --medium emptydrive
    ```
 
-3. Prepare raw disk image to use in VirtualBox VMs
+4. Prepare raw disk image to use in VirtualBox VMs
 
    ```bash
    ~/$ vboxmanage convertfromraw ~/debian-image-from-scratch/debian-image.raw "$HOME/VirtualBox VMs/debian-base-image/debian-base-image.vdi"
@@ -626,13 +634,13 @@ e2fsck 1.44.5 (15-Dec-2018)
    Creating dynamic image with size 32212254720 bytes (30720MB)...
    ```
 
-4. Attach disk on `debian-base-image` VM
+5. Attach disk on `debian-base-image` VM
 
    ```bash
    ~/$ vboxmanage storageattach debian-base-image --storagectl "SATA" --port 0 --device 0 --type hdd --medium "$HOME/VirtualBox VMs/debian-base-image/debian-base-image.vdi"
    ```
 
-5. Clean up
+6. Clean up
 
    ```bash
    ~/$ rm -rf $HOME/debian-image-from-scratch
