@@ -652,11 +652,11 @@ The premise is that you already have **Virtualbox** properly installed on your l
 
 The premise is that you already have **Virtualbox** properly installed on your local machine.
 
-* Add your user on `vboxusers` group
+Add your user on `vboxusers` group
 
-   ```console
-   ~$ sudo usermod -a -G vboxusers $USER
-   ```
+```console
+~$ sudo usermod -a -G vboxusers $USER
+```
 
 ### Debian
 
