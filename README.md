@@ -25,9 +25,9 @@ The target audience for this tutorial is someone planning to install a Kubernete
    - [Masters and Workers](documentation/kube-masters-and-workers.md)
    - [etcd](documentation/kube-etcd.md)
    - [flannel](documentation/kube-flannel.md)
-   - [Linux image](documentation/create-linux-image.md)
+   - [Linux image](documentation/linux-image.md)
 4. Putting all together
-   1. [How to setup the Debian Linux image from scratch](documentation/linux-image.md)
+   1. [How to setup the Debian Linux image from scratch](documentation/create-linux-image.md)
    2. [How to setup the Gateway and Busybox components](documentation/starting-setup.md)
    3. [How to setup the HAProxy Cluster with high availability](documentation/haproxy-cluster.md)
    4. [How to setup the Masters using `kubeadm` bootstrap](documentation/kube-masters.md)
