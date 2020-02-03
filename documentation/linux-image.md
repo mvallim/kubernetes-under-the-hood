@@ -366,10 +366,6 @@ This procedure shows how to create a cloud image Ubuntu from scratch to run on C
             <img src="images/resolvconf-confirm-02.png">
           </p>
 
-          <p align="center">
-            <img src="images/resolvconf-confirm-03.png">
-          </p>
-
     3. Configure network-manager
 
        ```bash
