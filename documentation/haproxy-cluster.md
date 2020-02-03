@@ -433,18 +433,18 @@ Before carrying out the configuration, it is worth making some observations.
 
    **Note:** each line below represents a command that should be entered separately in the command line.
 
-   ```console
-   debian@hapx-node01:~$ sudo crm configure
-
-   crm(live)configure# property stonith-enabled=no
-   crm(live)configure# property no-quorum-policy=ignore
-   crm(live)configure# property default-resource-stickiness=100
-   crm(live)configure# primitive virtual-ip-resource ocf:heartbeat:IPaddr2 params ip="192.168.4.20" broadcast=192.168.4.31 nic=enp0s3.41 cidr_netmask=27 meta migration-threshold=2 op monitor interval=20 timeout=60 on-fail=restart
-   crm(live)configure# primitive haproxy-resource ocf:heartbeat:haproxy op monitor interval=20 timeout=60 on-fail=restart
-   crm(live)configure# colocation loc inf: virtual-ip-resource haproxy-resource
-   crm(live)configure# order ord inf: virtual-ip-resource haproxy-resource
-   crm(live)configure# commit
-   crm(live)configure# bye
+   ```bash
+   debian@hapx-node01:~$ cat <<EOF | sudo crm configure
+   property stonith-enabled=no
+   property no-quorum-policy=ignore
+   property default-resource-stickiness=100
+   primitive virtual-ip-resource ocf:heartbeat:IPaddr2 params ip="192.168.4.20" broadcast=192.168.4.31 nic=enp0s3.41 cidr_netmask=27 meta migration-threshold=2 op monitor interval=20 timeout=60 on-fail=restart
+   primitive haproxy-resource ocf:heartbeat:haproxy op monitor interval=20 timeout=60 on-fail=restart
+   colocation loc inf: virtual-ip-resource haproxy-resource
+   order ord inf: virtual-ip-resource haproxy-resource
+   commit
+   bye
+   EOF
    ```
 
    Let's check again IP configuration, using `ip addr`
