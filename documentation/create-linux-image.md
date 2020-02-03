@@ -86,7 +86,7 @@ This procedure shows how to create a cloud image Ubuntu from scratch to run on C
    /dev/loop0p2      1050624 62914559 61863936 29.5G 83 Linux
    ```
 
-## Format partitions loop device
+### Format partitions loop device
 
    1. Format device loop0p1 (/boot)
 
@@ -133,7 +133,7 @@ This procedure shows how to create a cloud image Ubuntu from scratch to run on C
       Writing superblocks and filesystem accounting information: done
       ```
 
-## Mount loop devices
+### Mount loop devices
 
 1. Create `chroot` directory
 
@@ -161,7 +161,7 @@ This procedure shows how to create a cloud image Ubuntu from scratch to run on C
    ~$ sudo mount /dev/loop0p1 ~/debian-image-from-scratch/chroot/boot
    ```
 
-## Bootstrap and Configure Debian
+### Bootstrap and Configure Debian
 
 * Checkout bootstrap
 
@@ -188,7 +188,7 @@ This procedure shows how to create a cloud image Ubuntu from scratch to run on C
 
   As we will be updating and installing packages (grub among them), these mount points are necessary inside the chroot environment, so we are able to finish the installation without errors.
 
-## Define chroot environment
+### Define chroot environment
 
 *A chroot on Unix operating systems is an operation that changes the apparent root directory for the current running process and its children. A program that is run in such a modified environment cannot name (and therefore normally cannot access) files outside the designated directory tree. The term "chroot" may refer to the chroot system call or the chroot wrapper program. The modified environment is called a chroot jail.*
 
@@ -419,7 +419,7 @@ This procedure shows how to create a cloud image Ubuntu from scratch to run on C
        done
        ```
 
-## VirtualBox
+### VirtualBox
 
 If you plan to use this image in **VirtualBox**, install **VirtualBox Guest Additions**
 
@@ -508,7 +508,7 @@ If you plan to use this image in **VirtualBox**, install **VirtualBox Guest Addi
        sed -i -e 's/ systemd-timesyncd.service//g' /lib/systemd/system/vboxadd-service.service
        ```
 
-## Cleanup the chroot environment
+### Cleanup the chroot environment
 
    1. If you installed software, be sure to run
 
@@ -542,7 +542,7 @@ If you plan to use this image in **VirtualBox**, install **VirtualBox Guest Addi
        exit
        ```
 
-## Unbind mount points
+### Unbind mount points
 
 ```bash
 ~/$ sudo umount $HOME/debian-image-from-scratch/chroot/dev
@@ -550,7 +550,7 @@ If you plan to use this image in **VirtualBox**, install **VirtualBox Guest Addi
 ~/$ sudo umount $HOME/debian-image-from-scratch/chroot/run
 ```
 
-## Umount loop partitions
+### Umount loop partitions
 
 ```bash
 ~$ sudo umount $HOME/debian-image-from-scratch/chroot/boot
@@ -558,7 +558,7 @@ If you plan to use this image in **VirtualBox**, install **VirtualBox Guest Addi
 ~$ sudo umount $HOME/debian-image-from-scratch/chroot
 ```
 
-## Check disks
+### Check disks
 
 ```bash
 ~$ sudo fsck.ext4 /dev/loop0p1
@@ -578,13 +578,13 @@ e2fsck 1.44.5 (15-Dec-2018)
 /dev/loop0p2: clean, 47759/1933312 files, 422742/7732992 blocks
 ```
 
-## Leave loop device
+### Leave loop device
 
 ```bash
 ~$ sudo losetup -D
 ```
 
-## Create base image VirtualBox
+### Create base image VirtualBox
 
 The premise is that you already have **Virtualbox** properly installed on your local machine.
 
