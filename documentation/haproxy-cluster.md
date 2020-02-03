@@ -497,7 +497,7 @@ Before carrying out the configuration, it is worth making some observations.
   `STONITH`, an acronym for "**S**hoot **T**he **O**ther **N**ode **I**n **T**he **H**ead", and is the most popular form known.  
   To ensure the security of your data, `STONITH` is activated by default.
 
-  In our case, as we do not have access to data such as a database or files for example, it does not make sense to keep this `STONITH` active because, for this reason, we set parameters with `stonith-enabled=no`
+  In our case, as we do not have access to data such as a database or files for example, it does not make sense to keep this `STONITH` active, for this reason, we set parameters with `stonith-enabled=no`
 
 * `property no-quorum-policy=ignore`
 
