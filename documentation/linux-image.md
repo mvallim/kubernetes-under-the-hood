@@ -1,6 +1,6 @@
 # How to setup the Debian Linux image from scratch
 
-This procedure shows how to create a cloud image Ubuntu from scratch to run on Cloud environments (EC2, GCE, Azure, QEMU and VirtualBox).
+This procedure shows how to create a cloud image Ubuntu from scratch to run on Cloud environments (EC2, GCE, Azure, OpenStack, QEMU and VirtualBox).
 
 ## Prerequisites (GNU/Linux Debian/Ubuntu)
 
