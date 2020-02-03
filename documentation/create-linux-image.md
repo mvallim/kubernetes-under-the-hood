@@ -2,7 +2,9 @@
 
 This procedure shows how to create a cloud image Ubuntu from scratch to run on Cloud environments (EC2, GCE, Azure, OpenStack, QEMU and VirtualBox).
 
-## Prerequisites (GNU/Linux Debian/Ubuntu)
+## Running TL;DR
+
+### Prerequisites (GNU/Linux Debian/Ubuntu)
 
 * Install applications we need to build the environment.
 
@@ -14,7 +16,7 @@ This procedure shows how to create a cloud image Ubuntu from scratch to run on C
 ~$ mkdir $HOME/debian-image-from-scratch
 ```
 
-## Create loop device
+### Create loop device
 
 1. Create empty virtual hard drive file (`30Gb`)
 
@@ -641,3 +643,29 @@ The premise is that you already have **Virtualbox** properly installed on your l
    ```bash
    ~/$ rm -rf $HOME/debian-image-from-scratch
    ```
+
+## Or, if you prefer to download the base image
+
+The premise is that you already have **Virtualbox** properly installed on your local machine.
+
+* Add your user on `vboxusers` group
+
+   ```console
+   ~$ sudo usermod -a -G vboxusers $USER
+   ```
+
+### Debian
+
+```shell
+~$ cd ~/VirtualBox\ VMs/
+~$ wget https://www.dropbox.com/s/xcsk4matlzmjo2m/debian-base-image.tar.bz2?dl=0 -O - | tar xvjf -
+~$ vboxmanage registervm ~/VirtualBox\ VMs/debian-base-image/debian-base-image.vbox
+```
+
+### Ubuntu
+
+```shell
+~$ cd ~/VirtualBox\ VMs/
+~$ wget https://www.dropbox.com/s/hicmmy39gc3gog2/ubuntu-base-image.tar.bz2?dl=0 -O - | tar xvjf -
+~$ vboxmanage registervm ~/VirtualBox\ VMs/ubuntu-base-image/ubuntu-base-image.vbox
+```
