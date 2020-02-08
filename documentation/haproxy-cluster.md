@@ -491,6 +491,13 @@ Before carrying out the configuration, it is worth making some observations.
 
 * `property stonith-enabled=no`
 
+  `STONITH` has the function of protecting your data against corruption and the application is unavailable, due to simultaneous unintentional access by several nodes.
+  For example, just because a node does not respond, does not mean that it has stopped accessing its data. The only way to be 100% sure that your data is secure is to ensure that the node is actually offline before allowing the data to be accessed by another node.  
+  `STONITH` also plays a role in the event that a service cannot be stopped. In this case, the cluster uses `STONITH` to force the node to go offline, making it safe to start the service elsewhere.  
+  `STONITH`, an acronym for" **S**hoot **T**he **O**ther **N**ode **I**n **T**he **H**ead ", and is the most popular form known.  
+  To ensure the security of your data, `STONITH` is activated by default.
+
+  In our case, as we do not have access to data such as databases or files, it does not make sense to keep this `STONITH` active, for this reason, we define parameters with `stonith-enabled=no`
 
 * `property no-quorum-policy=ignore`
 
@@ -514,11 +521,17 @@ Before carrying out the configuration, it is worth making some observations.
 
 * `colocation loc inf: virtual-ip-resource haproxy-resource`
 
-  Lorem ip sum
+  As restrições de `colocation` informam ao cluster que o local de um recurso depende do local de outro.  
+  A colocação tem um efeito colateral importante: afeta a ordem em que os recursos são atribuídos a um nó.  
+  Pense bem: você não pode colocar `A` em relação a `B`, a menos que saiba onde `B` está.
+  Portanto, ao criar restrições de `colocation`, é importante considerar se você deve colocar `A` com `B` ou `B` com `A`.  
+  Outro aspecto a ter em mente é que, assumindo que `A` esteja colocado em conjunto com `B`, o cluster levará em consideração as preferências de `A` ao decidir qual nó escolher para `B`.
 
+  Neste caso onde o `virtual-ip-resource` estiver o `haproxy-resource` estará.
+  
 * `order ord inf: virtual-ip-resource haproxy-resource`
 
-  Lorem ip sum
+  The `order` constraints tell the cluster the order in which resources should start, In this case we are informing that the order must always be followed, first the `virtual-ip-resource` then `haproxy-resource`. Ordering constraints affect only the ordering of resources they do not require that the resources be placed on the same node.
 
 ### View HAProxy stats page
 
