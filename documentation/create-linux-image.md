@@ -384,7 +384,7 @@ This document shows how to create an Ubuntu image from scratch to run on Cloud e
        dpkg-reconfigure resolvconf
        ```
 
-       11.2.1. *Confirm the changes*:
+       11.2.1. Confirm the changes:
           <p align="center">
             <img src="images/resolvconf-confirm-01.png">
           </p>
