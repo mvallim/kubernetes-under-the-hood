@@ -120,7 +120,7 @@ Notice we also make use of our `create-image.sh` helper script, passing some fil
 
 You need to add a route to your local machine to access the **Virtualbox** internal network.
 
-```bash
+```console
 sudo ip route add 192.168.4.0/27 via 192.168.4.30 dev vboxnet0
 
 sudo ip route add 192.168.4.32/27 via 192.168.4.62 dev vboxnet0
@@ -130,7 +130,7 @@ sudo ip route add 192.168.4.32/27 via 192.168.4.62 dev vboxnet0
 
 We need to get the **BusyBox IP** to access it via ssh:
 
-```bash
+```console
 vboxmanage guestproperty get busybox "/VirtualBox/GuestInfo/Net/0/V4/IP"
 ```
 
@@ -142,7 +142,7 @@ Value: 192.168.4.57
 
 Use the returned value to access to ssh into the VM:
 
-```bash
+```console
 ~$ ssh debian@192.168.4.57
 ```
 
@@ -162,7 +162,7 @@ permitted by applicable law.
 
 After having accessed the BusyBox and being inside a ssh session, just access the instances by name, in our case we want to access hapx-node01.
 
-```bash
+```console
 debian@busybox:~$ ssh hapx-node01
 ```
 
