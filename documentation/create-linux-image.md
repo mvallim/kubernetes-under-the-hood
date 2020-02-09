@@ -25,7 +25,13 @@ This document shows how to create an Ubuntu image from scratch to run on Cloud e
 1. Create an empty virtual hard drive file (`30Gb`):
 
    ```bash
-   dd if=/dev/zero of=~/debian-image-from-scratch/debian-image.raw bs=1 count=0 seek=32212254720 status=progress
+   dd \
+     if=/dev/zero \
+     of=~/debian-image-from-scratch/debian-image.raw \
+     bs=1 \
+     count=0 \
+     seek=32212254720 \
+     status=progress
    ```
 
    Where:
