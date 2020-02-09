@@ -1,16 +1,16 @@
 # Linux Image
 
-Remembering that the information mentioned here in this topic has relative importance in the plans you will adopt for your need, and you are't necessarily ruling this subject with an iron fist.
+**Disclaimer:** the information presented here is for reference only and nothing should be considered as written into stone. Keep this in mind while planning your setup and adjust the values accordingly.
 
 ## Partitioning
 
-The big decision to take when configuring Linux is how the hard drive space should be divided.
+The big decision to make when configuring Linux is how the hard drive space should be partitioned.
 
 The design proposed here allows for dynamic growth and fine-tuning when needed. Being caught off guard in a scenario where there is no more storage space available, with no immediate option other than deleting files is never a good experience. The long-term life and growth of the system, as well as budgetary concerns, must be taken into account.
 
 Isolating the root volume, especially for static data that does not grow much over time, is the central concern. Isolating the other directories in their own volumes will be the strategy adopted here so that their dynamic growth does not affect the root partition. Filling the root volume in a system is a very bad thing and should be avoided at all costs. By segregating partitions, we have a bunch of options to act, like increasing one partition and/or reducing another, for example, since the volume is not 100% occupied by the logical volumes (partitions).
 
-Partitions may be increased later but this is how our volumes will be initially divided for the system installation:
+Partitions may be increased later, but this is how our volumes will be initially divided for the system installation:
 
 | Partition   | Size   | Description                                                                                            |
 |:-----------:|:------:|:-------------------------------------------------------------------------------------------------------|
@@ -28,7 +28,7 @@ Partitions may be increased later but this is how our volumes will be initially 
 
 The installation of software packages that make up the base image is necessary to avoid repetition of work in the other VMs that will be created based on it.
 
-Since we are using VirtualBox as our virtualization system, an important software that should compose every image is  [VirtualBox Guest Additions](https://docs.oracle.com/cd/E36500_01/E36502/html/qs-guest-additions.html), as well as its dependencies.
+Since we are using VirtualBox as our virtualization system, an important software that should be part of every image is [VirtualBox Guest Additions](https://docs.oracle.com/cd/E36500_01/E36502/html/qs-guest-additions.html), as well as its dependencies.
 
 The softwares to be installed are the following:
 
@@ -62,11 +62,11 @@ The softwares to be installed are the following:
 
 > Reference: apt-cache show package-name
 
-## Create image
+## Create the Linux image
 
-Please follow the steps [here](create-linux-image.md)
+Please follow the steps described [here](create-linux-image.md). 
 
-In the following steps we will not adopt LVM and multiple volume partitioning, again remembering that the information mentioned here in this topic has relative importance in the plans that you will adopt for your need, and you are't necessarily ruling this subject with an iron fist.
+Again, keep in mind this is for reference only and nothing should be considered as written into stone. Keep this in mind while planning your setup and adjust the values accordingly.
 
 ### Or, if you prefer to download the base image
 

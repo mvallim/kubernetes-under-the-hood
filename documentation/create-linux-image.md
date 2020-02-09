@@ -1,37 +1,56 @@
 # How to setup the Debian Linux image from scratch
 
-This procedure shows how to create a cloud image Ubuntu from scratch to run on Cloud environments (EC2, GCE, Azure, OpenStack, QEMU and VirtualBox).
+This document shows how to create an Ubuntu image from scratch to run on Cloud environments (EC2, GCE, Azure, OpenStack, QEMU and VirtualBox).
 
 <p align="center">
    <img src="images/linux-image.png">
 </p>
 
-## Running TL;DR
 
-### Prerequisites (GNU/Linux Debian/Ubuntu)
+## Prerequisites (GNU/Linux Debian/Ubuntu)
 
-* Install applications we need to build the environment.
-
-```bash
-~$ sudo apt-get install debootstrap
-```
-
-```bash
-~$ mkdir $HOME/debian-image-from-scratch
-```
-
-### Create loop device
-
-1. Create empty virtual hard drive file (`30Gb`)
+* Install the applications needed to build the environment:
 
    ```bash
-   ~$ dd if=/dev/zero of=~/debian-image-from-scratch/debian-image.raw bs=1 count=0 seek=32212254720 status=progress
+   sudo apt-get install debootstrap
    ```
 
-2. Create partitions on file
+* Create a folder to store the image:
+   ```bash
+   mkdir $HOME/debian-image-from-scratch
+   ```
+
+## Create the [loop device](https://en.wikipedia.org/wiki/Loop_device)
+
+1. Create an empty virtual hard drive file (`30Gb`):
 
    ```bash
-   ~$ sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | sudo fdisk ~/debian-image-from-scratch/debian-image.raw
+   dd \
+     if=/dev/zero \
+     of=~/debian-image-from-scratch/debian-image.raw \
+     bs=1 \
+     count=0 \
+     seek=32212254720 \
+     status=progress
+   ```
+
+   Where:
+   - **if**: read from FILE instead of stdin
+   - **of**: write to FILE instead of stdout
+   - **bs**: read and write up to BYTES bytes at a time (default: 512); overrides ibs and obs
+   - **count**: copy only N input blocks
+   - **seek**: skip N obs-sized blocks at start of output
+   - **status**: The LEVEL of information to print to stderr;
+     - `none`: suppresses everything but error messages;
+     - `noxfer`: suppresses the final transfer statistics;
+     - `progress`: shows periodic transfer statistics;
+
+   **TODO:** Explain the reasoning behind each value chosen.
+
+2. Create partitions on the file:
+
+   ```bash
+   sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | sudo fdisk ~/debian-image-from-scratch/debian-image.raw
    o # clear the in memory partition table
    n # new partition
    p # primary partition
@@ -51,31 +70,33 @@ This procedure shows how to create a cloud image Ubuntu from scratch to run on C
    EOF
    ```
 
-3. Start loop device
+   **TODO:** explain this better
+
+3. Start the loop device:
 
    ```bash
-   ~$ sudo losetup -fP ~/debian-image-from-scratch/debian-image.raw
+   sudo losetup -fP ~/debian-image-from-scratch/debian-image.raw
    ```
 
-   Check loop device
+   3.1. Check the status of the loop device:
 
    ```bash
-   ~$ sudo losetup -a
+   sudo losetup -a
    ```
 
-   Output
+   Expected output:
 
    ```console
    /dev/loop0: [64775]:26084892 (/home/mvallim/debian-image-from-scratch/debian-image.raw)
    ```
 
-4. Check partitions on loop device
+4. Check the partitions on the loop device:
 
    ```bash
-   ~$ sudo fdisk -l /dev/loop0
+   sudo fdisk -l /dev/loop0
    ```
 
-   Output
+   Expected output:
 
    ```console
    Disk /dev/loop0: 30 GiB, 32212254720 bytes, 62914560 sectors
@@ -90,15 +111,15 @@ This procedure shows how to create a cloud image Ubuntu from scratch to run on C
    /dev/loop0p2      1050624 62914559 61863936 29.5G 83 Linux
    ```
 
-### Format partitions loop device
+## Format the partitions in the loop device
 
-   1. Format device loop0p1 (/boot)
+   1. Format the `loop0p1` device (`/boot`):
 
       ```bash
-      ~$ sudo mkfs.ext4 /dev/loop0p1
+      sudo mkfs.ext4 /dev/loop0p1
       ```
 
-      Output
+      Expected output:
 
       ```console
       mke2fs 1.44.5 (15-Dec-2018)
@@ -114,13 +135,13 @@ This procedure shows how to create a cloud image Ubuntu from scratch to run on C
       Writing superblocks and filesystem accounting information: done
       ```
 
-   2. Format device loop0p2 (/)
+   2. Format the `loop0p2` device (`/`):
 
       ```bash
-      ~$ sudo mkfs.ext4 /dev/loop0p2
+      sudo mkfs.ext4 /dev/loop0p2
       ```
 
-      Output
+      Expected output:
 
       ```console
       mke2fs 1.44.5 (15-Dec-2018)
@@ -137,40 +158,42 @@ This procedure shows how to create a cloud image Ubuntu from scratch to run on C
       Writing superblocks and filesystem accounting information: done
       ```
 
-### Mount loop devices
+## Mount the loop devices
 
-1. Create `chroot` directory
-
-   ```bash
-   ~$ mkdir ~/debian-image-from-scratch/chroot
-   ```
-
-2. Mount `root` partition
+1. Create the `chroot` directory:
 
    ```bash
-   ~$ sudo mount /dev/loop0p2 ~/debian-image-from-scratch/chroot/
+   mkdir ~/debian-image-from-scratch/chroot
    ```
 
-3. Mount `boot` partition
-
-   First you need create directory...
+2. Mount the `root` partition:
 
    ```bash
-   ~$ sudo mkdir ~/debian-image-from-scratch/chroot/boot
+   sudo mount /dev/loop0p2 ~/debian-image-from-scratch/chroot/
    ```
 
-   ... and mount `boot` partition
+3. Create and mount the `boot` partition:
+
+   3.1. Create the directory:
 
    ```bash
-   ~$ sudo mount /dev/loop0p1 ~/debian-image-from-scratch/chroot/boot
+   sudo mkdir ~/debian-image-from-scratch/chroot/boot
    ```
 
-### Bootstrap and Configure Debian
+   3.2. Mount the `boot` partition:
 
-* Checkout bootstrap
+   ```bash
+   sudo mount /dev/loop0p1 ~/debian-image-from-scratch/chroot/boot
+   ```
+
+## Bootstrap and configure Debian
+
+* Run `debootstrap`
+
+  > **debootstrap** is used to create a Debian base system from scratch, without requiring the availability of **dpkg** or **apt**. It does this by downloading .deb files from a mirror site, and carefully unpacking them into a directory which can eventually be **chrooted** into.
 
   ```bash
-  ~$ sudo debootstrap \
+  sudo debootstrap \
      --arch=amd64 \
      --variant=minbase \
      --components "main" \
@@ -180,31 +203,31 @@ This procedure shows how to create a cloud image Ubuntu from scratch to run on C
      http://deb.debian.org/debian/
   ```
 
-  > **debootstrap** is used to create a Debian base system from scratch, without requiring the availability of **dpkg** or **apt**. It does this by downloading .deb files from a mirror site, and carefully unpacking them into a directory which can eventually be **chrooted** into.
-
 * Configure external mount points
 
+  As we will be updating and installing packages (`grub` among them), these mount points are necessary inside the chroot environment, so we are able to complete the installation without errors.
+
   ```bash
-  ~$ sudo mount --bind /dev $HOME/debian-image-from-scratch/chroot/dev
+  sudo mount --bind /dev $HOME/debian-image-from-scratch/chroot/dev
   
-  ~$ sudo mount --bind /run $HOME/debian-image-from-scratch/chroot/run
+  sudo mount --bind /run $HOME/debian-image-from-scratch/chroot/run
   ```
 
-  As we will be updating and installing packages (grub among them), these mount points are necessary inside the chroot environment, so we are able to finish the installation without errors.
-
-### Define chroot environment
+## Define the chroot environment
 
 *A chroot on Unix operating systems is an operation that changes the apparent root directory for the current running process and its children. A program that is run in such a modified environment cannot name (and therefore normally cannot access) files outside the designated directory tree. The term "chroot" may refer to the chroot system call or the chroot wrapper program. The modified environment is called a chroot jail.*
 
 > Reference: https://en.wikipedia.org/wiki/Chroot
 
-1. **Access chroot environment**
+1. Access the chroot environment:
 
    ```bash
-   ~$ sudo chroot $HOME/debian-image-from-scratch/chroot
+   sudo chroot $HOME/debian-image-from-scratch/chroot
    ```
 
-2. **Configure mount points, home and locale**
+2. Configure the mount points, home and locale:
+
+   These mount points are necessary inside the chroot environment, so we are able to complete the installation without errors.
 
    ```bash
    mount none -t proc /proc
@@ -218,15 +241,13 @@ This procedure shows how to create a cloud image Ubuntu from scratch to run on C
    export LC_ALL=C
    ```
 
-   These mount points are necessary inside the chroot environment, so we are able to finish the installation without errors.
-
-3. **Set a custom hostname**
+3. Set a custom hostname:
 
    ```bash
    echo "debian-image" > /etc/hostname
    ```
 
-4. **Configure apt sources.list**
+4. Configure `apt sources.list`:
 
    ```bash
    cat <<EOF > /etc/apt/sources.list
@@ -241,7 +262,7 @@ This procedure shows how to create a cloud image Ubuntu from scratch to run on C
    EOF
    ```
 
-5. **Configure `fstab`**
+5. Configure `fstab`:
 
    ```bash
    cat <<EOF > /etc/fstab
@@ -257,21 +278,23 @@ This procedure shows how to create a cloud image Ubuntu from scratch to run on C
    EOF
    ```
 
-6. **Update indexes packages**
+6. Update the `apt` packages indexes:
 
    ```bash
    apt-get update
    ```
 
-7. **Install systemd**
+7. Install `systemd`:
+
+   > **systemd** is a system and service manager for Linux. It provides aggressive parallelization capabilities, uses socket and D-Bus activation for starting services, offers on-demand starting of daemons, keeps track of processes using Linux control groups, maintains mount and automount points and implements an elaborate transactional dependency-based service control logic.
 
    ```bash
    apt-get install -y systemd-sysv
    ```
 
-   > **systemd** is a system and service manager for Linux. It provides aggressive parallelization capabilities, uses socket and D-Bus activation for starting services, offers on-demand starting of daemons, keeps track of processes using Linux control groups, maintains mount and automount points and implements an elaborate transactional dependency-based service control logic.
+8. Configure `machine-id` and `divert`:
 
-8. **Configure machine-id and divert**
+   > The `/etc/machine-id` file contains the unique machine ID of the local system that is set during installation or boot. The machine ID is a single newline-terminated, hexadecimal, 32-character, lowercase ID. When decoded from hexadecimal, this corresponds to a 16-byte/128-bit value. This ID may not be all zeros.
 
    ```bash
    dbus-uuidgen > /etc/machine-id
@@ -279,7 +302,7 @@ This procedure shows how to create a cloud image Ubuntu from scratch to run on C
    ln -fs /etc/machine-id /var/lib/dbus/machine-id
    ```
 
-   > The `/etc/machine-id` file contains the unique machine ID of the local system that is set during installation or boot. The machine ID is a single newline-terminated, hexadecimal, 32-character, lowercase ID. When decoded from hexadecimal, this corresponds to a 16-byte/128-bit value. This ID may not be all zeros.
+   > **dpkg-divert** is the utility used to set up and update the list of diversions. File diversions are a way of forcing dpkg not to install a file into its location, but to a diverted location.
 
    ```bash
    dpkg-divert --local --rename --add /sbin/initctl
@@ -287,9 +310,7 @@ This procedure shows how to create a cloud image Ubuntu from scratch to run on C
    ln -s /bin/true /sbin/initctl
    ```
 
-   > **dpkg-divert** is the utility used to set up and update the list of diversions.
-
-9. **Install packages needed for system**
+9. Install the packages needed for the system:
 
    ```bash
    apt-get install -y \
@@ -307,24 +328,24 @@ This procedure shows how to create a cloud image Ubuntu from scratch to run on C
        linux-headers-amd64
    ```
 
-   The next steps will appear, as a result of the packages that will be installed from the previous step, this will happen without anything having to be informed or executed.
+   The dialogs below will appear as a result of the packages that will be installed from the previous step.
 
-   1. Configure grub
+   9.1. Configure grub.
       <p align="center">
         <img src="images/grub-configure-01.png">
       </p>
 
-   2. Don’t select any options
+   9.2. Don’t select any option.
       <p align="center">
         <img src="images/grub-configure-02.png">
       </p>
 
-   3. Only confirm “Yes”
+   9.3. Only confirm with “Yes”.
       <p align="center">
         <img src="images/grub-configure-03.png">
       </p>
 
-10. **Configure `interfaces`**
+10. Configure the network interfaces:
 
     ```bash
     cat <<EOF > /etc/network/interfaces
@@ -339,31 +360,31 @@ This procedure shows how to create a cloud image Ubuntu from scratch to run on C
     EOF
     ```
 
-11. **Reconfigure packages**
+11. Reconfigure the packages:
 
-    1. Generate locales
+    11.1. Generate the locales:
 
        ```bash
        dpkg-reconfigure locales
        ```
 
-       1. *Select locales*
+       11.1.1. *Select the locales you want to be generated*:
           <p align="center">
             <img src="images/locales-select.png">
           </p>
 
-       2. *Select default locale*
+       11.1.2. *Select the default locale*:
           <p align="center">
             <img src="images/locales-default.png">
           </p>   
 
-    2. Reconfigure resolvconf
+    11.2. Reconfigure `resolvconf`:
 
        ```bash
        dpkg-reconfigure resolvconf
        ```
 
-       1. *Confirm changes*
+       11.2.1. Confirm the changes:
           <p align="center">
             <img src="images/resolvconf-confirm-01.png">
           </p>
@@ -372,7 +393,7 @@ This procedure shows how to create a cloud image Ubuntu from scratch to run on C
             <img src="images/resolvconf-confirm-02.png">
           </p>
 
-    3. Configure network-manager
+    11.3. Configure `network-manager`:
 
        ```bash
        cat <<EOF > /etc/NetworkManager/NetworkManager.conf
@@ -386,34 +407,34 @@ This procedure shows how to create a cloud image Ubuntu from scratch to run on C
        EOF
        ```
 
-    4. Reconfigure network-manager
+    11.4. Reconfigure `network-manager`:
 
        ```bash
        dpkg-reconfigure network-manager
        ```
 
-12. **Install `grub`**
+12. Install and configure `grub`:
 
-    1. Install
+    12.1. Install `grub`:
 
        ```bash
        grub-install /dev/loop0
        ```
 
-       Output
+       Expected output
 
        ```console
        Installing for i386-pc platform.
        Installation finished. No error reported.
        ```
 
-    2. Update grub configuration
+    12.2. Update `grub` configuration:
 
        ```bash
        update-grub
        ```
 
-       Output
+       Expected output
 
        ```console
        Generating grub configuration file ...
@@ -423,29 +444,29 @@ This procedure shows how to create a cloud image Ubuntu from scratch to run on C
        done
        ```
 
-### VirtualBox
+## VirtualBox
 
-If you plan to use this image in **VirtualBox**, install **VirtualBox Guest Additions**
+If you plan to use this image in **VirtualBox**, install [**VirtualBox Guest Additions**](https://www.virtualbox.org/manual/ch04.html)
 
-   1. Download VirtualBox Guest Additions
+   1. Download VirtualBox Guest Additions:
 
        ```bash
        curl --progress-bar https://download.virtualbox.org/virtualbox/6.0.6/VBoxGuestAdditions_6.0.6.iso -o VBoxGuestAdditions_6.0.6.iso
        ```
 
-   2. Mount ISO
+   2. Mount the ISO file:
 
        ```bash
        mount -o loop VBoxGuestAdditions_6.0.6.iso /mnt
        ```
 
-   3. Install
+   3. Install VirtualBox:
 
        ```bash
        /mnt/VBoxLinuxAdditions.run
        ```
 
-       Output like this
+       Expected output
 
        ```console
        Verifying archive integrity... All good.
@@ -470,13 +491,13 @@ If you plan to use this image in **VirtualBox**, install **VirtualBox Guest Addi
        Running in chroot, ignoring request.
        ```
 
-   4. Generate modules inside `chroot` environment
+   4. Generate modules inside `chroot` environment:
 
        ```bash
        ls -al /lib/modules
        ```
 
-       Output
+       Expected output
 
        ```console
        total 12
@@ -485,20 +506,20 @@ If you plan to use this image in **VirtualBox**, install **VirtualBox Guest Addi
        drwxr-xr-x  3 root root 4096 Feb  2 23:36 4.9.0-11-amd64
        ```
 
-       Use the same name listed before `4.9.0-11-amd64`
+       Refer to the file name listed. In this case, `4.9.0-11-amd64`:
 
        ```bash
        rcvboxadd quicksetup 4.9.0-11-amd64
        ```
 
-       Output like this
+       Expected output
 
        ```console
        VirtualBox Guest Additions: Building the modules for kernel 4.9.0-11-amd64.
        update-initramfs: Generating /boot/initrd.img-4.9.0-11-amd64
        ```
 
-   5. Umount and remove ISO
+   5. Umount and remove the ISO file:
 
        ```bash
        umount /mnt
@@ -511,16 +532,17 @@ If you plan to use this image in **VirtualBox**, install **VirtualBox Guest Addi
        ```bash
        sed -i -e 's/ systemd-timesyncd.service//g' /lib/systemd/system/vboxadd-service.service
        ```
+   **TODO:** Explain why this is needed.
 
-### Cleanup the chroot environment
+## Clean up the chroot environment
 
-   1. If you installed software, be sure to run
+   1. If you installed software, be sure to run:
 
        ```bash
        truncate -s 0 /etc/machine-id
        ```
 
-   2. Remove the diversion
+   2. Remove the diversion:
 
        ```bash
        rm /sbin/initctl
@@ -528,7 +550,7 @@ If you plan to use this image in **VirtualBox**, install **VirtualBox Guest Addi
        dpkg-divert --rename --remove /sbin/initctl
        ```
 
-   3. Clean up
+   3. Clean up:
 
        ```bash
        apt-get clean
@@ -546,27 +568,29 @@ If you plan to use this image in **VirtualBox**, install **VirtualBox Guest Addi
        exit
        ```
 
-### Unbind mount points
+## Unbind mount points
 
 ```bash
-~/$ sudo umount $HOME/debian-image-from-scratch/chroot/dev
+sudo umount $HOME/debian-image-from-scratch/chroot/dev
 
-~/$ sudo umount $HOME/debian-image-from-scratch/chroot/run
+sudo umount $HOME/debian-image-from-scratch/chroot/run
 ```
 
-### Umount loop partitions
+## Umount loop partitions
 
 ```bash
-~$ sudo umount $HOME/debian-image-from-scratch/chroot/boot
+sudo umount $HOME/debian-image-from-scratch/chroot/boot
 
-~$ sudo umount $HOME/debian-image-from-scratch/chroot
+sudo umount $HOME/debian-image-from-scratch/chroot
 ```
 
-### Check disks
+## Check disks integrity
 
 ```bash
-~$ sudo fsck.ext4 /dev/loop0p1
+sudo fsck.ext4 /dev/loop0p1
 ```
+
+Expected output:
 
 ```console
 e2fsck 1.44.5 (15-Dec-2018)
@@ -574,35 +598,39 @@ e2fsck 1.44.5 (15-Dec-2018)
 ```
 
 ```bash
-~$ sudo fsck.ext4 /dev/loop0p2
+sudo fsck.ext4 /dev/loop0p2
 ```
+
+Expected output:
 
 ```console
 e2fsck 1.44.5 (15-Dec-2018)
 /dev/loop0p2: clean, 47759/1933312 files, 422742/7732992 blocks
 ```
 
-### Leave loop device
+## Detach all associated loop devices
 
 ```bash
-~$ sudo losetup -D
+sudo losetup -D
 ```
 
-### Create base image VirtualBox
+## Create the VirtualBox base image 
 
-The premise is that you already have **Virtualbox** properly installed on your local machine.
+**Note:** **Virtualbox** should be properly installed on your local machine before you proceed.
 
-1. Add your user on `vboxusers` group
-
-   ```console
-   ~$ sudo usermod -a -G vboxusers $USER
-   ```
-
-2. Create VM
+1. Add your user to `vboxusers` group:
 
    ```bash
-   ~/$ vboxmanage createvm --name debian-base-image --ostype Debian_64 --register
+   sudo usermod -a -G vboxusers $USER
    ```
+
+2. Create the VM:
+
+   ```bash
+   vboxmanage createvm --name debian-base-image --ostype Debian_64 --register
+   ```
+
+   Expected output:
 
    ```console
    Virtual machine 'debian-base-image' is created and registered.
@@ -610,66 +638,51 @@ The premise is that you already have **Virtualbox** properly installed on your l
    Settings file: '/home/mvallim/VirtualBox VMs/debian-base-image/debian-base-image.vbox'
    ```
 
-3. Configure VM "hardware"
+3. Configure the VM "hardware" (make sure to run each command individually):
 
    ```bash
-   ~/$ vboxmanage modifyvm debian-base-image --memory 512 --ioapic on
-   ~/$ vboxmanage modifyvm debian-base-image --audio none
-   ~/$ vboxmanage modifyvm debian-base-image --usbcardreader off
-   ~/$ vboxmanage modifyvm debian-base-image --keyboard ps2 --mouse ps2
-   ~/$ vboxmanage modifyvm debian-base-image --graphicscontroller vboxsvga --vram 33
-   ~/$ vboxmanage modifyvm debian-base-image --nic1 nat
-   ~/$ vboxmanage modifyvm debian-base-image --rtcuseutc on
-   ~/$ vboxmanage storagectl debian-base-image --name "IDE" --add ide --controller PIIX4
-   ~/$ vboxmanage storagectl debian-base-image --name "SATA" --add sata --controller IntelAHCI --portcount 1
-   ~/$ vboxmanage storageattach debian-base-image --storagectl "IDE" --port 0 --device 0 --type dvddrive --medium emptydrive
+   vboxmanage modifyvm debian-base-image --memory 512 --ioapic on
+   
+   vboxmanage modifyvm debian-base-image --audio none
+   
+   vboxmanage modifyvm debian-base-image --usbcardreader off
+   
+   vboxmanage modifyvm debian-base-image --keyboard ps2 --mouse ps2
+   
+   vboxmanage modifyvm debian-base-image --graphicscontroller vboxsvga --vram 33
+   
+   vboxmanage modifyvm debian-base-image --nic1 nat
+   
+   vboxmanage modifyvm debian-base-image --rtcuseutc on
+   
+   vboxmanage storagectl debian-base-image --name "IDE" --add ide --controller PIIX4
+   
+   vboxmanage storagectl debian-base-image --name "SATA" --add sata --controller IntelAHCI --portcount 1
+   
+   vboxmanage storageattach debian-base-image --storagectl "IDE" --port 0 --device 0 --type dvddrive --medium emptydrive
    ```
 
-4. Prepare raw disk image to use in VirtualBox VMs
+4. Prepare the raw disk image to use on VirtualBox VMs:
 
    ```bash
-   ~/$ vboxmanage convertfromraw ~/debian-image-from-scratch/debian-image.raw "$HOME/VirtualBox VMs/debian-base-image/debian-base-image.vdi"
+   vboxmanage convertfromraw ~/debian-image-from-scratch/debian-image.raw "$HOME/VirtualBox VMs/debian-base-image/debian-base-image.vdi"
    ```
+
+   Expected output:
 
    ```console
    Converting from raw image file="/home/mvallim/debian-image-from-scratch/debian-image.raw" to file="/home/mvallim/VirtualBox VMs/debian-base-image/debian-base-image.vdi"...
    Creating dynamic image with size 32212254720 bytes (30720MB)...
    ```
 
-5. Attach disk on `debian-base-image` VM
+5. Attach disk to `debian-base-image` VM:
 
    ```bash
-   ~/$ vboxmanage storageattach debian-base-image --storagectl "SATA" --port 0 --device 0 --type hdd --medium "$HOME/VirtualBox VMs/debian-base-image/debian-base-image.vdi"
+   vboxmanage storageattach debian-base-image --storagectl "SATA" --port 0 --device 0 --type hdd --medium "$HOME/VirtualBox VMs/debian-base-image/debian-base-image.vdi"
    ```
 
 6. Clean up
 
    ```bash
-   ~/$ rm -rf $HOME/debian-image-from-scratch
+   rm -rf $HOME/debian-image-from-scratch
    ```
-
-## Or, if you prefer to download the base image
-
-The premise is that you already have **Virtualbox** properly installed on your local machine.
-
-Add your user on `vboxusers` group
-
-```console
-~$ sudo usermod -a -G vboxusers $USER
-```
-
-### Debian
-
-```shell
-~$ cd ~/VirtualBox\ VMs/
-~$ curl -L --progress-bar "https://vms-image.s3.amazonaws.com/debian-base-image.tar.bz2" -o - | tar xjf -
-~$ vboxmanage registervm ~/VirtualBox\ VMs/debian-base-image/debian-base-image.vbox
-```
-
-### Ubuntu
-
-```shell
-~$ cd ~/VirtualBox\ VMs/
-~$ curl -L --progress-bar "https://vms-image.s3.amazonaws.com/ubuntu-base-image.tar.bz2" -o - | tar xjf -
-~$ vboxmanage registervm ~/VirtualBox\ VMs/ubuntu-base-image/ubuntu-base-image.vbox
-```
