@@ -75,9 +75,6 @@ This document shows how to create an Ubuntu image from scratch to run on Cloud e
    `sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/'` is responsible for parsing the subsequent lines, keeping only the parameters at the beginning. Thus, `o # clear the in memory partition table` would be replaced with `o`, telling fdisk to clear the in-memory partition table; `n # new partition` would be replaced with `n`, telling fdisk a new partition should be created and so on and so forth.
 
 
-
-   **TODO:** explain this better
-
 3. Start the loop device:
 
    ```bash
