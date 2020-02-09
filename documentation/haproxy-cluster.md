@@ -1,6 +1,6 @@
 # How to setup the HAProxy Cluster with high availability
 
-This section shows how to setup a highly available **HAProxy** load balancer supported by a **Floating IP** and the [Corosync](https://clusterlabs.org/corosync.html)/[Pacemaker](https://clusterlabs.org/pacemaker/) cluster stack.
+This section shows how to set up a highly available **HAProxy** load balancer supported by a **Floating IP** and the [Corosync](https://clusterlabs.org/corosync.html)/[Pacemaker](https://clusterlabs.org/pacemaker/) cluster stack.
 
 **Floating IPs** are also known as “shared” or “virtual” IP addresses. A **Floating IP** is a normal IP address assigned to a node that may eventually fail. For failover, a node with similar characteristics (Passive) runs alongside with the main (Active) node in an Active/Passive mode. If a failure occurs, this **Floating IP** will be assigned to the Passive node automatically and transparently, making it the active one and avoiding downtime.
 
@@ -11,7 +11,9 @@ Each of the **HAProxy** load balancers will be configured to split traffic betwe
 
 ## HAProxy
 
-HAProxy is a free, very fast and reliable solution offering high availability, load balancing, and proxying for TCP and HTTP-based applications. It is particularly suited for very high traffic web sites and powers quite a number of the world's most visited ones. Over the years it has become the de-facto standard opensource load balancer, is now shipped with most mainstream Linux distributions, and is often deployed by default in cloud platforms. Since it does not advertise itself, we only know it's used when the admins report it :-)
+*"HAProxy is a free, very fast and reliable solution offering high availability, load balancing, and proxying for TCP and HTTP-based applications. It is particularly suited for very high traffic web sites and powers quite a number of the world's most visited ones. Over the years it has become the de-facto standard opensource load balancer, is now shipped with most mainstream Linux distributions, and is often deployed by default in cloud platforms. Since it does not advertise itself, we only know it's used when the admins report it :-)"*
+
+**Reference:** http://www.haproxy.org/
 
 > Full explanation in our [Technology Stack](technologies.md#HAProxy).
 
@@ -38,7 +40,7 @@ It will run scripts at initialization, when machines go up or down, when related
 
 ### Resource Agents
 
-Resource agents are the abstraction that allows Pacemaker to manage services it knows nothing about. They contain the logic for what to do when the cluster wishes to start, stop or check the health of a service.
+Resource Agents are the abstraction that allows Pacemaker to manage services it knows nothing about. They contain the logic for what to do when the cluster wishes to start, stop or check the health of a service.
 
 #### `ocf:heartbeat:IPaddr2`
 
@@ -74,7 +76,22 @@ Notice we also make use of our `create-image.sh` helper script, passing some fil
   done
   ```
 
-  The responses should look similar to this:
+  **Parameters:**
+
+  * **`-k`** is used to copy the **public key** from your host to the newly created VM.
+  * **`-u`** is used to specify the **user-data** file that will be passed as a parameter to the command that creates the cloud-init ISO file we mentioned before (check the source code of the script for a better understanding of how it's used). Default is **`/data/user-data`**.
+  * **`-m`** is used to specify the **meta-data** file that will be passed as a parameter to the command that creates the cloud-init ISO file we mentioned before (check the source code of the script for a better understanding of how it's used). Default is **`/data/meta-data`**.
+  * **`-n`** is used to pass a configuration file that will be used by cloud-init to configure the **network** for the instance.
+  * **`-i`** is used to pass a configuration file that our script will use to modify the **network interface** managed by **VirtualBox** that is attached to the instance that will be created from this image.
+  * **`-r`** is used to pass a configuration file that our script will use to configure the **number of processors and amount of memory** that is allocated to our instance by **VirtualBox**.
+  * **`-o`** is used to pass the **hostname** that will be assigned to our instance. This will also be the name used by **VirtualBox** to reference our instance.
+  * **`-l`** is used to inform which Linux distribution (**debian** or **ubuntu**) configuration files we want to use (notice this is used to specify which folder under data is referenced). Default is **`debian`**.
+  * **`-b`** is used to specify which **base image** should be used. This is the image name that was created on **VirtualBox** when we executed the installation steps from our [linux image](create-linux-image.md).
+  * **`-s`** is used to pass a configuration file that our script will use to configure **virtual disks** on **VirtualBox**. You'll notice this is used only on the **Gluster** configuration step.
+  * **`-a`** whether or not our instance **should be initialized** after it's created. Default is **`true`**.
+
+
+  **Expected output:**
   
   ```console
   Total translation table size: 0
@@ -99,48 +116,38 @@ Notice we also make use of our `create-image.sh` helper script, passing some fil
   VM "hapx-node02" has been successfully started.
   ```
 
-### Parameters
-
-* **`-k`** is used to copy the **public key** from your host to the newly created VM.
-* **`-u`** is used to specify the **user-data** file that will be passed as a parameter to the command that creates the cloud-init ISO file we mentioned before (check the source code of the script for a better understanding of how it's used). Default is **`/data/user-data`**.
-* **`-m`** is used to specify the **meta-data** file that will be passed as a parameter to the command that creates the cloud-init ISO file we mentioned before (check the source code of the script for a better understanding of how it's used). Default is **`/data/meta-data`**.
-* **`-n`** is used to pass a configuration file that will be used by cloud-init to configure the **network** for the instance.
-* **`-i`** is used to pass a configuration file that our script will use to modify the **network interface** managed by **VirtualBox** that is attached to the instance that will be created from this image.
-* **`-r`** is used to pass a configuration file that our script will use to configure the **number of processors and amount of memory** that is allocated to our instance by **VirtualBox**.
-* **`-o`** is used to pass the **hostname** that will be assigned to our instance. This will also be the name used by **VirtualBox** to reference our instance.
-* **`-l`** is used to inform which Linux distribution (**debian** or **ubuntu**) configuration files we want to use (notice this is used to specify which folder under data is referenced). Default is **`debian`**.
-* **`-b`** is used to specify which **base image** should be used. This is the image name that was created on **VirtualBox** when we executed the installation steps from our [linux image](create-linux-image.md).
-* **`-s`** is used to pass a configuration file that our script will use to configure **virtual disks** on **VirtualBox**. You'll notice this is used only on the **Gluster** configuration step.
-* **`-a`** whether or not our instance **should be initialized** after it's created. Default is **`true`**.
-
 ### Configure your local routing
 
-You need to add a route to your local machine to access the internal network of **Virtualbox**.
+You need to add a route to your local machine to access the **Virtualbox** internal network.
 
-```console
-~$ sudo ip route add 192.168.4.0/27 via 192.168.4.30 dev vboxnet0
-~$ sudo ip route add 192.168.4.32/27 via 192.168.4.62 dev vboxnet0
+```bash
+sudo ip route add 192.168.4.0/27 via 192.168.4.30 dev vboxnet0
+
+sudo ip route add 192.168.4.32/27 via 192.168.4.62 dev vboxnet0
 ```
 
 ### Access the BusyBox
 
-We need to get the **BusyBox IP** to access it via ssh
+We need to get the **BusyBox IP** to access it via ssh:
 
-```console
-~$ vboxmanage guestproperty get busybox "/VirtualBox/GuestInfo/Net/0/V4/IP"
+```bash
+vboxmanage guestproperty get busybox "/VirtualBox/GuestInfo/Net/0/V4/IP"
 ```
 
-The responses should look similar to this:
+Expected output:
 
 ```console
 Value: 192.168.4.57
 ```
 
-Use the returned value to access.
+Use the returned value to access to ssh into the VM:
 
-```console
+```bash
 ~$ ssh debian@192.168.4.57
+```
 
+Expected output:
+```console
 Linux busybox 4.9.0-11-amd64 #1 SMP Debian 4.9.189-3+deb9u2 (2019-11-11) x86_64
 
 The programs included with the Debian GNU/Linux system are free software;
@@ -155,19 +162,21 @@ permitted by applicable law.
 
 After having accessed the BusyBox and being inside a ssh session, just access the instances by name, in our case we want to access hapx-node01.
 
-```console
+```bash
 debian@busybox:~$ ssh hapx-node01
 ```
 
-### user-data TL;DR
+### Understading the user-data file
 
 The cloud-init HAProxy configuration file can be found [here](/data/debian/hapx/user-data). This sets up a Load Balance for the Kube Master Nodes.
+
+Below you can find the same file commented for easier understanding:
 
 ```yaml
 #cloud-config
 write_files:
 
-# CA ssh pub certificate
+# CA SSH pub certificate
 - path: /etc/ssh/ca.pub
   permissions: '0644'
   encoding: b64
@@ -186,10 +195,10 @@ write_files:
     N2h2R2QzS0ZvU1N4aDlFY1FONTNXWEhMYXBHQ0o0NGVFU3NqbVgzN1NwWElUYUhEOHJQRXBia0E0
     WWJzaVVoTXZPZ0VCLy9MZ1d0R2kvRVRxalVSUFkvWGRTVTR5dFE9PSBjYUBrdWJlLmRlbW8K
 
-# We want to configure corosync to use cryptographic techniques to ensure the
-# authenticity and privacy of messages. We generate a private key.
+# We want to configure Corosync to use cryptographic techniques to ensure the
+# authenticity and privacy of messages, so we generate a private key.
 #
-#  For more details read corosync-keygen man page on Linux: $ man 8 corosync-keygen
+#  For more details, read corosync-keygen man page on Linux: $ man 8 corosync-keygen
 - path: /etc/corosync/authkey
   permissions: '0400'
   content: !!binary |
@@ -197,11 +206,12 @@ write_files:
     1xCt67CRDkHHNuVViK79TCghbfczL6jnkkQNoWfmeMzX2axgp+Wp5tU3jBjGP5X7JMq0eu4RZ2vS
     y8iZqL5kYaRqRn3ElD0=
 
-# The corosync.conf instructs the corosync executive about various parameters
-# needed to control the corosync executive. Empty lines and lines starting with
-# '#' character are ignored.
+# The corosync.conf instructs the Corosync executive about various parameters
+# needed to control it. 
+# Empty lines and lines starting with the '#' 
+# character are ignored.
 #
-#  For more details read corosync.conf man page on Linux: $ man 5 corosync.conf
+#  For more details, read corosync.conf man page on Linux: $ man 5 corosync.conf
 - path: /etc/corosync/corosync.conf
   permissions: '0644'
   content: |
@@ -247,11 +257,11 @@ write_files:
 #
 #  - the arguments from the command-line, which always take precedence
 #  - the "global" section, which sets process-wide parameters
-#  - the proxies sections which can take form of "defaults", "listen",
-#    "frontend" and "backend".
+#  - the proxies sections, which can take the 
+# form of "defaults", "listen", "frontend" and "backend".
 #
-# The configuration file syntax consists in lines beginning with a keyword
-# referenced in this manual, optionally followed by one or several parameters
+# The configuration file syntax consists of lines beginning with a keyword
+# referenced in its manual, optionally followed by one or several parameters
 # delimited by spaces.
 #
 # For more details read haproxy.cfg page https://www.haproxy.org/download/1.7/doc/configuration.txt
@@ -388,9 +398,9 @@ power_state:
 
 ### Configure Pacemaker
 
-Before carrying out the configuration, it is worth making some observations.
+Before carrying out with the Pacemaker configuration, it is worth making some observations.
 
-1. Let's check IP configuration, using `ip addr`
+1. Let's check IP configuration, using `ip addr`:
 
    ```console
    debian@hapx-node01:~$ ip addr show enp0s3.41
@@ -401,9 +411,9 @@ Before carrying out the configuration, it is worth making some observations.
          valid_lft forever preferred_lft forever
    ```
 
-   As you can see we still don't have our cluster's ip configured (192.168.4.20) on any of the network interfaces.
+   As you can see, we still don't have our cluster's IP (`192.168.4.20`) configured on any of the network interfaces.
 
-2. Let's check configuration Pacemaker, using `crm status`
+2. Let's check Pacemaker configuration, using `crm status`
 
    ```console
    debian@hapx-node01:~$ sudo crm status
@@ -421,15 +431,15 @@ Before carrying out the configuration, it is worth making some observations.
    No resources
    ```
 
-   Here we notice that we have only two active and configured nodes (`hapx-node01` and `hapx-node02`), but no resources that will make up our cluster (`virtual-ip-resource` and `haproxy-resource`) .
+   Here we notice that we have only two active and configured nodes (`hapx-node01` and `hapx-node02`), but no resources that will make up our cluster (`virtual-ip-resource` and `haproxy-resource`).
 
-3. Let's configure resources on Pacemaker, using `crm configure`
+3. Let's configure resources on Pacemaker using `crm configure`
 
-   Here we define our Virtual IP as 192.168.4.20. This will be the IP address of our K8S cluster (Control Plane EndPoint).
+   Here we define our Virtual IP as `192.168.4.20`. This will be the IP address of our K8S cluster (Control Plane EndPoint).
 
    At this point, we will configure the features of our HAProxy Cluster using the [crmsh](https://crmsh.github.io/) tool. crmsh is a cluster management shell for the Pacemaker High Availability stack.
 
-   The following step can be run on any (one) Node, because right now corosync should keep the Cluster Configuration in Sync.
+   The following step can be run on any node, because right now Corosync should keep the Cluster Configuration in sync.
 
    **Note:** each line below represents a command that should be entered separately in the command line.
 
@@ -447,7 +457,55 @@ Before carrying out the configuration, it is worth making some observations.
    EOF
    ```
 
-   Let's check again IP configuration, using `ip addr`
+    **Pacemaker parameters explained:**
+
+    * `property stonith-enabled=no`
+
+      `STONITH` has the function of protecting your data against corruption and the application to get unavailable, due to simultaneous unintentional access by several nodes.
+      For example, just because a node does not respond, does not mean that it has stopped accessing its data. The only way to be 100% sure that your data is secure is to ensure that the node is actually offline before allowing the data to be accessed by another node.  
+      `STONITH` also plays a role in the event that a service cannot be stopped. In this case, the cluster uses `STONITH` to force the node to go offline, making it safe to start the service elsewhere.  
+      `STONITH` is an acronym for "**S**hoot **T**he **O**ther **N**ode **I**n **T**he **H**ead", and is the most popular data protection mechanism.  
+      To ensure the integrity of your data, `STONITH` is activated by default.
+
+      In our case, as we do not access data such as databases nor files, it does not make sense to keep `STONITH` active. For this reason, we set it to `stonith-enabled=no`
+
+    * `property no-quorum-policy=ignore`
+
+      The `no-quorum-policy` parameter determines how the cluster behaves when there aren't enough nodes to compose it. To avoid a [split-brain](https://en.wikipedia.org/wiki/Split-brain_(computing)) scenario, the cluster will only respond if quorum is achieved. To illustrate, imagine a cluster with five nodes, where, due to a network failure, two separate groups are created: one group with three nodes, and another group with two nodes. In this scenario, only the group with three nodes is able to achieve a majority of votes. Thus, only the group with three nodes can make use of cluster resources. This configuration is very important, because there would be a risk of resources corruption if the group with only two nodes was also able to use them. The default value for the `no-quorum-policy` parameter is `stop`.
+
+      We only have two nodes in our example. Thus, if one of they got offline for any reason, our whole cluster would be taken down due to lack of quorum (>50%). To avoid this situation, we configure our policy to `ignore` and nothing else needs to be done. In a production scenario, it would be a good idea to have at least 3 nodes to ensure higher availability though.
+
+    * `property default-resource-stickiness=100`
+
+      The `default-resource-stickiness` determines where the cluster resources will be allocated. The default behavior is to get the resources back to the original nodes where they were allocated. This means that, after a failure, the resource will be allocated in another node from the cluster and, when the original node is back to a healthy state, the resource is moved back to it. This is not ideal, because the users will be exposed to a inconsistent scenario twice. To avoid this situation, you can set a weight (between -1.000.000 and 1.000.000) to the `default-resource-stickiness` parameter: a `0` means the resource will be moved back to its original node; a positive value tells the resource should be kept where it is.
+      
+      In our case, we arbitrarily set it to `100`.
+
+    * `primitive virtual-ip-resource ocf:heartbeat:IPaddr2 params ip="192.168.4.20" broadcast=192.168.4.31 nic=enp0s3.41 cidr_netmask=27 meta migration-threshold=2 op monitor interval=20 timeout=60 on-fail=restart`
+
+      **TODO**: explain
+
+    * `primitive haproxy-resource ocf:heartbeat:haproxy op monitor interval=20 timeout=60 on-fail=restart`
+
+      **TODO**: explain
+
+    * `colocation loc inf: virtual-ip-resource haproxy-resource`
+
+      `colocation` restrictions allow you to tell the cluster how resources depend on each other. It has an important side-effect: it affects the order in which the resources are assigned to a node.
+
+      Think a bit about it: the cluster can't colocate `A` with `B`, unless it knows where `B` is located. For this reason, when creating `colocation` restrictions, it's really important to think if `A` needs to be colocated with `B` or if `B` needs to be colocated with `A`.
+
+      In our case, since the `haproxy-resource` should be colocated with the `virtual-ip-resource`, the `haproxy-resource` **will be allocated on the same node where the `virtual-ip-resource` is**.
+
+      
+    * `order ord inf: virtual-ip-resource haproxy-resource`
+
+      The `order` constraints tell the cluster the order in which resources should be allocated. In this case, we are informing that the `virtual-ip-resource` should always be allocated before the `haproxy-resource`. 
+      
+      Ordering constraints affect only the ordering in which resources are created. They do not cause the resources be **colocated** on the same node.
+
+
+   Let's check our IP configuration one more time, using `ip addr`:
 
    ```console
    debian@hapx-node01:~$ ip addr show enp0s3.41
@@ -460,9 +518,9 @@ Before carrying out the configuration, it is worth making some observations.
          valid_lft forever preferred_lft forever
    ```
 
-   Voilá, now our cluster's ip is properly configured in the `enp0s3.41` interface and managed.
+   Voilá! Now our cluster's IP is properly configured and managed in the `enp0s3.41` interface.
 
-4. Let's get some more information from our cluster, using `crm status`
+4. Let's get some more information from our cluster, using `crm status`:
 
    ```console
    debian@hapx-node01:~$ sudo crm status
@@ -485,53 +543,8 @@ Before carrying out the configuration, it is worth making some observations.
 
    Here we can see that both nodes and resources are active and configured.
 
-   If we look more closely, we will see that the `hapx-node01` node is the one that has these two allocated resources (`virtual-ip-resource` and `haproxy-resource`), which makes perfect sense, as we configure these resources they must always be allocated on the same node.
+   Looking closer, we can see that the `hapx-node01` node is the one that has these two resources (`virtual-ip-resource` and `haproxy-resource`) allocated. That makes perfect sense, as we configured these resources to be always allocated on the same node.
 
-#### Pacemaker parameters TL;DR
-
-* `property stonith-enabled=no`
-
-  `STONITH` has the function of protecting your data against corruption and the application is unavailable, due to simultaneous unintentional access by several nodes.
-  For example, just because a node does not respond, does not mean that it has stopped accessing its data. The only way to be 100% sure that your data is secure is to ensure that the node is actually offline before allowing the data to be accessed by another node.  
-  `STONITH` also plays a role in the event that a service cannot be stopped. In this case, the cluster uses `STONITH` to force the node to go offline, making it safe to start the service elsewhere.  
-  `STONITH`, an acronym for" **S**hoot **T**he **O**ther **N**ode **I**n **T**he **H**ead ", and is the most popular form known.  
-  To ensure the security of your data, `STONITH` is activated by default.
-
-  In our case, as we do not have access to data such as databases or files, it does not make sense to keep this `STONITH` active, for this reason, we define parameters with `stonith-enabled=no`
-
-* `property no-quorum-policy=ignore`
-
-  The `no-quorum-policy` parameter determines how the cluster behaves when there aren't enough nodes to compose it. To avoid a [split-brain](https://en.wikipedia.org/wiki/Split-brain_(computing)) scenario, the cluster will only respond if quorum is achieved. To illustrate, imagine a cluster with five nodes where, due to a network failure, two separate groups are created: one group with three nodes, and another group with two nodes. In this scenario, only the group with three nodes is able to achieve a majority of votes. Thus, only the group with three nodes can make use of cluster resources. This configuration is very important, because there would be a risk of resources corruption if the group with only two nodes was also able to use them. The default value for the `no-quorum-policy` parameter is `stop`.
-
-  We only have two nodes in our example. Thus, if one of they got offline for any reason, our whole cluster would be take down for lack of quorum (>50%). To avoid this situation, we configure our policy to `ignore` and nothing else needs to be done. In a production scenario, it would be a good idea to have at least 3 nodes for higher availability.
-
-* `property default-resource-stickiness=100`
-
-  The `default-resource-stickiness` determines where the cluster resources will be allocated. The default behavior is to get the resources back to the original nodes where they were allocated. This means that, after a failure, the resource wil be allocated in another node from the cluster and, when the original node is back to a healthy state, the resource is moved back to it. This is not ideal, because the users will be exposed to a inconsistent scenario twice. To avoid this situation, you can set a weight (between -1.000.000 and 1.000.000) to the `default-resource-stickiness` parameter: a `0` means the resource will be moved back to its original node; a positive value tells the resource should be kept where it is.
-  
-  In our case, we arbitrarily set it to `100`.
-
-* `primitive virtual-ip-resource ocf:heartbeat:IPaddr2 params ip="192.168.4.20" broadcast=192.168.4.31 nic=enp0s3.41 cidr_netmask=27 meta migration-threshold=2 op monitor interval=20 timeout=60 on-fail=restart`
-
-  Lorem ip sum
-
-* `primitive haproxy-resource ocf:heartbeat:haproxy op monitor interval=20 timeout=60 on-fail=restart`
-
-  Lorem ip sum
-
-* `colocation loc inf: virtual-ip-resource haproxy-resource`
-
-  As restrições de `colocation` informam ao cluster que o local de um recurso depende do local de outro.  
-  A colocação tem um efeito colateral importante: afeta a ordem em que os recursos são atribuídos a um nó.  
-  Pense bem: você não pode colocar `A` em relação a `B`, a menos que saiba onde `B` está.
-  Portanto, ao criar restrições de `colocation`, é importante considerar se você deve colocar `A` com `B` ou `B` com `A`.  
-  Outro aspecto a ter em mente é que, assumindo que `A` esteja colocado em conjunto com `B`, o cluster levará em consideração as preferências de `A` ao decidir qual nó escolher para `B`.
-
-  Neste caso onde o `virtual-ip-resource` estiver o `haproxy-resource` estará.
-  
-* `order ord inf: virtual-ip-resource haproxy-resource`
-
-  The `order` constraints tell the cluster the order in which resources should start, In this case we are informing that the order must always be followed, first the `virtual-ip-resource` then `haproxy-resource`. Ordering constraints affect only the ordering of resources they do not require that the resources be placed on the same node.
 
 ### View HAProxy stats page
 
