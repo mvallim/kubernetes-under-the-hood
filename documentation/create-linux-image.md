@@ -6,7 +6,6 @@ This document shows how to create an Ubuntu image from scratch to run on Cloud e
    <img src="images/linux-image.png">
 </p>
 
-
 ## Prerequisites (GNU/Linux Debian/Ubuntu)
 
 * Install the applications needed to build the environment:
