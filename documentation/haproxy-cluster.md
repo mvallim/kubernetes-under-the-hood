@@ -487,7 +487,7 @@ Before carrying out with the Pacemaker configuration, it is worth making some ob
 
         * `virtual-ip-resource` - É um nome unico que damos ao nosso recurso
 
-        * `ocf:heartbeat:IPaddr2` - É o [OCF](http://www.linux-ha.org/doc/man-pages/re-ra-IPaddr2.html) cluster resource agent
+        * `ocf:heartbeat:IPaddr2` - É o [OCF](#ocf:heartbeat:IPaddr2) cluster resource agent
 
       * `meta migration-threshold` - Ao criar um recurso, você pode configurá-lo para que ele se mova para um novo nó após um número definido de falhas, configurando a opção `migration-threshold` para esse recurso. Depois que o limite for atingido, esse nó não poderá mais executar o recurso com falha até que:
 
