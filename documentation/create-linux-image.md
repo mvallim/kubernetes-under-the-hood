@@ -532,7 +532,7 @@ If you plan to use this image in **VirtualBox**, install [**VirtualBox Guest Add
        sed -i -e 's/ systemd-timesyncd.service//g' /lib/systemd/system/vboxadd-service.service
        ```
 
-      > As we are using ntpd we removed the `systemd-timesyncd.service` in the `vboxadd-service.service` declaration
+      > As we are using ntpd, we remove the `systemd-timesyncd.service` from the `vboxadd-service.service` declaration.
 
 ## Clean up the chroot environment
 
