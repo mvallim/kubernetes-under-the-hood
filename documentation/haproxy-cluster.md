@@ -483,58 +483,58 @@ Before carrying out with the Pacemaker configuration, it is worth making some ob
 
     * `primitive virtual-ip-resource ocf:heartbeat:IPaddr2 params ip="192.168.4.20" broadcast=192.168.4.31 nic=enp0s3.41 cidr_netmask=27 meta migration-threshold=2 op monitor interval=20 timeout=60 on-fail=restart`
 
-      * `primitive` - É um recurso singular que pode ser gerenciado pelo cluster. Esse é o recurso que pode ser iniciado apenas uma vez. Um endereço IP, por exemplo, pode ser primitivo e esse endereço IP deve estar em execução uma vez e apenas uma vez no Cluster
+      * `primitive` - Represents a resource that should exist as a single instance in the whole cluster. An IP, for example, can be configured as a primitive resource and there should be only one instance of this resource in the cluster at any given time.
 
-        * `virtual-ip-resource` - É um nome unico que damos ao nosso recurso
+        * `virtual-ip-resource` - A unique name we give to our resource.
 
-        * `ocf:heartbeat:IPaddr2` - É o [OCF](#ocf:heartbeat:IPaddr2) cluster resource agent
+        * `ocf:heartbeat:IPaddr2` - The [OCF](#ocf:heartbeat:IPaddr2) cluster resource agent.
 
-      * `meta migration-threshold` - Ao criar um recurso, você pode configurá-lo para que ele se mova para um novo nó após um número definido de falhas, configurando a opção `migration-threshold` para esse recurso. Depois que o limite for atingido, esse nó não poderá mais executar o recurso com falha até que:
+      * `meta migration-threshold` - When a resource is created, you can configure it to be moved to a different node after a given number of failures happen. This parameter serves this purpose. After the limit is reached, the current node won't be able to own the resource until one of the following happens
 
-        * O administrador redefine manualmente o `failcount` do recurso.
+        * An administrator resets the resource's `failcount` value.
 
-        * O valor do `failure-timeout` do recurso é atingido.
+        * The resource's `failure-timeout` value is reached.
 
-        O valor de `migration-threshold` é definido como `INFINITY` por padrão. `INFINITY` é definido internamente como um número muito grande, mas finito. Um valor 0 desativa o recurso `migration-threshold`.
+        The default value for the `migration-threshold` is `INFINITY`. Internally, this is defined as a very high, but finite value. Setting this to 0 disables the threshold behavior for the given resource.
 
-      * `params` - Parameters of resource agent
+      * `params` - Parameters for resource agent:
 
         * `ip` - The IPv4 address to be configured in dotted quad notation, for example "192.168.1.1". (required, string, no default)
 
-        * `nic` - The base network interface on which the IP address will be brought online. If left empty, the script will try and determine this from the routing table. Do NOT specify an alias interface in the form eth0:1 or anything here; rather, specify the base interface only. Prerequisite: There must be at least one static IP address, which is not managed by the cluster, assigned to the network interface. If you can not assign any static IP address on the interface, modify this kernel parameter: sysctl -w net.ipv4.conf.all.promote_secondaries=1 (or per device) (optional, string, default eth0)
+        * `nic` - The base network interface on which the IP address will be brought online. If left empty, the script will try and determine this from the routing table. Do NOT specify an alias interface in the form `eth0:1` or anything here; rather, specify the base interface only. **Prerequisite:** There must be at least one static IP address, which is not managed by the cluster, assigned to the network interface. If you can not assign any static IP address on the interface, modify this kernel parameter: `sysctl -w net.ipv4.conf.all.promote_secondaries=1` (or per device). (optional, string, default eth0)
 
-        * `cidr_netmask` - The netmask for the interface in CIDR format (e.g., 24 and not 255.255.255.0) If unspecified, the script will also try to determine this from the routing table. (optional, string, no default)
+        * `cidr_netmask` - The netmask for the interface in CIDR format (e.g., 24 and not 255.255.255.0). If unspecified, the script will also try to determine this from the routing table. (optional, string, no default)
 
         * `broadcast` - Broadcast address associated with the IP. If left empty, the script will determine this from the netmask. (optional, string, no default)
 
-      * `op` - Configure monitoring operation
+      * `op` - Configure monitoring operation:
 
         * `monitor` - The action to perform. Common values: `monitor`, `start`, `stop`
 
-        * `interval` - If set to a nonzero value, a recurring operation is created that repeats at this frequency, in seconds. A nonzero value makes sense only when the action name is set to monitor. A recurring monitor action will be executed immediately after a resource start completes, and subsequent monitor actions are scheduled starting at the time the previous monitor action completed. For example, if a monitor action with interval=20s is executed at 01:00:00, the next monitor action does not occur at 01:00:20, but at 20 seconds after the first monitor action completes.
+        * `interval` - If set to a nonzero value, a recurring operation is created that repeats at this frequency, in seconds. A nonzero value makes sense only when the action name is set to monitor. A recurring monitor action will be executed immediately after a resource start completes, and subsequent monitor actions are scheduled starting at the time the previous monitor action completed. For example, if a monitor action with `interval=20s` is executed at 01:00:00, the next monitor action does not occur at 01:00:20, but at 20 seconds after the first monitor action completes.
 
           If set to zero, which is the default value, this parameter allows you to provide values to be used for operations created by the cluster. For example, if the interval is set to zero, the name of the operation is set to start, and the timeout value is set to 40, then Pacemaker will use a timeout of 40 seconds when starting this resource. A monitor operation with a zero interval allows you to set the timeout/on-fail/enabled values for the probes that Pacemaker does at startup to get the current status of all resources when the defaults are not desirable.
 
-        * `timeout` - If the operation does not complete in the amount of time set by this parameter, abort the operation and consider it failed. The default value is the value of timeout if set with the pcs resource op defaults command, or 20 seconds if it is not set. If you find that your system includes a resource that requires more time than the system allows to perform an operation (such as start, stop, or monitor), investigate the cause and if the lengthy execution time is expected you can increase this value.
+        * `timeout` - If the operation does not complete in the amount of time set by this parameter, it's aborted and considered as failed. The default value is the value of timeout if set with the pcs resource op defaults command, or 20 seconds if it is not set. If you find that your system includes a resource that requires more time than the system allows to perform an operation (such as start, stop, or monitor), investigate the cause and, if the lengthy execution time is expected, you can increase this value.
 
           The timeout value is not a delay of any kind, nor does the cluster wait the entire timeout period if the operation returns before the timeout period has completed.
 
         * `on-fail` - The action to take if this action ever fails.
 
           Allowed values:
-          * `ignore` - Pretend the resource disd not fail
-          * `block` - Do not perform any further operations on the resource
-          * `stop` - Stop the resource and do not start it elsewhere
-          * `restart` - Stop the resource and start it again (possibly on a different node)
-          * `fence` - STONITH the node on which the resource failed
-          * `standby` - Move all resources away from the node on which the resource failed
+          * `ignore` - Pretend the resource did not fail.
+          * `block` - Do not perform any further operations on the resource.
+          * `stop` - Stop the resource and do not start it elsewhere.
+          * `restart` - Stop the resource and start it again (possibly on a different node).
+          * `fence` - STONITH the node on which the resource failed.
+          * `standby` - Move all resources away from the node on which the resource failed.
 
         > Reference: http://www.linux-ha.org/doc/man-pages/re-ra-IPaddr2.html  
         > Reference: https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/high_availability_add-on_reference/s1-resourceoperate-haar
 
     * `primitive haproxy-resource ocf:heartbeat:haproxy op monitor interval=20 timeout=60 on-fail=restart`
 
-      The explanation are the same above.
+      The explanation is the same as above.
 
     * `colocation loc inf: virtual-ip-resource haproxy-resource`
 
