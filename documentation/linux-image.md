@@ -64,7 +64,7 @@ The softwares to be installed are the following:
 
 ## Create the Linux image
 
-Please follow the steps described [here](create-linux-image.md). 
+Please follow the steps described [here](create-linux-image.md).  
 
 Again, keep in mind this is for reference only and nothing should be considered as written into stone. Keep this in mind while planning your setup and adjust the values accordingly.
 

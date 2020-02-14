@@ -6,7 +6,6 @@ This document shows how to create an Ubuntu image from scratch to run on Cloud e
    <img src="images/linux-image.png">
 </p>
 
-
 ## Prerequisites (GNU/Linux Debian/Ubuntu)
 
 * Install the applications needed to build the environment:
@@ -16,6 +15,7 @@ This document shows how to create an Ubuntu image from scratch to run on Cloud e
    ```
 
 * Create a folder to store the image:
+
    ```bash
    mkdir $HOME/debian-image-from-scratch
    ```
@@ -35,17 +35,14 @@ This document shows how to create an Ubuntu image from scratch to run on Cloud e
    ```
 
    Where:
-   - **if**: read from FILE instead of stdin
-   - **of**: write to FILE instead of stdout
-   - **bs**: read and write up to BYTES bytes at a time (default: 512); overrides ibs and obs
-   - **count**: copy only N input blocks
-   - **seek**: skip N obs-sized blocks at start of output
-   - **status**: The LEVEL of information to print to stderr;
-     - `none`: suppresses everything but error messages;
-     - `noxfer`: suppresses the final transfer statistics;
-     - `progress`: shows periodic transfer statistics;
+   * **`if`**: read from FILE instead of stdin
+   * **`of`**: write to FILE instead of stdout
+   * **`bs`**: read and write up to BYTES bytes at a time (default: 512); overrides ibs and obs
+   * **`count`**: copy only N input blocks
+   * **`seek`**: skip N obs-sized blocks at start of output
+   * **`status`**: The LEVEL of information to print to stderr;
 
-   **TODO:** Explain the reasoning behind each value chosen.
+   > More details: man 1 dd
 
 2. Create partitions on the file:
 
@@ -71,9 +68,8 @@ This document shows how to create an Ubuntu image from scratch to run on Cloud e
    ```
 
    This command is going to call `fdisk` to partition the loop device at `~/debian-image-from-scratch/debian-image.raw`. 
-   
-   `sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/'` is responsible for parsing the subsequent lines, keeping only the parameters at the beginning. Thus, `o # clear the in memory partition table` would be replaced with `o`, telling fdisk to clear the in-memory partition table; `n # new partition` would be replaced with `n`, telling fdisk a new partition should be created and so on and so forth.
 
+   `sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/'` is responsible for parsing the subsequent lines, keeping only the parameters at the beginning. Thus, `o # clear the in memory partition table` would be replaced with `o`, telling fdisk to clear the in-memory partition table; `n # new partition` would be replaced with `n`, telling fdisk a new partition should be created and so on and so forth.
 
 3. Start the loop device:
 
@@ -535,7 +531,8 @@ If you plan to use this image in **VirtualBox**, install [**VirtualBox Guest Add
        ```bash
        sed -i -e 's/ systemd-timesyncd.service//g' /lib/systemd/system/vboxadd-service.service
        ```
-   **TODO:** Explain why this is needed.
+
+      > As we are using ntpd, we remove the `systemd-timesyncd.service` from the `vboxadd-service.service` declaration.
 
 ## Clean up the chroot environment
 
