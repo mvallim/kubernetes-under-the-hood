@@ -387,7 +387,6 @@ This document shows how to create a Debian image from scratch to run on Cloud en
           <p align="center">
             <img src="images/resolvconf-confirm-01.png">
           </p>
-
           <p align="center">
             <img src="images/resolvconf-confirm-02.png">
           </p>
