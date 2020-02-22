@@ -619,5 +619,5 @@ This will be fixed once we setup our Kubernetes Master nodes.
 Shutdown one of the two VMs (hapx-node01 or hapx-node02) and press F5 in the browser where you have opened the HAProxy statistics. No difference or error should be noticed. :)
 
 ## Conclusion
-In this article, we got deep into configuring an HAProxy Cluster with high availability supported by Corosync and Pacemaker. We configured each of the components individually and also configured an Elastic IP that allows the HAProxy Cluster to failover transparently when any of its nodes fail.
+We got deep into configuring an HAProxy Cluster with high availability supported by Corosync and Pacemaker. We configured each of the components individually and also configured an Elastic IP that allows the HAProxy Cluster to failover transparently when any of its nodes fail.
 I hope you had fun configuring your cluster and learned some nice useful stuff along the way.
