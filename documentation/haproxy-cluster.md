@@ -4,7 +4,7 @@ This section shows how to set up a highly available **HAProxy** load balancer su
 
 **Floating IPs** are also known as “shared” or “virtual” IP addresses. A **Floating IP** is a normal IP address assigned to a node that may eventually fail. For failover, a node with similar characteristics (Passive) runs alongside with the main (Active) node in an Active/Passive mode. If a failure occurs, this **Floating IP** will be assigned to the Passive node automatically and transparently, making it the active one and avoiding downtime.
 
-Each of the **HAProxy** load balancers will be configured to split traffic between backend application servers. If the primary load balancer goes down, the **Floating IP** will be moved to the second load balancer automatically, allowing it continue serving without downtime.
+Each of the **HAProxy** load balancers will be configured to split traffic between **kube-apiserver**. If the primary load balancer goes down, the **Floating IP** will be moved to the second load balancer automatically, allowing it continue serving without downtime.
 <p align="center">
   <img src="images/haproxy-cluster.gif">
 </p>
