@@ -1,6 +1,6 @@
 # How to setup the Debian Linux image from scratch
 
-This document shows how to create an Ubuntu image from scratch to run on Cloud environments (EC2, GCE, Azure, OpenStack, QEMU and VirtualBox).
+This document shows how to create a Debian image from scratch to run on Cloud environments (EC2, GCE, Azure, OpenStack, QEMU and VirtualBox).
 
 <p align="center">
    <img src="images/linux-image.png">
@@ -387,7 +387,6 @@ This document shows how to create an Ubuntu image from scratch to run on Cloud e
           <p align="center">
             <img src="images/resolvconf-confirm-01.png">
           </p>
-
           <p align="center">
             <img src="images/resolvconf-confirm-02.png">
           </p>
@@ -532,7 +531,7 @@ If you plan to use this image in **VirtualBox**, install [**VirtualBox Guest Add
        sed -i -e 's/ systemd-timesyncd.service//g' /lib/systemd/system/vboxadd-service.service
        ```
 
-      > As we are using ntpd we removed the `systemd-timesyncd.service` in the `vboxadd-service.service` declaration
+      > As we are using ntpd, we remove the `systemd-timesyncd.service` from the `vboxadd-service.service` declaration.
 
 ## Clean up the chroot environment
 
