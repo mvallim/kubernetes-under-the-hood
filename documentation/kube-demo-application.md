@@ -218,7 +218,11 @@ The `redis-slave` and `redis-master` Services you applied are only accessible wi
    kube-node03   Ready    <none>   50m   v1.15.6   192.168.2.195   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-11-amd64   docker://18.6.0
    ```
 
-Open your browser with address [http://kube-node01.kube.demo:30551](http://kube-node01.kube.demo:30551)
+2. Choice any ip of `kube-nodes` (`kube-node01`, `kube-node02` or `kube-node03`)
+
+   Here we will use the `192.168.2.136` (`kube-node01`)
+
+   Open your browser with address [http://192.168.2.136:30551](http://192.168.2.136:30551)
 
 > Keep attention on port **`30551`**, you should change correspondent port show in your on output above.
 
@@ -283,9 +287,12 @@ Deleting the Deployments and Services also deletes any running Pods. Use labels 
 
    ```console
    debian@busybox:~$ kubectl delete deployment -l app=redis
-   kubectl delete service -l app=redis
-   kubectl delete deployment -l app=guestbook
-   kubectl delete service -l app=guestbook
+
+   debian@busybox:~$ kubectl delete service -l app=redis
+
+   debian@busybox:~$ kubectl delete deployment -l app=guestbook
+
+   debian@busybox:~$ kubectl delete service -l app=guestbook
    ```
 
    The responses should be:
