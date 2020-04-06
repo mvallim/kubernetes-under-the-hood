@@ -203,7 +203,7 @@ The `redis-slave` and `redis-master` Services you applied are only accessible wi
 1. Query the nodes and ip information
 
    ```console
-   debian@kube-mast01:~$ kubectl get nodes -o wide
+   debian@busybox:~$ kubectl get nodes -o wide
    ```
 
    The response should look similar to this:
