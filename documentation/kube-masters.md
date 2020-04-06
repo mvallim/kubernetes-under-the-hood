@@ -16,7 +16,7 @@ Master components can be run on any machine in the cluster. However, for simplic
 * **Docker** - It takes care of downloading the images and starting the containers.
 * **etcd** - The etcd reliably stores the configuration data of the Kubernetes cluster, representing the state of the cluster (what nodes exist in the cluster, what pods should be running, which nodes they are running on, and a whole lot more) at any given point in time.
 * **API Server** - The API Server validates and configures data for the API objects, which include pods, services, replication controllers, and others. The API Server services REST operations and provides the frontend to the cluster’s shared state through which all other components interact.
-* **Controller Manager** - The Controller Manager watches the state of the cluster through the API Server watch feature and, when it gets notified, it makes the necessary changes, attempting to move the current state towards the desired state. Besides, the Controller Manager performs lifecycle of as namespace, event, terminated-pod, cascading-deletion, node, etc. **TODO: REVIEW**
+* **Controller Manager** - The Controller Manager watches the state of the cluster through the API Server watch feature and, when it gets notified, it makes the necessary changes, attempting to move the current state towards the desired state. Besides, the Controller Manager performs lifecycle of as namespace, event, terminated-pod, cascading-deletion, node, etc.
 * **Scheduler** - The Scheduler watches for unscheduled pods and binds them to nodes via the binding pod subresource API, according to the availability of the requested resources, quality of service requirements, affinity and anti-affinity specifications, and other constraints. Once the pod has a node assigned, the regular behavior of the Kubelet is triggered and the pod and its containers are created.
 * **Kube Proxy** - Kube Proxy acts as a network proxy and a load balancer for a service on a single worker node. It takes care of the network routing for TCP and UDP packets.
 * **Flannel** - It is a layer 3 network fabric designed for Kubernetes. Check our [previous article about flannel](https://itnext.io/kubernetes-journey-up-and-running-out-of-the-cloud-flannel-c01283308f0e) for more information.
@@ -164,7 +164,13 @@ networking:
 
 #### `kubeadm init`
 
-**TODO: Make it clear if this approach is recommended for production or only for learning purposes**
+The kubeadm tool is good if you need:
+
+* A simple way for you to try out Kubernetes, possibly for the first time.
+* A way for existing users to automate setting up a cluster and test their application.
+* A building block in other ecosystem and/or installer tools with a larger scope.
+
+> Reference: https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/
 
 This approach requires less infrastructure. The etcd members and control plane nodes are co-located.
 
@@ -414,7 +420,19 @@ Now we need to join the other nodes to our K8S cluster. For this, we need the ce
 
 1. Query the etcd state
 
-**TODO:** provide a brief explanation of each param.
+   At this point we will use images from `etcd` with the `etcdctl` cli, using the certificates generated in the previous step of initializing `master-node`.
+
+   **Command**  
+   **`cluster-health`** check the health of the etcd cluster  
+   **`member`** member `add`, `remove` and `list` subcommands  
+
+   **Glocal Options**  
+   **`--endpoints`** a comma-delimited list of machine addresses in the cluster (default: "127.0.0.1:4001,127.0.0.1:2379")  
+   **`--cert-file`** identify HTTPS client using this SSL certificate file  
+   **`--key-file`** identify HTTPS client using this SSL key file  
+   **`--ca-file`** verify certificates of HTTPS-enabled servers using this CA bundle  
+
+   For more details of the `etcdctl` parameters see: http://manpages.org/etcdctl
 
    ```console
    debian@busybox:~$ ssh kube-mast01
@@ -499,7 +517,7 @@ Now we need to join the other nodes to our K8S cluster. For this, we need the ce
 
    > All master pods **Running**
 
-### Check the HAProxy Cluster stats 
+### Check the HAProxy Cluster stats
 
 Open your browser at [http://192.168.4.20:32700](http://192.168.4.20:32700)
 
