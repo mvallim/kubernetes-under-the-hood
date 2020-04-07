@@ -1,8 +1,8 @@
-## Demo Application
+# Demo Application
 
 > Full referenced: https://kubernetes.io/docs/tutorials/stateless-application/guestbook/
 
-### Configure your local routing
+## Configure your local routing
 
 You need to add a route to your local machine to access the internal network of **Virtualbox**.
 
@@ -12,7 +12,7 @@ You need to add a route to your local machine to access the internal network of 
 ~$ sudo ip route add 192.168.2.0/24 via 192.168.4.254 dev vboxnet0
 ```
 
-### Access the BusyBox
+## Access the BusyBox
 
 We need to get the **BusyBox IP** to access it via ssh
 
@@ -32,7 +32,7 @@ Use the returned value to access.
 ~$ ssh debian@192.168.4.57
 ```
 
-### Start up the Redis Master
+## Start up the Redis Master
 
 The guestbook application uses Redis to store its data. It writes its data to a Redis master instance and reads data from multiple Redis slave instances.
 
@@ -63,7 +63,7 @@ The guestbook application uses Redis to store its data. It writes its data to a 
 
 > Note: Replace POD-NAME with the name of your Pod.
 
-### Creating the Redis Master Service
+## Creating the Redis Master Service
 
 The guestbook applications needs to communicate to the Redis master to write its data. You need to apply a Service to proxy the traffic to the Redis master Pod. A Service defines a policy to access the Pods.
 
@@ -89,11 +89,11 @@ The guestbook applications needs to communicate to the Redis master to write its
 
 > Note: This manifest file creates a Service named `redis-master` with a set of labels that match the labels previously defined, so the Service routes network traffic to the Redis master Pod.
 
-### Start up the Redis Slaves
+## Start up the Redis Slaves
 
 Although the Redis master is a single pod, you can make it highly available to meet traffic demands by adding replica Redis slaves.
 
-#### Creating the Redis Slave Deployment
+### Creating the Redis Slave Deployment
 
 Deployments scale based off of the configurations set in the manifest file. In this case, the Deployment object specifies two replicas.
 
@@ -120,7 +120,7 @@ If there are not any replicas running, this Deployment would start the two repli
    redis-slave-74ccb764fc-sps4r    0/1     ContainerCreating   0          6s
    ```
 
-#### Creating the Redis Slave Service
+### Creating the Redis Slave Service
 
 The guestbook application needs to communicate to Redis slaves to read data. To make the Redis slaves discoverable, you need to set up a Service. A Service provides transparent load balancing to a set of Pods.
 
@@ -145,11 +145,11 @@ The guestbook application needs to communicate to Redis slaves to read data. To 
    redis-slave    ClusterIP   10.105.138.125   <none>        6379/TCP   7s
    ```
 
-### Set up and Expose the Guestbook Frontend
+## Set up and Expose the Guestbook Frontend
 
 The guestbook application has a web frontend serving the HTTP requests written in PHP. It is configured to connect to the `redis-master` Service for write requests and the `redis-slave` service for Read requests.
 
-#### Creating the Guestbook Frontend Deployment
+### Creating the Guestbook Frontend Deployment
 
 1. Apply the frontend Deployment from the `frontend-deployment.yaml` file:
 
@@ -172,7 +172,7 @@ The guestbook application has a web frontend serving the HTTP requests written i
    frontend-74b4665db5-zg5kw       1/1     Running   0          70s
    ```
 
-#### Creating the Frontend Service
+### Creating the Frontend Service
 
 The `redis-slave` and `redis-master` Services you applied are only accessible within the container cluster because the default type for a Service is ClusterIP. `ClusterIP` provides a single IP address for the set of Pods the Service is pointing to. This IP address is accessible only within the cluster.
 
@@ -198,7 +198,7 @@ The `redis-slave` and `redis-master` Services you applied are only accessible wi
    redis-slave    ClusterIP   10.105.138.125   <none>        6379/TCP       2m9s
    ```
 
-#### Viewing the Frontend Service via **`NodePort`**
+### Viewing the Frontend Service via **`NodePort`**
 
 1. Query the nodes and ip information
 
@@ -226,7 +226,7 @@ The `redis-slave` and `redis-master` Services you applied are only accessible wi
 
 > Keep attention on port **`30551`**, you should change correspondent port show in your on output above.
 
-### Scale the Web Frontend
+## Scale the Web Frontend
 
 Scaling up or down is easy because your servers are defined as a Service that uses a Deployment controller.
 
@@ -279,7 +279,7 @@ Scaling up or down is easy because your servers are defined as a Service that us
    redis-slave-74ccb764fc-sps4r    1/1     Running   0          8m39s
    ```
 
-### Cleaning up (Don't clean if you enable [`LoadBalancer`](/documentation/kube-metallb.md))
+## Cleaning up (Don't clean if you enable [`LoadBalancer`](/documentation/kube-metallb.md))
 
 Deleting the Deployments and Services also deletes any running Pods. Use labels to delete multiple resources with one command.
 
