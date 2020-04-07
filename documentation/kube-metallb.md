@@ -67,7 +67,7 @@ spec:
 
 1. Apply the LoadBalancer service deploy from the [`kube-service-load-balancer`](../services/kube-service-load-balancer.yaml) file:
 
-   ```shell
+   ```console
    debian@busybox:~$ kubectl apply -f https://raw.githubusercontent.com/mvallim/kubernetes-under-the-hood/master/services/kube-service-load-balancer.yaml
    ```
 
@@ -79,7 +79,7 @@ spec:
 
 2. Query the state of service `load-balancer-service`
 
-   ```shell
+   ```console
    debian@busybox:~$ kubectl get service load-balancer-service -o wide
    ```
 
