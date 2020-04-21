@@ -1,6 +1,6 @@
 # How to setup the Masters using `kubeadm` bootstrap
 
-Master components provide the cluster’s control plane. Master components make global decisions about the cluster (for example, scheduling), and detecting and responding to cluster events (starting up a new pod when a replication controller’s ‘replicas’ field is unsatisfied).
+Master components provide the cluster’s control plane. Master components make global decisions about the cluster (for example, scheduling), and detecting and responding to cluster events (starting up a new pod when a replication controller’s ‘replicas’ field is unsatisfied, for example).
 
 Master components can be run on any machine in the cluster. However, for simplicity, setup scripts typically start all master components on the same machine, and do not run user containers on this machine.
 
@@ -12,24 +12,23 @@ Master components can be run on any machine in the cluster. However, for simplic
 
 ## Components
 
-* **Kubelet** - Kubelet gets the configuration of a pod from the API Server and ensures that the described containers are up and running.
-* **Docker** - It takes care of downloading the images and starting the containers.
-* **etcd** - The etcd reliably stores the configuration data of the Kubernetes cluster, representing the state of the cluster (what nodes exist in the cluster, what pods should be running, which nodes they are running on, and a whole lot more) at any given point in time.
-* **API Server** - The API Server validates and configures data for the API objects, which include pods, services, replication controllers, and others. The API Server services REST operations and provides the frontend to the cluster’s shared state through which all other components interact.
-* **Controller Manager** - The Controller Manager watches the state of the cluster through the API Server watch feature and, when it gets notified, it makes the necessary changes, attempting to move the current state towards the desired state. Besides, the Controller Manager performs lifecycle of as namespace, event, terminated-pod, cascading-deletion, node, etc.
-* **Scheduler** - The Scheduler watches for unscheduled pods and binds them to nodes via the binding pod subresource API, according to the availability of the requested resources, quality of service requirements, affinity and anti-affinity specifications, and other constraints. Once the pod has a node assigned, the regular behavior of the Kubelet is triggered and the pod and its containers are created.
-* **Kube Proxy** - Kube Proxy acts as a network proxy and a load balancer for a service on a single worker node. It takes care of the network routing for TCP and UDP packets.
-* **Flannel** - It is a layer 3 network fabric designed for Kubernetes. Check our [previous article about flannel](https://itnext.io/kubernetes-journey-up-and-running-out-of-the-cloud-flannel-c01283308f0e) for more information.
-* **CoreDNS** - It is the DNS Server of the Kubernetes cluster. For more information, check the [CoreDNS official repository](https://github.com/coredns/coredns).
-
+- **Kubelet** - Kubelet gets the configuration of a pod from the API Server and ensures that the described containers are up and running.
+- **Docker** - Takes care of downloading the images and starting the containers.
+- **etcd** - Reliably stores the configuration data of the Kubernetes cluster, representing the state of the cluster (what nodes exist in the cluster, what pods should be running, which nodes they are running on, and a whole lot more) at any given point in time.
+- **API Server** - Validates and configures data for the API objects, which include pods, services, replication controllers, and others. The API Server services REST operations and provides the frontend to the cluster’s shared state through which all other components interact.
+- **Controller Manager** - Watches the state of the cluster through the API Server **watch** feature and, when notified, makes the necessary changes to the cluster, attempting to move the current state towards the desired state. Besides, the Controller Manager performs lifecycle of as namespace, event, terminated-pod, cascading-deletion, node, etc.
+- **Scheduler** - Watches for unscheduled pods and binds them to nodes via the binding pod subresource API, according to the availability of the requested resources, quality of service requirements, affinity and anti-affinity specifications, and other constraints. Once the pod has a node assigned, the regular behavior of the Kubelet is triggered and the pod and its containers are created.
+- **Kube Proxy** - Acts as a network proxy and a load balancer for a service on a single worker node. It takes care of the network routing for TCP and UDP packets.
+- **Flannel** - A layer 3 network fabric designed for Kubernetes. Check our [previous article about flannel](https://itnext.io/kubernetes-journey-up-and-running-out-of-the-cloud-flannel-c01283308f0e) for more information.
+- **CoreDNS** - The DNS Server of the Kubernetes cluster. For more information, check the [CoreDNS official repository](https://github.com/coredns/coredns).
 
 ## Create the VMs
 
-To initialize and configure our instances using cloud-init, we'll use the configuration files versioned at the data directory from our repository.
+To initialize and configure our instances using cloud-init, we'll use the configuration files versioned at the data directory from our [repository](https://github.com/mvallim/kubernetes-under-the-hood).
 
-Notice we also make use of our `create-image.sh` helper script, passing some files from inside the `data/kube/` directory as parameters.
+Notice we also make use of our [`create-image.sh`](https://github.com/mvallim/kubernetes-under-the-hood/blob/master/create-image.sh) helper script, passing some files from inside the `data/kube/` directory as parameters.
 
-* **Create the Masters**
+- **Create the Masters**
 
   ```console
   ~/kubernetes-under-the-hood$ for instance in kube-mast01 kube-mast02 kube-mast03; do
@@ -47,17 +46,17 @@ Notice we also make use of our `create-image.sh` helper script, passing some fil
 
   **Parameters:**
 
-  * **`-k`** is used to copy the **public key** from your host to the newly created VM.
-  * **`-u`** is used to specify the **user-data** file that will be passed as a parameter to the command that creates the cloud-init ISO file we mentioned before (check the source code of the script for a better understanding of how it's used). Default is **`/data/user-data`**.
-  * **`-m`** is used to specify the **meta-data** file that will be passed as a parameter to the command that creates the cloud-init ISO file we mentioned before (check the source code of the script for a better understanding of how it's used). Default is **`/data/meta-data`**.
-  * **`-n`** is used to pass a configuration file that will be used by cloud-init to configure the **network** for the instance.
-  * **`-i`** is used to pass a configuration file that our script will use to modify the **network interface** managed by **VirtualBox** that is attached to the instance that will be created from this image.
-  * **`-r`** is used to pass a configuration file that our script will use to configure the **number of processors and amount of memory** that is allocated to our instance by **VirtualBox**.
-  * **`-o`** is used to pass the **hostname** that will be assigned to our instance. This will also be the name used by **VirtualBox** to reference our instance.
-  * **`-l`** is used to inform which Linux distribution (**debian** or **ubuntu**) configuration files we want to use (notice this is used to specify which folder under data is referenced). Default is **`debian`**.
-  * **`-b`** is used to specify which **base image** should be used. This is the image name that was created on **VirtualBox** when we executed the installation steps from our [linux image](create-linux-image.md).
-  * **`-s`** is used to pass a configuration file that our script will use to configure **virtual disks** on **VirtualBox**. You'll notice this is used only on the **Gluster** configuration step.
-  * **`-a`** whether or not our instance **should be initialized** after it's created. Default is **`true`**.
+  - **`-k`** is used to copy the **public key** from your host to the newly created VM.
+  - **`-u`** is used to specify the **user-data** file that will be passed as a parameter to the command that creates the cloud-init ISO file we mentioned before (check the source code of the script for a better understanding of how it's used). Default is **`/data/user-data`**.
+  - **`-m`** is used to specify the **meta-data** file that will be passed as a parameter to the command that creates the cloud-init ISO file we mentioned before (check the source code of the script for a better understanding of how it's used). Default is **`/data/meta-data`**.
+  - **`-n`** is used to pass a configuration file that will be used by cloud-init to configure the **network** for the instance.
+  - **`-i`** is used to pass a configuration file that our script will use to modify the **network interface** managed by **VirtualBox** that is attached to the instance that will be created from this image.
+  - **`-r`** is used to pass a configuration file that our script will use to configure the **number of processors and amount of memory** that is allocated to our instance by **VirtualBox**.
+  - **`-o`** is used to pass the **hostname** that will be assigned to our instance. This will also be the name used by **VirtualBox** to reference our instance.
+  - **`-l`** is used to inform which Linux distribution (**debian** or **ubuntu**) configuration files we want to use (notice this is used to specify which folder under data is referenced). Default is **`debian`**.
+  - **`-b`** is used to specify which **base image** should be used. This is the image name that was created on **VirtualBox** when we executed the installation steps from our [linux image](create-linux-image.md).
+  - **`-s`** is used to pass a configuration file that our script will use to configure **virtual disks** on **VirtualBox**. You'll notice this is used only on the **Gluster** configuration step.
+  - **`-a`** whether or not our instance **should be initialized** after it's created. Default is **`true`**.
 
   **Expected output:**
 
@@ -140,13 +139,13 @@ permitted by applicable law.
 
 #### `kubeadm-config`
 
-At this point, we need to set up our K8S cluster with its initial configuration..
+At this point, we need to set up our K8S cluster with its initial configuration.
 
 The **SAN**, **Plane Control EndPoint** and **POD Subnet** information is required.
 
-* The **Control Plane EndPoint** address was defined in the HAProxy Cluster (192.168.4.20) ([here](/documentation/haproxy-cluster.md)).
-* The **SAN address** will be the same as the Control Plane EndPoint.
-* The CIDR of the PODs will be the range recommended by the Flannel configuration (search for `net-conf.json` [here](https://github.com/coreos/flannel/blob/master/Documentation/kube-flannel.yml)).
+- The **Control Plane EndPoint** address was defined in the HAProxy Cluster (192.168.4.20) ([here](/documentation/haproxy-cluster.md)).
+- The **SAN address** will be the same as the Control Plane EndPoint.
+- The CIDR of the PODs will be the range recommended by the Flannel configuration (search for `net-conf.json` [here](https://github.com/coreos/flannel/blob/master/Documentation/kube-flannel.yml)).
 
 Based on the above information, we will have a [`kubeadm-config.yml`](../master/kubeadm-config.yaml) that looks like this:
 
@@ -156,7 +155,7 @@ kind: ClusterConfiguration
 kubernetesVersion: stable-1.15
 apiServer:
   certSANs:
-  - "192.168.4.20"
+    - "192.168.4.20"
 controlPlaneEndpoint: "192.168.4.20:6443"
 networking:
   podSubnet: 10.244.0.0/16
@@ -166,15 +165,15 @@ networking:
 
 The kubeadm tool is good if you need:
 
-* A simple way for you to try out Kubernetes, possibly for the first time.
-* A way for existing users to automate setting up a cluster and test their application.
-* A building block in other ecosystem and/or installer tools with a larger scope.
+- A simple way for you to try out Kubernetes, possibly for the first time.
+- A way for existing users to automate setting up a cluster and test their application.
+- A building block in other ecosystem and/or installer tools with a larger scope.
 
 > Reference: https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/
 
 This approach requires less infrastructure. The etcd members and control plane nodes are co-located.
 
-1. Run the following commands to init master node:
+1. Run the following commands to init the master node:
 
    ```console
    debian@busybox:~$ ssh kube-mast01
@@ -298,7 +297,7 @@ This approach requires less infrastructure. The etcd members and control plane n
    kube-system   kube-scheduler-kube-mast01            1/1     Running   0          27s   192.168.1.72   kube-mast01   <none>           <none>
    ```
 
-> If you look at the status on the `kube-mast01` node, it says it is **NotReady** and the `coredns` pods are in the **Pending** state. This is because, up to this point, we do not have a network component configured in our K8S cluster. Remember, as explained before, Flannel will be used for this matter.
+> If you look at the status on the `kube-mast01` node, it says it is **NotReady** and the `coredns` pods are in the **Pending** state. This is because, up to this point, we do not have a network component configured in our K8S cluster. Remember, as explained before, **Flannel** will be used for this matter.
 
 #### Deploy flannel
 
@@ -349,15 +348,15 @@ This approach requires less infrastructure. The etcd members and control plane n
    kube-system   kube-scheduler-kube-mast01            1/1     Running   0          5m2s    192.168.1.72   kube-mast01   <none>           <none>
    ```
 
-> If you look at the status on the `kube-mast01` node, it is now **Ready** and coredns is **Running**. Also, now there is pod named `kube-flannel-ds-amd64`.
+> If you look at the status on the `kube-mast01` node, it is now **Ready** and coredns is **Running**. Also, now there is a pod named `kube-flannel-ds-amd64`.
 
-### Join Master Replicas
+### Join the Master Replicas
 
 Now we need to join the other nodes to our K8S cluster. For this, we need the certificates that were generated in the previous steps.
 
 #### Print Certificate Key
 
-1. Run the following commands to copy certificates to master replicas:
+1. Run the following commands to copy certificates to the master replicas:
 
    ```console
    debian@kube-mast01:~$ sudo kubeadm init phase upload-certs --upload-certs
@@ -376,7 +375,7 @@ Now we need to join the other nodes to our K8S cluster. For this, we need the ce
 
 #### Print the Join Command
 
-1. Run the following command to print the join command. This will be used to join the other master replicas to the cluster:
+1. Run the following command to print the `join` command. This will be used to join the other master replicas to the cluster:
 
    ```console
    debian@kube-mast01:~$ sudo kubeadm token create --print-join-command
@@ -404,7 +403,7 @@ Now we need to join the other nodes to our K8S cluster. For this, we need the ce
 
 #### Join third Kube Master
 
-1. Run the following commands to join the third master replica to cluster using the join command printed in the previous section:
+1. Run the following commands to join the third master replica to the cluster using the join command printed in the previous section:
 
    ```console
    debian@busybox:~$ ssh kube-mast03
@@ -420,19 +419,20 @@ Now we need to join the other nodes to our K8S cluster. For this, we need the ce
 
 1. Query the etcd state
 
-   At this point we will use images from `etcd` with the `etcdctl` cli, using the certificates generated in the previous step of initializing `master-node`.
+   At this point we will use `etcd` images with the `etcdctl` cli, using the certificates generated in the previous step, when we initialized the `master-node`.
 
-   **Command**  
-   **`cluster-health`** check the health of the etcd cluster  
-   **`member`** member `add`, `remove` and `list` subcommands  
+   **Commands**
+
+   - **`cluster-health`** check the health of the etcd cluster
+   - **`member`** member `add`, `remove` and `list` subcommands
 
    **Glocal Options**  
    **`--endpoints`** a comma-delimited list of machine addresses in the cluster (default: "127.0.0.1:4001,127.0.0.1:2379")  
-   **`--cert-file`** identify HTTPS client using this SSL certificate file  
-   **`--key-file`** identify HTTPS client using this SSL key file  
-   **`--ca-file`** verify certificates of HTTPS-enabled servers using this CA bundle  
+   **`--cert-file`** identify the HTTPS client using a SSL certificate file  
+   **`--key-file`** identify the HTTPS client using a SSL key file  
+   **`--ca-file`** verify certificates of HTTPS-enabled servers using a CA bundle
 
-   For more details of the `etcdctl` parameters see: http://manpages.org/etcdctl
+   For more details about the `etcdctl` parameters, see: http://manpages.org/etcdctl
 
    ```console
    debian@busybox:~$ ssh kube-mast01
@@ -489,7 +489,7 @@ Now we need to join the other nodes to our K8S cluster. For this, we need the ce
    kube-mast03   Ready    master   2m54s   v1.15.6   192.168.1.81   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-11-amd64   docker://18.6.0
    ```
 
-   > All master nodes are expected to be in the **Ready** state:
+   > All master nodes are now expected to be in the **Ready** state:
 
    ```console
    NAMESPACE     NAME                                  READY   STATUS    RESTARTS   AGE     IP             NODE          NOMINATED NODE   READINESS GATES
@@ -515,7 +515,7 @@ Now we need to join the other nodes to our K8S cluster. For this, we need the ce
    kube-system   kube-scheduler-kube-mast03            1/1     Running   0          3m42s   192.168.1.81   kube-mast03   <none>           <none>
    ```
 
-   > All master pods **Running**
+   > All master pods are **Running**
 
 ### Check the HAProxy Cluster stats
 
@@ -527,12 +527,13 @@ Password: `admin`
 It will show:
 
 It will show:
+
 <p align="center">
   <img src="images/haproxy-cluster-stats-masters.png">
 </p>
 
-Notice all Control Plane EndPoints are now *UP*
+Notice all Control Plane EndPoints are now _UP_
 
-* kube-mast01:6443
-* kube-mast02:6443
-* kube-mast03:6443
+- kube-mast01:6443
+- kube-mast02:6443
+- kube-mast03:6443
