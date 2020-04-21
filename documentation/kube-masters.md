@@ -373,7 +373,7 @@ Now we need to join the other nodes to our K8S cluster. For this, we need the ce
 
    Now we'll use the certificate key `f385dc122fcaefb52a2c9c748b399b502026ac1c8134cb9b9aa79144d004d95c`
 
-#### Print the Join Command
+#### Print the `Join` Command
 
 1. Run the following command to print the `join` command. This will be used to join the other master replicas to the cluster:
 
@@ -387,9 +387,11 @@ Now we need to join the other nodes to our K8S cluster. For this, we need the ce
    kubeadm join 192.168.4.20:6443 --token uziz9q.5n9r0rbempgyupvg --discovery-token-ca-cert-hash sha256:457f6e849077f9c0a6ed8ad6517c91bfa4f48080c141dda34c3650fc3b1a99fd
    ```
 
+   > The output command prints the command to you join nodes on cluster. You will use this command to join the other masters in the cluster
+
 #### Join the second Kube Master
 
-1. Run the following commands to join the second master replica to cluster using the join command printed in the previous section:
+1. Run the following commands to join the **second master replica** in the cluster using the join command printed in the previous section:
 
    ```console
    debian@busybox:~$ ssh kube-mast02
@@ -403,7 +405,7 @@ Now we need to join the other nodes to our K8S cluster. For this, we need the ce
 
 #### Join third Kube Master
 
-1. Run the following commands to join the third master replica to the cluster using the join command printed in the previous section:
+1. Run the following commands to join the **third master replica** to the cluster using the join command printed in the previous section:
 
    ```console
    debian@busybox:~$ ssh kube-mast03
