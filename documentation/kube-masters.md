@@ -19,7 +19,7 @@ Master components can be run on any machine in the cluster. However, for simplic
 * **Controller Manager** - The Controller Manager watches the state of the cluster through the API Server watch feature and, when it gets notified, it makes the necessary changes, attempting to move the current state towards the desired state. Besides, the Controller Manager performs lifecycle of as namespace, event, terminated-pod, cascading-deletion, node, etc.
 * **Scheduler** - The Scheduler watches for unscheduled pods and binds them to nodes via the binding pod subresource API, according to the availability of the requested resources, quality of service requirements, affinity and anti-affinity specifications, and other constraints. Once the pod has a node assigned, the regular behavior of the Kubelet is triggered and the pod and its containers are created.
 * **Kube Proxy** - Kube Proxy acts as a network proxy and a load balancer for a service on a single worker node. It takes care of the network routing for TCP and UDP packets.
-* **Flannel** - It is a layer 3 network fabric designed for Kubernetes. Check our [previous article about flannel](https://itnext.io/kubernetes-journey-up-and-running-out-of-the-cloud-flannel-c01283308f0e) for more information.
+* **Flannel** - It is a layer 3 network fabric designed for Kubernetes. Check our [previous topic about flannel](kube-flannel.md) for more information.
 * **CoreDNS** - It is the DNS Server of the Kubernetes cluster. For more information, check the [CoreDNS official repository](https://github.com/coredns/coredns).
 
 
