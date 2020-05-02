@@ -37,8 +37,8 @@ The target audience for this tutorial is someone planning to install a Kubernete
    8. LoadBalancer
       - [How to setup the MetalLB](documentation/kube-metallb.md)
    9. Volumes
-      - [Gluster](documentation/gluster.md)
-      - [Heketi](documentation/kube-heketi.md)
+      - [Gluster](documentation/gluster.md) (under construction)
+      - [Heketi](documentation/kube-heketi.md) (under construction)
       - [Demo StorageClass](documentation/kube-demo-storageclass.md) (under construction)
 
 ## Contributing
