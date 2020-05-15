@@ -44,38 +44,6 @@ write_files:
       }
     }
 
-- path: /root/bin/copy-certificates.sh
-  permissions: '0755'
-  content: |
-    USER=debian
-    CONTROL_PLANE_IPS="kube-mast02 kube-mast03"
-    for host in ${CONTROL_PLANE_IPS}; do
-      scp /etc/kubernetes/pki/ca.crt "${USER}"@$host:~/.
-      scp /etc/kubernetes/pki/ca.key "${USER}"@$host:~/.
-      scp /etc/kubernetes/pki/sa.key "${USER}"@$host:~/.
-      scp /etc/kubernetes/pki/sa.pub "${USER}"@$host:~/.
-      scp /etc/kubernetes/pki/front-proxy-ca.crt "${USER}"@$host:~/.
-      scp /etc/kubernetes/pki/front-proxy-ca.key "${USER}"@$host:~/.
-      scp /etc/kubernetes/pki/etcd/ca.crt "${USER}"@$host:etcd-ca.crt
-      scp /etc/kubernetes/pki/etcd/ca.key "${USER}"@$host:etcd-ca.key
-      scp /etc/kubernetes/admin.conf "${USER}"@$host:~/.
-    done
-
-- path: /root/bin/move-certificates.sh
-  permissions: '0755'
-  content: |
-    USER=debian
-    mkdir -p /etc/kubernetes/pki/etcd
-    mv /home/${USER}/ca.crt /etc/kubernetes/pki/
-    mv /home/${USER}/ca.key /etc/kubernetes/pki/
-    mv /home/${USER}/sa.pub /etc/kubernetes/pki/
-    mv /home/${USER}/sa.key /etc/kubernetes/pki/
-    mv /home/${USER}/front-proxy-ca.crt /etc/kubernetes/pki/
-    mv /home/${USER}/front-proxy-ca.key /etc/kubernetes/pki/
-    mv /home/${USER}/etcd-ca.crt /etc/kubernetes/pki/etcd/ca.crt
-    mv /home/${USER}/etcd-ca.key /etc/kubernetes/pki/etcd/ca.key
-    mv /home/${USER}/admin.conf /etc/kubernetes/admin.conf
-
 apt:
   sources_list: |
     deb http://deb.debian.org/debian/ $RELEASE main contrib non-free

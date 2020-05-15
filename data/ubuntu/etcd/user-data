@@ -46,13 +46,13 @@ packages:
   - curl
 
 runcmd:
-  - [ chown, -R, 'debian:debian', '/home/debian' ]
+  - [ chown, -R, 'ubuntu:ubuntu', '/home/ubuntu' ]
     # SSH server to trust the CA
   - echo '\nTrustedUserCAKeys /etc/ssh/ca.pub' | tee -a /etc/ssh/sshd_config
 
 users:
-- name: debian
-  gecos: Debian User
+- name: ubuntu
+  gecos: Ubuntu User
   sudo: ALL=(ALL) NOPASSWD:ALL
   shell: /bin/bash
   lock_passwd: true
