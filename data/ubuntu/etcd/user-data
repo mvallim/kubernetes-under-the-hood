@@ -20,40 +20,16 @@ write_files:
     N2h2R2QzS0ZvU1N4aDlFY1FONTNXWEhMYXBHQ0o0NGVFU3NqbVgzN1NwWElUYUhEOHJQRXBia0E0
     WWJzaVVoTXZPZ0VCLy9MZ1d0R2kvRVRxalVSUFkvWGRTVTR5dFE9PSBjYUBrdWJlLmRlbW8K
     
-- path: /etc/modules-load.d/bridge.conf
-  permissions: '0644'
-  content: |
-    br_netfilter
-
-- path: /etc/sysctl.d/10-kubernetes.conf
-  permissions: '0644'
-  content: |
-    net.ipv4.ip_forward=1
-    net.bridge.bridge-nf-call-iptables=1
-    net.bridge.bridge-nf-call-arptables=1
-
-- path: /etc/docker/daemon.json
-  permissions: '0644'
-  content: |
-    {
-      "exec-opts": ["native.cgroupdriver=systemd"],
-      "log-driver": "json-file",
-      "storage-driver": "overlay2",
-      "log-opts": {
-        "max-size": "100m"
-      }
-    }
-
 apt:
   sources_list: |
-    deb http://us.archive.ubuntu.com/ubuntu/ $RELEASE main restricted universe multiverse
-    deb-src http://us.archive.ubuntu.com/ubuntu/ $RELEASE main restricted universe multiverse
+    deb http://deb.debian.org/debian/ $RELEASE main contrib non-free
+    deb-src http://deb.debian.org/debian/ $RELEASE main contrib non-free
 
-    deb http://us.archive.ubuntu.com/ubuntu/ $RELEASE-security main restricted universe multiverse
-    deb http://us.archive.ubuntu.com/ubuntu/ $RELEASE-updates main restricted universe multiverse
+    deb http://deb.debian.org/debian/ $RELEASE-updates main contrib non-free
+    deb-src http://deb.debian.org/debian/ $RELEASE-updates main contrib non-free
 
-    deb-src http://us.archive.ubuntu.com/ubuntu/ $RELEASE-security main restricted universe multiverse
-    deb-src http://us.archive.ubuntu.com/ubuntu/ $RELEASE-updates main restricted universe multiverse
+    deb http://deb.debian.org/debian-security $RELEASE/updates main
+    deb-src http://deb.debian.org/debian-security $RELEASE/updates main
   conf: |
     APT {
       Get {
@@ -67,22 +43,9 @@ packages:
   - ca-certificates
   - gnupg2
   - software-properties-common
-  - glusterfs-client
-  - bridge-utils
   - curl
 
 runcmd:
-  - [ modprobe, br_netfilter ]
-  - [ sysctl, --system ]
-  - curl -s https://download.docker.com/linux/debian/gpg | apt-key add -
-  - curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
-  - [ apt-key, fingerprint, '0EBFCD88' ]
-  - echo 'deb [arch=amd64] https://download.docker.com/linux/debian stretch stable' > /etc/apt/sources.list.d/docker-ce.list
-  - echo 'deb https://apt.kubernetes.io/ kubernetes-xenial main' > /etc/apt/sources.list.d/kubernetes.list
-  - [ apt-get, update ]
-  - [ apt-get, install, -y, 'docker-ce=18.06.0~ce~3-0~debian', containerd.io ]
-  - [ apt-get, install, -y, 'kubelet=1.15.6-00', 'kubectl=1.15.6-00', 'kubeadm=1.15.6-00' ]
-  - [ apt-mark, hold, kubelet, kubectl, kubeadm, docker-ce, containerd.io ]
   - [ chown, -R, 'ubuntu:ubuntu', '/home/ubuntu' ]
     # SSH server to trust the CA
   - echo '\nTrustedUserCAKeys /etc/ssh/ca.pub' | tee -a /etc/ssh/sshd_config
