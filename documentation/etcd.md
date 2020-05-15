@@ -132,6 +132,7 @@ permitted by applicable law.
     default_md              = sha256
     distinguished_name      = dn
     prompt                  = no
+
     [ dn ]
     C                       = BR
     ST                      = SP
@@ -139,6 +140,7 @@ permitted by applicable law.
     O                       = Kubernetes, Labs
     OU                      = Labs
     CN                      = \${ENV::CN}
+
     [ server ]
     subjectKeyIdentifier    = hash
     basicConstraints        = critical,CA:FALSE
@@ -146,6 +148,7 @@ permitted by applicable law.
     keyUsage                = critical,keyEncipherment,dataEncipherment
     authorityKeyIdentifier  = keyid,issuer:always
     subjectAltName          = DNS:localhost,\${ENV::SAN},IP:127.0.0.1,IP:127.0.1.1
+
     [ user ]
     subjectKeyIdentifier    = hash
     basicConstraints        = critical,CA:FALSE
