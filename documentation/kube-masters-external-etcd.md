@@ -409,7 +409,7 @@ Now we need to join the other nodes to our K8S cluster. For this, we need the ce
 1. Run the following commands to copy certificates to master replicas:
 
    ```console
-   debian@kube-mast01:~$ sudo kubeadm init phase upload-certs --upload-certs
+   debian@kube-mast01:~$ sudo kubeadm init phase upload-certs --upload-certs --config kubeadm-config-external-etcd.yaml
    ```
 
    Expected output:
