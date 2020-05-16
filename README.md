@@ -42,6 +42,7 @@ The target audience for this tutorial is someone planning to install a Kubernete
       - [Demo StorageClass](documentation/kube-demo-storageclass.md) (under construction)
 5. Extra
    1. [How to setup the external etcd with TLS](documentation/etcd.md)
+   2. [How to setup the Masters using `kubeadm` bootstrap with external `etcd`](documentation/kube-masters-external-etcd.md)  (under construction)
 
 ## Contributing
 
