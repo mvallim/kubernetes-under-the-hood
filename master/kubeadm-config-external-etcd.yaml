@@ -1,0 +1,18 @@
+apiVersion: kubeadm.k8s.io/v1beta1
+kind: ClusterConfiguration
+kubernetesVersion: stable-1.15
+apiServer:
+  certSANs:
+  - "192.168.4.20"
+controlPlaneEndpoint: "192.168.4.20:6443"
+networking:
+  podSubnet: 10.244.0.0/16
+etcd:
+  external:
+    endpoints:
+    - https://etcd-node01.kube.demo:2379
+    - https://etcd-node02.kube.demo:2379
+    - https://etcd-node03.kube.demo:2379
+    caFile: /etc/kubernetes/pki/etcd/ca-cert.pem
+    certFile: /etc/kubernetes/pki/apiserver-etcd-client-cert.pem
+    keyFile: /etc/kubernetes/pki/apiserver-etcd-client-key.pem  
