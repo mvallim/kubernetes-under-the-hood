@@ -284,24 +284,33 @@ Setting up a cluster with external etcd nodes is similar to the procedure used f
    [bootstrap-token] Creating the "cluster-info" ConfigMap in the "kube-public" namespace
    [addons] Applied essential addon: CoreDNS
    [addons] Applied essential addon: kube-proxy
+
    Your Kubernetes control-plane has initialized successfully!
+
    To start using your cluster, you need to run the following as a regular user:
-   mkdir -p $HOME/.kube
-   sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-   sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+     mkdir -p $HOME/.kube
+     sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+     sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
    You should now deploy a pod network to the cluster.
    Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:
-   https://kubernetes.io/docs/concepts/cluster-administration/addons/
+     https://kubernetes.io/docs/concepts/cluster-administration/addons/
+
    You can now join any number of the control-plane node running the following command on each as root:
-   kubeadm join 192.168.4.20:6443 --token 6xy7kn.y6j54yd9gixmz360 \
-       --discovery-token-ca-cert-hash sha256:5718ce4eaec07aef1ecdf4c5b3597503d26db3d2c3a3db282e6092d87066368c \
-       --control-plane --certificate-key 7e5faf2632e924ab1baa6a1fd0cf4fb5243acb5ef0a40c69ed2039cd9468dbb0
+
+     kubeadm join 192.168.4.20:6443 --token 5e7aaq.ejvnu55qqxst7czz \
+       --discovery-token-ca-cert-hash sha256:457f6e849077f9c0a6ed8ad6517c91bfa4f48080c141dda34c3650fc3b1a99fd \
+       --control-plane --certificate-key 039bae4efd18d7692139f1101fedc877f68c1b4f3a7aa247d4703a764cc98131
+
    Please note that the certificate-key gives access to cluster sensitive data, keep it secret!
-   As a safeguard, uploaded-certs will be deleted in two hours; If necessary, you can use 
-   "kubeadm init phase upload-certs --upload-certs" to reload certs afterward.
+   As a safeguard, uploaded-certs will be deleted in two hours; If necessary, you can use
+    "kubeadm init phase upload-certs --upload-certs" to reload certs afterward.
+
    Then you can join any number of worker nodes by running the following on each as root:
-   kubeadm join 192.168.4.20:6443 --token 6xy7kn.y6j54yd9gixmz360 \
-       --discovery-token-ca-cert-hash sha256:5718ce4eaec07aef1ecdf4c5b3597503d26db3d2c3a3db282e6092d87066368c
+
+   kubeadm join 192.168.4.20:6443 --token 5e7aaq.ejvnu55qqxst7czz \
+       --discovery-token-ca-cert-hash sha256:457f6e849077f9c0a6ed8ad6517c91bfa4f48080c141dda34c3650fc3b1a99fd
    ```
 
 3. Finish configuring the cluster and query the state of nodes and pods
@@ -329,7 +338,6 @@ Setting up a cluster with external etcd nodes is similar to the procedure used f
    NAMESPACE     NAME                                  READY   STATUS    RESTARTS   AGE   IP             NODE          NOMINATED NODE   READINESS GATES
    kube-system   coredns-86c58d9df4-6gzrk              0/1     Pending   0          89s   <none>         <none>        <none>           <none>
    kube-system   coredns-86c58d9df4-fxj5r              0/1     Pending   0          89s   <none>         <none>        <none>           <none>
-   kube-system   etcd-kube-mast01                      1/1     Running   0          46s   192.168.1.72   kube-mast01   <none>           <none>
    kube-system   kube-apiserver-kube-mast01            1/1     Running   0          43s   192.168.1.72   kube-mast01   <none>           <none>
    kube-system   kube-controller-manager-kube-mast01   1/1     Running   0          44s   192.168.1.72   kube-mast01   <none>           <none>
    kube-system   kube-proxy-8kb86                      1/1     Running   0          89s   192.168.1.72   kube-mast01   <none>           <none>
@@ -379,7 +387,6 @@ Setting up a cluster with external etcd nodes is similar to the procedure used f
    NAMESPACE     NAME                                  READY   STATUS    RESTARTS   AGE     IP             NODE          NOMINATED NODE   READINESS GATES
    kube-system   coredns-86c58d9df4-6gzrk              1/1     Running   0          6m4s    10.244.0.4     kube-mast01   <none>           <none>
    kube-system   coredns-86c58d9df4-fxj5r              1/1     Running   0          6m4s    10.244.0.5     kube-mast01   <none>           <none>
-   kube-system   etcd-kube-mast01                      1/1     Running   0          5m21s   192.168.1.72   kube-mast01   <none>           <none>
    kube-system   kube-apiserver-kube-mast01            1/1     Running   0          5m18s   192.168.1.72   kube-mast01   <none>           <none>
    kube-system   kube-controller-manager-kube-mast01   1/1     Running   0          5m19s   192.168.1.72   kube-mast01   <none>           <none>
    kube-system   kube-flannel-ds-amd64-545vl           1/1     Running   0          24s     192.168.1.72   kube-mast01   <none>           <none>
