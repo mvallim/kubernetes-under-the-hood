@@ -314,80 +314,110 @@ Press **ctrl+b** and **shit+:** type the following command and hit ENTER:
 
 `setw synchronize-panes`
 
-```shell
-sudo groupadd --system etcd
-sudo useradd -s /sbin/nologin --system -g etcd etcd
-```
+1. Create user and group `etcd` to run service
 
-```shell
-sudo mkdir -p /var/lib/etcd/
-sudo chown etcd:etcd /var/lib/etcd
-```
+    ```shell
+    sudo groupadd --system etcd
+    sudo useradd -s /sbin/nologin --system -g etcd etcd
+    ```
 
-```shell
-sudo mkdir /etc/etcd
-sudo cp *.pem /etc/etcd/.
-sudo chmod +r /etc/etcd/*.pem
-sudo chown etcd:etcd /etc/etcd/*.pem
-```
+2. Create directories to stora data `etcd`
 
-```shell
-curl -L --progress https://github.com/etcd-io/etcd/releases/download/v3.4.7/etcd-v3.4.7-linux-amd64.tar.gz -o /tmp/etcd-v3.4.7-linux-amd64.tar.gz
+    ```shell
+    sudo mkdir -p /var/lib/etcd/
+    sudo chown etcd:etcd /var/lib/etcd
+    ```
 
-tar xvzf /tmp/etcd-v3.4.7-linux-amd64.tar.gz
+3. Create directory to certificate files and copy files
 
-sudo mv etcd-v3.4.7-linux-amd64/etcd* /usr/local/bin/.
-sudo chown root:root /usr/local/bin/etcd*
+    ```shell
+    sudo mkdir /etc/etcd
+    sudo cp *.pem /etc/etcd/.
+    sudo chmod +r /etc/etcd/*.pem
+    sudo chown etcd:etcd /etc/etcd/*.pem
+    ```
 
-rm -rf etcd-v3.4.7-linux-amd64
-```
+4. Download and install binaries `etcd`
 
-```shell
-ETCD_NAME=$(hostname -s | tr -d '[:space:]')
+    ```shell
+    curl -L --progress https://github.com/etcd-io/etcd/releases/download/v3.4.7/etcd-v3.4.7-linux-amd64.tar.gz -o /tmp/etcd-v3.4.7-linux-amd64.tar.gz
 
-ETCD_IP=$(hostname -I | tr -d '[:space:]')
+    tar xvzf /tmp/etcd-v3.4.7-linux-amd64.tar.gz
 
-cat <<EOF | sudo tee -a /etc/systemd/system/etcd.service
-[Unit]
-Description=etcd
-Documentation=https://github.com/coreos/etcd
-Conflicts=etcd.service
+    sudo mv etcd-v3.4.7-linux-amd64/etcd* /usr/local/bin/.
+    sudo chown root:root /usr/local/bin/etcd*
 
-[Service]
-Type=notify
-Restart=always
-RestartSec=5s
-LimitNOFILE=40000
-TimeoutStartSec=0
-User=etcd
-Group=etcd
+    rm -rf etcd-v3.4.7-linux-amd64
+    ```
 
-ExecStart=/usr/local/bin/etcd --name ${ETCD_NAME} \\
-    --data-dir /var/lib/etcd \\
-    --listen-client-urls https://${ETCD_IP}:2379,https://localhost:2379 \\
-    --advertise-client-urls https://${ETCD_IP}:2379 \\
-    --listen-peer-urls https://${ETCD_IP}:2380 \\
-    --initial-advertise-peer-urls https://${ETCD_NAME}.kube.demo:2380 \\
-    --initial-cluster etcd-node01=https://etcd-node01.kube.demo:2380,etcd-node02=https://etcd-node02.kube.demo:2380,etcd-node03=https://etcd-node03.kube.demo:2380 \\
-    --initial-cluster-token BHGUXFgqJJfS38HCuVy4Xvn8DuDLu8Hd \\
-    --initial-cluster-state new \\
-    --client-cert-auth \\
-    --trusted-ca-file /etc/etcd/ca-cert.pem \\
-    --cert-file /etc/etcd/${ETCD_NAME}-cert.pem \\
-    --key-file /etc/etcd/${ETCD_NAME}-key.pem \\
-    --peer-client-cert-auth \\
-    --peer-trusted-ca-file /etc/etcd/ca-cert.pem \\
-    --peer-cert-file /etc/etcd/${ETCD_NAME}-cert.pem \\
-    --peer-key-file /etc/etcd/${ETCD_NAME}-key.pem
+5. Create unit service file to run on `systemd`
 
-[Install]
-WantedBy=multi-user.target
-EOF
-```
+    ```shell
+    ETCD_NAME=$(hostname -s | tr -d '[:space:]')
 
-```shell
-sudo systemctl daemon-reload
-sudo systemctl cat etcd.service
-sudo systemctl enable etcd.service
-sudo systemctl start etcd.service
-```
+    ETCD_IP=$(hostname -I | tr -d '[:space:]')
+
+    cat <<EOF | sudo tee -a /etc/systemd/system/etcd.service
+    [Unit]
+    Description=etcd
+    Documentation=https://github.com/coreos/etcd
+    Conflicts=etcd.service
+
+    [Service]
+    Type=notify
+    Restart=always
+    RestartSec=5s
+    LimitNOFILE=40000
+    TimeoutStartSec=0
+    User=etcd
+    Group=etcd
+
+    ExecStart=/usr/local/bin/etcd --name ${ETCD_NAME} \\
+        --data-dir /var/lib/etcd \\
+        --listen-client-urls https://${ETCD_IP}:2379,https://localhost:2379 \\
+        --advertise-client-urls https://${ETCD_IP}:2379 \\
+        --listen-peer-urls https://${ETCD_IP}:2380 \\
+        --initial-advertise-peer-urls https://${ETCD_NAME}.kube.demo:2380 \\
+        --initial-cluster etcd-node01=https://etcd-node01.kube.demo:2380,etcd-node02=https://etcd-node02.kube.demo:2380,etcd-node03=https://etcd-node03.kube.demo:2380 \\
+        --initial-cluster-token BHGUXFgqJJfS38HCuVy4Xvn8DuDLu8Hd \\
+        --initial-cluster-state new \\
+        --client-cert-auth \\
+        --trusted-ca-file /etc/etcd/ca-cert.pem \\
+        --cert-file /etc/etcd/${ETCD_NAME}-cert.pem \\
+        --key-file /etc/etcd/${ETCD_NAME}-key.pem \\
+        --peer-client-cert-auth \\
+        --peer-trusted-ca-file /etc/etcd/ca-cert.pem \\
+        --peer-cert-file /etc/etcd/${ETCD_NAME}-cert.pem \\
+        --peer-key-file /etc/etcd/${ETCD_NAME}-key.pem
+
+    [Install]
+    WantedBy=multi-user.target
+    EOF
+    ```
+
+6. Start and run the `etcd` servers
+
+    ```shell
+    sudo systemctl daemon-reload
+    sudo systemctl enable etcd.service
+    sudo systemctl start etcd.service
+    ```
+
+7. Verification
+
+    ```shell
+    ETCD_NAME=$(hostname -s | tr -d '[:space:]')
+
+    etcdctl member list \
+        --cacert=/etc/etcd/ca-cert.pem \
+        --cert=/etc/etcd/${ETCD_NAME}-cert.pem \
+        --key=/etc/etcd/${ETCD_NAME}-key.pem
+    ```
+
+    Expected output
+
+    ```text
+    77508fdcfa570432, started, etcd-node01, https://etcd-node01.kube.demo:2380, https://192.168.1.75:2379, false
+    8dc5f1bc33f2f56b, started, etcd-node02, https://etcd-node02.kube.demo:2380, https://192.168.1.128:2379, false
+    eefbe5085b970e3a, started, etcd-node03, https://etcd-node03.kube.demo:2380, https://192.168.1.121:2379, false
+    ```
