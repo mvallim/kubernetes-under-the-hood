@@ -178,7 +178,7 @@ permitted by applicable law.
 
 2. Create CA certificate
 
-    ```shell
+    ```console
     debian@busybox:~/etcd-certificates$ CN=labs SAN= \
         openssl req -x509 -newkey rsa:2048 -nodes \
             -keyout ca-key.pem \
@@ -199,7 +199,7 @@ permitted by applicable law.
 
 3. Create requests certificates to etcd nodes
 
-    ```shell
+    ```console
     debian@busybox:~/etcd-certificates$ for instance in etcd-node01 etcd-node02 etcd-node03; do
         CN=${instance} SAN=DNS:${instance},DNS:${instance}.kube.demo \
             openssl req -newkey rsa:2048 -nodes \
@@ -231,7 +231,7 @@ permitted by applicable law.
 
 4. Sing certificates using your own CA
 
-    ```shell
+    ```console
     debian@busybox:~/etcd-certificates$ for instance in etcd-node01 etcd-node02 etcd-node03; do
         CN=${instance} SAN=DNS:${instance},DNS:${instance}.kube.demo \
             openssl x509 -req \
@@ -262,7 +262,7 @@ permitted by applicable law.
 
 5. Verify signatures
 
-    ```shell
+    ```console
     debian@busybox:~/etcd-certificates$ for instance in etcd-node01 etcd-node02 etcd-node03; do
         openssl verify -CAfile ca-cert.pem ${instance}-cert.pem
     done
@@ -278,7 +278,7 @@ permitted by applicable law.
 
 6. Copy certificate to instances
 
-    ```shell
+    ```console
     debian@busybox:~/etcd-certificates$ for instance in etcd-node01 etcd-node02 etcd-node03; do
         scp ca-cert.pem ${instance}-*.pem debian@${instance}:~/.
     done
@@ -306,23 +306,23 @@ To split a pane horizontally, press **ctrl+b** and **”** (single quotation mar
 
 Let's go
 
-```shell
+```console
 debian@busybox:~$ tmux
 ```
 
-```shell
+```console
 debian@busybox:~$ ssh debian@etcd-node01
 ```
 
 > `ctrl+b` `"`
 
-```shell
+```console
 debian@busybox:~$ ssh debian@etcd-node02
 ```
 
 > `ctrl+b` `"`
 
-```shell
+```console
 debian@busybox:~$ ssh debian@etcd-node03
 ```
 
@@ -334,21 +334,21 @@ Press **ctrl+b** and **shit+:** type the following command and hit ENTER:
 
 1. Create user and group `etcd` to run service
 
-    ```shell
+    ```console
     sudo groupadd --system etcd
     sudo useradd -s /sbin/nologin --system -g etcd etcd
     ```
 
 2. Create directories to stora data `etcd`
 
-    ```shell
+    ```console
     sudo mkdir -p /var/lib/etcd/
     sudo chown etcd:etcd /var/lib/etcd
     ```
 
 3. Create directory to certificate files and copy files
 
-    ```shell
+    ```console
     sudo mkdir /etc/etcd
     sudo cp *.pem /etc/etcd/.
     sudo chmod +r /etc/etcd/*.pem
@@ -357,8 +357,10 @@ Press **ctrl+b** and **shit+:** type the following command and hit ENTER:
 
 4. Download and install binaries `etcd`
 
-    ```shell
-    curl -L --progress https://github.com/etcd-io/etcd/releases/download/v3.4.7/etcd-v3.4.7-linux-amd64.tar.gz -o /tmp/etcd-v3.4.7-linux-amd64.tar.gz
+    ```console
+    curl -L \
+        --progress https://github.com/etcd-io/etcd/releases/download/v3.4.7/etcd-v3.4.7-linux-amd64.tar.gz \
+        -o /tmp/etcd-v3.4.7-linux-amd64.tar.gz
 
     tar xvzf /tmp/etcd-v3.4.7-linux-amd64.tar.gz
 
@@ -370,7 +372,7 @@ Press **ctrl+b** and **shit+:** type the following command and hit ENTER:
 
 5. Create unit service file to run on `systemd`
 
-    ```shell
+    ```console
     ETCD_NAME=$(hostname -s | tr -d '[:space:]')
 
     ETCD_IP=$(hostname -I | tr -d '[:space:]')
@@ -415,7 +417,7 @@ Press **ctrl+b** and **shit+:** type the following command and hit ENTER:
 
 6. Start and run the `etcd` servers
 
-    ```shell
+    ```console
     sudo systemctl daemon-reload
     sudo systemctl enable etcd.service
     sudo systemctl start etcd.service
@@ -423,7 +425,7 @@ Press **ctrl+b** and **shit+:** type the following command and hit ENTER:
 
 7. Verification
 
-    ```shell
+    ```console
     ETCD_NAME=$(hostname -s | tr -d '[:space:]')
 
     etcdctl member list \
