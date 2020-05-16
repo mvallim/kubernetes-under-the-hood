@@ -40,6 +40,8 @@ The target audience for this tutorial is someone planning to install a Kubernete
       - [Gluster](documentation/gluster.md) (under construction)
       - [Heketi](documentation/kube-heketi.md) (under construction)
       - [Demo StorageClass](documentation/kube-demo-storageclass.md) (under construction)
+5. Extra
+   1. [How to setup the external etcd with TLS](documentation/etcd.md)
 
 ## Contributing
 
