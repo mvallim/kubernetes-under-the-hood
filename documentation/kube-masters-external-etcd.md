@@ -143,6 +143,16 @@ permitted by applicable law.
             -config config.conf \
             -out apiserver-etcd-client-cert.csr
     ```
+    
+    Expected output:
+
+    ```text
+    Generating a RSA private key
+    .....................+++++
+    .................................................+++++
+    writing new private key to 'etcd-node01-key.pem'
+    -----
+    ```
 
 2. Sing client certificate using your own CA etcd
 
@@ -159,11 +169,39 @@ permitted by applicable law.
             -days 3650 \
             -sha256
     ```
+    
+    Expected output:
 
-3. Copy certificates to `kube-mast01`
+    ```text
+    Signature ok
+    subject=C = BR, ST = SP, L = Campinas, O = "Kubernetes, Labs", OU = Labs, CN = apiserver-etcd-client
+    Getting CA Private Key
+    ```
+
+3. Verify signatures
+
+    ```console
+    openssl verify -CAfile ca-cert.pem apiserver-etcd-client.pem
+    ```
+
+    Expected output:
+
+    ```text
+    apiserver-etcd-client.pem: OK
+    ```
+
+4. Copy certificates to `kube-mast01`
 
     ```console
     debian@busybox:~/etcd-certificates$ scp ca-cert.pem apiserver-etcd-client-*.pem kube-mast01:~/.
+    ```
+    
+    Expected output:
+
+    ```text
+    ca-cert.pem                               100% 1200     1.2MB/s   00:00
+    apiserver-etcd-client-cert.pem            100% 1623     1.2MB/s   00:00
+    apiserver-etcd-client-key.pem             100% 1708     1.8MB/s   00:00
     ```
 
 #### `kubeadm-config`
