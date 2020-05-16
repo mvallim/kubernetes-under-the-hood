@@ -56,7 +56,7 @@ Notice we also make use of our `create-image.sh` helper script, passing some fil
 
   **Expected output:**
 
-  ```console
+  ```text
   Total translation table size: 0
   Total rockridge attributes bytes: 417
   Total directory bytes: 0
@@ -170,7 +170,7 @@ permitted by applicable law.
     [ user ]
     subjectKeyIdentifier    = hash
     basicConstraints        = critical,CA:FALSE
-    extendedKeyUsage        = serverAuth,clientAuth
+    extendedKeyUsage        = clientAuth
     keyUsage                = critical,keyEncipherment,dataEncipherment
     authorityKeyIdentifier  = keyid,issuer:always
     EOF
