@@ -7,7 +7,7 @@ Master components can be run on any machine in the cluster. However, for simplic
 ## Overview
 
 <p align="center">
-  <img src="images/kube-master-overview.png">
+  <img src="images/kube-external-etcd.png">
 </p>
 
 ## Components
