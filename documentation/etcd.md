@@ -1,5 +1,23 @@
 # How to setup the external etcd with TLS
 
+<p align="center">
+  <img src="images/etcd-logo.png">
+</p>
+
+*"etcd is a distributed key value store that provides a reliable way to store data across a cluster of machines. It’s open-source and available on GitHub. etcd gracefully handles leader elections during network partitions and will tolerate machine failure, including the leader."*
+
+> Reference: https://coreos.com/etcd/docs/latest/
+
+It is a daemon that runs on all servers in a cluster, providing a dynamic configuration record and allowing multiple configuration data to be shared between cluster members in a simple way.
+
+Because data is stored in a key-value form in **etcd**, it is distributed and replicated automatically (with a **leader** being automatically selected). All changes to the stored data are reflected throughout the whole cluster.
+
+**etcd** also provides a discovery service, allowing “deployed” applications to advertise the services they make available to all cluster nodes.
+
+Communication with **etcd** is done through API calls, using JSON over HTTP. The API can be used directly (via curl or wget for example), or indirectly through etcdctl.
+
+> Reference: https://etcd.io/
+
 ## Create the VMs
 
 To initialize and configure our instances using cloud-init, we'll use the configuration files versioned at the data directory from our repository.
