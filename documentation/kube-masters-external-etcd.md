@@ -290,7 +290,7 @@ permitted by applicable law.
 
 ### Configure the cluster
 
-1. Create requests certificates for the kube-mast nodes
+1. Create the requests certificates for the kube-mast nodes
 
    ```console
    debian@busybox:~/etcd-certificates$ CN=apiserver-etcd-client SAN= \
