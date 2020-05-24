@@ -134,7 +134,27 @@ permitted by applicable law.
 
 ### Configure the cluster
 
-1. Sing client certificate using your own CA etcd
+1. Create requests certificates to kube-mast nodes
+
+    ```console
+    debian@busybox:~/etcd-certificates$ CN=apiserver-etcd-client SAN= \
+        openssl req -newkey rsa:2048 -nodes \
+            -keyout apiserver-etcd-client-key.pem \
+            -config config.conf \
+            -out apiserver-etcd-client-cert.csr
+    ```
+    
+    Expected output:
+
+    ```text
+    Generating a RSA private key
+    ....................................+++++
+    .........................................+++++
+    writing new private key to 'apiserver-etcd-client-key.pem'
+    -----
+    ```
+
+2. Sing client certificate using your own CA etcd
 
     ```console
     debian@busybox:~/etcd-certificates$ CN=apiserver-etcd-client SAN= \
@@ -158,7 +178,7 @@ permitted by applicable law.
     Getting CA Private Key
     ```
 
-2. Verify signatures
+3. Verify signatures
 
     ```console
     debian@busybox:~/etcd-certificates$ openssl verify -CAfile ca-cert.pem apiserver-etcd-client.pem
@@ -170,7 +190,7 @@ permitted by applicable law.
     apiserver-etcd-client.pem: OK
     ```
 
-3. Copy certificates to `kube-mast01`
+4. Copy certificates to `kube-mast01`
 
     ```console
     debian@busybox:~/etcd-certificates$ scp ca-cert.pem apiserver-etcd-client-*.pem kube-mast01:~/.
