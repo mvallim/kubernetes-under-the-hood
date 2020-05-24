@@ -163,6 +163,7 @@ permitted by applicable law.
     basicConstraints        = critical,CA:TRUE
     subjectKeyIdentifier    = hash
     authorityKeyIdentifier  = keyid:always,issuer:always
+    keyUsage                = critical,digitalSignature,keyEncipherment,keyCertSign
 
     [ server ]
     subjectKeyIdentifier    = hash
