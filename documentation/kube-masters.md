@@ -26,9 +26,9 @@ Master components can be run on any machine in the cluster. However, for simplic
 
 To initialize and configure our instances using cloud-init, we'll use the configuration files versioned at the data directory from our repository.
 
-Notice we also make use of our [`create-image.sh`](create-image.sh) helper script, passing some files from inside the `data/kube/` directory as parameters.
+Notice we also make use of our [`create-image.sh`](../create-image.sh) helper script, passing some files from inside the `data/kube/` directory as parameters.
 
-* **Create the Masters**
+- **Create the Masters**
 
   ```console
   ~/kubernetes-under-the-hood$ for instance in kube-mast01 kube-mast02 kube-mast03; do
@@ -137,79 +137,78 @@ permitted by applicable law.
 
 ### Understading the user-data file
 
-The cloud-init kube-master configuration file can be found [here](/data/debian/kube/user-data). This configures and install docker and kubernetes biniaries (kubeadm, kubectl, kublet).
+The cloud-init kube-master configuration file can be found [here](/data/debian/kube/user-data). This configures and installs Docker and Kubernetes binaries (kubeadm, kubectl, kublet).
 
-Below you can find the same file commented for easier understanding:
+Below you can find the same file commented for a better understanding:
 
 ```yaml
 #cloud-config
 write_files:
+  # CA ssh pub certificate
+  - path: /etc/ssh/ca.pub
+    permissions: "0644"
+    encoding: b64
+    content: |
+      c3NoLXJzYSBBQUFBQjNOemFDMXljMkVBQUFBREFRQUJBQUFDQVFERGozaTNSODZvQzNzZ0N3ZVRh
+      R1dHZVZHRFpLbFdiOHM4QWVJVE9hOTB3NHl5UndSUWtBTWNGaWFNWGx5OEVOSDd0MHNpM0tFYnRZ
+      M1B1ekpTNVMwTHY0MVFkaHlYMHJhUGxobTZpNnVDV3BvYWsycEF6K1ZFazhLbW1kZjdqMm5OTHlG
+      Y3NQeVg0b0t0SlQrajh6R2QxWHRBWDBuS0JWOXFkOGNTTFFBZGpQVkdNZGxYdTNCZzdsNml3OHhK
+      Ti9ld1l1Qm5DODZ5TlNiWFlDVVpLOE1oQUNLV2FMVWVnOSt0dXNyNTBSbGVRcGI0a2NKRE45LzFa
+      MjhneUtORTRCVENYanEyTzVqRE1MRDlDU3hqNXJoNXRPUUlKREFvblIrMnljUlVnZTltc2hIQ05D
+      VWU2WG16OFVJUFJ2UVpPNERFaHpHZ2N0cFJnWlhQajRoMGJoeGVMekUxcFROMHI2Q29GMDVpOFB0
+      QXd1czl1K0tjUHVoQlgrVm9UbW1JNmRBTStUQkxRUnJ3SUorNnhtM29nWEMwYVpjdkdCVUVTcVll
+      QjUyU0xjZEwyNnBKUlBrVjZYQ0Qyc3RleG5uOFREUEdjYnlZelFnaGNlYUYrb0psdWE4UDZDSzV2
+      VStkNlBGK2o1aEE2NGdHbDQrWmw0TUNBcXdNcnBySEhpd2E3bzF0MC9JTmdoYlFvUUdSU3haQXMz
+      UHdYcklMQ0xUeGN6V29UWHZIWUxuRXRTWW42MVh3SElldWJrTVhJamJBSysreStKWCswcm02aHRN
+      N2h2R2QzS0ZvU1N4aDlFY1FONTNXWEhMYXBHQ0o0NGVFU3NqbVgzN1NwWElUYUhEOHJQRXBia0E0
+      WWJzaVVoTXZPZ0VCLy9MZ1d0R2kvRVRxalVSUFkvWGRTVTR5dFE9PSBjYUBrdWJlLmRlbW8K
 
-# CA ssh pub certificate
-- path: /etc/ssh/ca.pub
-  permissions: '0644'
-  encoding: b64
-  content: |
-    c3NoLXJzYSBBQUFBQjNOemFDMXljMkVBQUFBREFRQUJBQUFDQVFERGozaTNSODZvQzNzZ0N3ZVRh
-    R1dHZVZHRFpLbFdiOHM4QWVJVE9hOTB3NHl5UndSUWtBTWNGaWFNWGx5OEVOSDd0MHNpM0tFYnRZ
-    M1B1ekpTNVMwTHY0MVFkaHlYMHJhUGxobTZpNnVDV3BvYWsycEF6K1ZFazhLbW1kZjdqMm5OTHlG
-    Y3NQeVg0b0t0SlQrajh6R2QxWHRBWDBuS0JWOXFkOGNTTFFBZGpQVkdNZGxYdTNCZzdsNml3OHhK
-    Ti9ld1l1Qm5DODZ5TlNiWFlDVVpLOE1oQUNLV2FMVWVnOSt0dXNyNTBSbGVRcGI0a2NKRE45LzFa
-    MjhneUtORTRCVENYanEyTzVqRE1MRDlDU3hqNXJoNXRPUUlKREFvblIrMnljUlVnZTltc2hIQ05D
-    VWU2WG16OFVJUFJ2UVpPNERFaHpHZ2N0cFJnWlhQajRoMGJoeGVMekUxcFROMHI2Q29GMDVpOFB0
-    QXd1czl1K0tjUHVoQlgrVm9UbW1JNmRBTStUQkxRUnJ3SUorNnhtM29nWEMwYVpjdkdCVUVTcVll
-    QjUyU0xjZEwyNnBKUlBrVjZYQ0Qyc3RleG5uOFREUEdjYnlZelFnaGNlYUYrb0psdWE4UDZDSzV2
-    VStkNlBGK2o1aEE2NGdHbDQrWmw0TUNBcXdNcnBySEhpd2E3bzF0MC9JTmdoYlFvUUdSU3haQXMz
-    UHdYcklMQ0xUeGN6V29UWHZIWUxuRXRTWW42MVh3SElldWJrTVhJamJBSysreStKWCswcm02aHRN
-    N2h2R2QzS0ZvU1N4aDlFY1FONTNXWEhMYXBHQ0o0NGVFU3NqbVgzN1NwWElUYUhEOHJQRXBia0E0
-    WWJzaVVoTXZPZ0VCLy9MZ1d0R2kvRVRxalVSUFkvWGRTVTR5dFE9PSBjYUBrdWJlLmRlbW8K
+  # The bridge-netfilter code enables the following functionality:
+  #  - {Ip,Ip6,Arp}tables can filter bridged IPv4/IPv6/ARP packets, even when
+  # encapsulated in an 802.1Q VLAN or PPPoE header. This enables the functionality
+  # of a stateful transparent firewall.
+  #  - All filtering, logging and NAT features of the 3 tools can therefore be used
+  # on bridged frames.
+  #  - Combined with ebtables, the bridge-nf code therefore makes Linux a very
+  # powerful transparent firewall.
+  #  - This enables, f.e., the creation of a transparent masquerading machine (i.e.
+  # all local hosts think they are directly connected to the Internet).
+  - path: /etc/modules-load.d/bridge.conf
+    permissions: "0644"
+    content: |
+      br_netfilter
 
-# The bridge-netfilter code enables the following functionality:
-#  - {Ip,Ip6,Arp}tables can filter bridged IPv4/IPv6/ARP packets, even when
-# encapsulated in an 802.1Q VLAN or PPPoE header. This enables the functionality
-# of a stateful transparent firewall.
-#  - All filtering, logging and NAT features of the 3 tools can therefore be used
-# on bridged frames.
-#  - Combined with ebtables, the bridge-nf code therefore makes Linux a very
-# powerful transparent firewall.
-#  - This enables, f.e., the creation of a transparent masquerading machine (i.e. 
-# all local hosts think they are directly connected to the Internet).
-- path: /etc/modules-load.d/bridge.conf
-  permissions: '0644'
-  content: |
-    br_netfilter
+  # Besides providing the NetworkPlugin interface to configure and clean up pod networking,
+  # the plugin may also need specific support for kube-proxy. The iptables proxy obviously
+  # depends on iptables, and the plugin may need to ensure that container traffic is made
+  # available to iptables. For example, if the plugin connects containers to a Linux bridge,
+  # the plugin must set the net/bridge/bridge-nf-call-iptables sysctl to 1 to ensure that
+  # the iptables proxy functions correctly. If the plugin does not use a Linux bridge
+  # (but instead something like Open vSwitch or some other mechanism) it should ensure
+  # container traffic is appropriately routed for the proxy.
+  #
+  # For more details : https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/#network-plugin-requirements
+  #
+  # As a requirement for your Linux Node’s iptables to correctly see bridged traffic
+  - path: /etc/sysctl.d/10-kubernetes.conf
+    permissions: "0644"
+    content: |
+      net.ipv4.ip_forward=1
+      net.bridge.bridge-nf-call-iptables=1
+      net.bridge.bridge-nf-call-arptables=1
 
-# Besides providing the NetworkPlugin interface to configure and clean up pod networking,
-# the plugin may also need specific support for kube-proxy. The iptables proxy obviously
-# depends on iptables, and the plugin may need to ensure that container traffic is made
-# available to iptables. For example, if the plugin connects containers to a Linux bridge,
-# the plugin must set the net/bridge/bridge-nf-call-iptables sysctl to 1 to ensure that
-# the iptables proxy functions correctly. If the plugin does not use a Linux bridge
-# (but instead something like Open vSwitch or some other mechanism) it should ensure 
-# container traffic is appropriately routed for the proxy.
-#
-# For more details : https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/#network-plugin-requirements
-#
-# As a requirement for your Linux Node’s iptables to correctly see bridged traffic
-- path: /etc/sysctl.d/10-kubernetes.conf
-  permissions: '0644'
-  content: |
-    net.ipv4.ip_forward=1
-    net.bridge.bridge-nf-call-iptables=1
-    net.bridge.bridge-nf-call-arptables=1
-
-# Set up the Docker daemon
-- path: /etc/docker/daemon.json
-  permissions: '0644'
-  content: |
-    {
-      "exec-opts": ["native.cgroupdriver=systemd"],
-      "log-driver": "json-file",
-      "storage-driver": "overlay2",
-      "log-opts": {
-        "max-size": "100m"
+  # Set up the Docker daemon
+  - path: /etc/docker/daemon.json
+    permissions: "0644"
+    content: |
+      {
+        "exec-opts": ["native.cgroupdriver=systemd"],
+        "log-driver": "json-file",
+        "storage-driver": "overlay2",
+        "log-opts": {
+          "max-size": "100m"
+        }
       }
-    }
 
 apt:
   sources_list: |
@@ -239,29 +238,36 @@ packages:
   - curl
 
 runcmd:
-  - [ modprobe, br_netfilter ]
-  - [ sysctl, --system ]
+  - [modprobe, br_netfilter]
+  - [sysctl, --system]
   - curl -s https://download.docker.com/linux/debian/gpg | apt-key add -
   - curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
-  - [ apt-key, fingerprint, '0EBFCD88' ]
+  - [apt-key, fingerprint, "0EBFCD88"]
   - echo 'deb [arch=amd64] https://download.docker.com/linux/debian stretch stable' > /etc/apt/sources.list.d/docker-ce.list
   - echo 'deb https://apt.kubernetes.io/ kubernetes-xenial main' > /etc/apt/sources.list.d/kubernetes.list
-  - [ apt-get, update ]
-  - [ apt-get, install, -y, 'docker-ce=18.06.0~ce~3-0~debian', containerd.io ]
-  - [ apt-get, install, -y, 'kubelet=1.15.6-00', 'kubectl=1.15.6-00', 'kubeadm=1.15.6-00' ]
-  - [ apt-mark, hold, kubelet, kubectl, kubeadm, docker-ce, containerd.io ]
-  - [ chown, -R, 'debian:debian', '/home/debian' ]
+  - [apt-get, update]
+  - [apt-get, install, -y, "docker-ce=18.06.0~ce~3-0~debian", containerd.io]
+  - [
+      apt-get,
+      install,
+      -y,
+      "kubelet=1.15.6-00",
+      "kubectl=1.15.6-00",
+      "kubeadm=1.15.6-00",
+    ]
+  - [apt-mark, hold, kubelet, kubectl, kubeadm, docker-ce, containerd.io]
+  - [chown, -R, "debian:debian", "/home/debian"]
     # SSH server to trust the CA
   - echo '\nTrustedUserCAKeys /etc/ssh/ca.pub' | tee -a /etc/ssh/sshd_config
 
 users:
-- name: debian
-  gecos: Debian User
-  sudo: ALL=(ALL) NOPASSWD:ALL
-  shell: /bin/bash
-  lock_passwd: true
-- name: root
-  lock_passwd: true
+  - name: debian
+    gecos: Debian User
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    shell: /bin/bash
+    lock_passwd: true
+  - name: root
+    lock_passwd: true
 
 locale: en_US.UTF-8
 
@@ -679,6 +685,7 @@ Password: `admin`
 It will show:
 
 It will show:
+
 <p align="center">
   <img src="images/haproxy-cluster-stats-masters.png">
 </p>
