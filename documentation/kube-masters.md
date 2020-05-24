@@ -58,7 +58,7 @@ Notice we also make use of our [`create-image.sh`](../create-image.sh) helper sc
   - **`-s`** is used to pass a configuration file that our script will use to configure **virtual disks** on **VirtualBox**. You'll notice this is used only on the **Gluster** configuration step.
   - **`-a`** whether or not our instance **should be initialized** after it's created. Default is **`true`**.
 
-  **Expected output:**
+  Expected output:
 
   ```console
   Total translation table size: 0
@@ -92,48 +92,6 @@ Notice we also make use of our [`create-image.sh`](../create-image.sh) helper sc
   Waiting for VM "kube-mast03" to power on...
   VM "kube-mast03" has been successfully started.
   ```
-
-### Configure your local routing
-
-You need to add a route to your local machine to access the internal network of **Virtualbox**.
-
-```console
-~$ sudo ip route add 192.168.4.0/27 via 192.168.4.30 dev vboxnet0
-~$ sudo ip route add 192.168.4.32/27 via 192.168.4.62 dev vboxnet0
-```
-
-### Access the BusyBox
-
-We need to get the **BusyBox IP** to access it via ssh
-
-```console
-~$ vboxmanage guestproperty get busybox "/VirtualBox/GuestInfo/Net/0/V4/IP"
-```
-
-Expected output:
-
-```console
-Value: 192.168.4.57
-```
-
-Use the returned value to access.
-
-```cosole
-~$ ssh debian@192.168.4.57
-```
-
-Expected output:
-
-```console
-Linux busybox 4.9.0-11-amd64 #1 SMP Debian 4.9.189-3+deb9u2 (2019-11-11) x86_64
-
-The programs included with the Debian GNU/Linux system are free software;
-the exact distribution terms for each program are described in the
-individual files in /usr/share/doc/*/copyright.
-
-Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
-permitted by applicable law.
-```
 
 ### Understading the user-data file
 
@@ -289,6 +247,48 @@ power_state:
   mode: reboot
   timeout: 30
   condition: true
+```
+
+### Configure your local routing
+
+You need to add a route to your local machine to access the internal network of **Virtualbox**.
+
+```console
+~$ sudo ip route add 192.168.4.0/27 via 192.168.4.30 dev vboxnet0
+~$ sudo ip route add 192.168.4.32/27 via 192.168.4.62 dev vboxnet0
+```
+
+### Access the BusyBox
+
+We need to get the **BusyBox IP** to access it via ssh
+
+```console
+~$ vboxmanage guestproperty get busybox "/VirtualBox/GuestInfo/Net/0/V4/IP"
+```
+
+Expected output:
+
+```console
+Value: 192.168.4.57
+```
+
+Use the returned value to access.
+
+```cosole
+~$ ssh debian@192.168.4.57
+```
+
+Expected output:
+
+```console
+Linux busybox 4.9.0-11-amd64 #1 SMP Debian 4.9.189-3+deb9u2 (2019-11-11) x86_64
+
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
 ```
 
 ### Configure the cluster
@@ -510,7 +510,7 @@ This approach requires less infrastructure. The etcd members and control plane n
 
 Now we need to join the other nodes to our K8S cluster. For this, we need the certificates that were generated in the previous steps.
 
-#### Print Certificate Key
+#### Print the Certificate Key
 
 1. Run the following commands to copy certificates to the master replicas:
 
@@ -681,8 +681,6 @@ Open your browser at [http://192.168.4.20:32700](http://192.168.4.20:32700)
 
 User: `admin`  
 Password: `admin`
-
-It will show:
 
 It will show:
 
