@@ -161,7 +161,7 @@ permitted by applicable law.
 2. Verify signatures
 
     ```console
-    openssl verify -CAfile ca-cert.pem apiserver-etcd-client.pem
+    debian@busybox:~/etcd-certificates$ openssl verify -CAfile ca-cert.pem apiserver-etcd-client.pem
     ```
 
     Expected output:
