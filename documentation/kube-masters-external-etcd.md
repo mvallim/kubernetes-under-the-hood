@@ -181,13 +181,13 @@ permitted by applicable law.
 3. Verify signatures
 
     ```console
-    debian@busybox:~/etcd-certificates$ openssl verify -CAfile ca-cert.pem apiserver-etcd-client.pem
+    debian@busybox:~/etcd-certificates$ openssl verify -CAfile ca-cert.pem apiserver-etcd-client-cert.pem
     ```
 
     Expected output:
 
     ```text
-    apiserver-etcd-client.pem: OK
+    apiserver-etcd-client-cert.pem: OK
     ```
 
 4. Copy certificates to `kube-mast01`
