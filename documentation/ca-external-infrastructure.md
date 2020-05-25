@@ -283,3 +283,19 @@ The use of intermediate certificates does not cause installation, performance or
     ```console
     debian@busybox:~/certificates$ cat ca-etcd-cert.pem root-cert.pem > ca-etcd-chain-cert.pem
     ```
+
+9. Verify the signatures
+
+    ```console
+    debian@busybox:~/certificates$ for instance in ca-kubernetes ca-kubernetes-front-proxy ca-etcd ; do
+        openssl verify -CAfile root-cert.pem ${instance}-cert.pem
+    done
+    ```
+
+    Expected output:
+
+    ```text
+    ca-kubernetes-cert.pem: OK
+    ca-kubernetes-front-proxy-cert.pem: OK
+    ca-etcd-cert.pem: OK
+    ```
