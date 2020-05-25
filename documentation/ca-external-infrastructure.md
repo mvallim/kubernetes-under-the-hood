@@ -51,6 +51,12 @@ The use of intermediate certificates does not cause installation, performance or
     debian@busybox:~$ cd certificates
     ```
 
+    > This sample was created for Ubuntu and Debian distribution  
+    > Reference: man 5 config  
+    > Reference: man 1 req  
+    > Reference: man 1 ca  
+    > Reference: man 1 x509
+
     ```console
     debian@busybox:~/certificates$ cat <<EOF > config.conf
     [ req ]
