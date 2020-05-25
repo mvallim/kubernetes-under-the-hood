@@ -27,6 +27,20 @@ The use of intermediate certificates does not cause installation, performance or
   <img src="images/certificate-02.png">
 </p>
 
+### A little analogy for better understanding this concept
+
+> Era uma vez, um reino chamado **Cluster Land**, regido por um rei. E nesse reino não existia uma moeda corrente para que as pessoas pudessem fazer suas compras, na verdade tudo era feito na base do escambo.  
+
+> E certo dia muitos súditos começaram a reclamar como rei, pedindo uma solução, já que as trocas não estavam sendo justas. O rei sábio como era, resolveu criar uma moeda corrente **Cluster Coins**, que era cunhada por cada um dos súditos em um metal nobre, nesse caso a prata, usando uma prensa fornecida pelo cunhadores do rei, com um pedido formal e honesto dos súditos.  
+
+> Em um primeiro momento, estava funcionando muito bem, e moeda corrente começou a circular, e as compras nesse breve período parecia ser justa para todos, e todos estavam muito contentes com esse novo modelo de "troca".  
+
+> Mas certo dia, notou-se que a quantidade de moedas cunhadas estavam fora de controle, e a guarda real foi acionada para investigar, e descobriu-se que alguns malfeitores estavam falsificando as moedas cunhadas, e o valor da moeda não era tão justo como foi no primeiro momento, já que a quantidade de moedas circulando era muito maior e o valor da compra não era mais justo (super inflação), causando assim uma descrença na moeda tornando-a muito fraca e de pouco valor.  
+
+> Para tal, o sábio rei, pensou em uma solução, retirar todas as prensas fornecidas aos súditos, e criar uma casa da moeda **Great House Coins**, dessa forma todo o dinheiro cunhado seria feito em um único lugar, com todas a normas e medidas de segurança, para que quem tentar cunhar uma moeda falsa a dificuldade seria grande, pois vários padrões de segurança e qualidade seria implementado além do fato de trocar o metal da moeda para um metal mais nobre - o ouro - para a cunhagem das moedas.  
+
+> A ideia funcionou muito bem, já que a nova moeda começou a circular extinguindo assim a moeda antiga, mas mesmo assim alguns malfeitores continuavam a tentar falsificar a moeda, mas como o metal usado era nobre e caro de mais para se falsificar, isso ficava evidente quando os súditos as tinham em mão, assim denunciando os falsificadores.  
+
 ## OpenSSL
 
 <p align="center">
