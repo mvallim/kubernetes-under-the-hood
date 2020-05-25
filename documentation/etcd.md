@@ -136,15 +136,15 @@ permitted by applicable law.
 1. Create certificate template
 
     ```console
-    debian@busybox:~$ mkdir etcd-certificates
+    debian@busybox:~$ mkdir certificates
     ```
 
     ```console
-    debian@busybox:~$ cd etcd-certificates
+    debian@busybox:~$ cd certificates
     ```
 
     ```console
-    debian@busybox:~/etcd-certificates$ cat <<EOF > config.conf
+    debian@busybox:~/certificates$ cat <<EOF > config.conf
     [ req ]
     default_bits            = 2048
     default_md              = sha256
@@ -159,13 +159,27 @@ permitted by applicable law.
     OU                      = Labs
     CN                      = \${ENV::CN}
 
-    [ ca ]
+    [ root ]
     basicConstraints        = critical,CA:TRUE
     subjectKeyIdentifier    = hash
+    authorityKeyIdentifier  = keyid:always,issuer
+    keyUsage                = critical,digitalSignature,keyEncipherment,keyCertSign,cRLSign
+
+    [ ca ]
+    basicConstraints        = critical,CA:TRUE,pathlen:0
+    subjectKeyIdentifier    = hash
     authorityKeyIdentifier  = keyid:always,issuer:always
-    keyUsage                = critical,digitalSignature,keyEncipherment,keyCertSign
+    keyUsage                = critical,digitalSignature,keyEncipherment,keyCertSign,cRLSign
 
     [ server ]
+    subjectKeyIdentifier    = hash
+    basicConstraints        = critical,CA:FALSE
+    extendedKeyUsage        = serverAuth
+    keyUsage                = critical,keyEncipherment,dataEncipherment
+    authorityKeyIdentifier  = keyid,issuer:always
+    subjectAltName          = DNS:localhost,\${ENV::SAN},IP:127.0.0.1,IP:127.0.1.1
+
+    [ peer ]
     subjectKeyIdentifier    = hash
     basicConstraints        = critical,CA:FALSE
     extendedKeyUsage        = serverAuth,clientAuth
@@ -182,16 +196,16 @@ permitted by applicable law.
     EOF
     ```
 
-2. Create CA certificate
+2. Create Root CA certificate
 
     ```console
-    debian@busybox:~/etcd-certificates$ CN=labs SAN= \
+    debian@busybox:~/certificates$ CN="Root, CA" SAN= \
         openssl req -x509 -newkey rsa:2048 -nodes \
-            -keyout ca-key.pem \
+            -keyout root-key.pem \
             -days 3650 \
             -config config.conf \
-            -extensions ca \
-            -out ca-cert.pem
+            -extensions root \
+            -out root-cert.pem
     ```
 
     Expected output:
@@ -200,14 +214,63 @@ permitted by applicable law.
     Generating a RSA private key
     ...........................................................+++++
     ...............+++++
-    writing new private key to 'ca-key.pem'
+    writing new private key to 'root-cert.pem'
     -----
     ```
 
-3. Create requests certificates to etcd nodes
+3. Create request intermediate etcd CA certificate
 
     ```console
-    debian@busybox:~/etcd-certificates$ for instance in etcd-node01 etcd-node02 etcd-node03; do
+    debian@busybox:~/certificates$ CN="Etcd, CA" SAN= \
+        openssl req -newkey rsa:2048 -nodes \
+            -keyout ca-etcd-key.pem \
+            -config config.conf \
+            -out ca-etcd-cert.csr
+    ```
+
+    Expected output:
+
+    ```text
+    Generating a RSA private key
+    ..........+++++
+    ......................................................................................+++++
+    writing new private key to 'ca-etcd-key.pem'
+    -----
+    ```
+
+4. Sing intermediate etcd CA certificate with root CA
+
+    ```console
+    debian@busybox:~/certificates$ CN="Etcd, CA" SAN= \
+        openssl x509 -req \
+            -extfile config.conf \
+            -extensions ca \
+            -in ca-etcd-cert.csr \
+            -CA root-cert.pem \
+            -CAkey root-key.pem \
+            -CAcreateserial \
+            -out ca-etcd-cert.pem \
+            -days 3650 -sha256
+    ```
+
+    Expected output:
+
+    ```text
+    Signature ok
+    subject=C = BR, ST = SP, L = Campinas, O = "Kubernetes, Labs", OU = Labs, CN = "Etcd, CA"
+    Getting CA Private Key
+    ```
+
+5. Create chain intermediate certificate etcd CA
+
+    ```console
+    debian@busybox:~/certificates$ cat ca-etcd-cert.pem root-cert.pem > ca-etcd-chain-cert.pem
+    ```
+
+6. Create requests server certificates to etcd nodes
+
+    ```console
+    debian@busybox:~/certificates$ for instance in etcd-node01 etcd-node02 etcd-node03; do
         CN=${instance} SAN=DNS:${instance},DNS:${instance}.kube.demo \
             openssl req -newkey rsa:2048 -nodes \
                 -keyout ${instance}-key.pem \
@@ -236,17 +299,17 @@ permitted by applicable law.
     -----
     ```
 
-4. Sing certificates using your own CA
+7. Sing certificates using your own etcd CA
 
     ```console
-    debian@busybox:~/etcd-certificates$ for instance in etcd-node01 etcd-node02 etcd-node03; do
+    debian@busybox:~/certificates$ for instance in etcd-node01 etcd-node02 etcd-node03; do
         CN=${instance} SAN=DNS:${instance},DNS:${instance}.kube.demo \
             openssl x509 -req \
                 -extfile config.conf \
                 -extensions server \
                 -in ${instance}-cert.csr \
-                -CA ca-cert.pem \
-                -CAkey ca-key.pem \
+                -CA ca-etcd-cert.pem \
+                -CAkey ca-etcd-key.pem \
                 -CAcreateserial \
                 -out ${instance}-cert.pem \
                 -days 3650 -sha256
@@ -267,11 +330,11 @@ permitted by applicable law.
     Getting CA Private Key
     ```
 
-5. Verify signatures
+8. Verify signatures using your own etcd chain cert
 
     ```console
-    debian@busybox:~/etcd-certificates$ for instance in etcd-node01 etcd-node02 etcd-node03; do
-        openssl verify -CAfile ca-cert.pem ${instance}-cert.pem
+    debian@busybox:~/certificates$ for instance in etcd-node01 etcd-node02 etcd-node03; do
+        openssl verify -CAfile ca-etcd-chain-cert.pem ${instance}-cert.pem
     done
     ```
 
@@ -283,24 +346,24 @@ permitted by applicable law.
     etcd-node03-cert.pem: OK
     ```
 
-6. Copy certificate to instances
+9. Copy certificate to instances
 
     ```console
-    debian@busybox:~/etcd-certificates$ for instance in etcd-node01 etcd-node02 etcd-node03; do
-        scp ca-cert.pem ${instance}-*.pem debian@${instance}:~/.
+    debian@busybox:~/certificates$ for instance in etcd-node01 etcd-node02 etcd-node03; do
+        scp ca-etcd-chain-cert.pem ${instance}-*.pem debian@${instance}:~/.
     done
     ```
 
     Expected output:
 
     ```text
-    ca-cert.pem                     100% 1200     1.2MB/s   00:00
+    ca-etcd-chain-cert.pem          100% 1200     1.2MB/s   00:00
     etcd-node01-cert.pem            100% 1623     1.2MB/s   00:00
     etcd-node01-key.pem             100% 1708     1.8MB/s   00:00
-    ca-cert.pem                     100% 1200     1.0MB/s   00:00
+    ca-etcd-chain-cert.pem          100% 1200     1.0MB/s   00:00
     etcd-node02-cert.pem            100% 1623     1.6MB/s   00:00
     etcd-node02-key.pem             100% 1704     1.5MB/s   00:00
-    ca-cert.pem                     100% 1200     1.1MB/s   00:00
+    ca-etcd-chain-cert.pem          100% 1200     1.1MB/s   00:00
     etcd-node03-cert.pem            100% 1623     1.7MB/s   00:00
     etcd-node03-key.pem             100% 1704     1.0MB/s   00:00
     ```
@@ -357,7 +420,7 @@ Press **ctrl+b** and **shit+:** type the following command and hit ENTER:
 
     ```console
     sudo mkdir /etc/etcd
-    sudo cp *.pem /etc/etcd/.
+    sudo mv *.pem /etc/etcd/.
     sudo chmod +r /etc/etcd/*.pem
     sudo chown etcd:etcd /etc/etcd/*.pem
     ```
@@ -365,8 +428,8 @@ Press **ctrl+b** and **shit+:** type the following command and hit ENTER:
 4. Download and install binaries `etcd`
 
     ```console
-    curl -L \
-        --progress https://github.com/etcd-io/etcd/releases/download/v3.4.7/etcd-v3.4.7-linux-amd64.tar.gz \
+    curl -L --progress \
+        https://github.com/etcd-io/etcd/releases/download/v3.4.7/etcd-v3.4.7-linux-amd64.tar.gz \
         -o /tmp/etcd-v3.4.7-linux-amd64.tar.gz
 
     tar xvzf /tmp/etcd-v3.4.7-linux-amd64.tar.gz
@@ -381,8 +444,6 @@ Press **ctrl+b** and **shit+:** type the following command and hit ENTER:
 
     ```console
     ETCD_NAME=$(hostname -s | tr -d '[:space:]')
-
-    ETCD_IP=$(hostname -I | tr -d '[:space:]')
 
     cat <<EOF | sudo tee -a /etc/systemd/system/etcd.service
     [Unit]
@@ -401,21 +462,21 @@ Press **ctrl+b** and **shit+:** type the following command and hit ENTER:
 
     ExecStart=/usr/local/bin/etcd --name ${ETCD_NAME} \\
         --data-dir /var/lib/etcd \\
-        --listen-client-urls https://${ETCD_IP}:2379,https://localhost:2379 \\
-        --advertise-client-urls https://${ETCD_IP}:2379 \\
-        --listen-peer-urls https://${ETCD_IP}:2380 \\
+        --listen-client-urls https://0.0.0.0:2379,https://localhost:2379 \\
+        --listen-peer-urls https://0.0.0.0:2380 \\
+        --advertise-client-urls https://${ETCD_NAME}.kube.demo:2379 \\
         --initial-advertise-peer-urls https://${ETCD_NAME}.kube.demo:2380 \\
         --initial-cluster etcd-node01=https://etcd-node01.kube.demo:2380,etcd-node02=https://etcd-node02.kube.demo:2380,etcd-node03=https://etcd-node03.kube.demo:2380 \\
         --initial-cluster-token BHGUXFgqJJfS38HCuVy4Xvn8DuDLu8Hd \\
         --initial-cluster-state new \\
         --client-cert-auth \\
-        --trusted-ca-file /etc/etcd/ca-cert.pem \\
+        --trusted-ca-file /etc/etcd/ca-etcd-chain-cert.pem \\
         --cert-file /etc/etcd/${ETCD_NAME}-cert.pem \\
         --key-file /etc/etcd/${ETCD_NAME}-key.pem \\
         --peer-client-cert-auth \\
-        --peer-trusted-ca-file /etc/etcd/ca-cert.pem \\
-        --peer-cert-file /etc/etcd/${ETCD_NAME}-cert.pem \\
-        --peer-key-file /etc/etcd/${ETCD_NAME}-key.pem
+        --peer-trusted-ca-file /etc/etcd/ca-etcd-chain-cert.pem \\
+        --peer-cert-file /etc/etcd/${ETCD_NAME}-peer-cert.pem \\
+        --peer-key-file /etc/etcd/${ETCD_NAME}-peer-key.pem
 
     [Install]
     WantedBy=multi-user.target
@@ -436,9 +497,9 @@ Press **ctrl+b** and **shit+:** type the following command and hit ENTER:
     ETCD_NAME=$(hostname -s | tr -d '[:space:]')
 
     etcdctl member list \
-        --cacert=/etc/etcd/ca-cert.pem \
-        --cert=/etc/etcd/${ETCD_NAME}-cert.pem \
-        --key=/etc/etcd/${ETCD_NAME}-key.pem
+        --cacert=/etc/etcd/ca-etcd-chain-cert.pem \
+        --cert=/etc/etcd/${ETCD_NAME}-peer-cert.pem \
+        --key=/etc/etcd/${ETCD_NAME}-peer-key.pem
     ```
 
     Expected output
