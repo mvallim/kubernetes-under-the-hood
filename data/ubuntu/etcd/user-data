@@ -69,7 +69,7 @@ package_upgrade: true
 
 ssh_pwauth: true
 
-manage_etc_hosts: true
+manage_etc_hosts: false
 
 fqdn: #HOSTNAME#.kube.demo
 

@@ -267,7 +267,7 @@ permitted by applicable law.
     debian@busybox:~/certificates$ cat ca-etcd-cert.pem root-cert.pem > ca-etcd-chain-cert.pem
     ```
 
-6. Create the requests certificates to etcd nodes
+6. Create the server requests certificates to etcd nodes
 
     ```console
     debian@busybox:~/certificates$ for instance in etcd-node01 etcd-node02 etcd-node03; do
@@ -289,7 +289,7 @@ permitted by applicable law.
     -----
     Generating a RSA private key
     .......................+++++
-    ..............................................................................................................................................+++++
+    ......................................................................+++++
     writing new private key to 'etcd-node02-key.pem'
     -----
     Generating a RSA private key
@@ -299,7 +299,39 @@ permitted by applicable law.
     -----
     ```
 
-7. Sign the certificates using your own CA
+7. Create the peer requests certificates to etcd nodes
+
+    ```console
+    debian@busybox:~/certificates$ for instance in etcd-node01-peer etcd-node02-peer etcd-node03-peer; do
+        ETCD_HOST=$(echo ${instance} | sed -e s/-peer//g) CN=${instance} SAN=DNS:${instance},DNS:${ETCD_HOST}.kube.demo \
+            openssl req -newkey rsa:2048 -nodes \
+                -keyout ${instance}-key.pem \
+                -config config.conf \
+                -out ${instance}-cert.csr
+    done
+    ```
+
+    Expected output:
+
+    ```text
+    Generating a RSA private key
+    .......+++++
+    ....................................................................+++++
+    writing new private key to 'etcd-node01-peer-key.pem'
+    -----
+    Generating a RSA private key
+    ......................................................................................+++++
+    ..........................................................................+++++
+    writing new private key to 'etcd-node02-peer-key.pem'
+    -----
+    Generating a RSA private key
+    ........................+++++
+    ................................+++++
+    writing new private key to 'etcd-node03-peer-key.pem'
+    -----
+    ```
+
+8. Sign the server certificates using your own CA
 
     ```console
     debian@busybox:~/certificates$ for instance in etcd-node01 etcd-node02 etcd-node03; do
@@ -330,10 +362,41 @@ permitted by applicable law.
     Getting CA Private Key
     ```
 
-8. Verify the signatures
+9. Sign the peer certificates using your own CA
 
     ```console
-    debian@busybox:~/certificates$ for instance in etcd-node01 etcd-node02 etcd-node03; do
+    debian@busybox:~/certificates$ for instance in etcd-node01-peer etcd-node02-peer etcd-node03-peer; do
+        ETCD_HOST=$(echo ${instance} | sed -e s/-peer//g) CN=${instance} SAN=DNS:${instance},DNS:${ETCD_HOST}.kube.demo \
+            openssl x509 -req \
+                -extfile config.conf \
+                -extensions peer \
+                -in ${instance}-cert.csr \
+                -CA ca-etcd-cert.pem \
+                -CAkey ca-etcd-key.pem \
+                -CAcreateserial \
+                -out ${instance}-cert.pem \
+                -days 3650 -sha256
+    done
+    ```
+
+    Expected output:
+
+    ```text
+    Signature ok
+    subject=C = BR, ST = SP, L = Campinas, O = "Kubernetes, Labs", OU = Labs, CN = etcd-node01-peer
+    Getting CA Private Key
+    Signature ok
+    subject=C = BR, ST = SP, L = Campinas, O = "Kubernetes, Labs", OU = Labs, CN = etcd-node02-peer
+    Getting CA Private Key
+    Signature ok
+    subject=C = BR, ST = SP, L = Campinas, O = "Kubernetes, Labs", OU = Labs, CN = etcd-node03-peer
+    Getting CA Private Key
+    ```
+
+10. Verify the signatures
+
+    ```console
+    debian@busybox:~/certificates$ for instance in etcd-node01 etcd-node01-peer etcd-node02 etcd-node02-peer etcd-node03 etcd-node03-peer; do
         openssl verify -CAfile ca-etcd-chain-cert.pem ${instance}-cert.pem
     done
     ```
@@ -342,11 +405,14 @@ permitted by applicable law.
 
     ```text
     etcd-node01-cert.pem: OK
+    etcd-node01-peer-cert.pem: OK
     etcd-node02-cert.pem: OK
+    etcd-node02-peer-cert.pem: OK
     etcd-node03-cert.pem: OK
+    etcd-node03-peer-cert.pem: OK
     ```
 
-9. Copy the certificate to the etcd instances
+11. Copy the certificate to the etcd instances
 
     ```console
     debian@busybox:~/certificates$ for instance in etcd-node01 etcd-node02 etcd-node03; do
@@ -357,15 +423,21 @@ permitted by applicable law.
     Expected output:
 
     ```text
-    ca-etcd-chain-cert.pem          100% 1200     1.2MB/s   00:00
-    etcd-node01-cert.pem            100% 1623     1.2MB/s   00:00
-    etcd-node01-key.pem             100% 1708     1.8MB/s   00:00
-    ca-etcd-chain-cert.pem          100% 1200     1.0MB/s   00:00
-    etcd-node02-cert.pem            100% 1623     1.6MB/s   00:00
-    etcd-node02-key.pem             100% 1704     1.5MB/s   00:00
-    ca-etcd-chain-cert.pem          100% 1200     1.1MB/s   00:00
-    etcd-node03-cert.pem            100% 1623     1.7MB/s   00:00
-    etcd-node03-key.pem             100% 1704     1.0MB/s   00:00
+    ca-etcd-chain-cert.pem              100% 2883     2.9MB/s   00:00
+    etcd-node01-cert.pem                100% 1651     1.4MB/s   00:00
+    etcd-node01-key.pem                 100% 1704     1.8MB/s   00:00
+    etcd-node01-peer-cert.pem           100% 1679     2.4MB/s   00:00
+    etcd-node01-peer-key.pem            100% 1704     2.3MB/s   00:00
+    ca-etcd-chain-cert.pem              100% 2883     2.5MB/s   00:00
+    etcd-node02-cert.pem                100% 1651     1.5MB/s   00:00
+    etcd-node02-key.pem                 100% 1704     2.0MB/s   00:00
+    etcd-node02-peer-cert.pem           100% 1679     2.0MB/s   00:00
+    etcd-node02-peer-key.pem            100% 1704     2.1MB/s   00:00
+    ca-etcd-chain-cert.pem              100% 2883     2.2MB/s   00:00
+    etcd-node03-cert.pem                100% 1651     1.4MB/s   00:00
+    etcd-node03-key.pem                 100% 1704     1.5MB/s   00:00
+    etcd-node03-peer-cert.pem           100% 1679     1.7MB/s   00:00
+    etcd-node03-peer-key.pem            100% 1704     1.7MB/s   00:00
     ```
 
 ### Running Commands in Parallel with tmux
@@ -462,7 +534,7 @@ Press **ctrl+b** and **shit+:**, type the following command and hit ENTER:
 
     ExecStart=/usr/local/bin/etcd --name ${ETCD_NAME} \\
         --data-dir /var/lib/etcd \\
-        --listen-client-urls https://0.0.0.0:2379,https://localhost:2379 \\
+        --listen-client-urls https://0.0.0.0:2379 \\
         --listen-peer-urls https://0.0.0.0:2380 \\
         --advertise-client-urls https://${ETCD_NAME}.kube.demo:2379 \\
         --initial-advertise-peer-urls https://${ETCD_NAME}.kube.demo:2380 \\
@@ -499,13 +571,18 @@ Press **ctrl+b** and **shit+:**, type the following command and hit ENTER:
    etcdctl member list \
         --cacert=/etc/etcd/ca-etcd-chain-cert.pem \
         --cert=/etc/etcd/${ETCD_NAME}-peer-cert.pem \
-        --key=/etc/etcd/${ETCD_NAME}-peer-key.pem
+        --key=/etc/etcd/${ETCD_NAME}-peer-key.pem \
+        -w table
     ```
 
    Expected output:
 
    ```text
-   77508fdcfa570432, started, etcd-node01, https://etcd-node01.kube.demo:2380, https://192.168.1.75:2379, false
-   8dc5f1bc33f2f56b, started, etcd-node02, https://etcd-node02.kube.demo:2380, https://192.168.1.128:2379, false
-   eefbe5085b970e3a, started, etcd-node03, https://etcd-node03.kube.demo:2380, https://192.168.1.121:2379, false
+    +------------------+---------+-------------+------------------------------------+------------------------------------+------------+
+    |        ID        | STATUS  |    NAME     |             PEER ADDRS             |            CLIENT ADDRS            | IS LEARNER |
+    +------------------+---------+-------------+------------------------------------+------------------------------------+------------+
+    |  8dc5f1bc33f2f56 | started | etcd-node02 | https://etcd-node02.kube.demo:2380 | https://etcd-node02.kube.demo:2379 |      false |
+    | 77508fdcfa570432 | started | etcd-node01 | https://etcd-node01.kube.demo:2380 | https://etcd-node01.kube.demo:2379 |      false |
+    | eefbe5085b970e3a | started | etcd-node03 | https://etcd-node03.kube.demo:2380 | https://etcd-node03.kube.demo:2379 |      false |
+    +------------------+---------+-------------+------------------------------------+------------------------------------+------------+
    ```
