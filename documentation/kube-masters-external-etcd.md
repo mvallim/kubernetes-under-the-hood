@@ -292,72 +292,72 @@ permitted by applicable law.
 
 1. Create the requests certificates for the kube-mast nodes
 
-   ```console
-   debian@busybox:~/etcd-certificates$ CN=apiserver-etcd-client SAN= \
-       openssl req -newkey rsa:2048 -nodes \
-           -keyout apiserver-etcd-client-key.pem \
-           -config config.conf \
-           -out apiserver-etcd-client-cert.csr
-   ```
+    ```console
+    debian@busybox:~/certificates$ CN=kube-apiserver-etcd-client SAN= \
+        openssl req -newkey rsa:2048 -nodes \
+          -keyout kube-apiserver-etcd-client-key.pem \
+          -config config.conf \
+          -out kube-apiserver-etcd-client-cert.csr
+    ```
 
-   Expected output:
+    Expected output:
 
-   ```text
-   Generating a RSA private key
-   ....................................+++++
-   .........................................+++++
-   writing new private key to 'apiserver-etcd-client-key.pem'
-   -----
-   ```
+    ```text
+    Generating a RSA private key
+    .......+++++
+    .................+++++
+    writing new private key to 'kube-apiserver-etcd-client-key.pem'
+    -----
+    ```
 
 2. Sign the client certificate using your own etcd CA
 
-   ```console
-   debian@busybox:~/etcd-certificates$ CN=apiserver-etcd-client SAN= \
-       openssl x509 -req \
-           -extfile config.conf \
-           -extensions user \
-           -in apiserver-etcd-client-cert.csr \
-           -CA ca-cert.pem \
-           -CAkey ca-key.pem \
-           -CAcreateserial \
-           -out apiserver-etcd-client-cert.pem \
-           -days 3650 \
-           -sha256
-   ```
+    ```console
+    debian@busybox:~/certificates$ CN=kube-apiserver-etcd-client SAN= \
+      openssl x509 -req \
+          -extfile config.conf \
+          -extensions user \
+          -in kube-apiserver-etcd-client-cert.csr \
+          -CA ca-etcd-cert.pem \
+          -CAkey ca-etcd-key.pem \
+          -CAcreateserial \
+          -out kube-apiserver-etcd-client-cert.pem \
+          -days 3650 \
+          -sha256
+    ```
 
-   Expected output:
+    Expected output:
 
-   ```text
-   Signature ok
-   subject=C = BR, ST = SP, L = Campinas, O = "Kubernetes, Labs", OU = Labs, CN = apiserver-etcd-client
-   Getting CA Private Key
-   ```
+    ```text
+    Signature ok
+    subject=C = BR, ST = SP, L = Campinas, O = "Kubernetes, Labs", OU = Labs, CN = kube-apiserver-etcd-client
+    Getting CA Private Key
+    ```
 
 3. Verify the signatures
 
-   ```console
-   debian@busybox:~/etcd-certificates$ openssl verify -CAfile ca-cert.pem apiserver-etcd-client-cert.pem
-   ```
+    ```console
+    debian@busybox:~/certificates$ openssl verify -CAfile ca-etcd-chain-cert.pem kube-apiserver-etcd-client-cert.pem
+    ```
 
-   Expected output:
+    Expected output:
 
-   ```text
-   apiserver-etcd-client-cert.pem: OK
-   ```
+    ```text
+    kube-apiserver-etcd-client-cert.pem: OK
+    ```
 
 4. Copy certificates to `kube-mast01`
 
    ```console
-   debian@busybox:~/etcd-certificates$ scp ca-cert.pem apiserver-etcd-client-*.pem kube-mast01:~/.
+   debian@busybox:~/certificates$ scp ca-etcd-chain-cert.pem kube-apiserver-etcd-client-*.pem kube-mast01:~/.
    ```
 
    Expected output:
 
    ```text
-   ca-cert.pem                               100% 1200     1.2MB/s   00:00
-   apiserver-etcd-client-cert.pem            100% 1623     1.2MB/s   00:00
-   apiserver-etcd-client-key.pem             100% 1708     1.8MB/s   00:00
+   ca-etcd-chain-cert.pem                         100% 1200     1.2MB/s   00:00
+   kube-apiserver-etcd-client-cert.pem            100% 1623     1.2MB/s   00:00
+   kube-apiserver-etcd-client-key.pem             100% 1708     1.8MB/s   00:00
    ```
 
 #### `kubeadm-config`
@@ -389,9 +389,9 @@ etcd:
       - https://etcd-node01.kube.demo:2379
       - https://etcd-node02.kube.demo:2379
       - https://etcd-node03.kube.demo:2379
-    caFile: /etc/kubernetes/pki/etcd/ca-cert.pem
-    certFile: /etc/kubernetes/pki/apiserver-etcd-client-cert.pem
-    keyFile: /etc/kubernetes/pki/apiserver-etcd-client-key.pem
+    caFile: /etc/kubernetes/pki/etcd/ca.crt
+    certFile: /etc/kubernetes/pki/apiserver-etcd-client.crt
+    keyFile: /etc/kubernetes/pki/apiserver-etcd-client.key
 ```
 
 #### `kubeadm init`
@@ -413,9 +413,11 @@ Setting up a cluster with external etcd nodes is similar to the procedure used f
 
    debian@kube-mast01:~$ sudo mkdir -p /etc/kubernetes/pki/etcd
 
-   debian@kube-mast01:~$ sudo mv apiserver-etcd-client-*.pem /etc/kubernetes/pki/.
+   debian@kube-mast01:~$ sudo mv kube-apiserver-etcd-client-cert.pem /etc/kubernetes/pki/apiserver-etcd-client.crt
 
-   debian@kube-mast01:~$ sudo mv ca-cert.pem /etc/kubernetes/pki/etcd/.
+   debian@kube-mast01:~$ sudo mv kube-apiserver-etcd-client-key.pem /etc/kubernetes/pki/apiserver-etcd-client.key
+
+   debian@kube-mast01:~$ sudo mv ca-etcd-chain-cert.pem /etc/kubernetes/pki/etcd/ca.crt
 
    debian@kube-mast01:~$ sudo chown -R root:root /etc/kubernetes/pki
    ```
@@ -442,15 +444,15 @@ Setting up a cluster with external etcd nodes is similar to the procedure used f
    [kubelet-start] Writing kubelet configuration to file "/var/lib/kubelet/config.yaml"
    [kubelet-start] Activating the kubelet service
    [certs] Using certificateDir folder "/etc/kubernetes/pki"
+   [certs] Using existing etcd/ca keyless certificate authority
+   [certs] External etcd mode: Skipping etcd/peer certificate authority generation
+   [certs] External etcd mode: Skipping etcd/healthcheck-client certificate authority generation
+   [certs] Using existing apiserver-etcd-client certificate and key on disk
+   [certs] External etcd mode: Skipping etcd/server certificate authority generation
    [certs] Generating "ca" certificate and key
    [certs] Generating "apiserver" certificate and key
-   [certs] apiserver serving cert is signed for DNS names [kube-mast01 kubernetes kubernetes.default kubernetes.default.svc ubernetes.default.svc.cluster.local] and IPs [10.96.0.1 192.168.1.28 192.168.4.20 192.168.4.20]
+   [certs] apiserver serving cert is signed for DNS names [kube-mast01 kubernetes kubernetes.default kubernetes.default.svc kubernetes.default.svc.cluster.local] and IPs [10.96.0.1 192.168.1.231 192.168.4.20 192.168.4.20]
    [certs] Generating "apiserver-kubelet-client" certificate and key
-   [certs] External etcd mode: Skipping etcd/ca certificate authority generation
-   [certs] External etcd mode: Skipping etcd/healthcheck-client certificate authority generation
-   [certs] External etcd mode: Skipping apiserver-etcd-client certificate authority generation
-   [certs] External etcd mode: Skipping etcd/server certificate authority generation
-   [certs] External etcd mode: Skipping etcd/peer certificate authority generation
    [certs] Generating "front-proxy-ca" certificate and key
    [certs] Generating "front-proxy-client" certificate and key
    [certs] Generating "sa" key and public key
@@ -463,50 +465,41 @@ Setting up a cluster with external etcd nodes is similar to the procedure used f
    [control-plane] Creating static Pod manifest for "kube-apiserver"
    [control-plane] Creating static Pod manifest for "kube-controller-manager"
    [control-plane] Creating static Pod manifest for "kube-scheduler"
-   [wait-control-plane] Waiting for the kubelet to boot up the control plane as static Pods from directory "/etc/kubernetes/anifests". This can take up to 4m0s
-   [apiclient] All control plane components are healthy after 20.509626 seconds
+   [wait-control-plane] Waiting for the kubelet to boot up the control plane as static Pods from directory "/etc/kubernetes/manifests". This can take up to 4m0s
+   [apiclient] All control plane components are healthy after 19.007819 seconds
    [upload-config] Storing the configuration used in ConfigMap "kubeadm-config" in the "kube-system" Namespace
-   [kubelet] Creating a ConfigMap "kubelet-config-1.15" in namespace kube-system with the configuration for the kubelets in the luster
+   [kubelet] Creating a ConfigMap "kubelet-config-1.15" in namespace kube-system with the configuration for the kubelets in the cluster
    [upload-certs] Storing the certificates in Secret "kubeadm-certs" in the "kube-system" Namespace
    [upload-certs] Using certificate key:
-   7e5faf2632e924ab1baa6a1fd0cf4fb5243acb5ef0a40c69ed2039cd9468dbb0
+   b5a06f76e402d5d85ae459a66b7f8845eb76bf5afb45a8e45e52e0d81f166b8b
    [mark-control-plane] Marking the node kube-mast01 as control-plane by adding the label "node-role.kubernetes.io/master=''"
    [mark-control-plane] Marking the node kube-mast01 as control-plane by adding the taints [node-role.kubernetes.io/master:NoSchedule]
-   [bootstrap-token] Using token: 6xy7kn.y6j54yd9gixmz360
+   [bootstrap-token] Using token: whkzcy.0ryz5ta7kzndpnv0
    [bootstrap-token] Configuring bootstrap tokens, cluster-info ConfigMap, RBAC Roles
-   [bootstrap-token] configured RBAC rules to allow Node Bootstrap tokens to post CSRs in order for nodes to get long term ertificate credentials
+   [bootstrap-token] configured RBAC rules to allow Node Bootstrap tokens to post CSRs in order for nodes to get long term certificate credentials
    [bootstrap-token] configured RBAC rules to allow the csrapprover controller automatically approve CSRs from a Node Bootstrap Token
    [bootstrap-token] configured RBAC rules to allow certificate rotation for all node client certificates in the cluster
    [bootstrap-token] Creating the "cluster-info" ConfigMap in the "kube-public" namespace
    [addons] Applied essential addon: CoreDNS
    [addons] Applied essential addon: kube-proxy
-
    Your Kubernetes control-plane has initialized successfully!
-
    To start using your cluster, you need to run the following as a regular user:
-
      mkdir -p $HOME/.kube
      sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
      sudo chown $(id -u):$(id -g) $HOME/.kube/config
-
    You should now deploy a pod network to the cluster.
    Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:
      https://kubernetes.io/docs/concepts/cluster-administration/addons/
-
    You can now join any number of the control-plane node running the following command on each as root:
-
-     kubeadm join 192.168.4.20:6443 --token 5e7aaq.ejvnu55qqxst7czz \
-       --discovery-token-ca-cert-hash sha256:457f6e849077f9c0a6ed8ad6517c91bfa4f48080c141dda34c3650fc3b1a99fd \
-       --control-plane --certificate-key 039bae4efd18d7692139f1101fedc877f68c1b4f3a7aa247d4703a764cc98131
-
+     kubeadm join 192.168.4.20:6443 --token whkzcy.0ryz5ta7kzndpnv0 \
+       --discovery-token-ca-cert-hash sha256:795301309c1ac56707e1d882526c4e5d82e29f1f1f6cfdee5e0f5bc3b4629077 \
+       --control-plane --certificate-key b5a06f76e402d5d85ae459a66b7f8845eb76bf5afb45a8e45e52e0d81f166b8b
    Please note that the certificate-key gives access to cluster sensitive data, keep it secret!
-   As a safeguard, uploaded-certs will be deleted in two hours; If necessary, you can use
-    "kubeadm init phase upload-certs --upload-certs" to reload certs afterward.
-
+   As a safeguard, uploaded-certs will be deleted in two hours; If necessary, you can use 
+   "kubeadm init phase upload-certs --upload-certs" to reload certs afterward.
    Then you can join any number of worker nodes by running the following on each as root:
-
-   kubeadm join 192.168.4.20:6443 --token 5e7aaq.ejvnu55qqxst7czz \
-       --discovery-token-ca-cert-hash sha256:457f6e849077f9c0a6ed8ad6517c91bfa4f48080c141dda34c3650fc3b1a99fd
+   kubeadm join 192.168.4.20:6443 --token whkzcy.0ryz5ta7kzndpnv0 \
+       --discovery-token-ca-cert-hash sha256:795301309c1ac56707e1d882526c4e5d82e29f1f1f6cfdee5e0f5bc3b4629077
    ```
 
 3. Finish configuring the cluster and query the state of nodes and pods

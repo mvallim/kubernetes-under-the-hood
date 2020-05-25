@@ -271,7 +271,7 @@ permitted by applicable law.
 
     ```console
     debian@busybox:~/certificates$ for instance in etcd-node01 etcd-node02 etcd-node03; do
-        CN=${instance} SAN=DNS:${instance},DNS:${instance}.kube.demo \
+        CN=${instance} SAN=DNS:${instance},DNS:${instance}.kube.demo,DNS:*.kube.demo \
             openssl req -newkey rsa:2048 -nodes \
                 -keyout ${instance}-key.pem \
                 -config config.conf \
@@ -303,7 +303,7 @@ permitted by applicable law.
 
     ```console
     debian@busybox:~/certificates$ for instance in etcd-node01-peer etcd-node02-peer etcd-node03-peer; do
-        ETCD_HOST=$(echo ${instance} | sed -e s/-peer//g) CN=${instance} SAN=DNS:${instance},DNS:${ETCD_HOST}.kube.demo \
+        CN=${instance} SAN=DNS:${instance},DNS:${instance}.kube.demo,DNS:*.kube.demo \
             openssl req -newkey rsa:2048 -nodes \
                 -keyout ${instance}-key.pem \
                 -config config.conf \
@@ -335,7 +335,7 @@ permitted by applicable law.
 
     ```console
     debian@busybox:~/certificates$ for instance in etcd-node01 etcd-node02 etcd-node03; do
-        CN=${instance} SAN=DNS:${instance},DNS:${instance}.kube.demo \
+        CN=${instance} SAN=DNS:${instance},DNS:${instance}.kube.demo,DNS:*.kube.demo \
             openssl x509 -req \
                 -extfile config.conf \
                 -extensions server \
@@ -366,7 +366,7 @@ permitted by applicable law.
 
     ```console
     debian@busybox:~/certificates$ for instance in etcd-node01-peer etcd-node02-peer etcd-node03-peer; do
-        ETCD_HOST=$(echo ${instance} | sed -e s/-peer//g) CN=${instance} SAN=DNS:${instance},DNS:${ETCD_HOST}.kube.demo \
+        CN=${instance} SAN=DNS:${instance},DNS:${instance}.kube.demo,DNS:*.kube.demo \
             openssl x509 -req \
                 -extfile config.conf \
                 -extensions peer \
