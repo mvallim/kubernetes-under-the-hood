@@ -1,10 +1,10 @@
-# How to setup the external etcd with TLS
+# How to setup an external etcd instance with TLS
 
 <p align="center">
   <img src="images/etcd-logo.png">
 </p>
 
-*"etcd is a distributed key value store that provides a reliable way to store data across a cluster of machines. It’s open-source and available on GitHub. etcd gracefully handles leader elections during network partitions and will tolerate machine failure, including the leader."*
+_"etcd is a distributed key value store that provides a reliable way to store data across a cluster of machines. It’s open-source and available on GitHub. etcd gracefully handles leader elections during network partitions and will tolerate machine failure, including the leader."_
 
 > Reference: https://coreos.com/etcd/docs/latest/
 
@@ -22,9 +22,9 @@ Communication with **etcd** is done through API calls, using JSON over HTTP. The
 
 To initialize and configure our instances using cloud-init, we'll use the configuration files versioned at the data directory from our repository.
 
-Notice we also make use of our `create-image.sh` helper script, passing some files from inside the `data/kube/` directory as parameters.
+Notice we also make use of our `create-image.sh`(../create-image.sh) helper script, passing some files from inside the `data/kube/` directory as parameters.
 
-* **Create the Masters**
+- **Create the Masters**
 
   ```console
   ~/kubernetes-under-the-hood$ for instance in etcd-node01 etcd-node02 etcd-node03; do
@@ -40,7 +40,21 @@ Notice we also make use of our `create-image.sh` helper script, passing some fil
   done
   ```
 
-  **Expected output:**
+  **Parameters:**
+
+  - **`-k`** is used to copy the **public key** from your host to the newly created VM.
+  - **`-u`** is used to specify the **user-data** file that will be passed as a parameter to the command that creates the cloud-init ISO file we mentioned before (check the source code of the script for a better understanding of how it's used). Default is **`/data/user-data`**.
+  - **`-m`** is used to specify the **meta-data** file that will be passed as a parameter to the command that creates the cloud-init ISO file we mentioned before (check the source code of the script for a better understanding of how it's used). Default is **`/data/meta-data`**.
+  - **`-n`** is used to pass a configuration file that will be used by cloud-init to configure the **network** for the instance.
+  - **`-i`** is used to pass a configuration file that our script will use to modify the **network interface** managed by **VirtualBox** that is attached to the instance that will be created from this image.
+  - **`-r`** is used to pass a configuration file that our script will use to configure the **number of processors and amount of memory** that is allocated to our instance by **VirtualBox**.
+  - **`-o`** is used to pass the **hostname** that will be assigned to our instance. This will also be the name used by **VirtualBox** to reference our instance.
+  - **`-l`** is used to inform which Linux distribution (**debian** or **ubuntu**) configuration files we want to use (notice this is used to specify which folder under data is referenced). Default is **`debian`**.
+  - **`-b`** is used to specify which **base image** should be used. This is the image name that was created on **VirtualBox** when we executed the installation steps from our [linux image](create-linux-image.md).
+  - **`-s`** is used to pass a configuration file that our script will use to configure **virtual disks** on **VirtualBox**. You'll notice this is used only on the **Gluster** configuration step.
+  - **`-a`** whether or not our instance **should be initialized** after it's created. Default is **`true`**.
+
+  Expected output:
 
   ```text
   Total translation table size: 0
@@ -74,20 +88,6 @@ Notice we also make use of our `create-image.sh` helper script, passing some fil
   Waiting for VM "etcd-node03" to power on...
   VM "etcd-node03" has been successfully started.
   ```
-
-  **Parameters:**
-
-  * **`-k`** is used to copy the **public key** from your host to the newly created VM.
-  * **`-u`** is used to specify the **user-data** file that will be passed as a parameter to the command that creates the cloud-init ISO file we mentioned before (check the source code of the script for a better understanding of how it's used). Default is **`/data/user-data`**.
-  * **`-m`** is used to specify the **meta-data** file that will be passed as a parameter to the command that creates the cloud-init ISO file we mentioned before (check the source code of the script for a better understanding of how it's used). Default is **`/data/meta-data`**.
-  * **`-n`** is used to pass a configuration file that will be used by cloud-init to configure the **network** for the instance.
-  * **`-i`** is used to pass a configuration file that our script will use to modify the **network interface** managed by **VirtualBox** that is attached to the instance that will be created from this image.
-  * **`-r`** is used to pass a configuration file that our script will use to configure the **number of processors and amount of memory** that is allocated to our instance by **VirtualBox**.
-  * **`-o`** is used to pass the **hostname** that will be assigned to our instance. This will also be the name used by **VirtualBox** to reference our instance.
-  * **`-l`** is used to inform which Linux distribution (**debian** or **ubuntu**) configuration files we want to use (notice this is used to specify which folder under data is referenced). Default is **`debian`**.
-  * **`-b`** is used to specify which **base image** should be used. This is the image name that was created on **VirtualBox** when we executed the installation steps from our [linux image](create-linux-image.md).
-  * **`-s`** is used to pass a configuration file that our script will use to configure **virtual disks** on **VirtualBox**. You'll notice this is used only on the **Gluster** configuration step.
-  * **`-a`** whether or not our instance **should be initialized** after it's created. Default is **`true`**.
 
 ### Configure your local routing
 
@@ -133,7 +133,7 @@ permitted by applicable law.
 
 ### Creating certificates
 
-1. Create certificate template
+1. Create the certificate template
 
     ```console
     debian@busybox:~$ mkdir certificates
@@ -196,7 +196,7 @@ permitted by applicable law.
     EOF
     ```
 
-2. Create Root CA certificate
+2. Create Root the CA certificate
 
     ```console
     debian@busybox:~/certificates$ CN="Root, CA" SAN= \
@@ -218,7 +218,7 @@ permitted by applicable law.
     -----
     ```
 
-3. Create request intermediate etcd CA certificate
+3. Create request intermediate `etcd` the CA certificate
 
     ```console
     debian@busybox:~/certificates$ CN="Etcd, CA" SAN= \
@@ -267,7 +267,7 @@ permitted by applicable law.
     debian@busybox:~/certificates$ cat ca-etcd-cert.pem root-cert.pem > ca-etcd-chain-cert.pem
     ```
 
-6. Create requests server certificates to etcd nodes
+6. Create the requests certificates to etcd nodes
 
     ```console
     debian@busybox:~/certificates$ for instance in etcd-node01 etcd-node02 etcd-node03; do
@@ -299,7 +299,7 @@ permitted by applicable law.
     -----
     ```
 
-7. Sing certificates using your own etcd CA
+7. Sign the certificates using your own CA
 
     ```console
     debian@busybox:~/certificates$ for instance in etcd-node01 etcd-node02 etcd-node03; do
@@ -330,7 +330,7 @@ permitted by applicable law.
     Getting CA Private Key
     ```
 
-8. Verify signatures using your own etcd chain cert
+8. Verify the signatures
 
     ```console
     debian@busybox:~/certificates$ for instance in etcd-node01 etcd-node02 etcd-node03; do
@@ -346,7 +346,7 @@ permitted by applicable law.
     etcd-node03-cert.pem: OK
     ```
 
-9. Copy certificate to instances
+9. Copy the certificate to the etcd instances
 
     ```console
     debian@busybox:~/certificates$ for instance in etcd-node01 etcd-node02 etcd-node03; do
@@ -372,9 +372,7 @@ permitted by applicable law.
 
 #### Split panes horizontally
 
-To split a pane horizontally, press **ctrl+b** and **”** (single quotation mark).
-
-Let's go
+To split a pane horizontally, press **ctrl+b** and **'** (single quotation mark). Let's go!
 
 ```console
 debian@busybox:~$ tmux
@@ -384,39 +382,41 @@ debian@busybox:~$ tmux
 debian@busybox:~$ ssh debian@etcd-node01
 ```
 
-> `ctrl+b` `"`
+> `ctrl+b` `'`
 
 ```console
 debian@busybox:~$ ssh debian@etcd-node02
 ```
 
-> `ctrl+b` `"`
+> `ctrl+b` `'`
 
 ```console
 debian@busybox:~$ ssh debian@etcd-node03
 ```
 
+> `ctrl+b` `'`
+
 #### Send commands to all panes
 
-Press **ctrl+b** and **shit+:** type the following command and hit ENTER:
+Press **ctrl+b** and **shit+:**, type the following command and hit ENTER:
 
 `setw synchronize-panes`
 
-1. Create user and group `etcd` to run service
+1. Create `etcd` user and group to run the service
 
     ```console
     sudo groupadd --system etcd
     sudo useradd -s /sbin/nologin --system -g etcd etcd
     ```
 
-2. Create directories to stora data `etcd`
+2. Create directories to store `etcd` data
 
     ```console
     sudo mkdir -p /var/lib/etcd/
     sudo chown etcd:etcd /var/lib/etcd
     ```
 
-3. Create directory to certificate files and copy files
+3. Create a directory to hold the certificate files
 
     ```console
     sudo mkdir /etc/etcd
@@ -425,7 +425,7 @@ Press **ctrl+b** and **shit+:** type the following command and hit ENTER:
     sudo chown etcd:etcd /etc/etcd/*.pem
     ```
 
-4. Download and install binaries `etcd`
+4. Download and install the `etcd` binaries
 
     ```console
     curl -L --progress \
@@ -440,7 +440,7 @@ Press **ctrl+b** and **shit+:** type the following command and hit ENTER:
     rm -rf etcd-v3.4.7-linux-amd64
     ```
 
-5. Create unit service file to run on `systemd`
+5. Create a unit service file to run on `systemd`
 
     ```console
     ETCD_NAME=$(hostname -s | tr -d '[:space:]')
@@ -485,27 +485,27 @@ Press **ctrl+b** and **shit+:** type the following command and hit ENTER:
 
 6. Start and run the `etcd` servers
 
-    ```console
-    sudo systemctl daemon-reload
-    sudo systemctl enable etcd.service
-    sudo systemctl start etcd.service
-    ```
+   ```console
+   sudo systemctl daemon-reload
+   sudo systemctl enable etcd.service
+   sudo systemctl start etcd.service
+   ```
 
-7. Verification
+7. Check the `etcd` status
 
-    ```console
-    ETCD_NAME=$(hostname -s | tr -d '[:space:]')
+   ```console
+   ETCD_NAME=$(hostname -s | tr -d '[:space:]')
 
-    etcdctl member list \
+   etcdctl member list \
         --cacert=/etc/etcd/ca-etcd-chain-cert.pem \
         --cert=/etc/etcd/${ETCD_NAME}-peer-cert.pem \
         --key=/etc/etcd/${ETCD_NAME}-peer-key.pem
     ```
 
-    Expected output
+   Expected output:
 
-    ```text
-    77508fdcfa570432, started, etcd-node01, https://etcd-node01.kube.demo:2380, https://192.168.1.75:2379, false
-    8dc5f1bc33f2f56b, started, etcd-node02, https://etcd-node02.kube.demo:2380, https://192.168.1.128:2379, false
-    eefbe5085b970e3a, started, etcd-node03, https://etcd-node03.kube.demo:2380, https://192.168.1.121:2379, false
-    ```
+   ```text
+   77508fdcfa570432, started, etcd-node01, https://etcd-node01.kube.demo:2380, https://192.168.1.75:2379, false
+   8dc5f1bc33f2f56b, started, etcd-node02, https://etcd-node02.kube.demo:2380, https://192.168.1.128:2379, false
+   eefbe5085b970e3a, started, etcd-node03, https://etcd-node03.kube.demo:2380, https://192.168.1.121:2379, false
+   ```
