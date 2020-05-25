@@ -290,6 +290,8 @@ permitted by applicable law.
 
 ### Configure the cluster
 
+> For more information about best practices certificates see here : https://kubernetes.io/docs/setup/best-practices/certificates/
+
 1. Create the requests certificates for the kube-mast nodes
 
     ```console
