@@ -29,11 +29,11 @@ The use of intermediate certificates does not cause installation, performance or
 
 ### A little analogy for better understanding this concept
 
-> Era uma vez, um reino chamado **Cluster Land**, regido por um rei. E nesse reino não existia uma moeda corrente para que as pessoas pudessem fazer suas compras, na verdade tudo era feito na base do escambo.  
+> Era uma vez, um reino chamado **Cluster Land**, regido por um rei. E neste reino não existia uma moeda corrente para que as pessoas pudessem fazer suas compras, na verdade tudo era feito na base do escambo.  
 
-> E certo dia muitos súditos começaram a reclamar como rei, pedindo uma solução, já que as trocas não estavam sendo justas. O rei sábio como era, resolveu criar uma moeda corrente **Cluster Coins**, que era cunhada por cada um dos súditos em um metal nobre, nesse caso a prata, usando uma prensa fornecida pelo cunhadores do rei, com um pedido formal e honesto dos súditos.  
+> E certo dia muitos súditos começaram a reclamar como rei, pedindo uma solução, já que as trocas não estavam sendo justas. O rei sábio como era, resolveu criar uma moeda corrente **Cluster Coins**, que era cunhada por cada um dos súditos em um metal nobre, nesse caso a prata, usando uma prensa fornecida pelos cunhadores do rei, com um pedido formal e honesto dos súditos.  
 
-> Em um primeiro momento, estava funcionando muito bem, e moeda corrente começou a circular, e as compras nesse breve período parecia ser justa para todos, e todos estavam muito contentes com esse novo modelo de "troca".  
+> Em um primeiro momento, estava funcionando muito bem, e a moeda corrente começou a circular, as compras nesse breve período parecia ser justa para todos, e todos estavam muito contentes com esse novo modelo de "troca".  
 
 > Mas certo dia, notou-se que a quantidade de moedas cunhadas estavam fora de controle, e a guarda real foi acionada para investigar, e descobriu-se que alguns malfeitores estavam falsificando as moedas cunhadas, e o valor da moeda não era tão justo como foi no primeiro momento, já que a quantidade de moedas circulando era muito maior e o valor da compra não era mais justo (super inflação), causando assim uma descrença na moeda tornando-a muito fraca e de pouco valor.  
 
