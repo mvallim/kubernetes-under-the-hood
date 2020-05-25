@@ -47,6 +47,8 @@ The use of intermediate certificates does not cause installation, performance or
 
 1. Create the certificate template
 
+    > This sample was created for Ubuntu and Debian distribution  
+
     ```console
     debian@busybox:~$ mkdir certificates
     ```
@@ -55,7 +57,6 @@ The use of intermediate certificates does not cause installation, performance or
     debian@busybox:~$ cd certificates
     ```
 
-    > This sample was created for Ubuntu and Debian distribution  
     > Reference: man 5 config  
     > Reference: man 1 req  
     > Reference: man 1 ca  
