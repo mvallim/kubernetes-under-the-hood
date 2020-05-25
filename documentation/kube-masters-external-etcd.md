@@ -482,22 +482,31 @@ Setting up a cluster with external etcd nodes is similar to the procedure used f
    [bootstrap-token] Creating the "cluster-info" ConfigMap in the "kube-public" namespace
    [addons] Applied essential addon: CoreDNS
    [addons] Applied essential addon: kube-proxy
+
    Your Kubernetes control-plane has initialized successfully!
+
    To start using your cluster, you need to run the following as a regular user:
+
      mkdir -p $HOME/.kube
      sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
      sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
    You should now deploy a pod network to the cluster.
    Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:
      https://kubernetes.io/docs/concepts/cluster-administration/addons/
+
    You can now join any number of the control-plane node running the following command on each as root:
+
      kubeadm join 192.168.4.20:6443 --token whkzcy.0ryz5ta7kzndpnv0 \
        --discovery-token-ca-cert-hash sha256:795301309c1ac56707e1d882526c4e5d82e29f1f1f6cfdee5e0f5bc3b4629077 \
        --control-plane --certificate-key b5a06f76e402d5d85ae459a66b7f8845eb76bf5afb45a8e45e52e0d81f166b8b
+
    Please note that the certificate-key gives access to cluster sensitive data, keep it secret!
    As a safeguard, uploaded-certs will be deleted in two hours; If necessary, you can use 
    "kubeadm init phase upload-certs --upload-certs" to reload certs afterward.
+
    Then you can join any number of worker nodes by running the following on each as root:
+
    kubeadm join 192.168.4.20:6443 --token whkzcy.0ryz5ta7kzndpnv0 \
        --discovery-token-ca-cert-hash sha256:795301309c1ac56707e1d882526c4e5d82e29f1f1f6cfdee5e0f5bc3b4629077
    ```
