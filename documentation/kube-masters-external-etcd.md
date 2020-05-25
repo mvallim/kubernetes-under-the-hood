@@ -13,7 +13,7 @@ Master components provide the cluster’s control plane. Master components make 
 - **Kubelet** - Kubelet gets the configuration of a pod from the API Server and ensures that the described containers are up and running.
 - **Docker** - Takes care of downloading the images and starting the containers.
 - **API Server** - Validates and configures data for the API objects, which include pods, services, replication controllers, and others. The API Server services REST operations and provides the frontend to the cluster’s shared state through which all other components interact.
-- (**TODO: REVIEW THIS!!!**) **Controller Manager** - Watches the state of the cluster through the API Server **watch** feature and, when notified, makes the necessary changes to the cluster, attempting to move the current state towards the desired state. Besides, the Controller Manager performs lifecycle of as namespace, event, terminated-pod, cascading-deletion, node, etc.
+- (**TODO: REVIEW THIS!!!**) **Controller Manager** - Watches the state of the cluster through the API Server **watch** feature and, when notified, makes the necessary changes to the cluster, attempting to move the current state towards the desired state.
 - **Scheduler** - Watches for unscheduled pods and binds them to nodes via the binding pod subresource API, according to the availability of the requested resources, quality of service requirements, affinity and anti-affinity specifications, and other constraints. Once the pod has a node assigned, the regular behavior of the Kubelet is triggered and the pod and its containers are created.
 - **Kube Proxy** - Acts as a network proxy and a load balancer for a service on a single worker node. It takes care of the network routing for TCP and UDP packets.
 - **Flannel** - A layer 3 network fabric designed for Kubernetes. Check our [previous topic about flannel](kube-flannel.md) for more information.
@@ -294,59 +294,59 @@ permitted by applicable law.
 
 1. Create the requests certificates for the kube-mast nodes
 
-    ```console
-    debian@busybox:~/certificates$ CN=kube-apiserver-etcd-client SAN= \
-        openssl req -newkey rsa:2048 -nodes \
-          -keyout kube-apiserver-etcd-client-key.pem \
-          -config config.conf \
-          -out kube-apiserver-etcd-client-cert.csr
-    ```
+   ```console
+   debian@busybox:~/certificates$ CN=kube-apiserver-etcd-client SAN= \
+       openssl req -newkey rsa:2048 -nodes \
+         -keyout kube-apiserver-etcd-client-key.pem \
+         -config config.conf \
+         -out kube-apiserver-etcd-client-cert.csr
+   ```
 
-    Expected output:
+   Expected output:
 
-    ```text
-    Generating a RSA private key
-    .......+++++
-    .................+++++
-    writing new private key to 'kube-apiserver-etcd-client-key.pem'
-    -----
-    ```
+   ```text
+   Generating a RSA private key
+   .......+++++
+   .................+++++
+   writing new private key to 'kube-apiserver-etcd-client-key.pem'
+   -----
+   ```
 
 2. Sign the client certificate using your own etcd CA
 
-    ```console
-    debian@busybox:~/certificates$ CN=kube-apiserver-etcd-client SAN= \
-      openssl x509 -req \
-          -extfile config.conf \
-          -extensions user \
-          -in kube-apiserver-etcd-client-cert.csr \
-          -CA ca-etcd-cert.pem \
-          -CAkey ca-etcd-key.pem \
-          -CAcreateserial \
-          -out kube-apiserver-etcd-client-cert.pem \
-          -days 3650 \
-          -sha256
-    ```
+   ```console
+   debian@busybox:~/certificates$ CN=kube-apiserver-etcd-client SAN= \
+     openssl x509 -req \
+         -extfile config.conf \
+         -extensions user \
+         -in kube-apiserver-etcd-client-cert.csr \
+         -CA ca-etcd-cert.pem \
+         -CAkey ca-etcd-key.pem \
+         -CAcreateserial \
+         -out kube-apiserver-etcd-client-cert.pem \
+         -days 3650 \
+         -sha256
+   ```
 
-    Expected output:
+   Expected output:
 
-    ```text
-    Signature ok
-    subject=C = BR, ST = SP, L = Campinas, O = "Kubernetes, Labs", OU = Labs, CN = kube-apiserver-etcd-client
-    Getting CA Private Key
-    ```
+   ```text
+   Signature ok
+   subject=C = BR, ST = SP, L = Campinas, O = "Kubernetes, Labs", OU = Labs, CN = kube-apiserver-etcd-client
+   Getting CA Private Key
+   ```
 
 3. Verify the signatures
 
-    ```console
-    debian@busybox:~/certificates$ openssl verify -CAfile ca-etcd-chain-cert.pem kube-apiserver-etcd-client-cert.pem
-    ```
+   ```console
+   debian@busybox:~/certificates$ openssl verify -CAfile ca-etcd-chain-cert.pem kube-apiserver-etcd-client-cert.pem
+   ```
 
-    Expected output:
+   Expected output:
 
-    ```text
-    kube-apiserver-etcd-client-cert.pem: OK
-    ```
+   ```text
+   kube-apiserver-etcd-client-cert.pem: OK
+   ```
 
 4. Copy certificates to `kube-mast01`
 
@@ -504,7 +504,7 @@ Setting up a cluster with external etcd nodes is similar to the procedure used f
        --control-plane --certificate-key b5a06f76e402d5d85ae459a66b7f8845eb76bf5afb45a8e45e52e0d81f166b8b
 
    Please note that the certificate-key gives access to cluster sensitive data, keep it secret!
-   As a safeguard, uploaded-certs will be deleted in two hours; If necessary, you can use 
+   As a safeguard, uploaded-certs will be deleted in two hours; If necessary, you can use
    "kubeadm init phase upload-certs --upload-certs" to reload certs afterward.
 
    Then you can join any number of worker nodes by running the following on each as root:
