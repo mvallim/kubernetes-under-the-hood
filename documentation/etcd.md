@@ -382,19 +382,19 @@ debian@busybox:~$ tmux
 debian@busybox:~$ ssh debian@etcd-node01
 ```
 
-> `ctrl+b` `'`
+> `ctrl+b` `"`
 
 ```console
 debian@busybox:~$ ssh debian@etcd-node02
 ```
 
-> `ctrl+b` `'`
+> `ctrl+b` `"`
 
 ```console
 debian@busybox:~$ ssh debian@etcd-node03
 ```
 
-> `ctrl+b` `'`
+> `ctrl+b` `"`
 
 #### Send commands to all panes
 
