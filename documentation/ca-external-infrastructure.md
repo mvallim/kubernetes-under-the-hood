@@ -9,7 +9,7 @@ Kubernetes requires PKI certificates for authentication over TLS. If you install
 ## Root and Intermediate CAs
 
 <p align="center">
-  <img src="images/intermediate-ca.png">
+  <img src="images/intermediate-ca.svg">
 </p>
 
 ### What is the purpose of the Intermediate CA certificate (resume to our words)
