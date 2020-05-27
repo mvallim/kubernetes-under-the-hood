@@ -21,6 +21,30 @@ write_files:
     N2h2R2QzS0ZvU1N4aDlFY1FONTNXWEhMYXBHQ0o0NGVFU3NqbVgzN1NwWElUYUhEOHJQRXBia0E0
     WWJzaVVoTXZPZ0VCLy9MZ1d0R2kvRVRxalVSUFkvWGRTVTR5dFE9PSBjYUBrdWJlLmRlbW8K
 
+- path: /etc/modules-load.d/bridge.conf
+  permissions: '0644'
+  content: |
+    br_netfilter
+
+- path: /etc/sysctl.d/10-kubernetes.conf
+  permissions: '0644'
+  content: |
+    net.ipv4.ip_forward=1
+    net.bridge.bridge-nf-call-iptables=1
+    net.bridge.bridge-nf-call-arptables=1
+
+- path: /etc/docker/daemon.json
+  permissions: '0644'
+  content: |
+    {
+      "exec-opts": ["native.cgroupdriver=systemd"],
+      "log-driver": "json-file",
+      "storage-driver": "overlay2",
+      "log-opts": {
+        "max-size": "100m"
+      }
+    }
+
 apt:
   sources_list: |
     deb http://deb.debian.org/debian/ $RELEASE main contrib non-free
@@ -41,20 +65,45 @@ apt:
 
 packages: 
   - apt-transport-https
+  - ca-certificates
+  - gnupg2
   - software-properties-common
-  - thin-provisioning-tools
-  - xfsprogs
+  - bridge-utils
   - curl
+  - less
+  - vim
+  - thin-provisioning-tools
+  - lvm2
+  - xfsprogs
 
 runcmd:
-  - curl -s https://download.gluster.org/pub/gluster/glusterfs/5/rsa.pub | apt-key add -
-  - echo 'deb https://download.gluster.org/pub/gluster/glusterfs/5/LATEST/Debian/9/amd64/apt/ stretch main' > /etc/apt/sources.list.d/gluster.list
+  - [ modprobe, br_netfilter ]
+  - [ sysctl, --system ]
+  - curl -s https://download.docker.com/linux/debian/gpg | apt-key add -
+  - curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+  - [ apt-key, fingerprint, '0EBFCD88' ]
+  - echo 'deb [arch=amd64] https://download.docker.com/linux/debian stretch stable' > /etc/apt/sources.list.d/docker-ce.list
+  - echo 'deb https://apt.kubernetes.io/ kubernetes-xenial main' > /etc/apt/sources.list.d/kubernetes.list
   - [ apt-get, update ]
-  - [ apt-get, install, -y, glusterfs-server ]
-  - [ apt-mark, hold, glusterfs-common, glusterfs-client, glusterfs-server ]
+  - [ apt-get, install, -y, 'docker-ce=18.06.0~ce~3-0~debian', containerd.io ]
+  - [ apt-get, install, -y, 'kubectl=1.15.6-00', 'kubelet=1.15.6-00', 'kubeadm=1.15.6-00' ]
+  - [ apt-mark, hold, kubectl, kubelet, kubeadm, docker-ce, containerd.io ]
   - [ chown, -R, 'debian:debian', '/home/debian' ]
     # SSH server to trust the CA
   - echo '\nTrustedUserCAKeys /etc/ssh/ca.pub' | tee -a /etc/ssh/sshd_config
+    # Prepare storage disk
+  - [ pvcreate, --dataalignment, "128K", "/dev/sdb" ]
+  - [ vgcreate, --physicalextentsize, "128K", "vg01", "/dev/sdb" ]
+  - [ lvcreate, -L, "2G", --name, "pool-meta", "vg01" ]
+  - [ lvcreate, -L, "450G", --name, "pool", "vg01" ]
+  - [ lvconvert, -y, --chunksize, "1280K", --thinpool, "vg01/pool", --poolmetadata, "vg01/pool-meta" ]
+  - [ lvchange, --zero, "n", "vg01/pool" ]
+  - [ lvcreate, -V, "400G", -T, "vg01/pool", -n, "store" ]
+    # Format logical volume
+  - [ mkfs.xfs, -f, -i, "size=512", -n, "size=8192", -d, "su=128k,sw=10", "/dev/vg01/store" ]
+    # create mount point store
+  - [ mkdir, -p, /srv/store ]
+  - echo '/dev/vg01/store       /srv/store    xfs   rw,inode64,noatime,nouuid           1     2' | tee -a /etc/fstab
 
 users:
 - name: debian
