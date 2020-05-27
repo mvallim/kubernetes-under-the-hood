@@ -586,25 +586,75 @@ sudo umount $HOME/debian-image-from-scratch/chroot
 ## Check disks integrity
 
 ```bash
-sudo fsck.ext4 /dev/loop0p1
+sudo fsck -f -y -v /dev/loop0p1
 ```
 
 Expected output:
 
 ```console
+fsck from util-linux 2.33.1
 e2fsck 1.44.5 (15-Dec-2018)
-/dev/loop0p1: clean, 337/32768 files, 14874/131072 blocks
+Pass 1: Checking inodes, blocks, and sizes
+Pass 2: Checking directory structure
+Pass 3: Checking directory connectivity
+Pass 4: Checking reference counts
+Pass 5: Checking group summary information
+
+         337 inodes used (1.03%, out of 32768)
+           1 non-contiguous file (0.3%)
+           1 non-contiguous directory (0.3%)
+             # of inodes with ind/dind/tind blocks: 0/0/0
+             Extent depth histogram: 329
+       14878 blocks used (11.35%, out of 131072)
+           0 bad blocks
+           1 large file
+
+         322 regular files
+           6 directories
+           0 character device files
+           0 block device files
+           0 fifos
+           0 links
+           0 symbolic links (0 fast symbolic links)
+           0 sockets
+------------
+         328 files
 ```
 
 ```bash
-sudo fsck.ext4 /dev/loop0p2
+sudo fsck -f -y -v /dev/loop0p2
 ```
 
 Expected output:
 
 ```console
+fsck from util-linux 2.33.1
 e2fsck 1.44.5 (15-Dec-2018)
-/dev/loop0p2: clean, 47759/1933312 files, 422742/7732992 blocks
+Pass 1: Checking inodes, blocks, and sizes
+Pass 2: Checking directory structure
+Pass 3: Checking directory connectivity
+Pass 4: Checking reference counts
+Pass 5: Checking group summary information
+
+       47744 inodes used (2.47%, out of 1933312)
+          23 non-contiguous files (0.0%)
+          40 non-contiguous directories (0.1%)
+             # of inodes with ind/dind/tind blocks: 0/0/0
+             Extent depth histogram: 43880/6
+      422401 blocks used (5.46%, out of 7732992)
+           0 bad blocks
+           1 large file
+
+       37780 regular files
+        5971 directories
+           8 character device files
+           0 block device files
+           0 fifos
+          10 links
+        3976 symbolic links (3842 fast symbolic links)
+           0 sockets
+------------
+       47745 files
 ```
 
 ## Detach all associated loop devices
