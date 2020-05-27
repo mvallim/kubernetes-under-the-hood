@@ -1,0 +1,11 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: glusterfs-simple
+provisioner: gluster.org/glusterfs-simple
+parameters:
+  forceCreate: "true"
+  brickrootPaths: "glus-node01.kube.demo:/srv/store/,glus-node02.kube.demo:/srv/store/,glus-node03.kube.demo:/srv/store/"
+  volumeType: "replica 3"
+  namespace: "default"
+  selector: "glusterfs-node==pod"
