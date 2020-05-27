@@ -37,9 +37,7 @@ The target audience for this tutorial is someone planning to install a Kubernete
    8. LoadBalancer
       - [How to setup the MetalLB](documentation/kube-metallb.md)
    9. Volumes
-      - [Gluster](documentation/gluster.md) (under construction)
-      - [Heketi](documentation/kube-heketi.md) (under construction)
-      - [Demo StorageClass](documentation/kube-demo-storageclass.md) (under construction)
+      - [How to setup storage GlusterFS](documentation/gluster.md) (under construction)
 5. External CA Infrastructure
    1. [How to create the external CA Infrastructure](documentation/ca-external-infrastructure.md) (under construction)
 6. External `etcd`

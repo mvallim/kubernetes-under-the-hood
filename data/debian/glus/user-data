@@ -86,24 +86,24 @@ runcmd:
   - echo 'deb https://apt.kubernetes.io/ kubernetes-xenial main' > /etc/apt/sources.list.d/kubernetes.list
   - [ apt-get, update ]
   - [ apt-get, install, -y, 'docker-ce=18.06.0~ce~3-0~debian', containerd.io ]
-  - [ apt-get, install, -y, 'kubelet=1.15.6-00', 'kubectl=1.15.6-00', 'kubeadm=1.15.6-00' ]
-  - [ apt-mark, hold, kubelet, kubectl, kubeadm, docker-ce, containerd.io ]
+  - [ apt-get, install, -y, 'kubectl=1.15.6-00', 'kubelet=1.15.6-00', 'kubeadm=1.15.6-00' ]
+  - [ apt-mark, hold, kubectl, kubelet, kubeadm, docker-ce, containerd.io ]
   - [ chown, -R, 'debian:debian', '/home/debian' ]
     # SSH server to trust the CA
   - echo '\nTrustedUserCAKeys /etc/ssh/ca.pub' | tee -a /etc/ssh/sshd_config
     # Prepare storage disk
-  - pvcreate --dataalignment 128K /dev/sdb
-  - vgcreate --physicalextentsize 128K vg01 /dev/sdb
-  - lvcreate -L 2G --name pool-meta vg01
-  - lvcreate -l 100%FREE --name pool vg01
-  - lvconvert -y --chunksize 1280K --thinpool vg01/pool --poolmetadata vg01/pool-meta
-  - lvchange --zero n vg01/pool
-  - lvcreate -V 400G -T vg01/pool -n store
+  - [ pvcreate, --dataalignment, "128K", "/dev/sdb" ]
+  - [ vgcreate, --physicalextentsize, "128K", "vg01", "/dev/sdb" ]
+  - [ lvcreate, -L, "2G", --name, "pool-meta", "vg01" ]
+  - [ lvcreate, -L, "450G", --name, "pool", "vg01" ]
+  - [ lvconvert, -y, --chunksize, "1280K", --thinpool, "vg01/pool", --poolmetadata, "vg01/pool-meta" ]
+  - [ lvchange, --zero, "n", "vg01/pool" ]
+  - [ lvcreate, -V, "400G", -T, "vg01/pool", -n, "store" ]
     # Format logical volume
-  - mkfs.xfs -f -i size=512 -n size=8192 -d su=128k,sw=10 /dev/vg01/store
-    # Add mount point store
-  - mkdir -p /srv/store
-  - echo '/dev/vg01/store         /srv/store      xfs     rw,inode64,noatime,nouuid       1       2' >> /etc/fstab
+  - [ mkfs.xfs, -f, -i, "size=512", -n, "size=8192", -d, "su=128k,sw=10", "/dev/vg01/store" ]
+    # create mount point store
+  - [ mkdir, -p, /srv/store ]
+  - echo '/dev/vg01/store       /srv/store    xfs   rw,inode64,noatime,nouuid           1     2' | tee -a /etc/fstab
 
 users:
 - name: debian
