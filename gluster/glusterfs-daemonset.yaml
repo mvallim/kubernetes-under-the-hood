@@ -23,12 +23,6 @@ spec:
         imagePullPolicy: IfNotPresent
         name: glusterfs
         volumeMounts:
-        - name: glusterfs-heketi
-          mountPath: "/var/lib/heketi"
-        - name: glusterfs-run
-          mountPath: "/run"
-        - name: glusterfs-lvm
-          mountPath: "/run/lvm"
         - name: glusterfs-etc
           mountPath: "/etc/glusterfs"
         - name: glusterfs-logs
@@ -37,11 +31,13 @@ spec:
           mountPath: "/var/lib/glusterd"
         - name: glusterfs-dev
           mountPath: "/dev"
-        - name: glusterfs-misc
-          mountPath: "/var/lib/misc/glusterfsd"
+        - name: glusterfs-run
+          mountPath: "/run"
         - name: glusterfs-cgroup
           mountPath: "/sys/fs/cgroup"
           readOnly: true
+        - name: glusterfs-misc
+          mountPath: "/var/lib/misc/glusterfsd"
         - name: glusterfs-ssl
           mountPath: "/etc/ssl"
           readOnly: true
@@ -73,13 +69,6 @@ spec:
           successThreshold: 1
           failureThreshold: 15
       volumes:
-      - name: glusterfs-heketi
-        hostPath:
-          path: "/var/lib/heketi"
-      - name: glusterfs-run
-      - name: glusterfs-lvm
-        hostPath:
-          path: "/run/lvm"
       - name: glusterfs-etc
         hostPath:
           path: "/etc/glusterfs"
@@ -92,6 +81,9 @@ spec:
       - name: glusterfs-dev
         hostPath:
           path: "/dev"
+      - name: glusterfs-run
+        emptyDir:
+          medium: Memory
       - name: glusterfs-misc
         hostPath:
           path: "/var/lib/misc/glusterfsd"
