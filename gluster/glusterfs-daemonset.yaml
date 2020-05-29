@@ -19,7 +19,7 @@ spec:
         storagenode: glusterfs
       hostNetwork: true
       containers:
-      - image: gluster/gluster-centos:latest
+      - image: mvallim/gluster-debian:7-stretch
         imagePullPolicy: IfNotPresent
         name: glusterfs
         volumeMounts:
@@ -53,7 +53,7 @@ spec:
             command:
             - "/bin/bash"
             - "-c"
-            - systemctl status glusterd.service
+            - nc -z localhost 24007-24008
           periodSeconds: 25
           successThreshold: 1
           failureThreshold: 15
@@ -64,7 +64,7 @@ spec:
             command:
             - "/bin/bash"
             - "-c"
-            - systemctl status glusterd.service
+            - nc -z localhost 24007-24008
           periodSeconds: 25
           successThreshold: 1
           failureThreshold: 15
