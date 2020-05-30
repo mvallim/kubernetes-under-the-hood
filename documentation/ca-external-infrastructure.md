@@ -12,15 +12,15 @@ Kubernetes requires PKI certificates for authentication over TLS. If you install
   <img src="images/intermediate-ca.svg">
 </p>
 
-### What is the purpose of the Intermediate CA certificate (resume to our words)
+### What is the purpose of the Intermediate CA certificate
 
-To improve the security of the root certificate, we have created two intermediate certificates from which SSL certificates are signed and issued.
+To improve the security of the root certificate, we will create two intermediate certificates from which SSL certificates are signed and issued.
 
-An intermediate certificate is a subordinate certificate issued by the trusted root, specifically for issuing server certificates from the final subject. The result is a chain of certificates that starts at the trusted root CA, up to the middleman and ends with the SSL certificate issued to you. These certificates are called chained root certificates.
+An intermediate certificate is a subordinate certificate issued by the trusted root, specifically for issuing server certificates for the final subject. The result is a chain of certificates that starts at the trusted root CA, includes the intermediary certificates and ends with the SSL certificate issued to you. These certificates are called chained root certificates.
 
-Creating certificates directly from the root certificate of the CA increases the risk of compromising the root certificate, and if the root certificate is compromised, the entire trust infrastructure created by the SSL provider will fail. The use of intermediate certificates to issue SSL certificates to final entities, therefore, provides an additional level of security. You must install the intermediate certificates on your server together with the issued SSL certificate to complete the trusted chain and make the certificate effective.
+Creating certificates directly from the root certificate of the CA increases the risk of compromising the root certificate, and if the root certificate is compromised, the entire trust infrastructure created by the SSL provider will fail. The use of intermediate certificates to issue SSL certificates to final entities, therefore, provides an additional layer of security. You must install the intermediate certificates on your server together with the issued SSL certificate to complete the trusted chain and make the certificate effective.
 
-The use of intermediate certificates does not cause any installation, performance or compatibility problems.
+The use of intermediate certificates does not cause any installation, performance or compatibility issues.
 
 <p align="center">
   <img src="images/certificate-01.png">
@@ -29,15 +29,15 @@ The use of intermediate certificates does not cause any installation, performanc
 
 ### A little analogy for better understanding this concept
 
-> Once upon a time, there was on a kingdom known as **Cluster Land**. In this kingdom, there was no currency that allowed people to trade with each other. All the commerce happened through bartering.
+> Once upon a time, there was a kingdom known as **Cluster Land**. In this kingdom, there was no currency that allowed people to trade with each other. All the commerce happened through bartering.
 
 > One day, many king's subjects started complaining about how the bartering process wasn't fair. The king, a very wise man, decided to create a currency called **Cluster Coins**. The coins were supposed to be created by the king's subjects themselves, using a special material (silver) and a press provided by the king's wedges. This was a just in-time process and happened everytime the king's subjects made formal requests to do so.
 
-> At first, this process worked really well, and currency began to circulate in the reign. The trading was perceived as very fair, and everybody was pretty happy with this new model.
+> At first, this process worked really well, and currency began to circulate in the reign. The trading was perceived as being very fair, and everybody was pretty happy with this new model.
 
-> One day though, somebody perceived the amount of coins circulating was out of control, and the royal guard was tasked to investigate what was happening. It was found that some counterfeiters were falsifying the coins and the currency value wasn't not as fair as it used to be, since the number of coins circulating was much higher and the prices weren't fair anymore, creating an hyperinflation scenario. This made the currency to be depreciated and lose its value.
+> One day though, somebody realized the amount of coins circulating was out of control, and the royal guard was tasked to investigate what was happening. It was found that some counterfeiters were falsifying the coins and the currency value wasn't as fair as it used to be, because the number of coins circulating was much higher and the prices weren't fair anymore, creating an hyperinflation scenario. This made the currency to be depreciated and lose its value.
 
-> To solve this problem, the king came up with a solution: instead of providing the presses to the subjects, all coins would now be created in a centered place. The **Kingdom's Mint** was created. Now, many security measures and it was increasily difficult to falsify coins. Besides the inumerous security measures added to the process, gold (a more rare material) was used for creating the new coins.
+> To solve this problem, the king came up with a solution: instead of providing the presses to the subjects, all coins would now be created in a central place. The **Kingdom's Mint** was born. Now, many security measures were imposed and it was increasily difficult to falsify coins. Besides the inumerous security measures added to the process, now gold, a much rarer material, was used for creating the new coins.
 
 > This new process worked really well. The old coin was deprecated and, though some counterfeiters still tried to falsify the coins, it was now much harder and expensive to succeed. Besides that, it was clear to the subjects when somebody tried to fool themselves with false coins and the counterfeiters were immediatelly denounced to the king.
 
@@ -61,7 +61,7 @@ _OpenSSL is available for most Unix-like operating systems (including Linux, mac
 
 1. Create the certificate template
 
-   > This sample was created for Ubuntu and Debian distribution
+   > This sample was created for Ubuntu and Debian distributions
 
    ```console
    debian@busybox:~$ mkdir certificates
@@ -151,7 +151,7 @@ _OpenSSL is available for most Unix-like operating systems (including Linux, mac
    -----
    ```
 
-3. Create the request intermediate `kubernetes-ca` CA certificate
+3. Create the intermediate `kubernetes-ca` CA certificate request
 
    ```console
    debian@busybox:~/certificates$ CN="Kubernetes, CA" SAN= \
@@ -171,7 +171,7 @@ _OpenSSL is available for most Unix-like operating systems (including Linux, mac
    -----
    ```
 
-4. Create the request intermediate `kubernetes-front-proxy-ca` certificate CA
+4. Create the intermediate `kubernetes-front-proxy-ca` CA certificate request
 
    ```console
    debian@busybox:~/certificates$ CN="Kubernetes front proxy, CA" SAN= \
@@ -191,7 +191,7 @@ _OpenSSL is available for most Unix-like operating systems (including Linux, mac
    -----
    ```
 
-5. Create the request intermediate `etcd-ca` certificate CA
+5. Create the intermediate `etcd-ca` CA certificate request
 
    ```console
    debian@busybox:~/certificates$ CN="Etcd, CA" SAN= \
@@ -211,7 +211,7 @@ _OpenSSL is available for most Unix-like operating systems (including Linux, mac
    -----
    ```
 
-6. Create the request intermediate `certificate-manager-ca` certificate CA
+6. Create the intermediate `certificate-manager-ca` CA certificate request
 
    ```console
    debian@busybox:~/certificates$ CN="Certificate Manager, CA" SAN= \
@@ -231,7 +231,7 @@ _OpenSSL is available for most Unix-like operating systems (including Linux, mac
    -----
    ```
 
-7. Sign the intermediate `kubernetes-ca` certificate CA with the root CA
+7. Sign the intermediate `kubernetes-ca` CA certificate with the root CA certificate
 
    ```console
    debian@busybox:~/certificates$ CN="Kubernetes, CA" SAN= \
@@ -254,13 +254,13 @@ _OpenSSL is available for most Unix-like operating systems (including Linux, mac
    Getting CA Private Key
    ```
 
-   Create the chain intermediate `kubernetes-ca` certificate CA
+   Create the intermediate `kubernetes-ca` CA certificate chain
 
    ```console
    debian@busybox:~/certificates$ cat ca-kubernetes-cert.pem root-cert.pem > ca-kubernetes-chain-cert.pem
    ```
 
-8. Sign the intermediate `kubernetes-front-proxy-ca` certificate CA with the root CA
+8. Sign the intermediate `kubernetes-front-proxy-ca` CA certificate with the root CA certificate
 
    ```console
    debian@busybox:~/certificates$ CN="Kubernetes front proxy, CA" SAN= \
@@ -283,13 +283,13 @@ _OpenSSL is available for most Unix-like operating systems (including Linux, mac
    Getting CA Private Key
    ```
 
-   Create chain intermediate certificate `kubernetes-front-proxy-ca` CA
+   Create the `kubernetes-front-proxy-ca` intermediate CA certificate chain
 
    ```console
    debian@busybox:~/certificates$ cat ca-kubernetes-front-proxy-cert.pem root-cert.pem > ca-kubernetes-front-proxy-chain-cert.pem
    ```
 
-9. Sign intermediate `etcd-ca` CA certificate with root CA
+9. Sign the intermediate `etcd-ca` CA certificate with the root CA certificate
 
    ```console
    debian@busybox:~/certificates$ CN="Etcd, CA" SAN= \
@@ -312,54 +312,62 @@ _OpenSSL is available for most Unix-like operating systems (including Linux, mac
    Getting CA Private Key
    ```
 
-   Create chain intermediate certificate `etcd-ca` CA
+   Create the intermediate `etcd-ca` CA certificate chain
 
    ```console
    debian@busybox:~/certificates$ cat ca-etcd-cert.pem root-cert.pem > ca-etcd-chain-cert.pem
    ```
 
-10. Sign intermediate `certificate-manager-ca` CA certificate with root CA
+10. Sign the intermediate `certificate-manager-ca` CA certificate with the root CA certificate
 
-      ```console
-      debian@busybox:~/certificates$ CN="Certificate Manager, CA" SAN= \
-         openssl x509 -req \
-            -extfile config.conf \
-            -extensions ca \
-            -in ca-certificate-manager-cert.csr \
-            -CA root-cert.pem \
-            -CAkey root-key.pem \
-            -CAcreateserial \
-            -out ca-certificate-manager-cert.pem \
-            -days 3650 -sha256
-      ```
+    ```console
+    debian@busybox:~/certificates$ CN="Certificate Manager, CA" SAN= \
+       openssl x509 -req \
+          -extfile config.conf \
+          -extensions ca \
+          -in ca-certificate-manager-cert.csr \
+          -CA root-cert.pem \
+          -CAkey root-key.pem \
+          -CAcreateserial \
+          -out ca-certificate-manager-cert.pem \
+          -days 3650 -sha256
+    ```
 
-      Expected output:
+    Expected output:
 
-      ```text
-      Signature ok
-      subject=C = BR, ST = SP, L = Campinas, O = "Kubernetes, Labs", OU = Labs, CN = "Certificate Manager, CA"
-      Getting CA Private Key
-      ```
+    ```text
+    Signature ok
+    subject=C = BR, ST = SP, L = Campinas, O = "Kubernetes, Labs", OU = Labs, CN = "Certificate Manager, CA"
+    Getting CA Private Key
+    ```
 
-      Create chain intermediate certificate `etcd-ca` CA
+    Create the intermediate `etcd-ca` CA certificate chain
 
-      ```console
-      debian@busybox:~/certificates$ cat ca-certificate-manager-cert.pem root-cert.pem > ca-certificate-manager-chain-cert.pem
-      ```
+    ```console
+    debian@busybox:~/certificates$ cat ca-certificate-manager-cert.pem root-cert.pem > ca-certificate-manager-chain-cert.pem
+    ```
 
 11. Verify the signatures
 
-      ```console
-      debian@busybox:~/certificates$ for instance in ca-kubernetes ca-kubernetes-front-proxy ca-etcd ; do
-         openssl verify -CAfile root-cert.pem ${instance}-cert.pem
-      done
-      ```
+    ```console
+    debian@busybox:~/certificates$ for instance in ca-kubernetes ca-kubernetes-front-proxy ca-etcd ; do
+       openssl verify -CAfile root-cert.pem ${instance}-cert.pem
+    done
+    ```
 
-      Expected output:
+    Expected output:
 
-      ```text
-      ca-kubernetes-cert.pem: OK
-      ca-kubernetes-front-proxy-cert.pem: OK
-      ca-certificate-manager-cert.pem: OK
-      ca-etcd-cert.pem: OK
-      ```
+    ```text
+    ca-kubernetes-cert.pem: OK
+    ca-kubernetes-front-proxy-cert.pem: OK
+    ca-certificate-manager-cert.pem: OK
+    ca-etcd-cert.pem: OK
+    ```
+
+## Summary
+
+In this process, we:
+
+1. Created the root certificate;
+2. Create an intermediary certificate for each component of our cluster (`kubernetes-ca`, `kubernetes-front-proxy-ca`, `etcd-ca` and `certificate-manager-ca`) and sign them with the root certificate;
+3. Create the final certificates for each component, signing them with their respective intermediary certificates previously created;
