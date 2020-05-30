@@ -151,7 +151,7 @@ _OpenSSL is available for most Unix-like operating systems (including Linux, mac
    -----
    ```
 
-3. Create the request intermediate `kubernetes-ca` CA certificate
+3. Create the intermediate `kubernetes-ca` CA certificate request
 
    ```console
    debian@busybox:~/certificates$ CN="Kubernetes, CA" SAN= \
@@ -171,7 +171,7 @@ _OpenSSL is available for most Unix-like operating systems (including Linux, mac
    -----
    ```
 
-4. Create the request intermediate `kubernetes-front-proxy-ca` CA
+4. Create the intermediate `kubernetes-front-proxy-ca` CA certificate request
 
    ```console
    debian@busybox:~/certificates$ CN="Kubernetes front proxy, CA" SAN= \
@@ -191,7 +191,7 @@ _OpenSSL is available for most Unix-like operating systems (including Linux, mac
    -----
    ```
 
-5. Create the request intermediate `etcd-ca` CA
+5. Create the intermediate `etcd-ca` CA certificate request
 
    ```console
    debian@busybox:~/certificates$ CN="Etcd, CA" SAN= \
@@ -211,7 +211,27 @@ _OpenSSL is available for most Unix-like operating systems (including Linux, mac
    -----
    ```
 
-6. Sign the intermediate `kubernetes-ca` CA with the root CA
+6. Create the intermediate `certificate-manager-ca` CA certificate request
+
+   ```console
+   debian@busybox:~/certificates$ CN="Certificate Manager, CA" SAN= \
+      openssl req -newkey rsa:2048 -nodes \
+         -keyout ca-certificate-manager-key.pem \
+         -config config.conf \
+         -out ca-certificate-manager-cert.csr
+   ```
+
+   Expected output:
+
+   ```text
+   Generating a RSA private key
+   ..........+++++
+   ......................................................................................+++++
+   writing new private key to 'ca-certificate-manager-key.pem'
+   -----
+   ```
+
+7. Sign the intermediate `kubernetes-ca` CA certificate with the root CA certificate
 
    ```console
    debian@busybox:~/certificates$ CN="Kubernetes, CA" SAN= \
@@ -234,13 +254,13 @@ _OpenSSL is available for most Unix-like operating systems (including Linux, mac
    Getting CA Private Key
    ```
 
-   Create the chain intermediate `kubernetes-ca` CA
+   Create the intermediate `kubernetes-ca` CA certificate chain
 
    ```console
    debian@busybox:~/certificates$ cat ca-kubernetes-cert.pem root-cert.pem > ca-kubernetes-chain-cert.pem
    ```
 
-7. Sign the intermediate `kubernetes-front-proxy-ca` CA with the root CA
+8. Sign the intermediate `kubernetes-front-proxy-ca` CA certificate with the root CA certificate
 
    ```console
    debian@busybox:~/certificates$ CN="Kubernetes front proxy, CA" SAN= \
@@ -263,13 +283,13 @@ _OpenSSL is available for most Unix-like operating systems (including Linux, mac
    Getting CA Private Key
    ```
 
-   Create chain intermediate certificate `kubernetes-front-proxy-ca` CA
+   Create the `kubernetes-front-proxy-ca` intermediate CA certificate chain
 
    ```console
    debian@busybox:~/certificates$ cat ca-kubernetes-front-proxy-cert.pem root-cert.pem > ca-kubernetes-front-proxy-chain-cert.pem
    ```
 
-8. Sign intermediate `etcd-ca` CA certificate with root CA
+9. Sign the intermediate `etcd-ca` CA certificate with the root CA certificate
 
    ```console
    debian@busybox:~/certificates$ CN="Etcd, CA" SAN= \
@@ -292,24 +312,62 @@ _OpenSSL is available for most Unix-like operating systems (including Linux, mac
    Getting CA Private Key
    ```
 
-   Create chain intermediate certificate `etcd-ca` CA
+   Create the intermediate `etcd-ca` CA certificate chain
 
    ```console
    debian@busybox:~/certificates$ cat ca-etcd-cert.pem root-cert.pem > ca-etcd-chain-cert.pem
    ```
 
-9. Verify the signatures
+10. Sign the intermediate `certificate-manager-ca` CA certificate with the root CA certificate
 
-   ```console
-   debian@busybox:~/certificates$ for instance in ca-kubernetes ca-kubernetes-front-proxy ca-etcd ; do
+    ```console
+    debian@busybox:~/certificates$ CN="Certificate Manager, CA" SAN= \
+       openssl x509 -req \
+          -extfile config.conf \
+          -extensions ca \
+          -in ca-certificate-manager-cert.csr \
+          -CA root-cert.pem \
+          -CAkey root-key.pem \
+          -CAcreateserial \
+          -out ca-certificate-manager-cert.pem \
+          -days 3650 -sha256
+    ```
+
+    Expected output:
+
+    ```text
+    Signature ok
+    subject=C = BR, ST = SP, L = Campinas, O = "Kubernetes, Labs", OU = Labs, CN = "Certificate Manager, CA"
+    Getting CA Private Key
+    ```
+
+    Create the intermediate `etcd-ca` CA certificate chain
+
+    ```console
+    debian@busybox:~/certificates$ cat ca-certificate-manager-cert.pem root-cert.pem > ca-certificate-manager-chain-cert.pem
+    ```
+
+11. Verify the signatures
+
+    ```console
+    debian@busybox:~/certificates$ for instance in ca-kubernetes ca-kubernetes-front-proxy ca-etcd ; do
        openssl verify -CAfile root-cert.pem ${instance}-cert.pem
-   done
-   ```
+    done
+    ```
 
-   Expected output:
+    Expected output:
 
-   ```text
-   ca-kubernetes-cert.pem: OK
-   ca-kubernetes-front-proxy-cert.pem: OK
-   ca-etcd-cert.pem: OK
-   ```
+    ```text
+    ca-kubernetes-cert.pem: OK
+    ca-kubernetes-front-proxy-cert.pem: OK
+    ca-certificate-manager-cert.pem: OK
+    ca-etcd-cert.pem: OK
+    ```
+
+## Summary
+
+In this process, we:
+
+1. Created the root certificate;
+2. Create an intermediary certificate for each component of our cluster (`kubernetes-ca`, `kubernetes-front-proxy-ca`, `etcd-ca` and `certificate-manager-ca`) and sign them with the root certificate;
+3. Create the final certificates for each component, signing them with their respective intermediary certificates previously created;
