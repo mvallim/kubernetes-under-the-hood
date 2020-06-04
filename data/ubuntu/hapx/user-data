@@ -160,9 +160,9 @@ runcmd:
   - [ chmod, "0755", /usr/lib/ocf/resource.d/heartbeat/haproxy ]
   - [ systemctl, restart, pacemaker, corosync ]
   - [ systemctl, enable, pacemaker, corosync ]
-  - [ chown, -R, 'ubuntu:ubuntu', '/home/ubuntu' ]
   # SSH server to trust the CA
-  - echo '\nTrustedUserCAKeys /etc/ssh/ca.pub' | tee -a /etc/ssh/sshd_config
+  - [ sh, -c, 'echo >> /etc/ssh/sshd_config' ]
+  - [ sh, -c, 'echo TrustedUserCAKeys /etc/ssh/ca.pub >> /etc/ssh/sshd_config' ]
 
 apt:
   sources_list: |

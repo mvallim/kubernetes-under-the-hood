@@ -38,11 +38,12 @@ The target audience for this tutorial is someone planning to install a Kubernete
       - [How to setup the MetalLB](documentation/kube-metallb.md)
    9. Volumes
       - [How to setup storage GlusterFS](documentation/gluster.md) (under construction)
-5. External CA Infrastructure
-   1. [How to create the external CA Infrastructure](documentation/ca-external-infrastructure.md) (under construction)
-6. External `etcd`
-   1. [How to setup the external etcd with TLS](documentation/etcd.md)
-   2. [How to setup the Masters using `kubeadm` bootstrap with external `etcd`](documentation/kube-masters-external-etcd.md)
+5. Appendix
+   1. External CA Infrastructure
+      1. [How to create the external CA Infrastructure](documentation/ca-external-infrastructure.md)
+   2. External `etcd`
+      1. [How to setup the external etcd with TLS](documentation/etcd.md)
+      2. [How to setup the Masters using `kubeadm` bootstrap with external `etcd`](documentation/kube-masters-external-etcd.md)
 
 ## Contributing
 

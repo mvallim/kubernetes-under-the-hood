@@ -24,7 +24,7 @@ To initialize and configure our instances using cloud-init, we'll use the config
 
 Notice we also make use of our `create-image.sh`(../create-image.sh) helper script, passing some files from inside the `data/kube/` directory as parameters.
 
-- **Create the Masters**
+- **Create the etcd nodes**
 
   ```console
   ~/kubernetes-under-the-hood$ for instance in etcd-node01 etcd-node02 etcd-node03; do
@@ -221,141 +221,7 @@ permitted by applicable law.
 
 ### Creating certificates
 
-1. Create the certificate template
-
-    ```console
-    debian@busybox:~$ mkdir certificates
-    ```
-
-    ```console
-    debian@busybox:~$ cd certificates
-    ```
-
-    ```console
-    debian@busybox:~/certificates$ cat <<EOF > config.conf
-    [ req ]
-    default_bits            = 2048
-    default_md              = sha256
-    distinguished_name      = dn
-    prompt                  = no
-
-    [ dn ]
-    C                       = BR
-    ST                      = SP
-    L                       = Campinas
-    O                       = Kubernetes, Labs
-    OU                      = Labs
-    CN                      = \${ENV::CN}
-
-    [ root ]
-    basicConstraints        = critical,CA:TRUE
-    subjectKeyIdentifier    = hash
-    authorityKeyIdentifier  = keyid:always,issuer
-    keyUsage                = critical,digitalSignature,keyEncipherment,keyCertSign,cRLSign
-
-    [ ca ]
-    basicConstraints        = critical,CA:TRUE,pathlen:0
-    subjectKeyIdentifier    = hash
-    authorityKeyIdentifier  = keyid:always,issuer:always
-    keyUsage                = critical,digitalSignature,keyEncipherment,keyCertSign,cRLSign
-
-    [ server ]
-    subjectKeyIdentifier    = hash
-    basicConstraints        = critical,CA:FALSE
-    extendedKeyUsage        = serverAuth
-    keyUsage                = critical,keyEncipherment,dataEncipherment
-    authorityKeyIdentifier  = keyid,issuer:always
-    subjectAltName          = DNS:localhost,\${ENV::SAN},IP:127.0.0.1,IP:127.0.1.1
-
-    [ peer ]
-    subjectKeyIdentifier    = hash
-    basicConstraints        = critical,CA:FALSE
-    extendedKeyUsage        = serverAuth,clientAuth
-    keyUsage                = critical,keyEncipherment,dataEncipherment
-    authorityKeyIdentifier  = keyid,issuer:always
-    subjectAltName          = DNS:localhost,\${ENV::SAN},IP:127.0.0.1,IP:127.0.1.1
-
-    [ user ]
-    subjectKeyIdentifier    = hash
-    basicConstraints        = critical,CA:FALSE
-    extendedKeyUsage        = clientAuth
-    keyUsage                = critical,keyEncipherment,dataEncipherment
-    authorityKeyIdentifier  = keyid,issuer:always
-    EOF
-    ```
-
-2. Create Root the CA certificate
-
-    ```console
-    debian@busybox:~/certificates$ CN="Root, CA" SAN= \
-        openssl req -x509 -newkey rsa:2048 -nodes \
-            -keyout root-key.pem \
-            -days 3650 \
-            -config config.conf \
-            -extensions root \
-            -out root-cert.pem
-    ```
-
-    Expected output:
-
-    ```text
-    Generating a RSA private key
-    ...........................................................+++++
-    ...............+++++
-    writing new private key to 'root-cert.pem'
-    -----
-    ```
-
-3. Create request intermediate `etcd` the CA certificate
-
-    ```console
-    debian@busybox:~/certificates$ CN="Etcd, CA" SAN= \
-        openssl req -newkey rsa:2048 -nodes \
-            -keyout ca-etcd-key.pem \
-            -config config.conf \
-            -out ca-etcd-cert.csr
-    ```
-
-    Expected output:
-
-    ```text
-    Generating a RSA private key
-    ..........+++++
-    ......................................................................................+++++
-    writing new private key to 'ca-etcd-key.pem'
-    -----
-    ```
-
-4. Sing intermediate etcd CA certificate with root CA
-
-    ```console
-    debian@busybox:~/certificates$ CN="Etcd, CA" SAN= \
-        openssl x509 -req \
-            -extfile config.conf \
-            -extensions ca \
-            -in ca-etcd-cert.csr \
-            -CA root-cert.pem \
-            -CAkey root-key.pem \
-            -CAcreateserial \
-            -out ca-etcd-cert.pem \
-            -days 3650 -sha256
-    ```
-
-    Expected output:
-
-    ```text
-    Signature ok
-    subject=C = BR, ST = SP, L = Campinas, O = "Kubernetes, Labs", OU = Labs, CN = "Etcd, CA"
-    Getting CA Private Key
-    ```
-
-5. Create chain intermediate certificate etcd CA
-
-    ```console
-    debian@busybox:~/certificates$ cat ca-etcd-cert.pem root-cert.pem > ca-etcd-chain-cert.pem
-    ```
-
-6. Create the server requests certificates to etcd nodes
+1. Create the server requests certificates to etcd nodes
 
     ```console
     debian@busybox:~/certificates$ for instance in etcd-node01 etcd-node02 etcd-node03; do
@@ -387,7 +253,7 @@ permitted by applicable law.
     -----
     ```
 
-7. Create the peer requests certificates to etcd nodes
+2. Create the peer requests certificates to etcd nodes
 
     ```console
     debian@busybox:~/certificates$ for instance in etcd-node01-peer etcd-node02-peer etcd-node03-peer; do
@@ -419,7 +285,7 @@ permitted by applicable law.
     -----
     ```
 
-8. Sign the server certificates using your own CA
+3. Sign the server certificates using your own CA
 
     ```console
     debian@busybox:~/certificates$ for instance in etcd-node01 etcd-node02 etcd-node03; do
@@ -450,7 +316,7 @@ permitted by applicable law.
     Getting CA Private Key
     ```
 
-9. Sign the peer certificates using your own CA
+4. Sign the peer certificates using your own CA
 
     ```console
     debian@busybox:~/certificates$ for instance in etcd-node01-peer etcd-node02-peer etcd-node03-peer; do
@@ -481,7 +347,7 @@ permitted by applicable law.
     Getting CA Private Key
     ```
 
-10. Verify the signatures
+5. Verify the signatures
 
     ```console
     debian@busybox:~/certificates$ for instance in etcd-node01 etcd-node01-peer etcd-node02 etcd-node02-peer etcd-node03 etcd-node03-peer; do
@@ -500,7 +366,7 @@ permitted by applicable law.
     etcd-node03-peer-cert.pem: OK
     ```
 
-11. Copy the certificate to the etcd instances
+6. Copy the certificate to the etcd instances
 
     ```console
     debian@busybox:~/certificates$ for instance in etcd-node01 etcd-node02 etcd-node03; do
