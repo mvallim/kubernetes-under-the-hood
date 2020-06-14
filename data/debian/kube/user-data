@@ -67,25 +67,25 @@ packages:
   - ca-certificates
   - gnupg2
   - software-properties-common
-  - glusterfs-client
   - bridge-utils
   - curl
 
 runcmd:
   - [ modprobe, br_netfilter ]
   - [ sysctl, --system ]
-  - curl -s https://download.docker.com/linux/debian/gpg | apt-key add -
-  - curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+  - [ sh, -c, 'curl -s https://download.gluster.org/pub/gluster/glusterfs/7/rsa.pub | apt-key add -' ]
+  - [ sh, -c, 'curl -s https://download.docker.com/linux/debian/gpg | apt-key add -' ]
+  - [ sh, -c, 'curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -' ]
   - [ apt-key, fingerprint, '0EBFCD88' ]
-  - echo 'deb [arch=amd64] https://download.docker.com/linux/debian stretch stable' > /etc/apt/sources.list.d/docker-ce.list
-  - echo 'deb https://apt.kubernetes.io/ kubernetes-xenial main' > /etc/apt/sources.list.d/kubernetes.list
+  - [ sh, -c, 'echo deb https://download.gluster.org/pub/gluster/glusterfs/7/LATEST/Debian/9/amd64/apt/ stretch main > /etc/apt/sources.list.d/gluster.list' ]
+  - [ sh, -c, 'echo deb [arch=amd64] https://download.docker.com/linux/debian stretch stable > /etc/apt/sources.list.d/docker-ce.list' ]
+  - [ sh, -c, 'echo deb https://apt.kubernetes.io/ kubernetes-xenial main > /etc/apt/sources.list.d/kubernetes.list' ]
   - [ apt-get, update ]
-  - [ apt-get, install, -y, 'docker-ce=18.06.0~ce~3-0~debian', containerd.io ]
-  - [ apt-get, install, -y, 'kubelet=1.15.6-00', 'kubectl=1.15.6-00', 'kubeadm=1.15.6-00' ]
-  - [ apt-mark, hold, kubelet, kubectl, kubeadm, docker-ce, containerd.io ]
-  - [ chown, -R, 'debian:debian', '/home/debian' ]
-    # SSH server to trust the CA
-  - echo '\nTrustedUserCAKeys /etc/ssh/ca.pub' | tee -a /etc/ssh/sshd_config
+  - [ apt-get, install, -y, glusterfs-client, 'docker-ce=18.06.0~ce~3-0~debian', containerd.io, 'kubelet=1.15.6-00', 'kubectl=1.15.6-00', 'kubeadm=1.15.6-00' ]
+  - [ apt-mark, hold, glusterfs-client, kubelet, kubectl, kubeadm, docker-ce, containerd.io ]
+  # SSH server to trust the CA
+  - [ sh, -c, 'echo >> /etc/ssh/sshd_config' ]
+  - [ sh, -c, 'echo TrustedUserCAKeys /etc/ssh/ca.pub >> /etc/ssh/sshd_config' ]
 
 users:
 - name: debian
