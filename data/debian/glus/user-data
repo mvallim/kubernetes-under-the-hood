@@ -71,6 +71,7 @@ packages:
   - bridge-utils
   - thin-provisioning-tools
   - lvm2
+  - acl
   - xfsprogs
   - curl
 
@@ -108,7 +109,7 @@ runcmd:
   - [ mkfs.xfs, -f, -i, "size=512", -n, "size=8192", -d, "su=1280k,sw=1", "/dev/vg01/store" ]
   # create mount point store
   - [ mkdir, -p, /srv/store ]
-  - [ sh, -c, 'echo /dev/vg01/store         /srv/store      xfs     rw,inode64,noatime,nouuid       1       2 >> /etc/fstab' ]
+  - [ sh, -c, 'echo /dev/vg01/store         /srv/store      xfs     rw,inode64,noatime,nouuid,acl   1       2 >> /etc/fstab' ]
 
 users:
 - name: debian
