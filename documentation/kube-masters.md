@@ -260,7 +260,7 @@ You need to add a route to your local machine to access the internal network of 
 
 ### Access the BusyBox
 
-We need to get the **BusyBox IP** to access it via ssh
+We need to get the **BusyBox IP** to access it via ssh:
 
 ```console
 ~$ vboxmanage guestproperty get busybox "/VirtualBox/GuestInfo/Net/0/V4/IP"
@@ -272,7 +272,7 @@ Expected output:
 Value: 192.168.4.57
 ```
 
-Use the returned value to access.
+Use the returned value to access the BusyBox:
 
 ```cosole
 ~$ ssh debian@192.168.4.57
