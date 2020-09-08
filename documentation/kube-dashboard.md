@@ -19,25 +19,25 @@ sudo ip route add 192.168.4.32/27 via 192.168.4.62 dev vboxnet0
 
 ### Access the BusyBox
 
-We need to get the **BusyBox IP** to access it via ssh
+We need to get the **BusyBox IP** to access it via ssh:
 
 ```shell
 vboxmanage guestproperty get busybox "/VirtualBox/GuestInfo/Net/0/V4/IP"
 ```
 
-The responses should look similar to this:
+Expected output:
 
 ```shell
 Value: 192.168.4.57
 ```
 
-Use the returned value to access.
+Use the returned value to access the BusyBox:
 
 ```console
 ~$ ssh debian@192.168.4.57
 ```
 
-The responses should look similar to this:
+Expected output:
 
 ```text
 Linux busybox 4.9.0-11-amd64 #1 SMP Debian 4.9.189-3+deb9u2 (2019-11-11) x86_64
@@ -50,9 +50,7 @@ permitted by applicable law.
 
 ## Deploy
 
-1. Copy config from master node
-
-   Now we need configure kubectl in busybox.
+1. Configure `kubectl` in the BusyXox. To do so, copy the configuration from the master node:
 
    ```console
    debian@busybox:~$ mkdir ~/.kube
@@ -60,13 +58,13 @@ permitted by applicable law.
    debian@busybox:~$ ssh kube-mast01 'sudo cat /etc/kubernetes/admin.conf' > ~/.kube/config
    ```
 
-2. Create the dashboard from the `kubernetes-dashboard.yaml` file:
+2. Install the Dashboard by applying the `kubernetes-dashboard.yaml` file:
 
    ```console
    debian@busybox:~$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0/aio/deploy/recommended.yaml
    ```
 
-   The response should look similar to this:
+   Expected output:
 
    ```text
    namespace/kubernetes-dashboard created
@@ -85,13 +83,13 @@ permitted by applicable law.
    deployment.apps/dashboard-metrics-scraper created
    ```
 
-3. Checking the state of pods after dashboard deployed
+3. Check the state of the pods after the Dashboard deployed:
 
    ```console
    debian@busybox:~$ kubectl get pods -o wide -n kubernetes-dashboard
    ```
 
-   The response should look similar to this:
+   Expected output:
 
    ```text
    NAME                                         READY   STATUS    RESTARTS   AGE    IP           NODE          NOMINATED NODE   READINESS GATES
@@ -99,13 +97,13 @@ permitted by applicable law.
    kubernetes-dashboard-56c5f95c6b-ptcw6        1/1     Running   0          2m2s   10.244.3.2   kube-node01   <none>           <none>
    ```
 
-   > Now you can see the dashboard pod `kubernetes-dashboard-56c5f95c6b-ptcw6`
+   > Notice we now have a pod named `kubernetes-dashboard-56c5f95c6b-ptcw6`
 
-## Configure
+## Configure the Dashboard
 
 ### `serviceaccount`
 
-We need service account to access K8S Dashboard
+We need a service account to access the K8S Dashboard.
 
 1. Create service account
 
@@ -118,7 +116,7 @@ We need service account to access K8S Dashboard
        -n kubernetes-dashboard
    ```
 
-   The responses should look similar to this:
+   Expected output:
 
    ```text
    serviceaccount/cluster-admin-dashboard created
@@ -128,11 +126,11 @@ We need service account to access K8S Dashboard
    clusterrolebinding.rbac.authorization.k8s.io/cluster-admin-dashboard created
    ```
 
-### View Dashboard
+### Access the Dashboard
 
 #### Bearer Token
 
-We need get token of service account `cluster-admin-dashboard`
+To access the Dashboard, we need to have a token from the `cluster-admin-dashboard` service account.
 
 1. Query secrets
 
@@ -140,7 +138,7 @@ We need get token of service account `cluster-admin-dashboard`
    debian@busybox:~$ kubectl get secret -n kubernetes-dashboard
    ```
 
-   The response should look similar to this:
+   Expected output:
 
    ```text
    NAME                                  TYPE                                  DATA   AGE
@@ -152,15 +150,15 @@ We need get token of service account `cluster-admin-dashboard`
    kubernetes-dashboard-token-k48sq      kubernetes.io/service-account-token   3      86m
    ```
 
-   > Now you can see the service account token of `cluster-admin-dashboard` with name `cluster-admin-dashboard-token-zth9n`
+   > We can see the `cluster-admin-dashboard` service account token has a token named `cluster-admin-dashboard-token-zth9n`
 
-2. Get token we describe `cluster-admin-dashboard-token-zth9n`
+2. To fetch the token, describe the `cluster-admin-dashboard-token-zth9n` secret:
 
    ```console
    debian@busybox:~$ kubectl describe secret cluster-admin-dashboard-token-zth9n -n kubernetes-dashboard
    ```
 
-   The response should look similar to this:
+   Expected output:
 
    ```text
    Name:         cluster-admin-dashboard-token-zth9n
@@ -178,15 +176,13 @@ We need get token of service account `cluster-admin-dashboard`
    token:      eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlcm5ldGVzLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJjbHVzdGVyLWFkbWluLWRhc2hib2FyZC10b2tlbi16dGg5biIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJjbHVzdGVyLWFkbWluLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6ImI3MjRlNDc1LTc3NWUtNGM0My05Mzk1LWQ5NTYwM2IwMjIyMSIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDprdWJlcm5ldGVzLWRhc2hib2FyZDpjbHVzdGVyLWFkbWluLWRhc2hib2FyZCJ9.cJrZQCZPXVwg5xV871EbnTiuxB0KtIyZZyDanthEXyJl9Wcj8xs11GCiKPQAodwDZtF693WCP0-xGn8M16vBQI9mEbevtkpTbj021p5OahxJnxhfdkQFW1gLIM4OwBkBn5tHMhs9D54_G4XrtHR5dt3VEL36NoKZiT3iaZovDGyg03_VpB3VviuUrQJnt0RJx4ZkoN-109EozIaV_55bromtKR-cR0d8iuctHlT8v4SgGp9CyDyYL4Ko3Y_RO4HTf2VAj-d6htv0LPToabo1-jSuC0DXjX8f-mmgIWNI0tq_jbVX96D48HMghJKF0p31pBH-0u802ePmFI3W38ZEZA
    ```
 
-   > We are going to use token `eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9....SHgDFTnhEPP5EVSbxBx75bOzbGIatNuSGNRg-UFHcQ` (I show here first and last blocks, but you must use the full printed value)
+   > We are going to use the `eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9....SHgDFTnhEPP5EVSbxBx75bOzbGIatNuSGNRg-UFHcQ` token. For shortness, we show only the first and last blocks here, but we must use the full printed value to access the Dashboard.
 
-### Access dashboard
+### Access the Dashboard
 
-1. Try view dashboard ui open your browser via **API Server** with address [https://192.168.4.20:6443/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/](https://192.168.4.20:6443/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/)
+1. To view the Dashboard, open your browser at [https://192.168.4.20:6443/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/](https://192.168.4.20:6443/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/)
 
-   Probaly you get the error to access because don't have permission
-
-   Output like this
+   By now, you should get an `Access Denied` error similar to the following:
 
    ```json
    {
@@ -204,7 +200,7 @@ We need get token of service account `cluster-admin-dashboard`
    }
    ```
 
-2. Create role to access resources in `kubernetes-dashboard`
+2. To solve this issue, create a role to access `kubernetes-dashboard` resources. The yaml block below is just for clarity. The important part is the console command right after that:
 
    ```yaml
    kind: ClusterRole
@@ -212,12 +208,17 @@ We need get token of service account `cluster-admin-dashboard`
    metadata:
      name: kubernetes-dashboard-anonymous
    rules:
-   - apiGroups: [""]
-     resources: ["services/proxy"]
-     resourceNames: ["https:kubernetes-dashboard:"]
-     verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
-   - nonResourceURLs: ["/ui", "/ui/*", "/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/*"]
-     verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+     - apiGroups: [""]
+       resources: ["services/proxy"]
+       resourceNames: ["https:kubernetes-dashboard:"]
+       verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+     - nonResourceURLs:
+         [
+           "/ui",
+           "/ui/*",
+           "/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/*",
+         ]
+       verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
    ```
 
    ```console
@@ -236,13 +237,13 @@ We need get token of service account `cluster-admin-dashboard`
    EOF
    ```
 
-   Output
+   Expected output:
 
    ```text
    clusterrole.rbac.authorization.k8s.io/kubernetes-dashboard-anonymous created
    ```
 
-3. Create role binding to anonymous (`system:anonymous`)
+3. Create the role binding for anonymous access (`system:anonymous`) - again, the yaml block below is just for clarity:
 
    ```yaml
    apiVersion: rbac.authorization.k8s.io/v1
@@ -254,8 +255,8 @@ We need get token of service account `cluster-admin-dashboard`
      kind: ClusterRole
      name: kubernetes-dashboard-anonymous
    subjects:
-   - kind: User
-     name: system:anonymous
+     - kind: User
+       name: system:anonymous
    ```
 
    ```console
@@ -274,19 +275,19 @@ We need get token of service account `cluster-admin-dashboard`
    EOF
    ```
 
-   Output
+   Expected output:
 
    ```text
    clusterrolebinding.rbac.authorization.k8s.io/kubernetes-dashboard-anonymous created
    ```
 
-4. Now copy the [token](#bearer-token) and paste it into Enter token field on log in screen.
+4. Now, copy and paste the [token](#bearer-token) when prompted for it in the log in screen:
 
    <p align="center">
       <img src="images/kube-dashboard-auth.png">
    </p>
 
-5. Click Sign in button and that's it. You are now logged in as an admin.
+5. Click the Sign In button and that's it. You are now logged in as an admin:
 
    <p align="center">
       <img src="images/kube-dashboard-singin.png">
