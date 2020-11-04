@@ -92,9 +92,9 @@ permitted by applicable law.
    Expected output:
 
    ```text
-   NAME                                         READY   STATUS    RESTARTS   AGE    IP           NODE          NOMINATED NODE   READINESS GATES
-   dashboard-metrics-scraper-6c554969c6-4mmth   1/1     Running   0          2m1s   10.244.5.2   kube-node03   <none>           <none>
-   kubernetes-dashboard-56c5f95c6b-ptcw6        1/1     Running   0          2m2s   10.244.3.2   kube-node01   <none>           <none>
+   NAME                                        READY   STATUS    RESTARTS   AGE   IP           NODE          NOMINATED NODE   READINESS GATES
+   dashboard-metrics-scraper-c79c65bb7-jgkpf   1/1     Running   0          15s   10.244.4.2   kube-node02   <none>           <none>
+   kubernetes-dashboard-56484d4c5-27c6g        1/1     Running   0          15s   10.244.5.2   kube-node03   <none>           <none>
    ```
 
    > Notice we now have a pod named `kubernetes-dashboard-56c5f95c6b-ptcw6`
@@ -142,30 +142,30 @@ To access the Dashboard, we need to have a token from the `cluster-admin-dashboa
 
    ```text
    NAME                                  TYPE                                  DATA   AGE
-   cluster-admin-dashboard-token-zth9n   kubernetes.io/service-account-token   3      66s
-   default-token-9lnss                   kubernetes.io/service-account-token   3      86m
-   kubernetes-dashboard-certs            Opaque                                0      86m
-   kubernetes-dashboard-csrf             Opaque                                1      86m
-   kubernetes-dashboard-key-holder       Opaque                                2      86m
-   kubernetes-dashboard-token-k48sq      kubernetes.io/service-account-token   3      86m
+   cluster-admin-dashboard-token-7b2qq   kubernetes.io/service-account-token   3      12s
+   default-token-xj4q7                   kubernetes.io/service-account-token   3      54s
+   kubernetes-dashboard-certs            Opaque                                0      54s
+   kubernetes-dashboard-csrf             Opaque                                1      54s
+   kubernetes-dashboard-key-holder       Opaque                                2      54s
+   kubernetes-dashboard-token-89wh5      kubernetes.io/service-account-token   3      54s
    ```
 
-   > We can see the `cluster-admin-dashboard` service account token has a token named `cluster-admin-dashboard-token-zth9n`
+   > We can see the `cluster-admin-dashboard` service account token has a token named `cluster-admin-dashboard-token-7b2qq`
 
-2. To fetch the token, describe the `cluster-admin-dashboard-token-zth9n` secret:
+2. To fetch the token, describe the `cluster-admin-dashboard-token-7b2qq` secret:
 
    ```console
-   debian@busybox:~$ kubectl describe secret cluster-admin-dashboard-token-zth9n -n kubernetes-dashboard
+   debian@busybox:~$ kubectl describe secret cluster-admin-dashboard-token-7b2qq -n kubernetes-dashboard
    ```
 
    Expected output:
 
    ```text
-   Name:         cluster-admin-dashboard-token-zth9n
+   Name:         cluster-admin-dashboard-token-7b2qq
    Namespace:    kubernetes-dashboard
    Labels:       <none>
    Annotations:  kubernetes.io/service-account.name: cluster-admin-dashboard
-                 kubernetes.io/service-account.uid: b724e475-775e-4c43-9395-d95603b02221
+                 kubernetes.io/service-account.uid: bbad3979-8372-4082-b5c1-8ff051ff0e15
 
    Type:  kubernetes.io/service-account-token
 
@@ -173,10 +173,10 @@ To access the Dashboard, we need to have a token from the `cluster-admin-dashboa
    ====
    ca.crt:     1025 bytes
    namespace:  20 bytes
-   token:      eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlcm5ldGVzLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJjbHVzdGVyLWFkbWluLWRhc2hib2FyZC10b2tlbi16dGg5biIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJjbHVzdGVyLWFkbWluLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6ImI3MjRlNDc1LTc3NWUtNGM0My05Mzk1LWQ5NTYwM2IwMjIyMSIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDprdWJlcm5ldGVzLWRhc2hib2FyZDpjbHVzdGVyLWFkbWluLWRhc2hib2FyZCJ9.cJrZQCZPXVwg5xV871EbnTiuxB0KtIyZZyDanthEXyJl9Wcj8xs11GCiKPQAodwDZtF693WCP0-xGn8M16vBQI9mEbevtkpTbj021p5OahxJnxhfdkQFW1gLIM4OwBkBn5tHMhs9D54_G4XrtHR5dt3VEL36NoKZiT3iaZovDGyg03_VpB3VviuUrQJnt0RJx4ZkoN-109EozIaV_55bromtKR-cR0d8iuctHlT8v4SgGp9CyDyYL4Ko3Y_RO4HTf2VAj-d6htv0LPToabo1-jSuC0DXjX8f-mmgIWNI0tq_jbVX96D48HMghJKF0p31pBH-0u802ePmFI3W38ZEZA
+   token:      eyJhbGciOiJSUzI1NiIsImtpZCI6Ii1TWkw3a01zSlh4SkNPVmRSUTlsZ0lKT2oxQkVaMEplQzB0TVN3TnNLbE0ifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlcm5ldGVzLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJjbHVzdGVyLWFkbWluLWRhc2hib2FyZC10b2tlbi03YjJxcSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJjbHVzdGVyLWFkbWluLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6ImJiYWQzOTc5LTgzNzItNDA4Mi1iNWMxLThmZjA1MWZmMGUxNSIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDprdWJlcm5ldGVzLWRhc2hib2FyZDpjbHVzdGVyLWFkbWluLWRhc2hib2FyZCJ9.tGykZ1o0Q-2YYilAi1KjzvLdRpM4ooSbYLlW83oieNpgrmPXQay-UyVJFa7HRaANT4vTqLnikxAe4VFwpaFdsBLIZBLDybN_M8SMN8yXztgXy5iXkcE5fphWhOUs4Q--7rzjIbZvCM3ApH9QFcRcR-N17FllK8XoYU5KMvpw5qNnlVH_UcOcT7nP1957VZIeAsj5d1-E9xyzYDNW5fVUK7XWv5jPh2OG_Va7uSCyC6yavVzeArPatl3ifDfUsPgCX7tq4pW-UyWYqwq8y03H6itOyzB-ZYOhTNR15aFmbWj5L62pLIh0JGMomr-8-V_WH2es5qWmjCeDU-B8dVNkPw
    ```
 
-   > We are going to use the `eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9....SHgDFTnhEPP5EVSbxBx75bOzbGIatNuSGNRg-UFHcQ` token. For shortness, we show only the first and last blocks here, but we must use the full printed value to access the Dashboard.
+   > We are going to use the `eyJhbGciOiJSUzI1NiIsImtpZCI6Ii1TWkw3...ZYOhTNR15aFmbWj5L62pLIh0JGMomr-8-V_WH2es5qWmjCeDU-B8dVNkPw` token. For shortness, we show only the first and last blocks here, but we must use the full printed value to access the Dashboard.
 
 ### Access the Dashboard
 

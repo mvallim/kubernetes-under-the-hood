@@ -661,7 +661,7 @@ Let's check **`kubectl`** version
 ```console
 debian@busybox:~$ kubectl version --client
 
-Client Version: version.Info{Major:"1", Minor:"15", GitVersion:"v1.15.6", GitCommit:"7015f71e75f670eb9e7ebd4b5749639d42e20079", GitTreeState:"clean", BuildDate:"2019-11-13T11:20:18Z", GoVersion:"go1.12.12", Compiler:"gc", Platform:"linux/amd64"}
+Client Version: version.Info{Major:"1", Minor:"16", GitVersion:"v1.16.15", GitCommit:"2adc8d7091e89b6e3ca8d048140618ec89b39369", GitTreeState:"clean", BuildDate:"2020-09-02T11:40:00Z", GoVersion:"go1.13.15", Compiler:"gc", Platform:"linux/amd64"}
 ```
 
 Let's check access `gate-node01`

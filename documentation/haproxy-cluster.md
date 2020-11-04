@@ -156,8 +156,8 @@ write_files:
     y8iZqL5kYaRqRn3ElD0=
 
 # The corosync.conf instructs the Corosync executive about various parameters
-# needed to control it. 
-# Empty lines and lines starting with the '#' 
+# needed to control it.
+# Empty lines and lines starting with the '#'
 # character are ignored.
 #
 #  For more details, read corosync.conf man page on Linux: $ man 5 corosync.conf
@@ -532,9 +532,7 @@ Before carrying out with the Pacemaker configuration, it is worth making some ob
         > Reference: https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/high_availability_add-on_reference/s1-resourceoperate-haar
 
     * `primitive haproxy-resource ocf:heartbeat:haproxy op monitor interval=20 timeout=60 on-fail=restart`
-
-      The explanation is the same as above.
-
+ssh debian@gate-node01
     * `colocation loc inf: virtual-ip-resource haproxy-resource`
 
       `colocation` restrictions allow you to tell the cluster how resources depend on each other. It has an important side-effect: it affects the order in which the resources are assigned to a node.
@@ -554,7 +552,7 @@ Before carrying out with the Pacemaker configuration, it is worth making some ob
    ```console
    debian@hapx-node01:~$ ip addr show enp0s3.41
 
-   3: enp0s3.41@enp0s3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+   3: enp0s3.41@enp0s3: <BROADCAST,MULTICAST,UP,LOWERssh debian@gate-node01_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
        link/ether 08:00:27:a4:ce:07 brd ff:ff:ff:ff:ff:ff
        inet 192.168.4.20/27 brd 192.168.4.31 scope global enp0s3.41
          valid_lft forever preferred_lft forever
