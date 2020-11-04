@@ -206,9 +206,9 @@ runcmd:
       apt-get,
       install,
       -y,
-      "kubelet=1.15.6-00",
-      "kubectl=1.15.6-00",
-      "kubeadm=1.15.6-00",
+      "kubelet=1.16.15-00",
+      "kubectl=1.16.15-00",
+      "kubeadm=1.16.15-00",
     ]
   - [apt-mark, hold, kubelet, kubectl, kubeadm, docker-ce, containerd.io]
   - [chown, -R, "debian:debian", "/home/debian"]
