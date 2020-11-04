@@ -12,7 +12,7 @@ The target audience for this tutorial is someone planning to install a Kubernete
 
 ## Index
 
-***Atention**: the documentation for this project is being actively improved to explain the demonstrated concepts clearly. If you face any difficulties while following the steps described in the documentation, please open an issue, so we can keep improving it. The version of Kubernetes used here is **1.15.6***
+***Atention**: the documentation for this project is being actively improved to explain the demonstrated concepts clearly. If you face any difficulties while following the steps described in the documentation, please open an issue, so we can keep improving it. The version of Kubernetes used here is **1.16.15***
 
 1. Introdution
    - [Up and running out of the cloud](documentation/objective.md)
@@ -36,6 +36,12 @@ The target audience for this tutorial is someone planning to install a Kubernete
    7. [Demo Application](documentation/kube-demo-application.md)
    8. LoadBalancer
       - [How to setup the MetalLB](documentation/kube-metallb.md)
+5. Appendix
+   1. External CA Infrastructure (under construction)
+      1. [How to create the external CA Infrastructure](documentation/ca-external-infrastructure.md)
+   2. External `etcd` (under construction)
+      1. [How to setup the external etcd with TLS](documentation/etcd.md)
+      2. [How to setup the Masters using `kubeadm` bootstrap with external `etcd`](documentation/kube-masters-external-etcd.md)
 
 ## Contributing
 

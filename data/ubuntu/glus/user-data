@@ -21,6 +21,17 @@ write_files:
     N2h2R2QzS0ZvU1N4aDlFY1FONTNXWEhMYXBHQ0o0NGVFU3NqbVgzN1NwWElUYUhEOHJQRXBia0E0
     WWJzaVVoTXZPZ0VCLy9MZ1d0R2kvRVRxalVSUFkvWGRTVTR5dFE9PSBjYUBrdWJlLmRlbW8K
 
+- path: /etc/rc.local
+  permissions: '0755'
+  content: |
+    #!/bin/sh -e
+    
+    setfacl -d -m u::rwx /srv/store
+    setfacl -d -m g::rwx /srv/store
+    setfacl -d -m o::rwx /srv/store
+
+    exit 0
+    
 - path: /etc/modules-load.d/bridge.conf
   permissions: '0644'
   content: |
@@ -71,6 +82,7 @@ packages:
   - bridge-utils
   - thin-provisioning-tools
   - lvm2
+  - acl
   - xfsprogs
   - curl
 
