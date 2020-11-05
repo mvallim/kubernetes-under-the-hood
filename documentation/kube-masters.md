@@ -308,10 +308,10 @@ Based on the above information, we will have a [`kubeadm-config.yml`](../master/
 ```yaml
 apiVersion: kubeadm.k8s.io/v1beta1
 kind: ClusterConfiguration
-kubernetesVersion: stable-1.15
+kubernetesVersion: stable-1.16
 apiServer:
   certSANs:
-    - "192.168.4.20"
+  - "192.168.4.20"
 controlPlaneEndpoint: "192.168.4.20:6443"
 networking:
   podSubnet: 10.244.0.0/16
