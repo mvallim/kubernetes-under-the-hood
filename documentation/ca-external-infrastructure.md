@@ -1,4 +1,4 @@
-# How to create the external CA Infrastructure (under construction)
+# How to create the external CA Infrastructure
 
 ## Certificates and requirements
 
@@ -350,7 +350,7 @@ _OpenSSL is available for most Unix-like operating systems (including Linux, mac
 11. Verify the signatures
 
     ```console
-    debian@busybox:~/certificates$ for instance in ca-kubernetes ca-kubernetes-front-proxy ca-etcd ; do
+    debian@busybox:~/certificates$ for instance in ca-kubernetes ca-kubernetes-front-proxy ca-certificate-manager ca-etcd; do
        openssl verify -CAfile root-cert.pem ${instance}-cert.pem
     done
     ```
