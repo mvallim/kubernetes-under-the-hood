@@ -77,11 +77,3 @@ Again, keep in mind this is for reference only and nothing should be considered 
 ~$ curl -L --progress-bar "https://vms-image.s3.amazonaws.com/debian-base-image.tar.bz2" -o - | tar xjf -
 ~$ vboxmanage registervm ~/VirtualBox\ VMs/debian-base-image/debian-base-image.vbox
 ```
-
-#### Ubuntu
-
-```shell
-~$ cd ~/VirtualBox\ VMs/
-~$ curl -L --progress-bar "https://vms-image.s3.amazonaws.com/ubuntu-base-image.tar.bz2" -o - | tar xjf -
-~$ vboxmanage registervm ~/VirtualBox\ VMs/ubuntu-base-image/ubuntu-base-image.vbox
-```
