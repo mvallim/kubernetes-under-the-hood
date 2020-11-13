@@ -405,7 +405,23 @@ This document shows how to create a Debian image from scratch to run on Cloud en
        EOF
        ```
 
-    11.4. Reconfigure `network-manager`:
+    11.4. Disabling `networkd`:
+
+       We can revert the networking service to the original Debian /etc/network/interfaces style of configuring the network:
+
+       ```bash
+       systemctl mask systemd-networkd.socket systemd-networkd networkd-dispatcher systemd-networkd-wait-online
+       ```
+
+    11.5. Disabling `resolved`
+
+       systemd also has a DNS resolver, but we can disable that:
+
+       ```bash
+       systemctl mask systemd-resolved
+       ```
+
+    11.6. Reconfigure `network-manager`:
 
        ```bash
        dpkg-reconfigure network-manager
@@ -449,13 +465,13 @@ If you plan to use this image in **VirtualBox**, install [**VirtualBox Guest Add
    1. Download VirtualBox Guest Additions:
 
        ```bash
-       curl --progress-bar https://download.virtualbox.org/virtualbox/6.0.22/VBoxGuestAdditions_6.0.22.iso -o VBoxGuestAdditions_6.0.22.iso
+       curl --progress-bar https://download.virtualbox.org/virtualbox/6.1.16/VBoxGuestAdditions_6.1.16.iso -o VBoxGuestAdditions_6.1.16.iso
        ```
 
    2. Mount the ISO file:
 
        ```bash
-       mount -o loop VBoxGuestAdditions_6.0.22.iso /mnt
+       mount -o loop VBoxGuestAdditions_6.1.16.iso /mnt
        ```
 
    3. Install VirtualBox:
@@ -468,7 +484,7 @@ If you plan to use this image in **VirtualBox**, install [**VirtualBox Guest Add
 
        ```console
        Verifying archive integrity... All good.
-       Uncompressing VirtualBox 6.0.22 Guest Additions for Linux........
+       Uncompressing VirtualBox 6.1.16 Guest Additions for Linux........
        VirtualBox Guest Additions installer
        Copying additional installer modules ...
        Installing additional modules ...
@@ -532,6 +548,12 @@ If you plan to use this image in **VirtualBox**, install [**VirtualBox Guest Add
        ```
 
       > As we are using ntpd, we remove the `systemd-timesyncd.service` from the `vboxadd-service.service` declaration.
+
+   7. Upgrade
+
+      ```bash
+      apt-get -y upgrade
+      ```
 
 ## Clean up the chroot environment
 
@@ -691,23 +713,23 @@ sudo losetup -D
 
    ```bash
    vboxmanage modifyvm debian-base-image --memory 512 --ioapic on
-   
+
    vboxmanage modifyvm debian-base-image --audio none
-   
+
    vboxmanage modifyvm debian-base-image --usbcardreader off
-   
+
    vboxmanage modifyvm debian-base-image --keyboard ps2 --mouse ps2
-   
+
    vboxmanage modifyvm debian-base-image --graphicscontroller vboxsvga --vram 33
-   
+
    vboxmanage modifyvm debian-base-image --nic1 nat
-   
+
    vboxmanage modifyvm debian-base-image --rtcuseutc on
-   
+
    vboxmanage storagectl debian-base-image --name "IDE" --add ide --controller PIIX4
-   
+
    vboxmanage storagectl debian-base-image --name "SATA" --add sata --controller IntelAHCI --portcount 1
-   
+
    vboxmanage storageattach debian-base-image --storagectl "IDE" --port 0 --device 0 --type dvddrive --medium emptydrive
    ```
 
