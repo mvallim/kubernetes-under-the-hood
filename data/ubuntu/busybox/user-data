@@ -1,0 +1,139 @@
+#cloud-config
+
+write_files:
+
+# Private ED25519 key
+- path: /run/.ssh/id_ed25519
+  permissions: '0600'
+  encoding: b64
+  content: |
+    LS0tLS1CRUdJTiBPUEVOU1NIIFBSSVZBVEUgS0VZLS0tLS0KYjNCbGJuTnphQzFyWlhrdGRqRUFB
+    QUFBQkc1dmJtVUFBQUFFYm05dVpRQUFBQUFBQUFBQkFBQUFNd0FBQUF0emMyZ3RaVwpReU5UVXhP
+    UUFBQUNDZ1U2bWNKYlc3NU1VMEZPVmcybCtXS0ZWUVB2UmwwY1ExbzRnMTVJbUdTQUFBQUppcVhU
+    YUdxbDAyCmhnQUFBQXR6YzJndFpXUXlOVFV4T1FBQUFDQ2dVNm1jSmJXNzVNVTBGT1ZnMmwrV0tG
+    VlFQdlJsMGNRMW80ZzE1SW1HU0EKQUFBRUJkeWdLVUpIVDIxNzBBNkhIMW82QkN6YmtxZXB1bjlS
+    dTFOWitqM3NuZGdxQlRxWndsdGJ2a3hUUVU1V0RhWDVZbwpWVkErOUdYUnhEV2ppRFhraVlaSUFB
+    QUFFSFZpZFc1MGRVQnJkV0psTG1SbGJXOEJBZ01FQlE9PQotLS0tLUVORCBPUEVOU1NIIFBSSVZB
+    VEUgS0VZLS0tLS0K
+
+# Public ED25519 key
+- path: /run/.ssh/id_ed25519.pub
+  permissions: '0644'
+  encoding: b64
+  content: |
+    c3NoLWVkMjU1MTkgQUFBQUMzTnphQzFsWkRJMU5URTVBQUFBSUtCVHFad2x0YnZreFRRVTVXRGFY
+    NVlvVlZBKzlHWFJ4RFdqaURYa2lZWkkgdWJ1bnR1QGt1YmUuZGVtbwo=
+
+# Signed ED25519 public key
+- path: /run/.ssh/id_ed25519-cert.pub
+  permissions: '0644'
+  encoding: b64
+  content: |
+    c3NoLWVkMjU1MTktY2VydC12MDFAb3BlbnNzaC5jb20gQUFBQUlITnphQzFsWkRJMU5URTVMV05s
+    Y25RdGRqQXhRRzl3Wlc1emMyZ3VZMjl0QUFBQUlHVjhtNUZEeDVzQlVPWWdhYzlTSXhibU1QY0gv
+    bzZDL1kvdVRkWEV5c0tyQUFBQUlLQlRxWndsdGJ2a3hUUVU1V0RhWDVZb1ZWQSs5R1hSeERXamlE
+    WGtpWVpJQUFBQUFBQUFBQUFBQUFBQkFBQUFFSFZpZFc1MGRVQnJkV0psTG1SbGJXOEFBQUFLQUFB
+    QUJuVmlkVzUwZFFBQUFBQUFBQUFBLy8vLy8vLy8vLzhBQUFBQUFBQUFnZ0FBQUJWd1pYSnRhWFF0
+    V0RFeExXWnZjbmRoY21ScGJtY0FBQUFBQUFBQUYzQmxjbTFwZEMxaFoyVnVkQzFtYjNKM1lYSmth
+    VzVuQUFBQUFBQUFBQlp3WlhKdGFYUXRjRzl5ZEMxbWIzSjNZWEprYVc1bkFBQUFBQUFBQUFwd1pY
+    SnRhWFF0Y0hSNUFBQUFBQUFBQUE1d1pYSnRhWFF0ZFhObGNpMXlZd0FBQUFBQUFBQUFBQUFDRndB
+    QUFBZHpjMmd0Y25OaEFBQUFBd0VBQVFBQUFnRUF3NDk0dDBmT3FBdDdJQXNIazJobGhubFJnMlNw
+    Vm0vTFBBSGlFem12ZE1PTXNrY0VVSkFESEJZbWpGNWN2QkRSKzdkTEl0eWhHN1dOejdzeVV1VXRD
+    NytOVUhZY2w5SzJqNVladW91cmdscWFHcE5xUU0vbFJKUENwcG5YKzQ5cHpTOGhYTEQ4bCtLQ3JT
+    VS9vL014bmRWN1FGOUp5Z1ZmYW5mSEVpMEFIWXoxUmpIWlY3dHdZTzVlb3NQTVNUZjNzR0xnWnd2
+    T3NqVW0xMkFsR1N2RElRQWlsbWkxSG9QZnJicksrZEVaWGtLVytKSENRemZmOVdkdklNaWpST0FV
+    d2w0NnRqdVl3ekN3L1Frc1krYTRlYlRrQ0NRd0tKMGZ0c25FVklIdlpySVJ3alFsSHVsNXMvRkNE
+    MGIwR1R1QXhJY3hvSExhVVlHVno0K0lkRzRjWGk4eE5hVXpkSytncUJkT1l2RDdRTUxyUGJ2aW5E
+    N29RVi9sYUU1cGlPblFEUGt3UzBFYThDQ2Z1c1p0NklGd3RHbVhMeGdWQkVxbUhnZWRraTNIUzl1
+    cVNVVDVGZWx3ZzlyTFhzWjUvRXd6eG5HOG1NMElJWEhtaGZxQ1pibXZEK2dpdWIxUG5lanhmbytZ
+    UU91SUJwZVBtWmVEQWdLc0RLNmF4eDRzR3U2TmJkUHlEWUlXMEtFQmtVc1dRTE56OEY2eUN3aTA4
+    WE0xcUUxN3gyQzV4TFVtSit0VjhCeUhybTVERnlJMndDdnZzdmlWL3RLNXVvYlRPNGJ4bmR5aGFF
+    a3NZZlJIRURlZDFseHkycVJnaWVPSGhFckk1bDkrMHFWeUUyaHcvS3p4S1c1QU9HRzdJbElUTHpv
+    QkFmL3k0RnJSb3Z4RTZvMUVUMlAxM1VsT01yVUFBQUlQQUFBQUIzTnphQzF5YzJFQUFBSUFwejdK
+    M0RDZmxFVzdvTXFIc1ZGS3ZDbmRwRVFSdlZYcWJEdVNDMGRBblI4ZE8rdHNTcU1JTzFzS1IwZDlk
+    L2NFT0kyc3FSZEpwVXVkZE9jaFVrODE0WEtPeVJtMnpQU0hnL2JSY2VmWklVd2E3U085NjlPSmxO
+    WDMrdWZtNnN5eEdYSDZhMjljbTB3UGVtN0NReGozUjVBek1URVE2N3ZHdlJZVkthZnA1OTVaaHlV
+    N1RNU09UZDB0Y1FodEp5Y2JuSVBTc3U0WVNHc3kzTjN3ZC9tUlBXamRYdTE3VjNzWEhpK25Mc2h1
+    b2NHNGlkTys2MlVhZVRHZmtOZloxU3BCeThWSS9PR1BDT3NYKzNseHZCbUJlSWtlblhVSVBKLzE4
+    QXU3L0s1WjhrSmI2S3V2clVHQzFZS1FYNWJXRU1mUTM1SUVhQ3RkYU1xMnZWWWF4KysyMUIvdVNM
+    U29VSWZrTlVMN3pKMitQejhTVFZoemw1NjMvVnFpU1ZTc01YVlhmalNISjVzYjQyQWxja2RFWk05
+    a0Vwanpna0ZEQmxQdk5LekNzTFdrK2tLb2dycFZsbWFBSjR6VnBSaXlaaGpDWFlycExhc0R0QUpQ
+    STlySUJ0OVk1OVlBN0tXMHR2UTUwS3lRT0wyQy9BNWdyR3J3TGxzREJBTjFmOTlEZzN5RHd5OFRz
+    ajZ2RVJGVHB3M2ZqWkd4em45bVV1eE9XWEliNEQ0aTd1TGlIVjZKNHkvcStxdmtRRlNjMEd5Nko3
+    OE41Sk1zYW5ESXJGK0JueHJ4a3VLZ2xUOTh1VEIvNDFRVjFRcXJlQ2V4RTNGaWJXMTRpNUVDQTRD
+    REZOenNkSWNlbUI3OE0ydzZraTlweWtrelcyZ2JQdTJJNGhRaldlZXlPZnErNGxGWHFkWT0gdWJ1
+    bnR1QGt1YmUuZGVtbwo=
+
+apt:
+  sources_list: |
+    deb http://us.archive.ubuntu.com/ubuntu/ $RELEASE main restricted universe multiverse
+    deb-src http://us.archive.ubuntu.com/ubuntu/ $RELEASE main restricted universe multiverse
+
+    deb http://us.archive.ubuntu.com/ubuntu/ $RELEASE-security main restricted universe multiverse
+    deb http://us.archive.ubuntu.com/ubuntu/ $RELEASE-updates main restricted universe multiverse
+
+    deb-src http://us.archive.ubuntu.com/ubuntu/ $RELEASE-security main restricted universe multiverse
+    deb-src http://us.archive.ubuntu.com/ubuntu/ $RELEASE-updates main restricted universe multiverse
+
+  conf: |
+    APT {
+      Get {
+        Assume-Yes "true";
+        Fix-Broken "true";
+      };
+    };
+
+packages: 
+  - apt-transport-https
+  - software-properties-common
+  - ca-certificates
+  - gnupg2
+  - glusterfs-client
+  - dnsutils
+  - screen
+  - curl
+  - git
+  - vim
+  - less
+  - tmux
+
+runcmd:
+  - [ sh, -c, 'curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -' ]
+  - [ sh, -c, 'echo deb https://apt.kubernetes.io/ kubernetes-xenial main > /etc/apt/sources.list.d/kubernetes.list' ]
+  - [ apt-get, update ]
+  - [ apt-get, install, -y, 'kubectl=1.16.15-00' ]
+  - [ apt-mark, hold, kubectl ]
+  - [ sh, -c, 'mv -u /run/.ssh/* /home/ubuntu/.ssh/.' ]
+  - [ chown, -R, 'ubuntu:ubuntu', '/home/ubuntu' ]
+
+users:
+- name: ubuntu
+  gecos: Ubuntu User
+  sudo: ALL=(ALL) NOPASSWD:ALL
+  shell: /bin/bash
+  lock_passwd: true
+  ssh_authorized_keys:
+    - #SSH-PUB-KEY#
+- name: root
+  lock_passwd: true
+
+locale: en_US.UTF-8
+
+timezone: UTC
+
+ssh_deletekeys: 1
+
+package_upgrade: true
+
+ssh_pwauth: false
+
+manage_etc_hosts: true
+
+fqdn: #HOSTNAME#.kube.demo
+
+hostname: #HOSTNAME#
+
+power_state:
+  mode: reboot
+  timeout: 30
+  condition: true

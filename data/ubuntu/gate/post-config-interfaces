@@ -1,0 +1,29 @@
+---
+nic1:
+  id: 1
+  type: nat
+
+nic2:
+  id: 2
+  type: intnet
+  name: mast
+
+nic3:
+  id: 3
+  type: intnet
+  name: node
+
+nic4:
+  id: 4
+  type: intnet
+  name: glus
+
+nic5:
+  id: 5
+  type: intnet
+  name: dmz
+
+nic6:
+  id: 6
+  type: hostonly
+  adapter: vboxnet0

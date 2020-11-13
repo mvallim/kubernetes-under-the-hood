@@ -128,14 +128,14 @@ bootcmd:
 
 apt:
   sources_list: |
-    deb http://deb.debian.org/debian/ $RELEASE main contrib non-free
-    deb-src http://deb.debian.org/debian/ $RELEASE main contrib non-free
+    deb http://us.archive.ubuntu.com/ubuntu/ $RELEASE main restricted universe multiverse
+    deb-src http://us.archive.ubuntu.com/ubuntu/ $RELEASE main restricted universe multiverse
 
-    deb http://deb.debian.org/debian/ $RELEASE-updates main contrib non-free
-    deb-src http://deb.debian.org/debian/ $RELEASE-updates main contrib non-free
+    deb http://us.archive.ubuntu.com/ubuntu/ $RELEASE-security main restricted universe multiverse
+    deb http://us.archive.ubuntu.com/ubuntu/ $RELEASE-updates main restricted universe multiverse
 
-    deb http://deb.debian.org/debian-security $RELEASE/updates main
-    deb-src http://deb.debian.org/debian-security $RELEASE/updates main
+    deb-src http://us.archive.ubuntu.com/ubuntu/ $RELEASE-security main restricted universe multiverse
+    deb-src http://us.archive.ubuntu.com/ubuntu/ $RELEASE-updates main restricted universe multiverse
   conf: |
     APT {
       Get {
@@ -148,8 +148,8 @@ packages:
   - dnsmasq
 
 users:
-- name: debian
-  gecos: Debian User
+- name: ubuntu
+  gecos: Ubuntu User
   sudo: ALL=(ALL) NOPASSWD:ALL
   shell: /bin/bash
   lock_passwd: true
