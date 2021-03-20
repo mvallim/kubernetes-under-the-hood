@@ -446,7 +446,7 @@ Before carrying out with the Pacemaker configuration, it is worth making some ob
    debian@hapx-node01:~$ cat <<EOF | sudo crm configure
    property stonith-enabled=no
    property no-quorum-policy=ignore
-   property default-resource-stickiness=100
+   property resource-stickiness=100
    primitive virtual-ip-resource ocf:heartbeat:IPaddr2 params ip="192.168.4.20" broadcast=192.168.4.31 nic=enp0s3.41 cidr_netmask=27 meta migration-threshold=2 op monitor interval=20 timeout=60 on-fail=restart
    primitive haproxy-resource ocf:heartbeat:haproxy op monitor interval=20 timeout=60 on-fail=restart
    colocation loc inf: virtual-ip-resource haproxy-resource
@@ -474,9 +474,9 @@ Before carrying out with the Pacemaker configuration, it is worth making some ob
 
       We only have two nodes in our example. Thus, if one of they got offline for any reason, our whole cluster would be taken down due to lack of quorum (>50%). To avoid this situation, we configure our policy to `ignore` and nothing else needs to be done. In a production scenario, it would be a good idea to have at least 3 nodes to ensure higher availability though.
 
-    * `property default-resource-stickiness=100`
+    * `property resource-stickiness=100`
 
-      The `default-resource-stickiness` determines where the cluster resources will be allocated. The default behavior is to get the resources back to the original nodes where they were allocated. This means that, after a failure, the resource will be allocated in another node from the cluster and, when the original node is back to a healthy state, the resource is moved back to it. This is not ideal, because the users will be exposed to a inconsistent scenario twice. To avoid this situation, you can set a weight (between -1.000.000 and 1.000.000) to the `default-resource-stickiness` parameter: a `0` means the resource will be moved back to its original node; a positive value tells the resource should be kept where it is.
+      The `resource-stickiness` determines where the cluster resources will be allocated. The default behavior is to get the resources back to the original nodes where they were allocated. This means that, after a failure, the resource will be allocated in another node from the cluster and, when the original node is back to a healthy state, the resource is moved back to it. This is not ideal, because the users will be exposed to a inconsistent scenario twice. To avoid this situation, you can set a weight (between -1.000.000 and 1.000.000) to the `default-resource-stickiness` parameter: a `0` means the resource will be moved back to its original node; a positive value tells the resource should be kept where it is.
 
       In our case, we arbitrarily set it to `100`.
 
