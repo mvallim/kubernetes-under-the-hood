@@ -476,7 +476,7 @@ Before carrying out with the Pacemaker configuration, it is worth making some ob
 
     * `rsc_defaults resource-stickiness=100`
 
-      The `resource-stickiness` determines where the cluster resources will be allocated. The default behavior is to get the resources back to the original nodes where they were allocated. This means that, after a failure, the resource will be allocated in another node from the cluster and, when the original node is back to a healthy state, the resource is moved back to it. This is not ideal, because the users will be exposed to a inconsistent scenario twice. To avoid this situation, you can set a weight (between -1.000.000 and 1.000.000) to the `default-resource-stickiness` parameter: a `0` means the resource will be moved back to its original node; a positive value tells the resource should be kept where it is.
+      The `resource-stickiness` determines where the cluster resources will be allocated. The default behavior is to get the resources back to the original nodes where they were allocated. This means that, after a failure, the resource will be allocated in another node from the cluster and, when the original node is back to a healthy state, the resource is moved back to it. This is not ideal, because the users will be exposed to a inconsistent scenario twice. To avoid this situation, you can set a weight (between -1.000.000 and 1.000.000) to the `resource-stickiness` parameter: a `0` means the resource will be moved back to its original node; a positive value tells the resource should be kept where it is.
 
       In our case, we arbitrarily set it to `100`.
 
