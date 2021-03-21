@@ -1,6 +1,6 @@
 # Demo Application
 
-> Full referenced: https://kubernetes.io/docs/tutorials/stateless-application/guestbook/
+> Full referenced: https://github.com/kubernetes/examples/tree/master/guestbook/
 
 ## Configure your local routing
 
@@ -39,7 +39,7 @@ The guestbook application uses Redis to store its data. It writes its data to a 
 1. Apply the Redis Master Deployment from the `redis-master-deployment.yaml` file:
 
    ```console
-   debian@busybox:~$ kubectl apply -f https://k8s.io/examples/application/guestbook/redis-master-deployment.yaml
+   debian@busybox:~$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/examples/master/guestbook/redis-master-deployment.yaml
    ```
 
 2. Query the list of Pods to verify that the Redis Master Pod is running:
@@ -70,7 +70,7 @@ The guestbook applications needs to communicate to the Redis master to write its
 1. Apply the Redis Master Service from the following `redis-master-service.yaml` file:
 
    ```console
-   debian@busybox:~$ kubectl apply -f https://k8s.io/examples/application/guestbook/redis-master-service.yaml
+   debian@busybox:~$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/examples/master/guestbook/redis-master-service.yaml
    ```
 
 2. Query the list of Services to verify that the Redis Master Service is running:
@@ -102,7 +102,7 @@ If there are not any replicas running, this Deployment would start the two repli
 1. Apply the Redis Slave Deployment from the `redis-slave-deployment.yaml` file:
 
    ```console
-   debian@busybox:~$ kubectl apply -f https://k8s.io/examples/application/guestbook/redis-slave-deployment.yaml
+   debian@busybox:~$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/examples/master/guestbook/redis-slave-deployment.yaml
    ```
 
 2. Query the list of Pods to verify that the Redis Slave Pods are running:
@@ -127,7 +127,7 @@ The guestbook application needs to communicate to Redis slaves to read data. To 
 1. Apply the Redis Slave Service from the following `redis-slave-service.yaml` file:
 
    ```console
-   debian@busybox:~$ kubectl apply -f https://k8s.io/examples/application/guestbook/redis-slave-service.yaml
+   debian@busybox:~$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/examples/master/guestbook/redis-slave-service.yaml
    ```
 
 2. Query the list of Services to verify that the Redis slave service is running:
@@ -154,7 +154,7 @@ The guestbook application has a web frontend serving the HTTP requests written i
 1. Apply the frontend Deployment from the `frontend-deployment.yaml` file:
 
    ```console
-   debian@busybox:~$ kubectl apply -f https://k8s.io/examples/application/guestbook/frontend-deployment.yaml
+   debian@busybox:~$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/examples/master/guestbook/frontend-deployment.yaml
    ```
 
 2. Query the list of Pods to verify that the three frontend replicas are running:
@@ -179,7 +179,7 @@ The `redis-slave` and `redis-master` Services you applied are only accessible wi
 1. Apply the frontend Service from the `frontend-service.yaml` file:
 
    ```console
-   debian@busybox:~$ kubectl apply -f https://k8s.io/examples/application/guestbook/frontend-service.yaml
+   debian@busybox:~$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/examples/master/guestbook/frontend-service.yaml
    ```
 
 2. Query the list of Services to verify that the frontend Service is running:
