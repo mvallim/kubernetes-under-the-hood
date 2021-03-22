@@ -13,7 +13,7 @@ Each of the **HAProxy** load balancers will be configured to split traffic betwe
 
 *"HAProxy is a free, very fast and reliable solution offering high availability, load balancing, and proxying for TCP and HTTP-based applications. It is particularly suited for very high traffic web sites and powers quite a number of the world's most visited ones. Over the years it has become the de-facto standard opensource load balancer, is now shipped with most mainstream Linux distributions, and is often deployed by default in cloud platforms. Since it does not advertise itself, we only know it's used when the admins report it :-)"*
 
-**Reference:** http://www.haproxy.org/
+**Reference:** <http://www.haproxy.org/>
 
 > Full explanation in our [Technology Stack](technologies.md#HAProxy).
 
@@ -46,13 +46,13 @@ Resource Agents are the abstraction that allows Pacemaker to manage services it 
 
 This Linux-specific resource manages IP alias IP addresses. It can add an IP alias, or remove one. In addition, it can implement Cluster Alias IP functionality if invoked as a clone resource.
 
-> More info http://linux-ha.org/doc/man-pages/re-ra-IPaddr2.html
+> More info <http://linux-ha.org/doc/man-pages/re-ra-IPaddr2.html>
 
 #### `ocf:heartbeat:haproxy`
 
 Manages haproxy daemon as an OCF resource in an High Availability setup.
 
-> More info https://raw.githubusercontent.com/russki/cluster-agents/master/haproxy
+> More info <https://raw.githubusercontent.com/russki/cluster-agents/master/haproxy>
 
 ## Create the VMs
 
@@ -377,7 +377,7 @@ Use the returned value to access to ssh into the VM:
 Expected output:
 
 ```console
-Linux busybox 4.9.0-11-amd64 #1 SMP Debian 4.9.189-3+deb9u2 (2019-11-11) x86_64
+Linux busybox 4.9.0-15-amd64 #1 SMP Debian 4.9.258-1 (2021-03-08) x86_64
 
 The programs included with the Debian GNU/Linux system are free software;
 the exact distribution terms for each program are described in the
@@ -528,8 +528,8 @@ Before carrying out with the Pacemaker configuration, it is worth making some ob
           * `fence` - STONITH the node on which the resource failed.
           * `standby` - Move all resources away from the node on which the resource failed.
 
-        > Reference: http://www.linux-ha.org/doc/man-pages/re-ra-IPaddr2.html  
-        > Reference: https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/high_availability_add-on_reference/s1-resourceoperate-haar
+        > Reference: <http://www.linux-ha.org/doc/man-pages/re-ra-IPaddr2.html>  
+        > Reference: <https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/high_availability_add-on_reference/s1-resourceoperate-haar>
 
     * `primitive haproxy-resource ocf:heartbeat:haproxy op monitor interval=20 timeout=60 on-fail=restart`
 ssh debian@gate-node01
@@ -543,7 +543,7 @@ ssh debian@gate-node01
 
     * `order ord inf: virtual-ip-resource haproxy-resource`
 
-      The `order` constraints tell the cluster the order in which resources should be allocated. In this case, we are informing that the `virtual-ip-resource` should always be allocated before the `haproxy-resource`. 
+      The `order` constraints tell the cluster the order in which resources should be allocated. In this case, we are informing that the `virtual-ip-resource` should always be allocated before the `haproxy-resource`.
 
       Ordering constraints affect only the ordering in which resources are created. They do not cause the resources be **colocated** on the same node.
 
@@ -587,7 +587,6 @@ ssh debian@gate-node01
 
    Looking closer, we can see that the `hapx-node01` node is the one that has these two resources (`virtual-ip-resource` and `haproxy-resource`) allocated. That makes perfect sense, as we configured these resources to be always allocated on the same node.
 
-
 ### View HAProxy stats page
 
 Now that everything is set up, you can access the HAProxy stats through the Virtual IP we just configured.
@@ -616,6 +615,7 @@ This will be fixed once we setup our Kubernetes Master nodes.
 Shutdown one of the two VMs (hapx-node01 or hapx-node02) and press F5 in the browser where you have opened the HAProxy statistics. No difference or error should be noticed. :)
 
 ## Conclusion
+
 We got deep into configuring an HAProxy Cluster with high availability supported by Corosync and Pacemaker. We configured each of the components individually and also configured an Elastic IP that allows the HAProxy Cluster to failover transparently when any of its nodes fail.
 
 I hope you had fun configuring your cluster and learned some nice useful stuff along the way.

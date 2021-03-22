@@ -208,21 +208,21 @@ The `redis-slave` and `redis-master` Services you applied are only accessible wi
 
    The response should look similar to this:
 
-   ```text
-   NAME          STATUS   ROLES    AGE   VERSION   INTERNAL-IP     EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION   CONTAINER-RUNTIME
-   kube-mast01   Ready    master   73m   v1.15.6   192.168.1.64    <none>        Debian GNU/Linux 9 (stretch)   4.9.0-11-amd64   docker://18.6.0
-   kube-mast02   Ready    master   69m   v1.15.6   192.168.1.69    <none>        Debian GNU/Linux 9 (stretch)   4.9.0-11-amd64   docker://18.6.0
-   kube-mast03   Ready    master   65m   v1.15.6   192.168.1.170   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-11-amd64   docker://18.6.0
-   kube-node01   Ready    <none>   51m   v1.15.6   192.168.2.136   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-11-amd64   docker://18.6.0
-   kube-node02   Ready    <none>   50m   v1.15.6   192.168.2.205   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-11-amd64   docker://18.6.0
-   kube-node03   Ready    <none>   50m   v1.15.6   192.168.2.195   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-11-amd64   docker://18.6.0
+   ```console
+   NAME          STATUS   ROLES    AGE   VERSION    INTERNAL-IP     EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION   CONTAINER-RUNTIME
+   kube-mast01   Ready    master   56m   v1.18.17   192.168.1.85    <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   docker://18.6.0
+   kube-mast02   Ready    master   47m   v1.18.17   192.168.1.164   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   docker://18.6.0
+   kube-mast03   Ready    master   45m   v1.18.17   192.168.1.212   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   docker://18.6.0
+   kube-node01   Ready    <none>   20m   v1.18.17   192.168.2.213   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   docker://18.6.0
+   kube-node02   Ready    <none>   20m   v1.18.17   192.168.2.171   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   docker://18.6.0
+   kube-node03   Ready    <none>   19m   v1.18.17   192.168.2.216   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   docker://18.6.0
    ```
 
 2. Choice any ip of `kube-nodes` (`kube-node01`, `kube-node02` or `kube-node03`)
 
-   Here we will use the `192.168.2.136` (`kube-node01`)
+   Here we will use the `192.168.2.213` (`kube-node01`)
 
-   Open your browser with address [http://192.168.2.136:30551](http://192.168.2.136:30551)
+   Open your browser with address [http://192.168.2.213:30551](http://192.168.2.136:30551)
 
 > Keep attention on port **`30551`**, you should change correspondent port show in your on output above.
 
