@@ -19,13 +19,35 @@ write_files:
     UHdYcklMQ0xUeGN6V29UWHZIWUxuRXRTWW42MVh3SElldWJrTVhJamJBSysreStKWCswcm02aHRN
     N2h2R2QzS0ZvU1N4aDlFY1FONTNXWEhMYXBHQ0o0NGVFU3NqbVgzN1NwWElUYUhEOHJQRXBia0E0
     WWJzaVVoTXZPZ0VCLy9MZ1d0R2kvRVRxalVSUFkvWGRTVTR5dFE9PSBjYUBrdWJlLmRlbW8K
-    
+
+  # The bridge-netfilter code enables the following functionality:
+  #  - {Ip,Ip6,Arp}tables can filter bridged IPv4/IPv6/ARP packets, even when
+  # encapsulated in an 802.1Q VLAN or PPPoE header. This enables the functionality
+  # of a stateful transparent firewall.
+  #  - All filtering, logging and NAT features of the 3 tools can therefore be used
+  # on bridged frames.
+  #  - Combined with ebtables, the bridge-nf code therefore makes Linux a very
+  # powerful transparent firewall.
+  #  - This enables, f.e., the creation of a transparent masquerading machine (i.e.
+  # all local hosts think they are directly connected to the Internet).    
 - path: /etc/modules-load.d/containerd.conf
   permissions: '0644'
   content: |
     overlay
     br_netfilter
 
+  # Besides providing the NetworkPlugin interface to configure and clean up pod networking,
+  # the plugin may also need specific support for kube-proxy. The iptables proxy obviously
+  # depends on iptables, and the plugin may need to ensure that container traffic is made
+  # available to iptables. For example, if the plugin connects containers to a Linux bridge,
+  # the plugin must set the net/bridge/bridge-nf-call-iptables sysctl to 1 to ensure that
+  # the iptables proxy functions correctly. If the plugin does not use a Linux bridge
+  # (but instead something like Open vSwitch or some other mechanism) it should ensure
+  # container traffic is appropriately routed for the proxy.
+  #
+  # For more details : https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/#network-plugin-requirements
+  #
+  # As a requirement for your Linux Node’s iptables to correctly see bridged traffic
 - path: /etc/sysctl.d/10-kubernetes.conf
   permissions: '0644'
   content: |

@@ -387,8 +387,8 @@ apt:
     deb http://deb.debian.org/debian/ $RELEASE-updates main contrib non-free
     deb-src http://deb.debian.org/debian/ $RELEASE-updates main contrib non-free
 
-    deb http://deb.debian.org/debian-security $RELEASE/updates main contrib non-free
-    deb-src http://deb.debian.org/debian-security $RELEASE/updates main contrib non-free
+    deb http://deb.debian.org/debian-security $RELEASE/updates main
+    deb-src http://deb.debian.org/debian-security $RELEASE/updates main
 
   conf: |
     APT {
@@ -398,7 +398,7 @@ apt:
       };
     };
 
-packages:
+packages: 
   - apt-transport-https
   - software-properties-common
   - ca-certificates
@@ -410,14 +410,15 @@ packages:
   - git
   - vim
   - less
+  - tmux
 
 runcmd:
-  - curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
-  - echo 'deb https://apt.kubernetes.io/ kubernetes-xenial main' > /etc/apt/sources.list.d/kubernetes.list
+  - [ sh, -c, 'curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -' ]
+  - [ sh, -c, 'echo deb https://apt.kubernetes.io/ kubernetes-xenial main > /etc/apt/sources.list.d/kubernetes.list' ]
   - [ apt-get, update ]
-  - [ apt-get, install, -y, 'kubectl=1.15.6-00' ]
+  - [ apt-get, install, -y, 'kubectl=1.18.17-00' ]
   - [ apt-mark, hold, kubectl ]
-  - mv -u /run/.ssh/* /home/debian/.ssh/.
+  - [ sh, -c, 'mv -u /run/.ssh/* /home/debian/.ssh/.' ]
   - [ chown, -R, 'debian:debian', '/home/debian' ]
 
 users:

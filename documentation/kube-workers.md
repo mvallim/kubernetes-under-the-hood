@@ -139,24 +139,25 @@ Below you can find the same file commented for easier understanding:
 ```yaml
 #cloud-config
 write_files:
-  # CA ssh pub certificate
-  - path: /etc/ssh/ca.pub
-    permissions: "0644"
-    encoding: b64
-    content: |
-      c3NoLXJzYSBBQUFBQjNOemFDMXljMkVBQUFBREFRQUJBQUFDQVFERGozaTNSODZvQzNzZ0N3ZVRh
-      R1dHZVZHRFpLbFdiOHM4QWVJVE9hOTB3NHl5UndSUWtBTWNGaWFNWGx5OEVOSDd0MHNpM0tFYnRZ
-      M1B1ekpTNVMwTHY0MVFkaHlYMHJhUGxobTZpNnVDV3BvYWsycEF6K1ZFazhLbW1kZjdqMm5OTHlG
-      Y3NQeVg0b0t0SlQrajh6R2QxWHRBWDBuS0JWOXFkOGNTTFFBZGpQVkdNZGxYdTNCZzdsNml3OHhK
-      Ti9ld1l1Qm5DODZ5TlNiWFlDVVpLOE1oQUNLV2FMVWVnOSt0dXNyNTBSbGVRcGI0a2NKRE45LzFa
-      MjhneUtORTRCVENYanEyTzVqRE1MRDlDU3hqNXJoNXRPUUlKREFvblIrMnljUlVnZTltc2hIQ05D
-      VWU2WG16OFVJUFJ2UVpPNERFaHpHZ2N0cFJnWlhQajRoMGJoeGVMekUxcFROMHI2Q29GMDVpOFB0
-      QXd1czl1K0tjUHVoQlgrVm9UbW1JNmRBTStUQkxRUnJ3SUorNnhtM29nWEMwYVpjdkdCVUVTcVll
-      QjUyU0xjZEwyNnBKUlBrVjZYQ0Qyc3RleG5uOFREUEdjYnlZelFnaGNlYUYrb0psdWE4UDZDSzV2
-      VStkNlBGK2o1aEE2NGdHbDQrWmw0TUNBcXdNcnBySEhpd2E3bzF0MC9JTmdoYlFvUUdSU3haQXMz
-      UHdYcklMQ0xUeGN6V29UWHZIWUxuRXRTWW42MVh3SElldWJrTVhJamJBSysreStKWCswcm02aHRN
-      N2h2R2QzS0ZvU1N4aDlFY1FONTNXWEhMYXBHQ0o0NGVFU3NqbVgzN1NwWElUYUhEOHJQRXBia0E0
-      WWJzaVVoTXZPZ0VCLy9MZ1d0R2kvRVRxalVSUFkvWGRTVTR5dFE9PSBjYUBrdWJlLmRlbW8K
+
+# CA ssh pub certificate
+- path: /etc/ssh/ca.pub
+  permissions: '0644'
+  encoding: b64
+  content: |
+    c3NoLXJzYSBBQUFBQjNOemFDMXljMkVBQUFBREFRQUJBQUFDQVFERGozaTNSODZvQzNzZ0N3ZVRh
+    R1dHZVZHRFpLbFdiOHM4QWVJVE9hOTB3NHl5UndSUWtBTWNGaWFNWGx5OEVOSDd0MHNpM0tFYnRZ
+    M1B1ekpTNVMwTHY0MVFkaHlYMHJhUGxobTZpNnVDV3BvYWsycEF6K1ZFazhLbW1kZjdqMm5OTHlG
+    Y3NQeVg0b0t0SlQrajh6R2QxWHRBWDBuS0JWOXFkOGNTTFFBZGpQVkdNZGxYdTNCZzdsNml3OHhK
+    Ti9ld1l1Qm5DODZ5TlNiWFlDVVpLOE1oQUNLV2FMVWVnOSt0dXNyNTBSbGVRcGI0a2NKRE45LzFa
+    MjhneUtORTRCVENYanEyTzVqRE1MRDlDU3hqNXJoNXRPUUlKREFvblIrMnljUlVnZTltc2hIQ05D
+    VWU2WG16OFVJUFJ2UVpPNERFaHpHZ2N0cFJnWlhQajRoMGJoeGVMekUxcFROMHI2Q29GMDVpOFB0
+    QXd1czl1K0tjUHVoQlgrVm9UbW1JNmRBTStUQkxRUnJ3SUorNnhtM29nWEMwYVpjdkdCVUVTcVll
+    QjUyU0xjZEwyNnBKUlBrVjZYQ0Qyc3RleG5uOFREUEdjYnlZelFnaGNlYUYrb0psdWE4UDZDSzV2
+    VStkNlBGK2o1aEE2NGdHbDQrWmw0TUNBcXdNcnBySEhpd2E3bzF0MC9JTmdoYlFvUUdSU3haQXMz
+    UHdYcklMQ0xUeGN6V29UWHZIWUxuRXRTWW42MVh3SElldWJrTVhJamJBSysreStKWCswcm02aHRN
+    N2h2R2QzS0ZvU1N4aDlFY1FONTNXWEhMYXBHQ0o0NGVFU3NqbVgzN1NwWElUYUhEOHJQRXBia0E0
+    WWJzaVVoTXZPZ0VCLy9MZ1d0R2kvRVRxalVSUFkvWGRTVTR5dFE9PSBjYUBrdWJlLmRlbW8K
 
   # The bridge-netfilter code enables the following functionality:
   #  - {Ip,Ip6,Arp}tables can filter bridged IPv4/IPv6/ARP packets, even when
@@ -167,11 +168,12 @@ write_files:
   #  - Combined with ebtables, the bridge-nf code therefore makes Linux a very
   # powerful transparent firewall.
   #  - This enables, f.e., the creation of a transparent masquerading machine (i.e.
-  # all local hosts think they are directly connected to the Internet).
-  - path: /etc/modules-load.d/bridge.conf
-    permissions: "0644"
-    content: |
-      br_netfilter
+  # all local hosts think they are directly connected to the Internet).    
+- path: /etc/modules-load.d/containerd.conf
+  permissions: '0644'
+  content: |
+    overlay
+    br_netfilter
 
   # Besides providing the NetworkPlugin interface to configure and clean up pod networking,
   # the plugin may also need specific support for kube-proxy. The iptables proxy obviously
@@ -185,25 +187,19 @@ write_files:
   # For more details : https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/#network-plugin-requirements
   #
   # As a requirement for your Linux Node’s iptables to correctly see bridged traffic
-  - path: /etc/sysctl.d/10-kubernetes.conf
-    permissions: "0644"
-    content: |
-      net.ipv4.ip_forward=1
-      net.bridge.bridge-nf-call-iptables=1
-      net.bridge.bridge-nf-call-arptables=1
+- path: /etc/sysctl.d/10-kubernetes.conf
+  permissions: '0644'
+  content: |
+    net.ipv4.ip_forward=1
+    net.bridge.bridge-nf-call-iptables=1
+    net.bridge.bridge-nf-call-arptables=1
 
-  # Set up the Docker daemon
-  - path: /etc/docker/daemon.json
-    permissions: "0644"
-    content: |
-      {
-        "exec-opts": ["native.cgroupdriver=systemd"],
-        "log-driver": "json-file",
-        "storage-driver": "overlay2",
-        "log-opts": {
-          "max-size": "100m"
-        }
-      }
+- path: /etc/crictl.yaml
+  permissions: '0644'
+  content: |
+    runtime-endpoint: unix:///var/run/containerd/containerd.sock
+    timeout: 0
+    debug: false
 
 apt:
   sources_list: |
@@ -223,46 +219,42 @@ apt:
       };
     };
 
-packages:
+packages: 
   - apt-transport-https
   - ca-certificates
   - gnupg2
   - software-properties-common
-  - glusterfs-client
   - bridge-utils
   - curl
 
 runcmd:
-  - [modprobe, br_netfilter]
-  - [sysctl, --system]
-  - curl -s https://download.docker.com/linux/debian/gpg | apt-key add -
-  - curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
-  - [apt-key, fingerprint, "0EBFCD88"]
-  - echo 'deb [arch=amd64] https://download.docker.com/linux/debian stretch stable' > /etc/apt/sources.list.d/docker-ce.list
-  - echo 'deb https://apt.kubernetes.io/ kubernetes-xenial main' > /etc/apt/sources.list.d/kubernetes.list
-  - [apt-get, update]
-  - [apt-get, install, -y, "docker-ce=18.06.0~ce~3-0~debian", containerd.io]
-  - [
-      apt-get,
-      install,
-      -y,
-      "kubelet=1.16.15-00",
-      "kubectl=1.16.15-00",
-      "kubeadm=1.16.15-00",
-    ]
-  - [apt-mark, hold, kubelet, kubectl, kubeadm, docker-ce, containerd.io]
-  - [chown, -R, "debian:debian", "/home/debian"]
-    # SSH server to trust the CA
-  - echo '\nTrustedUserCAKeys /etc/ssh/ca.pub' | tee -a /etc/ssh/sshd_config
+  - [ modprobe, overlay, br_netfilter ]
+  - [ sysctl, --system ]
+  - [ sh, -c, 'curl -s https://download.gluster.org/pub/gluster/glusterfs/7/rsa.pub | apt-key add -' ]
+  - [ sh, -c, 'curl -s https://download.docker.com/linux/debian/gpg | apt-key add -' ]
+  - [ sh, -c, 'curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -' ]
+  - [ apt-key, fingerprint, '0EBFCD88' ]
+  - [ sh, -c, 'echo deb https://download.gluster.org/pub/gluster/glusterfs/7/LATEST/Debian/9/amd64/apt/ stretch main > /etc/apt/sources.list.d/gluster.list' ]
+  - [ sh, -c, 'echo deb [arch=amd64] https://download.docker.com/linux/debian stretch stable > /etc/apt/sources.list.d/docker-ce.list' ]
+  - [ sh, -c, 'echo deb https://apt.kubernetes.io/ kubernetes-xenial main > /etc/apt/sources.list.d/kubernetes.list' ]
+  - [ apt-get, update ]
+  - [ apt-get, install, -y, glusterfs-client, containerd.io, 'kubelet=1.18.17-00', 'kubectl=1.18.17-00', 'kubeadm=1.18.17-00' ]
+  - [ apt-mark, hold, glusterfs-client, kubelet, kubectl, kubeadm, containerd.io ]
+  # Configure containerd
+  - [ mkdir, -p, /etc/containerd ]
+  - [ sh, -c, 'containerd config default > /etc/containerd/config.toml' ]
+  # SSH server to trust the CA
+  - [ sh, -c, 'echo >> /etc/ssh/sshd_config' ]
+  - [ sh, -c, 'echo TrustedUserCAKeys /etc/ssh/ca.pub >> /etc/ssh/sshd_config' ]
 
 users:
-  - name: debian
-    gecos: Debian User
-    sudo: ALL=(ALL) NOPASSWD:ALL
-    shell: /bin/bash
-    lock_passwd: true
-  - name: root
-    lock_passwd: true
+- name: debian
+  gecos: Debian User
+  sudo: ALL=(ALL) NOPASSWD:ALL
+  shell: /bin/bash
+  lock_passwd: true
+- name: root
+  lock_passwd: true
 
 locale: en_US.UTF-8
 
