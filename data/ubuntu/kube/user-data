@@ -20,9 +20,10 @@ write_files:
     N2h2R2QzS0ZvU1N4aDlFY1FONTNXWEhMYXBHQ0o0NGVFU3NqbVgzN1NwWElUYUhEOHJQRXBia0E0
     WWJzaVVoTXZPZ0VCLy9MZ1d0R2kvRVRxalVSUFkvWGRTVTR5dFE9PSBjYUBrdWJlLmRlbW8K
     
-- path: /etc/modules-load.d/bridge.conf
+- path: /etc/modules-load.d/containerd.conf
   permissions: '0644'
   content: |
+    overlay
     br_netfilter
 
 - path: /etc/sysctl.d/10-kubernetes.conf
@@ -32,17 +33,12 @@ write_files:
     net.bridge.bridge-nf-call-iptables=1
     net.bridge.bridge-nf-call-arptables=1
 
-- path: /etc/docker/daemon.json
+- path: /etc/crictl.yaml
   permissions: '0644'
   content: |
-    {
-      "exec-opts": ["native.cgroupdriver=systemd"],
-      "log-driver": "json-file",
-      "storage-driver": "overlay2",
-      "log-opts": {
-        "max-size": "100m"
-      }
-    }
+    runtime-endpoint: unix:///var/run/containerd/containerd.sock
+    timeout: 0
+    debug: false
 
 apt:
   sources_list: |
@@ -71,7 +67,7 @@ packages:
   - curl
 
 runcmd:
-  - [ modprobe, br_netfilter ]
+  - [ modprobe, overlay, br_netfilter ]
   - [ sysctl, --system ]
   - [ sh, -c, 'curl -s https://download.gluster.org/pub/gluster/glusterfs/7/rsa.pub | apt-key add -' ]
   - [ sh, -c, 'curl -s https://download.docker.com/linux/debian/gpg | apt-key add -' ]
@@ -81,8 +77,11 @@ runcmd:
   - [ sh, -c, 'echo deb [arch=amd64] https://download.docker.com/linux/debian stretch stable > /etc/apt/sources.list.d/docker-ce.list' ]
   - [ sh, -c, 'echo deb https://apt.kubernetes.io/ kubernetes-xenial main > /etc/apt/sources.list.d/kubernetes.list' ]
   - [ apt-get, update ]
-  - [ apt-get, install, -y, glusterfs-client, 'docker-ce=18.06.0~ce~3-0~debian', containerd.io, 'kubelet=1.15.6-00', 'kubectl=1.15.6-00', 'kubeadm=1.15.6-00' ]
-  - [ apt-mark, hold, glusterfs-client, kubelet, kubectl, kubeadm, docker-ce, containerd.io ]
+  - [ apt-get, install, -y, glusterfs-client, containerd.io, 'kubelet=1.18.17-00', 'kubectl=1.18.17-00', 'kubeadm=1.18.17-00' ]
+  - [ apt-mark, hold, glusterfs-client, kubelet, kubectl, kubeadm, containerd.io ]
+  # Configure containerd
+  - [ mkdir, -p, /etc/containerd ]
+  - [ sh, -c, 'containerd config default > /etc/containerd/config.toml' ]
   # SSH server to trust the CA
   - [ sh, -c, 'echo >> /etc/ssh/sshd_config' ]
   - [ sh, -c, 'echo TrustedUserCAKeys /etc/ssh/ca.pub >> /etc/ssh/sshd_config' ]
