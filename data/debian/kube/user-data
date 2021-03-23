@@ -62,6 +62,16 @@ write_files:
     timeout: 0
     debug: false
 
+- path: /etc/cni/net.d/net-conf.json
+  permission: '0644'
+  content: |
+    {
+      "Network": "10.244.0.0/16",
+      "Backend": {
+        "Type": "vxlan"
+      }
+    }
+
 apt:
   sources_list: |
     deb http://deb.debian.org/debian/ $RELEASE main contrib non-free
