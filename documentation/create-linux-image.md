@@ -429,7 +429,21 @@ This document shows how to create a Debian image from scratch to run on Cloud en
 
 12. Install and configure `grub`:
 
-    12.1. Install `grub`:
+    12.1 Configure:
+
+    ```bash
+    cat <<EOF > /etc/default/grub 
+    GRUB_DEFAULT=0
+    GRUB_TIMEOUT=0
+    GRUB_DISTRIBUTOR=`lsb_release -i -s 2> /dev/null || echo Debian`
+    GRUB_CMDLINE_LINUX_DEFAULT=""
+    GRUB_CMDLINE_LINUX="console=tty0 console=ttyS0,115200 earlyprintk=ttyS0,115200"
+    GRUB_TERMINAL="console serial"
+    GRUB_SERIAL_COMMAND="serial --speed=115200"
+    EOF
+    ```
+
+    12.2. Install `grub`:
 
        ```bash
        grub-install /dev/loop0
@@ -442,7 +456,7 @@ This document shows how to create a Debian image from scratch to run on Cloud en
        Installation finished. No error reported.
        ```
 
-    12.2. Update `grub` configuration:
+    12.3. Update `grub` configuration:
 
        ```bash
        update-grub
@@ -465,40 +479,39 @@ If you plan to use this image in **VirtualBox**, install [**VirtualBox Guest Add
    1. Download VirtualBox Guest Additions:
 
        ```bash
-       curl --progress-bar https://download.virtualbox.org/virtualbox/6.1.16/VBoxGuestAdditions_6.1.16.iso -o VBoxGuestAdditions_6.1.16.iso
+       curl --progress-bar https://download.virtualbox.org/virtualbox/6.1.18/VBoxGuestAdditions_6.1.18.iso -o VBoxGuestAdditions_6.1.18.iso
        ```
 
    2. Mount the ISO file:
 
        ```bash
-       mount -o loop VBoxGuestAdditions_6.1.16.iso /mnt
+       mount -o loop VBoxGuestAdditions_6.1.18.iso /mnt
        ```
 
    3. Install VirtualBox:
 
        ```bash
-       /mnt/VBoxLinuxAdditions.run
+       /mnt/VBoxLinuxAdditions.run --nox11
        ```
 
        Expected output
 
        ```console
-       Verifying archive integrity... All good.
-       Uncompressing VirtualBox 6.1.16 Guest Additions for Linux........
+       Uncompressing VirtualBox 6.1.18 Guest Additions for Linux........
        VirtualBox Guest Additions installer
        Copying additional installer modules ...
        Installing additional modules ...
-       depmod: ERROR: could not open directory /lib/modules/4.19.0-6-amd64: No such file or directory
+       depmod: ERROR: could not open directory /lib/modules/5.10.0-1-amd64: No such file or directory
        depmod: FATAL: could not search modules: No such file or directory
        VirtualBox Guest Additions: Starting.
-       VirtualBox Guest Additions: Building the VirtualBox Guest Additions kernel
+       VirtualBox Guest Additions: Building the VirtualBox Guest Additions kernel 
        modules.  This may take a while.
        VirtualBox Guest Additions: To build modules for other installed kernels, run
        VirtualBox Guest Additions:   /sbin/rcvboxadd quicksetup <version>
        VirtualBox Guest Additions: or
        VirtualBox Guest Additions:   /sbin/rcvboxadd quicksetup all
-       VirtualBox Guest Additions: Kernel headers not found for target kernel
-       4.19.0-6-amd64. Please install them and execute
+       VirtualBox Guest Additions: Kernel headers not found for target kernel 
+       5.10.0-1-amd64. Please install them and execute
          /sbin/rcvboxadd setup
        modprobe vboxguest failed
        The log file /var/log/vboxadd-setup.log may contain further information.
@@ -517,20 +530,20 @@ If you plan to use this image in **VirtualBox**, install [**VirtualBox Guest Add
        total 12
        drwxr-xr-x  3 root root 4096 Feb  2 23:36 .
        drwxr-xr-x 14 root root 4096 Feb  2 23:36 ..
-       drwxr-xr-x  3 root root 4096 Feb  2 23:36 4.9.0-11-amd64
+       drwxr-xr-x  3 root root 4096 Feb  2 23:36 4.9.0-15-amd64
        ```
 
-       Refer to the file name listed. In this case, `4.9.0-11-amd64`:
+       Refer to the file name listed. In this case, `4.9.0-15-amd64`:
 
        ```bash
-       rcvboxadd quicksetup 4.9.0-11-amd64
+       rcvboxadd quicksetup 4.9.0-15-amd64
        ```
 
        Expected output
 
        ```console
-       VirtualBox Guest Additions: Building the modules for kernel 4.9.0-11-amd64.
-       update-initramfs: Generating /boot/initrd.img-4.9.0-11-amd64
+       VirtualBox Guest Additions: Building the modules for kernel 4.9.0-15-amd64.
+       update-initramfs: Generating /boot/initrd.img-4.9.0-15-amd64
        ```
 
    5. Umount and remove the ISO file:
@@ -538,7 +551,7 @@ If you plan to use this image in **VirtualBox**, install [**VirtualBox Guest Add
        ```bash
        umount /mnt
 
-       rm -rf VBoxGuestAdditions_6.0.22.iso
+       rm -rf VBoxGuestAdditions_6.1.18.iso
        ```
 
    6. Fix `vboxadd-service`
@@ -574,7 +587,7 @@ If you plan to use this image in **VirtualBox**, install [**VirtualBox Guest Add
    3. Clean up:
 
        ```bash
-       apt-get clean
+       apt-get autoclean
 
        rm -rf /tmp/* ~/.bash_history
 
@@ -720,7 +733,7 @@ sudo losetup -D
 
    vboxmanage modifyvm debian-base-image --keyboard ps2 --mouse ps2
 
-   vboxmanage modifyvm debian-base-image --graphicscontroller vboxsvga --vram 33
+   vboxmanage modifyvm debian-base-image --graphicscontroller vmsvga --vram 33
 
    vboxmanage modifyvm debian-base-image --nic1 nat
 

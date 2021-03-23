@@ -9,23 +9,29 @@ config:
     name: enp0s8
     subnets:
       - type: static
-        address: 192.168.1.1/24
+        address: 192.168.1.1
+        netmask: 255.255.255.0
       - type: static
-        address: 192.168.1.254/24
+        address: 192.168.1.254
+        netmask: 255.255.255.0
   - type: physical
     name: enp0s9
     subnets:
       - type: static
-        address: 192.168.2.1/24
+        address: 192.168.2.1
+        netmask: 255.255.255.0
       - type: static
-        address: 192.168.2.254/24
+        address: 192.168.2.254
+        netmask: 255.255.255.0
   - type: physical
     name: enp0s10
     subnets:
       - type: static
-        address: 192.168.3.1/24
+        address: 192.168.3.1
+        netmask: 255.255.255.0
       - type: static
-        address: 192.168.3.254/24
+        address: 192.168.3.254
+        netmask: 255.255.255.0
   - type: physical
     name: enp0s16
   - type: vlan
@@ -34,29 +40,36 @@ config:
     name: enp0s16.41
     subnets:
       - type: static
-        address: 192.168.4.1/27
+        address: 192.168.4.1
+        netmask: 255.255.255.224
       - type: static
-        address: 192.168.4.30/27
+        address: 192.168.4.30
+        netmask: 255.255.255.224
   - type: vlan
     vlan_link: enp0s16
     vlan_id: 42
     name: enp0s16.42
     subnets:
       - type: static
-        address: 192.168.4.33/27
+        address: 192.168.4.33
+        netmask: 255.255.255.224
       - type: static
-        address: 192.168.4.62/27
+        address: 192.168.4.62
+        netmask: 255.255.255.224
   - type: vlan
     vlan_link: enp0s16
     vlan_id: 43
     name: enp0s16.43
     subnets:
       - type: static
-        address: 192.168.4.129/25
+        address: 192.168.4.129
+        netmask: 255.255.255.128
       - type: static
-        address: 192.168.4.254/25
+        address: 192.168.4.254
+        netmask: 255.255.255.128
   - type: physical
     name: enp0s17
     subnets:
       - type: static
-        address: 192.168.254.254/24
+        address: 192.168.254.254
+        netmask: 255.255.255.0
