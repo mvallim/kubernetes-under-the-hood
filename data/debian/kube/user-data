@@ -29,11 +29,18 @@ write_files:
   #  - Combined with ebtables, the bridge-nf code therefore makes Linux a very
   # powerful transparent firewall.
   #  - This enables, f.e., the creation of a transparent masquerading machine (i.e.
-  # all local hosts think they are directly connected to the Internet).    
+  # all local hosts think they are directly connected to the Internet).
+  #
+  # The OverlayFS is a union mount filesystem implementation for Linux. It combines
+  # multiple different underlying mount points into one, resulting in single 
+  # directory structure that contains underlying files and sub-directories from all 
+  # sources.
 - path: /etc/modules-load.d/containerd.conf
   permissions: '0644'
   content: |
+    # OverlayFS
     overlay
+    # Bridge-netfilter
     br_netfilter
 
   # Besides providing the NetworkPlugin interface to configure and clean up pod networking,
