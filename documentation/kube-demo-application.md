@@ -1,6 +1,6 @@
 # Demo Application
 
-> Full referenced: https://kubernetes.io/docs/tutorials/stateless-application/guestbook/
+> Full referenced: https://github.com/kubernetes/examples/tree/master/guestbook/
 
 ## Configure your local routing
 
@@ -39,7 +39,7 @@ The guestbook application uses Redis to store its data. It writes its data to a 
 1. Apply the Redis Master Deployment from the `redis-master-deployment.yaml` file:
 
    ```console
-   debian@busybox:~$ kubectl apply -f https://k8s.io/examples/application/guestbook/redis-master-deployment.yaml
+   debian@busybox:~$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/examples/master/guestbook/redis-master-deployment.yaml
    ```
 
 2. Query the list of Pods to verify that the Redis Master Pod is running:
@@ -70,7 +70,7 @@ The guestbook applications needs to communicate to the Redis master to write its
 1. Apply the Redis Master Service from the following `redis-master-service.yaml` file:
 
    ```console
-   debian@busybox:~$ kubectl apply -f https://k8s.io/examples/application/guestbook/redis-master-service.yaml
+   debian@busybox:~$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/examples/master/guestbook/redis-master-service.yaml
    ```
 
 2. Query the list of Services to verify that the Redis Master Service is running:
@@ -102,7 +102,7 @@ If there are not any replicas running, this Deployment would start the two repli
 1. Apply the Redis Slave Deployment from the `redis-slave-deployment.yaml` file:
 
    ```console
-   debian@busybox:~$ kubectl apply -f https://k8s.io/examples/application/guestbook/redis-slave-deployment.yaml
+   debian@busybox:~$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/examples/master/guestbook/redis-slave-deployment.yaml
    ```
 
 2. Query the list of Pods to verify that the Redis Slave Pods are running:
@@ -127,7 +127,7 @@ The guestbook application needs to communicate to Redis slaves to read data. To 
 1. Apply the Redis Slave Service from the following `redis-slave-service.yaml` file:
 
    ```console
-   debian@busybox:~$ kubectl apply -f https://k8s.io/examples/application/guestbook/redis-slave-service.yaml
+   debian@busybox:~$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/examples/master/guestbook/redis-slave-service.yaml
    ```
 
 2. Query the list of Services to verify that the Redis slave service is running:
@@ -154,7 +154,7 @@ The guestbook application has a web frontend serving the HTTP requests written i
 1. Apply the frontend Deployment from the `frontend-deployment.yaml` file:
 
    ```console
-   debian@busybox:~$ kubectl apply -f https://k8s.io/examples/application/guestbook/frontend-deployment.yaml
+   debian@busybox:~$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/examples/master/guestbook/frontend-deployment.yaml
    ```
 
 2. Query the list of Pods to verify that the three frontend replicas are running:
@@ -179,7 +179,7 @@ The `redis-slave` and `redis-master` Services you applied are only accessible wi
 1. Apply the frontend Service from the `frontend-service.yaml` file:
 
    ```console
-   debian@busybox:~$ kubectl apply -f https://k8s.io/examples/application/guestbook/frontend-service.yaml
+   debian@busybox:~$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/examples/master/guestbook/frontend-service.yaml
    ```
 
 2. Query the list of Services to verify that the frontend Service is running:
@@ -208,21 +208,21 @@ The `redis-slave` and `redis-master` Services you applied are only accessible wi
 
    The response should look similar to this:
 
-   ```text
-   NAME          STATUS   ROLES    AGE   VERSION   INTERNAL-IP     EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION   CONTAINER-RUNTIME
-   kube-mast01   Ready    master   73m   v1.15.6   192.168.1.64    <none>        Debian GNU/Linux 9 (stretch)   4.9.0-11-amd64   docker://18.6.0
-   kube-mast02   Ready    master   69m   v1.15.6   192.168.1.69    <none>        Debian GNU/Linux 9 (stretch)   4.9.0-11-amd64   docker://18.6.0
-   kube-mast03   Ready    master   65m   v1.15.6   192.168.1.170   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-11-amd64   docker://18.6.0
-   kube-node01   Ready    <none>   51m   v1.15.6   192.168.2.136   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-11-amd64   docker://18.6.0
-   kube-node02   Ready    <none>   50m   v1.15.6   192.168.2.205   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-11-amd64   docker://18.6.0
-   kube-node03   Ready    <none>   50m   v1.15.6   192.168.2.195   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-11-amd64   docker://18.6.0
+   ```console
+   NAME          STATUS   ROLES    AGE   VERSION    INTERNAL-IP     EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION   CONTAINER-RUNTIME
+   kube-mast01   Ready    master   56m   v1.18.17   192.168.1.85    <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   docker://18.6.0
+   kube-mast02   Ready    master   47m   v1.18.17   192.168.1.164   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   docker://18.6.0
+   kube-mast03   Ready    master   45m   v1.18.17   192.168.1.212   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   docker://18.6.0
+   kube-node01   Ready    <none>   20m   v1.18.17   192.168.2.213   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   docker://18.6.0
+   kube-node02   Ready    <none>   20m   v1.18.17   192.168.2.171   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   docker://18.6.0
+   kube-node03   Ready    <none>   19m   v1.18.17   192.168.2.216   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   docker://18.6.0
    ```
 
 2. Choice any ip of `kube-nodes` (`kube-node01`, `kube-node02` or `kube-node03`)
 
-   Here we will use the `192.168.2.136` (`kube-node01`)
+   Here we will use the `192.168.2.213` (`kube-node01`)
 
-   Open your browser with address [http://192.168.2.136:30551](http://192.168.2.136:30551)
+   Open your browser with address [http://192.168.2.213:30551](http://192.168.2.136:30551)
 
 > Keep attention on port **`30551`**, you should change correspondent port show in your on output above.
 

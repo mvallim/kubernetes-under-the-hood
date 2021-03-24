@@ -39,11 +39,13 @@ Use the returned value to access the BusyBox:
 
 Expected output:
 
-```text
-Linux busybox 4.9.0-11-amd64 #1 SMP Debian 4.9.189-3+deb9u2 (2019-11-11) x86_64
+```console
+Linux busybox 4.9.0-15-amd64 #1 SMP Debian 4.9.258-1 (2021-03-08) x86_64
+
 The programs included with the Debian GNU/Linux system are free software;
 the exact distribution terms for each program are described in the
 individual files in /usr/share/doc/*/copyright.
+
 Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
 permitted by applicable law.
 ```
@@ -61,7 +63,7 @@ permitted by applicable law.
 2. Install the Dashboard by applying the `kubernetes-dashboard.yaml` file:
 
    ```console
-   debian@busybox:~$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0/aio/deploy/recommended.yaml
+   debian@busybox:~$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.2.0/aio/deploy/recommended.yaml
    ```
 
    Expected output:
@@ -92,12 +94,12 @@ permitted by applicable law.
    Expected output:
 
    ```text
-   NAME                                        READY   STATUS    RESTARTS   AGE   IP           NODE          NOMINATED NODE   READINESS GATES
-   dashboard-metrics-scraper-c79c65bb7-jgkpf   1/1     Running   0          15s   10.244.4.2   kube-node02   <none>           <none>
-   kubernetes-dashboard-56484d4c5-27c6g        1/1     Running   0          15s   10.244.5.2   kube-node03   <none>           <none>
+   NAME                                         READY   STATUS    RESTARTS   AGE   IP           NODE          NOMINATED NODE   READINESS GATES
+   dashboard-metrics-scraper-78f5d9f487-ptvqb   1/1     Running   0          26s   10.244.3.2   kube-node01   <none>           <none>
+   kubernetes-dashboard-577bd97bc-5jpkd         1/1     Running   0          26s   10.244.4.2   kube-node02   <none>           <none>
    ```
 
-   > Notice we now have a pod named `kubernetes-dashboard-56c5f95c6b-ptcw6`
+   > Notice we now have a pod named `kubernetes-dashboard-577bd97bc-5jpkd`
 
 ## Configure the Dashboard
 
@@ -142,43 +144,43 @@ To access the Dashboard, we need to have a token from the `cluster-admin-dashboa
 
    ```text
    NAME                                  TYPE                                  DATA   AGE
-   cluster-admin-dashboard-token-7b2qq   kubernetes.io/service-account-token   3      12s
-   default-token-xj4q7                   kubernetes.io/service-account-token   3      54s
-   kubernetes-dashboard-certs            Opaque                                0      54s
-   kubernetes-dashboard-csrf             Opaque                                1      54s
-   kubernetes-dashboard-key-holder       Opaque                                2      54s
-   kubernetes-dashboard-token-89wh5      kubernetes.io/service-account-token   3      54s
+   cluster-admin-dashboard-token-jvzbm   kubernetes.io/service-account-token   3      16s
+   default-token-jp4kc                   kubernetes.io/service-account-token   3      86s
+   kubernetes-dashboard-certs            Opaque                                0      86s
+   kubernetes-dashboard-csrf             Opaque                                1      86s
+   kubernetes-dashboard-key-holder       Opaque                                2      86s
+   kubernetes-dashboard-token-sxrp9      kubernetes.io/service-account-token   3      86s
    ```
 
-   > We can see the `cluster-admin-dashboard` service account token has a token named `cluster-admin-dashboard-token-7b2qq`
+   > We can see the `cluster-admin-dashboard` service account token has a token named `cluster-admin-dashboard-token-jvzbm`
 
-2. To fetch the token, describe the `cluster-admin-dashboard-token-7b2qq` secret:
+2. To fetch the token, describe the `cluster-admin-dashboard-token-jvzbm` secret:
 
    ```console
-   debian@busybox:~$ kubectl describe secret cluster-admin-dashboard-token-7b2qq -n kubernetes-dashboard
+   debian@busybox:~$ kubectl describe secret cluster-admin-dashboard-token-jvzbm -n kubernetes-dashboard
    ```
 
    Expected output:
 
    ```text
-   Name:         cluster-admin-dashboard-token-7b2qq
+   Name:         cluster-admin-dashboard-token-jvzbm
    Namespace:    kubernetes-dashboard
    Labels:       <none>
    Annotations:  kubernetes.io/service-account.name: cluster-admin-dashboard
-                 kubernetes.io/service-account.uid: bbad3979-8372-4082-b5c1-8ff051ff0e15
-
+                 kubernetes.io/service-account.uid: 181b0dd6-561d-4dcf-9f66-58fd154b5a7d
+   
    Type:  kubernetes.io/service-account-token
-
+   
    Data
    ====
    ca.crt:     1025 bytes
    namespace:  20 bytes
-   token:      eyJhbGciOiJSUzI1NiIsImtpZCI6Ii1TWkw3a01zSlh4SkNPVmRSUTlsZ0lKT2oxQkVaMEplQzB0TVN3TnNLbE0ifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlcm5ldGVzLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJjbHVzdGVyLWFkbWluLWRhc2hib2FyZC10b2tlbi03YjJxcSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJjbHVzdGVyLWFkbWluLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6ImJiYWQzOTc5LTgzNzItNDA4Mi1iNWMxLThmZjA1MWZmMGUxNSIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDprdWJlcm5ldGVzLWRhc2hib2FyZDpjbHVzdGVyLWFkbWluLWRhc2hib2FyZCJ9.tGykZ1o0Q-2YYilAi1KjzvLdRpM4ooSbYLlW83oieNpgrmPXQay-UyVJFa7HRaANT4vTqLnikxAe4VFwpaFdsBLIZBLDybN_M8SMN8yXztgXy5iXkcE5fphWhOUs4Q--7rzjIbZvCM3ApH9QFcRcR-N17FllK8XoYU5KMvpw5qNnlVH_UcOcT7nP1957VZIeAsj5d1-E9xyzYDNW5fVUK7XWv5jPh2OG_Va7uSCyC6yavVzeArPatl3ifDfUsPgCX7tq4pW-UyWYqwq8y03H6itOyzB-ZYOhTNR15aFmbWj5L62pLIh0JGMomr-8-V_WH2es5qWmjCeDU-B8dVNkPw
+   token:      eyJhbGciOiJSUzI1NiIsImtpZCI6ImpTTHVJZ0h6LVpGSnFadzBpaXBUSjYyemVWZFJNZUZ3X29qMjIxRHBQOU0ifQ.   eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlcm5ldGVzLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJjbHVzdGVyLWFkbWluLWRhc2hib2FyZC10b2tlbi1qdnpibSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJjbHVzdGVyLWFkbWluLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6IjE4MWIwZGQ2LTU2MWQtNGRjZi05ZjY2LTU4ZmQxNTRiNWE3ZCIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDprdWJlcm5ldGVzLWRhc2hib2FyZDpjbHVzdGVyLWFkbWluLWRhc2hib2FyZCJ9.uibwq9m149OSdWG8FJGYJIxEBQle_QEVTnctBMY_67_HkCVLBA0R9d2brGhcw-bq9_IQWfOkMLRBj3duPr7YBTqKg53i6jXsnKnlh_t_UOCjx543or5Aw5HgcasslfHAVken6CtcEIYin4ya1LOb5DNH7mfHvdGWDFzTsSM3TxXe4FD6rvLfS-S0ICju7RBRLaOsrEptGjoX7z7mRXoQbeO3cFRlMsOQG7uShxgfz9BZDYrYICYw3YjhupQ9FXvWe_guLCA4XD3GNpPVp8bSgX_UayvgMouAleYs93QrlKqdBT0oD72VEFAHr0GeRjnoC9z-XDBixeaM4BFxGuAfqw
    ```
 
-   > We are going to use the `eyJhbGciOiJSUzI1NiIsImtpZCI6Ii1TWkw3...ZYOhTNR15aFmbWj5L62pLIh0JGMomr-8-V_WH2es5qWmjCeDU-B8dVNkPw` token. For shortness, we show only the first and last blocks here, but we must use the full printed value to access the Dashboard.
+   > We are going to use the `eyJhbGciOiJSUzI1NiIsImtpZCI6ImpTTHVJZ0h6L...72VEFAHr0GeRjnoC9z-XDBixeaM4BFxGuAfqw` token. For shortness, we show only the first and last blocks here, but we must use the full printed value to access the Dashboard.
 
-### Access the Dashboard
+### View the Dashboard
 
 1. To view the Dashboard, open your browser at [https://192.168.4.20:6443/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/](https://192.168.4.20:6443/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/)
 

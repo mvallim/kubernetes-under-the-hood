@@ -387,8 +387,8 @@ apt:
     deb http://deb.debian.org/debian/ $RELEASE-updates main contrib non-free
     deb-src http://deb.debian.org/debian/ $RELEASE-updates main contrib non-free
 
-    deb http://deb.debian.org/debian-security $RELEASE/updates main contrib non-free
-    deb-src http://deb.debian.org/debian-security $RELEASE/updates main contrib non-free
+    deb http://deb.debian.org/debian-security $RELEASE/updates main
+    deb-src http://deb.debian.org/debian-security $RELEASE/updates main
 
   conf: |
     APT {
@@ -398,7 +398,7 @@ apt:
       };
     };
 
-packages:
+packages: 
   - apt-transport-https
   - software-properties-common
   - ca-certificates
@@ -410,14 +410,15 @@ packages:
   - git
   - vim
   - less
+  - tmux
 
 runcmd:
-  - curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
-  - echo 'deb https://apt.kubernetes.io/ kubernetes-xenial main' > /etc/apt/sources.list.d/kubernetes.list
+  - [ sh, -c, 'curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -' ]
+  - [ sh, -c, 'echo deb https://apt.kubernetes.io/ kubernetes-xenial main > /etc/apt/sources.list.d/kubernetes.list' ]
   - [ apt-get, update ]
-  - [ apt-get, install, -y, 'kubectl=1.15.6-00' ]
+  - [ apt-get, install, -y, 'kubectl=1.18.17-00' ]
   - [ apt-mark, hold, kubectl ]
-  - mv -u /run/.ssh/* /home/debian/.ssh/.
+  - [ sh, -c, 'mv -u /run/.ssh/* /home/debian/.ssh/.' ]
   - [ chown, -R, 'debian:debian', '/home/debian' ]
 
 users:
@@ -600,7 +601,7 @@ Use the returned value to access.
 ```console
 ~$ ssh debian@192.168.4.57
 
-Linux busybox 4.9.0-11-amd64 #1 SMP Debian 4.9.189-3+deb9u2 (2019-11-11) x86_64
+Linux busybox 4.9.0-15-amd64 #1 SMP Debian 4.9.258-1 (2021-03-08) x86_64
 
 The programs included with the Debian GNU/Linux system are free software;
 the exact distribution terms for each program are described in the
@@ -661,7 +662,7 @@ Let's check **`kubectl`** version
 ```console
 debian@busybox:~$ kubectl version --client
 
-Client Version: version.Info{Major:"1", Minor:"16", GitVersion:"v1.16.15", GitCommit:"2adc8d7091e89b6e3ca8d048140618ec89b39369", GitTreeState:"clean", BuildDate:"2020-09-02T11:40:00Z", GoVersion:"go1.13.15", Compiler:"gc", Platform:"linux/amd64"}
+Client Version: version.Info{Major:"1", Minor:"18", GitVersion:"v1.18.17", GitCommit:"68b4e26caf6ede7af577db4af62fb405b4dd47e6", GitTreeState:"clean", BuildDate:"2021-03-18T01:02:41Z", GoVersion:"go1.13.15", Compiler:"gc", Platform:"linux/amd64"}
 ```
 
 Let's check access `gate-node01`
@@ -669,7 +670,7 @@ Let's check access `gate-node01`
 ```console
 debian@busybox:~$ ssh debian@gate-node01
 
-Linux gate-node01 4.9.0-11-amd64 #1 SMP Debian 4.9.189-3+deb9u2 (2019-11-11) x86_64
+Linux gate-node01 4.9.0-15-amd64 #1 SMP Debian 4.9.258-1 (2021-03-08) x86_64
 
 The programs included with the Debian GNU/Linux system are free software;
 the exact distribution terms for each program are described in the

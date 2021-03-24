@@ -6,7 +6,7 @@
 
 *“MetalLB is a load-balancer implementation for bare metal Kubernetes clusters, using standard routing protocols.”*
 
-> Reference: https://metallb.universe.tf/
+> Reference: <https://metallb.universe.tf/>
 
 ## Why
 
@@ -99,10 +99,10 @@ To install MetalLB, apply the manifest:
 1. Apply the MetalLB manifest `namespace` from the `namespace.yaml` file:
 
    ```console
-   debian@busybox:~$ kubectl apply -f https://raw.githubusercontent.com/google/metallb/v0.9.3/manifests/namespace.yaml
+   debian@busybox:~$ kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.5/manifests/namespace.yaml
    ```
 
-      The response should look similar to this:
+   The response should look similar to this:
 
    ```text
    namespace/metallb-system created
@@ -111,7 +111,7 @@ To install MetalLB, apply the manifest:
 2. Apply the MetalLB manifest `controller` and `speaker` from the `metallb.yaml` file:
 
    ```console
-   debian@busybox:~$ kubectl apply -f https://raw.githubusercontent.com/google/metallb/v0.9.3/manifests/metallb.yaml
+   debian@busybox:~$ kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.5/manifests/metallb.yaml
    ```
 
    The response should look similar to this:
@@ -153,20 +153,20 @@ To install MetalLB, apply the manifest:
 
    The response should look similar to this:
 
-   ```text
+   ```console
    NAME         READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES                      SELECTOR
-   controller   1/1     1            1           28s   controller   metallb/controller:v0.9.3   app=metallb,component=controller
+   controller   1/1     1            1           40s   controller   metallb/controller:v0.9.5   app=metallb,component=controller
    ```
 
 This will deploy MetalLB to your cluster, under the **`metallb-system`** namespace. The components in the manifest are:
 
 * The **`metallb-system/controller`** deployment. This is the cluster-wide controller that handles IP address assignments.  
 * The **`metallb-system/speaker`** daemonset. This is the component that speaks the protocol(s) of your choice to make the services reachable.  
-* Service accounts for the controller and speaker, along with the RBAC permissions that the components need to function. 
+* Service accounts for the controller and speaker, along with the RBAC permissions that the components need to function.
 
 The installation manifest does not include a configuration file. MetalLB’s components will still start, but will remain idle until you define and deploy a `configmap`. The `memberlist` secret contains the `secretkey` to encrypt the communication between speakers for the fast dead node detection.
 
-> Reference : https://metallb.universe.tf/installation/#installation-by-manifest
+> Reference : <https://metallb.universe.tf/installation/#installation-by-manifest>
 
 ### Configure
 
@@ -201,9 +201,9 @@ data:
 
    The response should look similar to this:
 
-   ```text
-   NAME         READY   UP-TO-DATE   AVAILABLE   AGE     CONTAINERS   IMAGES                      SELECTOR
-   controller   1/1     1            1           5m34s   controller   metallb/controller:v0.8.3   app=metallb,component=controller
+   ```console
+   NAME         READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES                      SELECTOR
+   controller   1/1     1            1           87s   controller   metallb/controller:v0.9.5   app=metallb,component=controller
    ```
 
 3. Query the state of service `load-balancer-service`

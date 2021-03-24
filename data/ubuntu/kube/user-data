@@ -19,12 +19,35 @@ write_files:
     UHdYcklMQ0xUeGN6V29UWHZIWUxuRXRTWW42MVh3SElldWJrTVhJamJBSysreStKWCswcm02aHRN
     N2h2R2QzS0ZvU1N4aDlFY1FONTNXWEhMYXBHQ0o0NGVFU3NqbVgzN1NwWElUYUhEOHJQRXBia0E0
     WWJzaVVoTXZPZ0VCLy9MZ1d0R2kvRVRxalVSUFkvWGRTVTR5dFE9PSBjYUBrdWJlLmRlbW8K
-    
-- path: /etc/modules-load.d/bridge.conf
+
+  # The bridge-netfilter code enables the following functionality:
+  #  - {Ip,Ip6,Arp}tables can filter bridged IPv4/IPv6/ARP packets, even when
+  # encapsulated in an 802.1Q VLAN or PPPoE header. This enables the functionality
+  # of a stateful transparent firewall.
+  #  - All filtering, logging and NAT features of the 3 tools can therefore be used
+  # on bridged frames.
+  #  - Combined with ebtables, the bridge-nf code therefore makes Linux a very
+  # powerful transparent firewall.
+  #  - This enables, f.e., the creation of a transparent masquerading machine (i.e.
+  # all local hosts think they are directly connected to the Internet).    
+- path: /etc/modules-load.d/containerd.conf
   permissions: '0644'
   content: |
+    overlay
     br_netfilter
 
+  # Besides providing the NetworkPlugin interface to configure and clean up pod networking,
+  # the plugin may also need specific support for kube-proxy. The iptables proxy obviously
+  # depends on iptables, and the plugin may need to ensure that container traffic is made
+  # available to iptables. For example, if the plugin connects containers to a Linux bridge,
+  # the plugin must set the net/bridge/bridge-nf-call-iptables sysctl to 1 to ensure that
+  # the iptables proxy functions correctly. If the plugin does not use a Linux bridge
+  # (but instead something like Open vSwitch or some other mechanism) it should ensure
+  # container traffic is appropriately routed for the proxy.
+  #
+  # For more details : https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/#network-plugin-requirements
+  #
+  # As a requirement for your Linux Node’s iptables to correctly see bridged traffic
 - path: /etc/sysctl.d/10-kubernetes.conf
   permissions: '0644'
   content: |
@@ -32,17 +55,12 @@ write_files:
     net.bridge.bridge-nf-call-iptables=1
     net.bridge.bridge-nf-call-arptables=1
 
-- path: /etc/docker/daemon.json
+- path: /etc/crictl.yaml
   permissions: '0644'
   content: |
-    {
-      "exec-opts": ["native.cgroupdriver=systemd"],
-      "log-driver": "json-file",
-      "storage-driver": "overlay2",
-      "log-opts": {
-        "max-size": "100m"
-      }
-    }
+    runtime-endpoint: unix:///var/run/containerd/containerd.sock
+    timeout: 0
+    debug: false
 
 apt:
   sources_list: |
@@ -71,7 +89,7 @@ packages:
   - curl
 
 runcmd:
-  - [ modprobe, br_netfilter ]
+  - [ modprobe, overlay, br_netfilter ]
   - [ sysctl, --system ]
   - [ sh, -c, 'curl -s https://download.gluster.org/pub/gluster/glusterfs/7/rsa.pub | apt-key add -' ]
   - [ sh, -c, 'curl -s https://download.docker.com/linux/debian/gpg | apt-key add -' ]
@@ -81,8 +99,11 @@ runcmd:
   - [ sh, -c, 'echo deb [arch=amd64] https://download.docker.com/linux/debian stretch stable > /etc/apt/sources.list.d/docker-ce.list' ]
   - [ sh, -c, 'echo deb https://apt.kubernetes.io/ kubernetes-xenial main > /etc/apt/sources.list.d/kubernetes.list' ]
   - [ apt-get, update ]
-  - [ apt-get, install, -y, glusterfs-client, 'docker-ce=18.06.0~ce~3-0~debian', containerd.io, 'kubelet=1.15.6-00', 'kubectl=1.15.6-00', 'kubeadm=1.15.6-00' ]
-  - [ apt-mark, hold, glusterfs-client, kubelet, kubectl, kubeadm, docker-ce, containerd.io ]
+  - [ apt-get, install, -y, glusterfs-client, containerd.io, 'kubelet=1.18.17-00', 'kubectl=1.18.17-00', 'kubeadm=1.18.17-00' ]
+  - [ apt-mark, hold, glusterfs-client, kubelet, kubectl, kubeadm, containerd.io ]
+  # Configure containerd
+  - [ mkdir, -p, /etc/containerd ]
+  - [ sh, -c, 'containerd config default > /etc/containerd/config.toml' ]
   # SSH server to trust the CA
   - [ sh, -c, 'echo >> /etc/ssh/sshd_config' ]
   - [ sh, -c, 'echo TrustedUserCAKeys /etc/ssh/ca.pub >> /etc/ssh/sshd_config' ]
