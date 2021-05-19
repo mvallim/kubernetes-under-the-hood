@@ -378,7 +378,7 @@ Based on the above information, we will have a [`kubeadm-config-external-etcd.ya
 ```yaml
 apiVersion: kubeadm.k8s.io/v1beta2
 kind: ClusterConfiguration
-kubernetesVersion: stable-1.19
+kubernetesVersion: stable-1.18
 apiServer:
   certSANs:
   - "192.168.4.20"
@@ -437,7 +437,7 @@ Setting up a cluster with external etcd nodes is similar to the procedure used f
    Expected output:
 
    ```console
-   [init] Using Kubernetes version: v1.19.11
+   [init] Using Kubernetes version: v1.18.17
    [preflight] Running pre-flight checks
    [preflight] Pulling images required for setting up a Kubernetes cluster
    [preflight] This might take a minute or two, depending on the speed of your internet connection
@@ -473,7 +473,7 @@ Setting up a cluster with external etcd nodes is similar to the procedure used f
    [kubelet-check] Initial timeout of 40s passed.
    [apiclient] All control plane components are healthy after 62.615174 seconds
    [upload-config] Storing the configuration used in ConfigMap "kubeadm-config" in the "kube-system" Namespace
-   [kubelet] Creating a ConfigMap "kubelet-config-1.19" in namespace kube-system with the configuration for the kubelets in the cluster
+   [kubelet] Creating a ConfigMap "kubelet-config-1.18" in namespace kube-system with the configuration for the kubelets in the cluster
    [upload-certs] Storing the certificates in Secret "kubeadm-certs" in the "kube-system" Namespace
    [upload-certs] Using certificate key:
    fa81add22301bc70f46d9089433e7e5945c2121bf6e1e9397284ec979e85eaf4
@@ -536,7 +536,7 @@ Setting up a cluster with external etcd nodes is similar to the procedure used f
 
    ```console
    NAME          STATUS     ROLES    AGE   VERSION    INTERNAL-IP     EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION   CONTAINER-RUNTIME
-   kube-mast01   NotReady   master   64s   v1.19.11   192.168.1.161   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   docker://18.6.0
+   kube-mast01   NotReady   master   64s   v1.18.17   192.168.1.161   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   docker://18.6.0
    ```
 
    ```console
@@ -582,7 +582,7 @@ Setting up a cluster with external etcd nodes is similar to the procedure used f
 
    ```console
    NAME          STATUS   ROLES    AGE     VERSION    INTERNAL-IP     EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION   CONTAINER-RUNTIME
-   kube-mast01   Ready    master   2m43s   v1.19.11   192.168.1.161   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   docker://18.6.0
+   kube-mast01   Ready    master   2m43s   v1.18.17   192.168.1.161   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   docker://18.6.0
    ```
 
    ```console
@@ -678,9 +678,9 @@ Now we need to join the other nodes to our K8S cluster. For this, we need the ce
 
    ```console
    NAME          STATUS     ROLES    AGE     VERSION    INTERNAL-IP     EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION   CONTAINER-RUNTIME
-   kube-mast01   Ready      master   7m47s   v1.19.11   192.168.1.161   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   docker://18.6.0
-   kube-mast02   Ready      master   80s     v1.19.11   192.168.1.119   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   docker://18.6.0
-   kube-mast03   NotReady   master   13s     v1.19.11   192.168.1.206   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   docker://18.6.0
+   kube-mast01   Ready      master   7m47s   v1.18.17   192.168.1.161   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   docker://18.6.0
+   kube-mast02   Ready      master   80s     v1.18.17   192.168.1.119   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   docker://18.6.0
+   kube-mast03   NotReady   master   13s     v1.18.17   192.168.1.206   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   docker://18.6.0
    ```
 
    > All master nodes are expected to be in the **Ready** state:
