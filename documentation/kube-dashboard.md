@@ -95,11 +95,11 @@ permitted by applicable law.
 
    ```text
    NAME                                         READY   STATUS    RESTARTS   AGE   IP           NODE          NOMINATED NODE   READINESS GATES
-   dashboard-metrics-scraper-78f5d9f487-ptvqb   1/1     Running   0          26s   10.244.3.2   kube-node01   <none>           <none>
-   kubernetes-dashboard-577bd97bc-5jpkd         1/1     Running   0          26s   10.244.4.2   kube-node02   <none>           <none>
+   dashboard-metrics-scraper-79c5968bdc-t6k7b   1/1     Running   0          17s   10.244.5.2   kube-node03   <none>           <none>
+   kubernetes-dashboard-9f9799597-qb8gw         1/1     Running   0          17s   10.244.4.2   kube-node02   <none>           <none>
    ```
 
-   > Notice we now have a pod named `kubernetes-dashboard-577bd97bc-5jpkd`
+   > Notice we now have a pod named `kubernetes-dashboard-9f9799597-qb8gw`
 
 ## Configure the Dashboard
 
@@ -144,30 +144,30 @@ To access the Dashboard, we need to have a token from the `cluster-admin-dashboa
 
    ```text
    NAME                                  TYPE                                  DATA   AGE
-   cluster-admin-dashboard-token-jvzbm   kubernetes.io/service-account-token   3      16s
-   default-token-jp4kc                   kubernetes.io/service-account-token   3      86s
-   kubernetes-dashboard-certs            Opaque                                0      86s
-   kubernetes-dashboard-csrf             Opaque                                1      86s
-   kubernetes-dashboard-key-holder       Opaque                                2      86s
-   kubernetes-dashboard-token-sxrp9      kubernetes.io/service-account-token   3      86s
+   cluster-admin-dashboard-token-7srtb   kubernetes.io/service-account-token   3      35s
+   default-token-fqzs8                   kubernetes.io/service-account-token   3      96s
+   kubernetes-dashboard-certs            Opaque                                0      96s
+   kubernetes-dashboard-csrf             Opaque                                1      96s
+   kubernetes-dashboard-key-holder       Opaque                                2      96s
+   kubernetes-dashboard-token-rn2pj      kubernetes.io/service-account-token   3      96s
    ```
 
-   > We can see the `cluster-admin-dashboard` service account token has a token named `cluster-admin-dashboard-token-jvzbm`
+   > We can see the `cluster-admin-dashboard` service account token has a token named `cluster-admin-dashboard-token-7srtb`
 
-2. To fetch the token, describe the `cluster-admin-dashboard-token-jvzbm` secret:
+2. To fetch the token, describe the `cluster-admin-dashboard-token-7srtb` secret:
 
    ```console
-   debian@busybox:~$ kubectl describe secret cluster-admin-dashboard-token-jvzbm -n kubernetes-dashboard
+   debian@busybox:~$ kubectl describe secret cluster-admin-dashboard-token-7srtb -n kubernetes-dashboard
    ```
 
    Expected output:
 
    ```text
-   Name:         cluster-admin-dashboard-token-jvzbm
+   Name:         cluster-admin-dashboard-token-7srtb
    Namespace:    kubernetes-dashboard
    Labels:       <none>
    Annotations:  kubernetes.io/service-account.name: cluster-admin-dashboard
-                 kubernetes.io/service-account.uid: 181b0dd6-561d-4dcf-9f66-58fd154b5a7d
+                 kubernetes.io/service-account.uid: a2cb115c-3d82-42cf-80ac-3fa003e568cf
    
    Type:  kubernetes.io/service-account-token
    
