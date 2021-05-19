@@ -13,7 +13,7 @@ Master components can be run on any machine in the cluster. However, for simplic
 ## Components
 
 - **Kubelet** - Kubelet gets the configuration of a pod from the API Server and ensures that the described containers are up and running.
-- **Docker** - Takes care of downloading the images and starting the containers.
+- **containerd** - Takes care of downloading the images and starting the containers.
 - **etcd** - Reliably stores the configuration data of the Kubernetes cluster, representing the state of the cluster (what nodes exist in the cluster, what pods should be running, which nodes they are running on, and a whole lot more) at any given point in time.
 - **API Server** - Validates and configures data for the API objects, which include pods, services, replication controllers, and others. The API Server services REST operations and provides the frontend to the cluster’s shared state through which all other components interact.
 - **Controller Manager** - Watches the state of the cluster through the API Server **watch** feature and, when notified, makes the necessary changes to the cluster, attempting to move the current state towards the desired state.
