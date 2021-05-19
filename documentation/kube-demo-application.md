@@ -210,12 +210,12 @@ The `redis-slave` and `redis-master` Services you applied are only accessible wi
 
    ```console
    NAME          STATUS   ROLES    AGE   VERSION    INTERNAL-IP     EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION   CONTAINER-RUNTIME
-   kube-mast01   Ready    master   56m   v1.19.11   192.168.1.85    <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   docker://18.6.0
-   kube-mast02   Ready    master   47m   v1.19.11   192.168.1.164   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   docker://18.6.0
-   kube-mast03   Ready    master   45m   v1.19.11   192.168.1.212   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   docker://18.6.0
-   kube-node01   Ready    <none>   20m   v1.19.11   192.168.2.213   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   docker://18.6.0
-   kube-node02   Ready    <none>   20m   v1.19.11   192.168.2.171   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   docker://18.6.0
-   kube-node03   Ready    <none>   19m   v1.19.11   192.168.2.216   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   docker://18.6.0
+   kube-mast01   Ready    master   76m   v1.19.11   192.168.1.192   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   containerd://1.4.3
+   kube-mast02   Ready    master   67m   v1.19.11   192.168.1.43    <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   containerd://1.4.3
+   kube-mast03   Ready    master   66m   v1.19.11   192.168.1.33    <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   containerd://1.4.3
+   kube-node01   Ready    <none>   21m   v1.19.11   192.168.2.150   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   containerd://1.4.3
+   kube-node02   Ready    <none>   20m   v1.19.11   192.168.2.158   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   containerd://1.4.3
+   kube-node03   Ready    <none>   20m   v1.19.11   192.168.2.239   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   containerd://1.4.3
    ```
 
 2. Choice any ip of `kube-nodes` (`kube-node01`, `kube-node02` or `kube-node03`)
@@ -286,13 +286,15 @@ Deleting the Deployments and Services also deletes any running Pods. Use labels 
 1. Run the following commands to delete all Pods, Deployments, and Services.
 
    ```console
-   debian@busybox:~$ kubectl delete deployment -l app=redis
+   debian@busybox:~$ kubectl delete -n default deployment frontend
 
-   debian@busybox:~$ kubectl delete service -l app=redis
+   debian@busybox:~$ kubectl delete -n default deployment redis-slave
 
-   debian@busybox:~$ kubectl delete deployment -l app=guestbook
+   debian@busybox:~$ kubectl delete -n default deployment redis-master
 
-   debian@busybox:~$ kubectl delete service -l app=guestbook
+   debian@busybox:~$ kubectl delete -n default service -l app=redis
+
+   debian@busybox:~$ kubectl delete -n default service -l app=guestbook
    ```
 
    The responses should be:
