@@ -101,7 +101,7 @@ runcmd:
   - [ sh, -c, 'curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -' ]
   - [ sh, -c, 'echo deb https://apt.kubernetes.io/ kubernetes-xenial main > /etc/apt/sources.list.d/kubernetes.list' ]
   - [ apt-get, update ]
-  - [ apt-get, install, -y, 'kubectl=1.18.17-00' ]
+  - [ apt-get, install, -y, 'kubectl=1.19.11-00' ]
   - [ apt-mark, hold, kubectl ]
   - [ sh, -c, 'mv -u /run/.ssh/* /home/ubuntu/.ssh/.' ]
   - [ chown, -R, 'ubuntu:ubuntu', '/home/ubuntu' ]
