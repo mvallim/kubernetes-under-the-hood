@@ -11,7 +11,7 @@ Master components provide the cluster’s control plane. Master components make 
 ## Components
 
 - **Kubelet** - Kubelet gets the configuration of a pod from the API Server and ensures that the described containers are up and running.
-- **Docker** - Takes care of downloading the images and starting the containers.
+- **containerd** - Takes care of downloading the images and starting the containers.
 - **API Server** - Validates and configures data for the API objects, which include pods, services, replication controllers, and others. The API Server services REST operations and provides the frontend to the cluster’s shared state through which all other components interact.
 - **Controller Manager** - Watches the state of the cluster through the API Server **watch** feature and, when notified, makes the necessary changes to the cluster, attempting to move the current state towards the desired state.
 - **Scheduler** - Watches for unscheduled pods and binds them to nodes via the binding pod subresource API, according to the availability of the requested resources, quality of service requirements, affinity and anti-affinity specifications, and other constraints. Once the pod has a node assigned, the regular behavior of the Kubelet is triggered and the pod and its containers are created.
