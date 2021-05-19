@@ -29,7 +29,12 @@ write_files:
   #  - Combined with ebtables, the bridge-nf code therefore makes Linux a very
   # powerful transparent firewall.
   #  - This enables, f.e., the creation of a transparent masquerading machine (i.e.
-  # all local hosts think they are directly connected to the Internet).    
+  # all local hosts think they are directly connected to the Internet).
+  #
+  # The OverlayFS is a union mount filesystem implementation for Linux. It combines
+  # multiple different underlying mount points into one, resulting in single 
+  # directory structure that contains underlying files and sub-directories from all 
+  # sources.
 - path: /etc/modules-load.d/containerd.conf
   permissions: '0644'
   content: |
@@ -120,7 +125,7 @@ runcmd:
   - [ sh, -c, 'echo deb [arch=amd64] https://download.docker.com/linux/debian stretch stable > /etc/apt/sources.list.d/docker-ce.list' ]
   - [ sh, -c, 'echo deb https://apt.kubernetes.io/ kubernetes-xenial main > /etc/apt/sources.list.d/kubernetes.list' ]
   - [ apt-get, update ]
-  - [ apt-get, install, -y, glusterfs-client, containerd.io, 'kubelet=1.18.17-00', 'kubectl=1.18.17-00', 'kubeadm=1.18.17-00' ]
+  - [ apt-get, install, -y, glusterfs-client, containerd.io, 'kubelet=1.19.11-00', 'kubectl=1.19.11-00', 'kubeadm=1.19.11-00' ]
   - [ apt-mark, hold, glusterfs-client, kubelet, kubectl, kubeadm, containerd.io ]
   # Configure containerd
   - [ mkdir, -p, /etc/containerd ]
