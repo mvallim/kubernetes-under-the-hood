@@ -201,7 +201,7 @@ runcmd:
   - [ sh, -c, 'echo deb [arch=amd64] https://download.docker.com/linux/debian stretch stable > /etc/apt/sources.list.d/docker-ce.list' ]
   - [ sh, -c, 'echo deb https://apt.kubernetes.io/ kubernetes-xenial main > /etc/apt/sources.list.d/kubernetes.list' ]
   - [ apt-get, update ]
-  - [ apt-get, install, -y, glusterfs-client, containerd.io, 'kubelet=1.18.17-00', 'kubectl=1.18.17-00', 'kubeadm=1.18.17-00' ]
+  - [ apt-get, install, -y, glusterfs-client, containerd.io, 'kubelet=1.19.11-00', 'kubectl=1.19.11-00', 'kubeadm=1.19.11-00' ]
   - [ apt-mark, hold, glusterfs-client, kubelet, kubectl, kubeadm, containerd.io ]
   # Configure containerd
   - [ mkdir, -p, /etc/containerd ]
@@ -300,7 +300,7 @@ Based on the above information, we will have a [`kubeadm-config.yml`](../master/
 ```yaml
 apiVersion: kubeadm.k8s.io/v1beta2
 kind: ClusterConfiguration
-kubernetesVersion: stable-1.18
+kubernetesVersion: stable-1.19
 apiServer:
   certSANs:
   - "192.168.4.20"
@@ -334,7 +334,7 @@ This approach requires less infrastructure. The etcd members and control plane n
    Expected output:
 
    ```console
-   [init] Using Kubernetes version: v1.18.17
+   [init] Using Kubernetes version: v1.19.11
    [preflight] Running pre-flight checks
    [preflight] Pulling images required for setting up a Kubernetes cluster
    [preflight] This might take a minute or two, depending on the speed of your internet connection
@@ -373,7 +373,7 @@ This approach requires less infrastructure. The etcd members and control plane n
    [kubelet-check] Initial timeout of 40s passed.
    [apiclient] All control plane components are healthy after 71.351995 seconds
    [upload-config] Storing the configuration used in ConfigMap "kubeadm-config" in the "kube-system" Namespace
-   [kubelet] Creating a ConfigMap "kubelet-config-1.18" in namespace kube-system with the configuration for the kubelets in the cluster
+   [kubelet] Creating a ConfigMap "kubelet-config-1.19" in namespace kube-system with the configuration for the kubelets in the cluster
    [upload-certs] Storing the certificates in Secret "kubeadm-certs" in the "kube-system" Namespace
    [upload-certs] Using certificate key:
    65871091a50e1cc136db5c07f4ef13359f388966408246601eff108b7deb3d28
@@ -436,7 +436,7 @@ This approach requires less infrastructure. The etcd members and control plane n
 
    ```console
    NAME          STATUS     ROLES    AGE    VERSION    INTERNAL-IP    EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION   CONTAINER-RUNTIME
-   kube-mast01   NotReady   master   2m1s   v1.18.17   192.168.1.85   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   docker://18.6.0
+   kube-mast01   NotReady   master   2m1s   v1.19.11   192.168.1.85   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   docker://18.6.0
    ```
 
    ```console
@@ -483,7 +483,7 @@ This approach requires less infrastructure. The etcd members and control plane n
 
    ```console
    NAME          STATUS   ROLES    AGE    VERSION    INTERNAL-IP    EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION   CONTAINER-RUNTIME
-   kube-mast01   Ready    master   5m1s   v1.18.17   192.168.1.85   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   docker://18.6.0
+   kube-mast01   Ready    master   5m1s   v1.19.11   192.168.1.85   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   docker://18.6.0
    ```
 
    ```console
@@ -515,7 +515,7 @@ Now we need to join the other nodes to our K8S cluster. For this, we need the ce
    Expected output:
 
    ```console
-   I0322 02:16:57.663034    4818 version.go:255] remote version is much newer: v1.20.5; falling back to: stable-1.18
+   I0322 02:16:57.663034    4818 version.go:255] remote version is much newer: v1.20.5; falling back to: stable-1.19
    W0322 02:16:58.112358    4818 configset.go:202] WARNING: kubeadm cannot validate component configs for API groups [kubelet.config.k8s.io kubeproxy.config.k8s.io]
    [upload-certs] Storing the certificates in Secret "kubeadm-certs" in the "kube-system" Namespace
    [upload-certs] Using certificate key:
@@ -645,9 +645,9 @@ Now we need to join the other nodes to our K8S cluster. For this, we need the ce
 
    ```console
    NAME          STATUS   ROLES    AGE     VERSION    INTERNAL-IP     EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION   CONTAINER-RUNTIME
-   kube-mast01   Ready    master   11m     v1.18.17   192.168.1.85    <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   docker://18.6.0
-   kube-mast02   Ready    master   2m16s   v1.18.17   192.168.1.164   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   docker://18.6.0
-   kube-mast03   Ready    master   38s     v1.18.17   192.168.1.212   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   docker://18.6.0
+   kube-mast01   Ready    master   11m     v1.19.11   192.168.1.85    <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   docker://18.6.0
+   kube-mast02   Ready    master   2m16s   v1.19.11   192.168.1.164   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   docker://18.6.0
+   kube-mast03   Ready    master   38s     v1.19.11   192.168.1.212   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   docker://18.6.0
    ```
 
    > All master nodes are now expected to be in the **Ready** state:
