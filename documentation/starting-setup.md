@@ -416,7 +416,7 @@ runcmd:
   - [ sh, -c, 'curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -' ]
   - [ sh, -c, 'echo deb https://apt.kubernetes.io/ kubernetes-xenial main > /etc/apt/sources.list.d/kubernetes.list' ]
   - [ apt-get, update ]
-  - [ apt-get, install, -y, 'kubectl=1.18.17-00' ]
+  - [ apt-get, install, -y, 'kubectl=1.19.11-00' ]
   - [ apt-mark, hold, kubectl ]
   - [ sh, -c, 'mv -u /run/.ssh/* /home/debian/.ssh/.' ]
   - [ chown, -R, 'debian:debian', '/home/debian' ]
@@ -662,7 +662,7 @@ Let's check **`kubectl`** version
 ```console
 debian@busybox:~$ kubectl version --client
 
-Client Version: version.Info{Major:"1", Minor:"18", GitVersion:"v1.18.17", GitCommit:"68b4e26caf6ede7af577db4af62fb405b4dd47e6", GitTreeState:"clean", BuildDate:"2021-03-18T01:02:41Z", GoVersion:"go1.13.15", Compiler:"gc", Platform:"linux/amd64"}
+Client Version: version.Info{Major:"1", Minor:"18", GitVersion:"v1.19.11", GitCommit:"68b4e26caf6ede7af577db4af62fb405b4dd47e6", GitTreeState:"clean", BuildDate:"2021-03-18T01:02:41Z", GoVersion:"go1.13.15", Compiler:"gc", Platform:"linux/amd64"}
 ```
 
 Let's check access `gate-node01`
