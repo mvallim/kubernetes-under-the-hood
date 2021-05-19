@@ -38,9 +38,7 @@ write_files:
 - path: /etc/modules-load.d/containerd.conf
   permissions: '0644'
   content: |
-    # OverlayFS
     overlay
-    # Bridge-netfilter
     br_netfilter
 
   # Besides providing the NetworkPlugin interface to configure and clean up pod networking,
@@ -73,10 +71,20 @@ write_files:
   permission: '0644'
   content: |
     {
+      "cniVersion": "0.3.1"
       "Network": "10.244.0.0/16",
       "Backend": {
         "Type": "vxlan"
       }
+    }
+
+- path: /etc/cni/net.d/loopback-conf.json
+  permission: '0644'
+  content: |
+    {
+      "cniVersion": "0.3.1",
+      "name": "lo",
+      "type": "loopback"
     }
 
 apt:
@@ -106,7 +114,8 @@ packages:
   - curl
 
 runcmd:
-  - [ modprobe, overlay, br_netfilter ]
+  - [ modprobe, overlay]
+  - [ modprobe, br_netfilter ]
   - [ sysctl, --system ]
   - [ sh, -c, 'curl -s https://download.gluster.org/pub/gluster/glusterfs/7/rsa.pub | apt-key add -' ]
   - [ sh, -c, 'curl -s https://download.docker.com/linux/debian/gpg | apt-key add -' ]
