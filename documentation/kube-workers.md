@@ -11,7 +11,7 @@ A node is a worker machine in Kubernetes, previously known as a minion. A node m
 ## Components
 
 - **Kubelet** - Gets configuration of a pod from the API Server and ensures that the described containers are up and running.
-- **Docker** - Takes care of downloading the images and starting the containers.
+- **containerd** - Takes care of downloading the images and starting the containers.
 - **Kube Proxy** - Acts as a network proxy and a load balancer for a service on a single worker node. It takes care of the network routing for TCP and UDP packets.
 - **Flannel** - A layer 3 network fabric designed for Kubernetes. Check our [previous topic about flannel](kube-flannel.md) for more information.
 
