@@ -437,18 +437,17 @@ Setting up a cluster with external etcd nodes is similar to the procedure used f
    Expected output:
 
    ```console
+   W0524 20:11:36.217630    7933 configset.go:348] WARNING: kubeadm cannot validate component configs for API groups [kubelet.config.k8s.io kubeproxy.config.k8s.io]
    [init] Using Kubernetes version: v1.19.11
    [preflight] Running pre-flight checks
+           [WARNING SystemVerification]: missing optional cgroups: hugetlb
    [preflight] Pulling images required for setting up a Kubernetes cluster
    [preflight] This might take a minute or two, depending on the speed of your internet connection
    [preflight] You can also perform this action in beforehand using 'kubeadm config images pull'
-   [kubelet-start] Writing kubelet environment file with flags to file "/var/lib/kubelet/kubeadm-flags.env"
-   [kubelet-start] Writing kubelet configuration to file "/var/lib/kubelet/config.yaml"
-   [kubelet-start] Starting the kubelet
    [certs] Using certificateDir folder "/etc/kubernetes/pki"
    [certs] Generating "ca" certificate and key
    [certs] Generating "apiserver" certificate and key
-   [certs] apiserver serving cert is signed for DNS names [kube-mast01 kubernetes kubernetes.default kubernetes.default.svc kubernetes.default.svc.cluster.local] and IPs    [10.96.0.1 192.168.1.161 192.168.4.20 192.168.4.20]
+   [certs] apiserver serving cert is signed for DNS names [kube-mast01 kubernetes kubernetes.default kubernetes.default.svc kubernetes.default.svc.cluster.local] and IPs [10.96.0.1 192.168.1.96 192.168.4.20]
    [certs] Generating "apiserver-kubelet-client" certificate and key
    [certs] Generating "front-proxy-ca" certificate and key
    [certs] Generating "front-proxy-client" certificate and key
@@ -463,23 +462,23 @@ Setting up a cluster with external etcd nodes is similar to the procedure used f
    [kubeconfig] Writing "kubelet.conf" kubeconfig file
    [kubeconfig] Writing "controller-manager.conf" kubeconfig file
    [kubeconfig] Writing "scheduler.conf" kubeconfig file
+   [kubelet-start] Writing kubelet environment file with flags to file "/var/lib/kubelet/kubeadm-flags.env"
+   [kubelet-start] Writing kubelet configuration to file "/var/lib/kubelet/config.yaml"
+   [kubelet-start] Starting the kubelet
    [control-plane] Using manifest folder "/etc/kubernetes/manifests"
    [control-plane] Creating static Pod manifest for "kube-apiserver"
    [control-plane] Creating static Pod manifest for "kube-controller-manager"
-   W0322 03:40:10.407229    1716 manifests.go:225] the default kube-apiserver authorization-mode is "Node,RBAC"; using "Node,RBAC"
    [control-plane] Creating static Pod manifest for "kube-scheduler"
-   W0322 03:40:10.409322    1716 manifests.go:225] the default kube-apiserver authorization-mode is "Node,RBAC"; using "Node,RBAC"
    [wait-control-plane] Waiting for the kubelet to boot up the control plane as static Pods from directory "/etc/kubernetes/manifests". This can take up to 4m0s
-   [kubelet-check] Initial timeout of 40s passed.
-   [apiclient] All control plane components are healthy after 62.615174 seconds
+   [apiclient] All control plane components are healthy after 19.034619 seconds
    [upload-config] Storing the configuration used in ConfigMap "kubeadm-config" in the "kube-system" Namespace
    [kubelet] Creating a ConfigMap "kubelet-config-1.19" in namespace kube-system with the configuration for the kubelets in the cluster
    [upload-certs] Storing the certificates in Secret "kubeadm-certs" in the "kube-system" Namespace
    [upload-certs] Using certificate key:
-   fa81add22301bc70f46d9089433e7e5945c2121bf6e1e9397284ec979e85eaf4
+   7d883ee8ceb68ce59b11f7dbbf9cfcdb2a78ae8b5950fff6361071f5dee34091
    [mark-control-plane] Marking the node kube-mast01 as control-plane by adding the label "node-role.kubernetes.io/master=''"
    [mark-control-plane] Marking the node kube-mast01 as control-plane by adding the taints [node-role.kubernetes.io/master:NoSchedule]
-   [bootstrap-token] Using token: wv8gtp.3wx3jp22aepxux7v
+   [bootstrap-token] Using token: easkmo.8pkquw6orv3dprvs
    [bootstrap-token] Configuring bootstrap tokens, cluster-info ConfigMap, RBAC Roles
    [bootstrap-token] configured RBAC rules to allow Node Bootstrap tokens to get nodes
    [bootstrap-token] configured RBAC rules to allow Node Bootstrap tokens to post CSRs in order for nodes to get long term certificate credentials
@@ -504,9 +503,9 @@ Setting up a cluster with external etcd nodes is similar to the procedure used f
    
    You can now join any number of the control-plane node running the following command on each as root:
    
-     kubeadm join 192.168.4.20:6443 --token wv8gtp.3wx3jp22aepxux7v \
-       --discovery-token-ca-cert-hash sha256:50a12d2dc866be63c2aed97f38b14fd9729ada935732daedecdc6187f6227568 \
-       --control-plane --certificate-key fa81add22301bc70f46d9089433e7e5945c2121bf6e1e9397284ec979e85eaf4
+     kubeadm join 192.168.4.20:6443 --token easkmo.8pkquw6orv3dprvs \
+       --discovery-token-ca-cert-hash sha256:8effc333238b3c45a6a0c4cae3070164040df9202ad3f6e7e266b5c4dbd8f2ed \
+       --control-plane --certificate-key 7d883ee8ceb68ce59b11f7dbbf9cfcdb2a78ae8b5950fff6361071f5dee34091
    
    Please note that the certificate-key gives access to cluster sensitive data, keep it secret!
    As a safeguard, uploaded-certs will be deleted in two hours; If necessary, you can use
@@ -514,8 +513,8 @@ Setting up a cluster with external etcd nodes is similar to the procedure used f
    
    Then you can join any number of worker nodes by running the following on each as root:
    
-   kubeadm join 192.168.4.20:6443 --token wv8gtp.3wx3jp22aepxux7v \
-       --discovery-token-ca-cert-hash sha256:50a12d2dc866be63c2aed97f38b14fd9729ada935732daedecdc6187f6227568 
+   kubeadm join 192.168.4.20:6443 --token easkmo.8pkquw6orv3dprvs \
+       --discovery-token-ca-cert-hash sha256:8effc333238b3c45a6a0c4cae3070164040df9202ad3f6e7e266b5c4dbd8f2ed
    ```
 
 3. Finish configuring the cluster and query the state of nodes and pods
@@ -535,18 +534,18 @@ Setting up a cluster with external etcd nodes is similar to the procedure used f
    Expected output:
 
    ```console
-   NAME          STATUS     ROLES    AGE   VERSION    INTERNAL-IP     EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION   CONTAINER-RUNTIME
-   kube-mast01   NotReady   master   64s   v1.19.11   192.168.1.161   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   docker://18.6.0
+   NAME          STATUS   ROLES    AGE    VERSION    INTERNAL-IP    EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION   CONTAINER-RUNTIME
+   kube-mast01   Ready    master   2m6s   v1.19.11   192.168.1.96   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   containerd://1.4.3
    ```
 
    ```console
-   NAMESPACE     NAME                                  READY   STATUS    RESTARTS   AGE   IP              NODE          NOMINATED NODE   READINESS GATES
-   kube-system   coredns-66bff467f8-v4cj6              0/1     Pending   0          66s   <none>          <none>        <none>           <none>
-   kube-system   coredns-66bff467f8-xvv98              0/1     Pending   0          66s   <none>          <none>        <none>           <none>
-   kube-system   kube-apiserver-kube-mast01            1/1     Running   0          84s   192.168.1.161   kube-mast01   <none>           <none>
-   kube-system   kube-controller-manager-kube-mast01   1/1     Running   0          84s   192.168.1.161   kube-mast01   <none>           <none>
-   kube-system   kube-proxy-8h8sr                      1/1     Running   0          66s   192.168.1.161   kube-mast01   <none>           <none>
-   kube-system   kube-scheduler-kube-mast01            1/1     Running   0          84s   192.168.1.161   kube-mast01   <none>           <none>
+   NAMESPACE     NAME                                  READY   STATUS              RESTARTS   AGE     IP             NODE          NOMINATED NODE   READINESS GATES
+   kube-system   coredns-f9fd979d6-8lx9r               0/1     ContainerCreating   0          2m8s    <none>         kube-mast01   <none>           <none>
+   kube-system   coredns-f9fd979d6-b7qxk               0/1     ContainerCreating   0          2m8s    <none>         kube-mast01   <none>           <none>
+   kube-system   kube-apiserver-kube-mast01            1/1     Running             0          2m13s   192.168.1.96   kube-mast01   <none>           <none>
+   kube-system   kube-controller-manager-kube-mast01   1/1     Running             0          2m13s   192.168.1.96   kube-mast01   <none>           <none>
+   kube-system   kube-proxy-zm4cw                      1/1     Running             0          2m8s    192.168.1.96   kube-mast01   <none>           <none>
+   kube-system   kube-scheduler-kube-mast01            1/1     Running             0          2m13s   192.168.1.96   kube-mast01   <none>           <none>
    ```
 
 > If you look at the status on the `kube-mast01` node, it says it is **NotReady** and the `coredns` pods are in the **Pending** state. This is because, up to this point, we do not have a network component configured in our K8S cluster. Remember, as explained before, **Flannel** will be used for this matter.
@@ -581,19 +580,19 @@ Setting up a cluster with external etcd nodes is similar to the procedure used f
    Expected output:
 
    ```console
-   NAME          STATUS   ROLES    AGE     VERSION    INTERNAL-IP     EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION   CONTAINER-RUNTIME
-   kube-mast01   Ready    master   2m43s   v1.19.11   192.168.1.161   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   docker://18.6.0
+   NAME          STATUS   ROLES    AGE     VERSION    INTERNAL-IP    EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION   CONTAINER-RUNTIME
+   kube-mast01   Ready    master   3m22s   v1.19.11   192.168.1.96   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   containerd://1.4.3
    ```
 
    ```console
-   NAMESPACE     NAME                                  READY   STATUS    RESTARTS   AGE     IP              NODE          NOMINATED NODE   READINESS GATES
-   kube-system   coredns-66bff467f8-v4cj6              1/1     Running   0          2m39s   10.244.0.2      kube-mast01   <none>           <none>
-   kube-system   coredns-66bff467f8-xvv98              1/1     Running   0          2m39s   10.244.0.3      kube-mast01   <none>           <none>
-   kube-system   kube-apiserver-kube-mast01            1/1     Running   0          2m57s   192.168.1.161   kube-mast01   <none>           <none>
-   kube-system   kube-controller-manager-kube-mast01   1/1     Running   0          2m57s   192.168.1.161   kube-mast01   <none>           <none>
-   kube-system   kube-flannel-ds-zp2k9                 1/1     Running   0          46s     192.168.1.161   kube-mast01   <none>           <none>
-   kube-system   kube-proxy-8h8sr                      1/1     Running   0          2m39s   192.168.1.161   kube-mast01   <none>           <none>
-   kube-system   kube-scheduler-kube-mast01            1/1     Running   0          2m57s   192.168.1.161   kube-mast01   <none>           <none>
+   NAMESPACE     NAME                                  READY   STATUS    RESTARTS   AGE     IP             NODE          NOMINATED NODE   READINESS GATES
+   kube-system   coredns-f9fd979d6-8lx9r               1/1     Running   0          3m26s   10.244.0.2     kube-mast01   <none>           <none>
+   kube-system   coredns-f9fd979d6-b7qxk               1/1     Running   0          3m26s   10.244.0.3     kube-mast01   <none>           <none>
+   kube-system   kube-apiserver-kube-mast01            1/1     Running   0          3m31s   192.168.1.96   kube-mast01   <none>           <none>
+   kube-system   kube-controller-manager-kube-mast01   1/1     Running   0          3m31s   192.168.1.96   kube-mast01   <none>           <none>
+   kube-system   kube-flannel-ds-9bbls                 1/1     Running   0          49s     192.168.1.96   kube-mast01   <none>           <none>
+   kube-system   kube-proxy-zm4cw                      1/1     Running   0          3m26s   192.168.1.96   kube-mast01   <none>           <none>
+   kube-system   kube-scheduler-kube-mast01            1/1     Running   0          3m31s   192.168.1.96   kube-mast01   <none>           <none>
    ```
 
 > If you look at the status on the `kube-mast01` node, it is now **Ready** and coredns is **Running**. Also, now there is a pod named `kube-flannel-ds-zp2k9`.
@@ -677,33 +676,33 @@ Now we need to join the other nodes to our K8S cluster. For this, we need the ce
    Expected output:
 
    ```console
-   NAME          STATUS     ROLES    AGE     VERSION    INTERNAL-IP     EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION   CONTAINER-RUNTIME
-   kube-mast01   Ready      master   7m47s   v1.19.11   192.168.1.161   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   docker://18.6.0
-   kube-mast02   Ready      master   80s     v1.19.11   192.168.1.119   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   docker://18.6.0
-   kube-mast03   NotReady   master   13s     v1.19.11   192.168.1.206   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   docker://18.6.0
+   NAME          STATUS   ROLES    AGE     VERSION    INTERNAL-IP     EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION   CONTAINER-RUNTIME
+   kube-mast01   Ready    master   6m50s   v1.19.11   192.168.1.96    <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   containerd://1.4.3
+   kube-mast02   Ready    master   78s     v1.19.11   192.168.1.150   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   containerd://1.4.3
+   kube-mast03   Ready    master   12s     v1.19.11   192.168.1.2     <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   containerd://1.4.3
    ```
 
    > All master nodes are expected to be in the **Ready** state:
 
    ```console
    NAMESPACE     NAME                                  READY   STATUS    RESTARTS   AGE     IP              NODE          NOMINATED NODE   READINESS GATES
-   kube-system   coredns-66bff467f8-v4cj6              1/1     Running   0          7m41s   10.244.0.2      kube-mast01   <none>           <none>
-   kube-system   coredns-66bff467f8-xvv98              1/1     Running   0          7m41s   10.244.0.3      kube-mast01   <none>           <none>
-   kube-system   kube-apiserver-kube-mast01            1/1     Running   0          7m59s   192.168.1.161   kube-mast01   <none>           <none>
-   kube-system   kube-apiserver-kube-mast02            1/1     Running   0          99s     192.168.1.119   kube-mast02   <none>           <none>
-   kube-system   kube-apiserver-kube-mast03            1/1     Running   0          32s     192.168.1.206   kube-mast03   <none>           <none>
-   kube-system   kube-controller-manager-kube-mast01   1/1     Running   0          7m59s   192.168.1.161   kube-mast01   <none>           <none>
-   kube-system   kube-controller-manager-kube-mast02   1/1     Running   0          99s     192.168.1.119   kube-mast02   <none>           <none>
-   kube-system   kube-controller-manager-kube-mast03   1/1     Running   0          32s     192.168.1.206   kube-mast03   <none>           <none>
-   kube-system   kube-flannel-ds-4s9gv                 1/1     Running   0          32s     192.168.1.206   kube-mast03   <none>           <none>
-   kube-system   kube-flannel-ds-z4xs9                 1/1     Running   0          100s    192.168.1.119   kube-mast02   <none>           <none>
-   kube-system   kube-flannel-ds-zp2k9                 1/1     Running   0          5m48s   192.168.1.161   kube-mast01   <none>           <none>
-   kube-system   kube-proxy-8h8sr                      1/1     Running   0          7m41s   192.168.1.161   kube-mast01   <none>           <none>
-   kube-system   kube-proxy-9fxqc                      1/1     Running   0          32s     192.168.1.206   kube-mast03   <none>           <none>
-   kube-system   kube-proxy-phhbx                      1/1     Running   0          100s    192.168.1.119   kube-mast02   <none>           <none>
-   kube-system   kube-scheduler-kube-mast01            1/1     Running   0          7m59s   192.168.1.161   kube-mast01   <none>           <none>
-   kube-system   kube-scheduler-kube-mast02            1/1     Running   0          99s     192.168.1.119   kube-mast02   <none>           <none>
-   kube-system   kube-scheduler-kube-mast03            1/1     Running   0          31s     192.168.1.206   kube-mast03   <none>           <none>
+   kube-system   coredns-f9fd979d6-8lx9r               1/1     Running   0          6m50s   10.244.0.2      kube-mast01   <none>           <none>
+   kube-system   coredns-f9fd979d6-b7qxk               1/1     Running   0          6m50s   10.244.0.3      kube-mast01   <none>           <none>
+   kube-system   kube-apiserver-kube-mast01            1/1     Running   0          6m55s   192.168.1.96    kube-mast01   <none>           <none>
+   kube-system   kube-apiserver-kube-mast02            1/1     Running   0          95s     192.168.1.150   kube-mast02   <none>           <none>
+   kube-system   kube-apiserver-kube-mast03            1/1     Running   0          29s     192.168.1.2     kube-mast03   <none>           <none>
+   kube-system   kube-controller-manager-kube-mast01   1/1     Running   0          6m55s   192.168.1.96    kube-mast01   <none>           <none>
+   kube-system   kube-controller-manager-kube-mast02   1/1     Running   0          95s     192.168.1.150   kube-mast02   <none>           <none>
+   kube-system   kube-controller-manager-kube-mast03   0/1     Running   0          28s     192.168.1.2     kube-mast03   <none>           <none>
+   kube-system   kube-flannel-ds-9bbls                 1/1     Running   0          4m13s   192.168.1.96    kube-mast01   <none>           <none>
+   kube-system   kube-flannel-ds-kqvtm                 1/1     Running   0          96s     192.168.1.150   kube-mast02   <none>           <none>
+   kube-system   kube-flannel-ds-pcw72                 1/1     Running   0          30s     192.168.1.2     kube-mast03   <none>           <none>
+   kube-system   kube-proxy-dcmtm                      1/1     Running   0          96s     192.168.1.150   kube-mast02   <none>           <none>
+   kube-system   kube-proxy-p6wc7                      1/1     Running   0          30s     192.168.1.2     kube-mast03   <none>           <none>
+   kube-system   kube-proxy-zm4cw                      1/1     Running   0          6m50s   192.168.1.96    kube-mast01   <none>           <none>
+   kube-system   kube-scheduler-kube-mast01            1/1     Running   0          6m55s   192.168.1.96    kube-mast01   <none>           <none>
+   kube-system   kube-scheduler-kube-mast02            1/1     Running   0          95s     192.168.1.150   kube-mast02   <none>           <none>
+   kube-system   kube-scheduler-kube-mast03            0/1     Running   0          29s     192.168.1.2     kube-mast03   <none>           <none>
    ```
 
    > All master pods are **Running**
