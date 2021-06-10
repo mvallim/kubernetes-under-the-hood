@@ -497,7 +497,7 @@ If you plan to use this image in **VirtualBox**, install [**VirtualBox Guest Add
        Expected output
 
        ```console
-       Uncompressing VirtualBox 6.1.19 Guest Additions for Linux........
+       Uncompressing VirtualBox 6.1.18 Guest Additions for Linux........
        VirtualBox Guest Additions installer
        Copying additional installer modules ...
        Installing additional modules ...
@@ -551,7 +551,7 @@ If you plan to use this image in **VirtualBox**, install [**VirtualBox Guest Add
        ```bash
        umount /mnt
 
-       rm -rf VBoxGuestAdditions_6.1.19.iso
+       rm -rf VBoxGuestAdditions_6.1.18.iso
        ```
 
    6. Fix `vboxadd-service`
