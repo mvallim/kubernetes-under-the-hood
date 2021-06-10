@@ -479,13 +479,13 @@ If you plan to use this image in **VirtualBox**, install [**VirtualBox Guest Add
    1. Download VirtualBox Guest Additions:
 
        ```bash
-       curl --progress-bar https://download.virtualbox.org/virtualbox/6.1.19/VBoxGuestAdditions_6.1.19.iso -o VBoxGuestAdditions_6.1.19.iso
+       curl --progress-bar https://download.virtualbox.org/virtualbox/6.1.18/VBoxGuestAdditions_6.1.18.iso -o VBoxGuestAdditions_6.1.18.iso
        ```
 
    2. Mount the ISO file:
 
        ```bash
-       mount -o loop VBoxGuestAdditions_6.1.19.iso /mnt
+       mount -o loop VBoxGuestAdditions_6.1.18.iso /mnt
        ```
 
    3. Install VirtualBox:
