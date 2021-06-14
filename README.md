@@ -35,7 +35,7 @@ The target audience for this tutorial is someone planning to install a Kubernete
    6. [How to setup the Dashboard](documentation/kube-dashboard.md)
    7. [Demo Application](documentation/kube-demo-application.md)
    8. LoadBalancer
-      - [How to setup the MetalLB](documentation/kube-metallb.md)
+      1. [How to setup the MetalLB](documentation/kube-metallb.md)
 5. Appendix
    1. External CA Infrastructure
       1. [How to create the external CA Infrastructure](documentation/ca-external-infrastructure.md)
