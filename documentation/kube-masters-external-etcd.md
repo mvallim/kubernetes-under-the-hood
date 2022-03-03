@@ -278,7 +278,7 @@ Use the returned value to access.
 Expected output:
 
 ```console
-Linux busybox 4.9.0-15-amd64 #1 SMP Debian 4.9.258-1 (2021-03-08) x86_64
+Linux busybox 4.19.0-18-amd64 #1 SMP Debian 4.9.258-1 (2021-03-08) x86_64
 
 The programs included with the Debian GNU/Linux system are free software;
 the exact distribution terms for each program are described in the
@@ -535,7 +535,7 @@ Setting up a cluster with external etcd nodes is similar to the procedure used f
 
    ```console
    NAME          STATUS   ROLES    AGE    VERSION    INTERNAL-IP    EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION   CONTAINER-RUNTIME
-   kube-mast01   Ready    master   2m6s   v1.19.11   192.168.1.96   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   containerd://1.4.3
+   kube-mast01   Ready    master   2m6s   v1.19.11   192.168.1.96   <none>        Debian GNU/Linux 9 (stretch)   4.19.0-18-amd64   containerd://1.4.3
    ```
 
    ```console
@@ -581,7 +581,7 @@ Setting up a cluster with external etcd nodes is similar to the procedure used f
 
    ```console
    NAME          STATUS   ROLES    AGE     VERSION    INTERNAL-IP    EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION   CONTAINER-RUNTIME
-   kube-mast01   Ready    master   3m22s   v1.19.11   192.168.1.96   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   containerd://1.4.3
+   kube-mast01   Ready    master   3m22s   v1.19.11   192.168.1.96   <none>        Debian GNU/Linux 9 (stretch)   4.19.0-18-amd64   containerd://1.4.3
    ```
 
    ```console
@@ -677,9 +677,9 @@ Now we need to join the other nodes to our K8S cluster. For this, we need the ce
 
    ```console
    NAME          STATUS   ROLES    AGE     VERSION    INTERNAL-IP     EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION   CONTAINER-RUNTIME
-   kube-mast01   Ready    master   6m50s   v1.19.11   192.168.1.96    <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   containerd://1.4.3
-   kube-mast02   Ready    master   78s     v1.19.11   192.168.1.150   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   containerd://1.4.3
-   kube-mast03   Ready    master   12s     v1.19.11   192.168.1.2     <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   containerd://1.4.3
+   kube-mast01   Ready    master   6m50s   v1.19.11   192.168.1.96    <none>        Debian GNU/Linux 9 (stretch)   4.19.0-18-amd64   containerd://1.4.3
+   kube-mast02   Ready    master   78s     v1.19.11   192.168.1.150   <none>        Debian GNU/Linux 9 (stretch)   4.19.0-18-amd64   containerd://1.4.3
+   kube-mast03   Ready    master   12s     v1.19.11   192.168.1.2     <none>        Debian GNU/Linux 9 (stretch)   4.19.0-18-amd64   containerd://1.4.3
    ```
 
    > All master nodes are expected to be in the **Ready** state:

@@ -528,20 +528,20 @@ If you plan to use this image in **VirtualBox**, install [**VirtualBox Guest Add
        total 12
        drwxr-xr-x  3 root root 4096 Feb  2 23:36 .
        drwxr-xr-x 14 root root 4096 Feb  2 23:36 ..
-       drwxr-xr-x  3 root root 4096 Feb  2 23:36 4.9.0-15-amd64
+       drwxr-xr-x  3 root root 4096 Feb  2 23:36 4.19.0-18-amd64
        ```
 
-       Refer to the file name listed. In this case, `4.9.0-15-amd64`:
+       Refer to the file name listed. In this case, `4.19.0-18-amd64`:
 
        ```bash
-       rcvboxadd quicksetup 4.9.0-15-amd64
+       rcvboxadd quicksetup 4.19.0-18-amd64
        ```
 
        Expected output
 
        ```console
-       VirtualBox Guest Additions: Building the modules for kernel 4.9.0-15-amd64.
-       update-initramfs: Generating /boot/initrd.img-4.9.0-15-amd64
+       VirtualBox Guest Additions: Building the modules for kernel 4.19.0-18-amd64.
+       update-initramfs: Generating /boot/initrd.img-4.19.0-18-amd64
        ```
 
    5. Umount and remove the ISO file:
