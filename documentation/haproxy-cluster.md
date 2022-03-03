@@ -151,9 +151,11 @@ write_files:
 - path: /etc/corosync/authkey
   permissions: '0400'
   content: !!binary |
-    oazyUUgBg/bkG5cmzZAunHkKozJQ4AKUVTUHcn0tGBXR8OLKsZi3KUWy2bKjeWY6Y44ZFjvuC4sj
-    1xCt67CRDkHHNuVViK79TCghbfczL6jnkkQNoWfmeMzX2axgp+Wp5tU3jBjGP5X7JMq0eu4RZ2vS
-    y8iZqL5kYaRqRn3ElD0=
+    OMTsv6GMyv7yUn2kfWiNA4d7NEudNDUokpxSkL60Czw1AN9t4vs/eOF09nk0STb5yXacjApDAq8J
+    smu0y/y2g0uQK9T9euYlZmqVuUJVX8afQ/ZYVVrJaB+JwwocTgjXE6jdXB38g8cqBCRSBxenlQpB
+    OGVN8os72UdniJynZa25gsPlSIrSoKNsoz2sgcZUgrDC3WsCjzQfuvK/RabyJjC997RMRUAvCliH
+    YnYf3AAFufgTtAxO41APzEg+7bceaxxfSjtv3QdQcLB1O6WoXadX+Ksm1QxfKJX0nz3UA9zKwXCY
+    mrUVTP1ilpvwkl1VZXYGOiHZakJC0BiayQhJDg==
 
 # The corosync.conf instructs the Corosync executive about various parameters
 # needed to control it.
@@ -172,12 +174,28 @@ write_files:
       clear_node_high_bit: yes
       crypto_cipher: aes256
       crypto_hash: sha256
+      ip_version: ipv4
       interface {
         ringnumber: 0
-        bindnetaddr: 192.168.4.255
+        bindnetaddr: 192.168.4.128
         mcastaddr: 239.255.1.1
         mcastport: 5405
         ttl: 1
+      }
+    }
+
+    nodelist {
+      node {
+        ring0_addr: hapx-node01.kube.demo
+        name: hapx-node01
+        nodeid: 1
+        quorum_votes: 1
+      }
+      node {
+        ring0_addr: hapx-node02.kube.demo
+        name: hapx-node02
+        nodeid: 2
+        quorum_votes: 1
       }
     }
 
@@ -199,7 +217,7 @@ write_files:
     quorum {
       provider: corosync_votequorum
       two_node: 1
-      expected_votes: 2
+      expected_votes: 1
     }
 
 # HAProxy's configuration process involves 3 major sources of parameters :
@@ -333,7 +351,7 @@ package_upgrade: true
 
 ssh_pwauth: false
 
-manage_etc_hosts: true
+manage_etc_hosts: false
 
 fqdn: #HOSTNAME#.kube.demo
 
@@ -444,13 +462,14 @@ Before carrying out with the Pacemaker configuration, it is worth making some ob
 
    ```console
    debian@hapx-node01:~$ cat <<EOF | sudo crm configure
-   property stonith-enabled=no
+   property startup-fencing=false
+   property stonith-enabled=false
    property no-quorum-policy=ignore
    rsc_defaults resource-stickiness=100
    primitive virtual-ip-resource ocf:heartbeat:IPaddr2 params ip="192.168.4.20" broadcast=192.168.4.31 nic=enp0s3.41 cidr_netmask=27 meta migration-threshold=2 op monitor interval=20 timeout=60 on-fail=restart
    primitive haproxy-resource ocf:heartbeat:haproxy op monitor interval=20 timeout=60 on-fail=restart
    colocation loc inf: virtual-ip-resource haproxy-resource
-   order ord inf: virtual-ip-resource haproxy-resource
+   order ord Mandatory: virtual-ip-resource haproxy-resource
    commit
    bye
    EOF
@@ -541,7 +560,7 @@ ssh debian@gate-node01
 
       In our case, since the `haproxy-resource` should be colocated with the `virtual-ip-resource`, the `haproxy-resource` **will be allocated on the same node where the `virtual-ip-resource` is**.
 
-    * `order ord inf: virtual-ip-resource haproxy-resource`
+    * `order ord Mandatory: virtual-ip-resource haproxy-resource`
 
       The `order` constraints tell the cluster the order in which resources should be allocated. In this case, we are informing that the `virtual-ip-resource` should always be allocated before the `haproxy-resource`.
 

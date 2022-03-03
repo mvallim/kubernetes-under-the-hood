@@ -197,7 +197,7 @@ This document shows how to create a Debian image from scratch to run on Cloud en
      --variant=minbase \
      --components "main" \
      --include "ca-certificates,cron,iptables,isc-dhcp-client,libnss-myhostname,ntp,ntpdate,rsyslog,ssh,sudo,dialog,whiptail,man-db,curl,dosfstools,e2fsck-static" \
-     stretch \
+     buster \
      $HOME/debian-image-from-scratch/chroot \
      http://deb.debian.org/debian/
   ```
@@ -250,14 +250,14 @@ This document shows how to create a Debian image from scratch to run on Cloud en
 
    ```bash
    cat <<EOF > /etc/apt/sources.list
-   deb http://deb.debian.org/debian/ stretch main contrib non-free
-   deb-src http://deb.debian.org/debian/ stretch main contrib non-free
+   deb http://deb.debian.org/debian/ buster main contrib non-free
+   deb-src http://deb.debian.org/debian/ buster main contrib non-free
 
-   deb http://deb.debian.org/debian/ stretch-updates main contrib non-free
-   deb-src http://deb.debian.org/debian/ stretch-updates main contrib non-free
+   deb http://deb.debian.org/debian/ buster-updates main contrib non-free
+   deb-src http://deb.debian.org/debian/ buster-updates main contrib non-free
 
-   deb http://deb.debian.org/debian-security stretch/updates main
-   deb-src http://deb.debian.org/debian-security stretch/updates main
+   deb http://deb.debian.org/debian-security buster/updates main
+   deb-src http://deb.debian.org/debian-security buster/updates main
    EOF
    ```
 
@@ -436,10 +436,8 @@ This document shows how to create a Debian image from scratch to run on Cloud en
     GRUB_DEFAULT=0
     GRUB_TIMEOUT=0
     GRUB_DISTRIBUTOR=`lsb_release -i -s 2> /dev/null || echo Debian`
-    GRUB_CMDLINE_LINUX_DEFAULT=""
-    GRUB_CMDLINE_LINUX="console=tty0 console=ttyS0,115200 earlyprintk=ttyS0,115200"
-    GRUB_TERMINAL="console serial"
-    GRUB_SERIAL_COMMAND="serial --speed=115200"
+    GRUB_CMDLINE_LINUX_DEFAULT="quiet splash nomodeset"
+    GRUB_CMDLINE_LINUX=""
     EOF
     ```
 
