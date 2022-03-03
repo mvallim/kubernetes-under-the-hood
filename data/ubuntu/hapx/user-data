@@ -47,12 +47,28 @@ write_files:
       clear_node_high_bit: yes
       crypto_cipher: aes256
       crypto_hash: sha256
+      ip_version: ipv4
       interface {
         ringnumber: 0
-        bindnetaddr: 192.168.4.255
+        bindnetaddr: 192.168.4.128
         mcastaddr: 239.255.1.1
         mcastport: 5405
         ttl: 1
+      }
+    }
+
+    nodelist {
+      node {
+        ring0_addr: hapx-node01.kube.demo
+        name: hapx-node01
+        nodeid: 1
+        quorum_votes: 1
+      }
+      node {
+        ring0_addr: hapx-node02.kube.demo
+        name: hapx-node02
+        nodeid: 2
+        quorum_votes: 1
       }
     }
 
@@ -74,7 +90,7 @@ write_files:
     quorum {
       provider: corosync_votequorum
       two_node: 1
-      expected_votes: 2
+      expected_votes: 1
     }
 
 # HAProxy's configuration process involves 3 major sources of parameters :
@@ -208,7 +224,7 @@ package_upgrade: true
 
 ssh_pwauth: false
 
-manage_etc_hosts: true
+manage_etc_hosts: false
 
 fqdn: #HOSTNAME#.kube.demo
 
