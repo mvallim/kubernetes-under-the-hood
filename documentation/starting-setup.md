@@ -485,6 +485,12 @@ The premise is that you already have **Virtualbox** properly installed on your l
   ~$ sudo apt-get install uuid-runtime
   ```
 
+* Configure Host-Only Networking
+
+  ```console
+  sudo /bin/sh -c "echo '* 192.168.0.0/16 0:0:0:0:0:0:0:0/16' >> /etc/vbox/networks.conf"
+  ```
+
 * Configure Host Adapter VirtualBox
 
   ```console
