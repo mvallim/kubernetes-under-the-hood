@@ -395,7 +395,7 @@ Use the returned value to access to ssh into the VM:
 Expected output:
 
 ```console
-Linux busybox 4.19.0-18-amd64 #1 SMP Debian 4.9.258-1 (2021-03-08) x86_64
+Linux busybox 4.19.0-18-amd64 #1 SMP Debian 4.19.208-1 (2021-09-29) x86_64
 
 The programs included with the Debian GNU/Linux system are free software;
 the exact distribution terms for each program are described in the
