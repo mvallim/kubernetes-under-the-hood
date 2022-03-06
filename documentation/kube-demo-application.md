@@ -222,7 +222,7 @@ The `redis-follower` and `redis-leader` Services you applied are only accessible
 
    Here we will use the `192.168.2.185` (`kube-node01`)
 
-   Open your browser with address [http://192.168.2.185:32767](http://192.168.2.136:32767)
+   Open your browser with address [http://192.168.2.185:32767](http://192.168.2.185:32767)
 
 > Keep attention on port **`32767`**, you should change correspondent port show in your on output above.
 

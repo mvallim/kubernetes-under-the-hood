@@ -53,6 +53,9 @@ apiVersion: v1
 kind: Service
 metadata:  
   name: load-balancer-service
+  labels:
+    app: guestbook
+    tier: frontend
 spec:
   selector:
     app: guestbook
@@ -87,7 +90,7 @@ spec:
 
    ```text
    NAME                    TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE   SELECTOR
-   load-balancer-service   LoadBalancer   10.107.119.217   <pending>     80:30154/TCP   9s    app=guestbook,tier=frontend
+   load-balancer-service   LoadBalancer   10.103.128.109   <pending>     80:31969/TCP   7s    app=guestbook,tier=frontend
    ```
 
 > If you look at the status on the `EXTERNAL-IP` it is **`<pending>`** because we need configure MetalLB to provide IP to `LoadBalancer` service.
@@ -99,7 +102,7 @@ To install MetalLB, apply the manifest:
 1. Apply the MetalLB manifest `namespace` from the `namespace.yaml` file:
 
    ```console
-   debian@busybox:~$ kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.5/manifests/namespace.yaml
+   debian@busybox:~$ kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.12.1/manifests/namespace.yaml
    ```
 
    The response should look similar to this:
@@ -111,7 +114,7 @@ To install MetalLB, apply the manifest:
 2. Apply the MetalLB manifest `controller` and `speaker` from the `metallb.yaml` file:
 
    ```console
-   debian@busybox:~$ kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.9.5/manifests/metallb.yaml
+   debian@busybox:~$ kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.12.1/manifests/metallb.yaml
    ```
 
    The response should look similar to this:
@@ -125,27 +128,17 @@ To install MetalLB, apply the manifest:
    clusterrole.rbac.authorization.k8s.io/metallb-system:speaker created
    role.rbac.authorization.k8s.io/config-watcher created
    role.rbac.authorization.k8s.io/pod-lister created
+   role.rbac.authorization.k8s.io/controller created
    clusterrolebinding.rbac.authorization.k8s.io/metallb-system:controller created
    clusterrolebinding.rbac.authorization.k8s.io/metallb-system:speaker created
    rolebinding.rbac.authorization.k8s.io/config-watcher created
    rolebinding.rbac.authorization.k8s.io/pod-lister created
+   rolebinding.rbac.authorization.k8s.io/controller created
    daemonset.apps/speaker created
    deployment.apps/controller created
    ```
 
-3. Create the MetalLB scret `memberlist`:
-
-   ```console
-   debian@busybox:~$ kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
-   ```
-
-   The response should look similar to this:
-
-   ```text
-   secret/memberlist created
-   ```
-
-4. Query the state of deploy
+3. Query the state of deploy
 
    ```shell
    debian@busybox:~$ kubectl get deploy -n metallb-system -o wide
@@ -154,8 +147,8 @@ To install MetalLB, apply the manifest:
    The response should look similar to this:
 
    ```console
-   NAME         READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES                      SELECTOR
-   controller   1/1     1            1           40s   controller   metallb/controller:v0.9.5   app=metallb,component=controller
+   NAME         READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES                               SELECTOR
+   controller   1/1     1            1           41s   controller   quay.io/metallb/controller:v0.12.1   app=metallb,component=controller
    ```
 
 This will deploy MetalLB to your cluster, under the **`metallb-system`** namespace. The components in the manifest are:
@@ -202,8 +195,8 @@ data:
    The response should look similar to this:
 
    ```console
-   NAME         READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES                      SELECTOR
-   controller   1/1     1            1           87s   controller   metallb/controller:v0.9.5   app=metallb,component=controller
+   NAME         READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES                               SELECTOR
+   controller   1/1     1            1           88s   controller   quay.io/metallb/controller:v0.12.1   app=metallb,component=controller
    ```
 
 3. Query the state of service `load-balancer-service`
@@ -215,37 +208,8 @@ data:
    The response should look similar to this:
 
    ```text
-   NAME                    TYPE           CLUSTER-IP       EXTERNAL-IP    PORT(S)        AGE    SELECTOR
-   load-balancer-service   LoadBalancer   10.107.119.217   192.168.2.10   80:30154/TCP   3m4s   app=guestbook,tier=frontend
+   NAME                    TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE     SELECTOR
+   load-balancer-service   LoadBalancer   10.103.128.109   192.168.2.2   80:31969/TCP   4m51s   app=guestbook,tier=frontend
    ```
 
-> Now if you look at the status on the `EXTERNAL-IP` it is **`192.168.2.10`** and can be access directly from external, without using [`NodePort`](/documentation/kube.md#service) or [`ClusterIp`](/documentation/kube.md#service). Remember this IP **`192.168.2.10`** isn't assigned to any node. In this example of service we can access using [`http://192.168.2.10`](http://192.168.2.10).
-
-### Cleaning up
-
-Deleting the services
-
-1. Run the following commands to delete service.
-
-   ```console
-   debian@busybox:~$ kubectl delete service load-balancer-service
-   ```
-
-   The responses should be:
-
-   ```text
-   service "load-balancer-service" deleted
-   ```
-
-2. Query the list of service:
-
-   ```console
-   debian@busybox:~$ kubectl get services
-   ```
-
-   The response should be this:
-
-   ```text
-   NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
-   kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   2d2h
-   ```
+> Now if you look at the status on the `EXTERNAL-IP` it is **`192.168.2.2`** and can be access directly from external, without using [`NodePort`](/documentation/kube.md#service) or [`ClusterIp`](/documentation/kube.md#service). Remember this IP **`192.168.2.2`** isn't assigned to any node. In this example of service we can access using [`http://192.168.2.2`](http://192.168.2.2).
