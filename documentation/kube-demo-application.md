@@ -1,6 +1,6 @@
 # Demo Application
 
-> Full referenced: https://github.com/kubernetes/examples/tree/master/guestbook/
+> Full referenced: https://kubernetes.io/docs/tutorials/stateless-application/guestbook/
 
 ## Configure your local routing
 
@@ -32,17 +32,17 @@ Use the returned value to access.
 ~$ ssh debian@192.168.4.57
 ```
 
-## Start up the Redis Master
+## Start up the Redis Leader
 
-The guestbook application uses Redis to store its data. It writes its data to a Redis master instance and reads data from multiple Redis slave instances.
+The guestbook application uses Redis to store its data. It writes its data to a Redis leader instance and reads data from multiple Redis followers instances.
 
-1. Apply the Redis Master Deployment from the `redis-master-deployment.yaml` file:
+1. Apply the Redis Leader Deployment from the `redis-leader-deployment.yaml` file:
 
    ```console
-   debian@busybox:~$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/examples/master/guestbook/redis-master-deployment.yaml
+   debian@busybox:~$ kubectl apply -f https://k8s.io/examples/application/guestbook/redis-leader-deployment.yaml
    ```
 
-2. Query the list of Pods to verify that the Redis Master Pod is running:
+2. Query the list of Pods to verify that the Redis Leader Pod is running:
 
    ```console
    debian@busybox:~$ kubectl get pods
@@ -51,11 +51,11 @@ The guestbook application uses Redis to store its data. It writes its data to a 
    The response should be similar to this:
 
    ```text
-   NAME                            READY     STATUS    RESTARTS   AGE
-   redis-master-1068406935-3lswp   1/1       Running   0          28s
+   NAME                           READY   STATUS    RESTARTS   AGE
+   redis-leader-fb76b4755-g7s42   1/1     Running   0          11s
    ```
 
-3. Run the following command to view the logs from the Redis Master Pod:
+3. Run the following command to view the logs from the Redis Leader Pod:
 
    ```text
    kubectl logs -f POD-NAME
@@ -63,17 +63,17 @@ The guestbook application uses Redis to store its data. It writes its data to a 
 
 > Note: Replace POD-NAME with the name of your Pod.
 
-## Creating the Redis Master Service
+## Creating the Redis Leader Service
 
-The guestbook applications needs to communicate to the Redis master to write its data. You need to apply a Service to proxy the traffic to the Redis master Pod. A Service defines a policy to access the Pods.
+The guestbook applications needs to communicate to the Redis leader to write its data. You need to apply a Service to proxy the traffic to the Redis leader Pod. A Service defines a policy to access the Pods.
 
-1. Apply the Redis Master Service from the following `redis-master-service.yaml` file:
+1. Apply the Redis Leader Service from the following `redis-leader-service.yaml` file:
 
    ```console
-   debian@busybox:~$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/examples/master/guestbook/redis-master-service.yaml
+   debian@busybox:~$ kubectl apply -f https://k8s.io/examples/application/guestbook/redis-leader-service.yaml
    ```
 
-2. Query the list of Services to verify that the Redis Master Service is running:
+2. Query the list of Services to verify that the Redis Leader Service is running:
 
    ```console
    debian@busybox:~$ kubectl get service
@@ -82,30 +82,30 @@ The guestbook applications needs to communicate to the Redis master to write its
    The response should be similar to this:
 
    ```text
-   NAME           TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)    AGE
-   kubernetes     ClusterIP   10.96.0.1     <none>        443/TCP    46h
-   redis-master   ClusterIP   10.103.95.1   <none>        6379/TCP   7s
+   NAME           TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+   kubernetes     ClusterIP   10.96.0.1        <none>        443/TCP    2d22h
+   redis-leader   ClusterIP   10.101.140.177   <none>        6379/TCP   5s
    ```
 
-> Note: This manifest file creates a Service named `redis-master` with a set of labels that match the labels previously defined, so the Service routes network traffic to the Redis master Pod.
+> Note: This manifest file creates a Service named `redis-leader` with a set of labels that match the labels previously defined, so the Service routes network traffic to the Redis leader Pod.
 
-## Start up the Redis Slaves
+## Start up the Redis Followers
 
-Although the Redis master is a single pod, you can make it highly available to meet traffic demands by adding replica Redis slaves.
+Although the Redis leader is a single pod, you can make it highly available to meet traffic demands by adding replica Redis followers.
 
-### Creating the Redis Slave Deployment
+### Creating the Redis Follower Deployment
 
 Deployments scale based off of the configurations set in the manifest file. In this case, the Deployment object specifies two replicas.
 
 If there are not any replicas running, this Deployment would start the two replicas on your container cluster. Conversely, if there are more than two replicas are running, it would scale down until two replicas are running.
 
-1. Apply the Redis Slave Deployment from the `redis-slave-deployment.yaml` file:
+1. Apply the Redis Follower Deployment from the `redis-follower-deployment.yaml` file:
 
    ```console
-   debian@busybox:~$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/examples/master/guestbook/redis-slave-deployment.yaml
+   debian@busybox:~$ kubectl apply -f https://k8s.io/examples/application/guestbook/redis-follower-deployment.yaml
    ```
 
-2. Query the list of Pods to verify that the Redis Slave Pods are running:
+2. Query the list of Pods to verify that the Redis Follower Pods are running:
 
    ```console
    debian@busybox:~$ kubectl get pods
@@ -114,23 +114,23 @@ If there are not any replicas running, this Deployment would start the two repli
    The response should be similar to this:
 
    ```text
-   NAME                            READY   STATUS              RESTARTS   AGE
-   redis-master-6fbbc44567-sxvjh   1/1     Running             0          66s
-   redis-slave-74ccb764fc-smr7n    0/1     ContainerCreating   0          6s
-   redis-slave-74ccb764fc-sps4r    0/1     ContainerCreating   0          6s
+   NAME                             READY   STATUS    RESTARTS   AGE
+   redis-follower-dddfbdcc9-4pcrs   1/1     Running   0          18s
+   redis-follower-dddfbdcc9-jfs29   1/1     Running   0          18s
+   redis-leader-fb76b4755-g7s42     1/1     Running   0          4m36s
    ```
 
-### Creating the Redis Slave Service
+### Creating the Redis Replica Service
 
-The guestbook application needs to communicate to Redis slaves to read data. To make the Redis slaves discoverable, you need to set up a Service. A Service provides transparent load balancing to a set of Pods.
+The guestbook application needs to communicate to Redis followers to read data. To make the Redis followers discoverable, you need to set up a Service. A Service provides transparent load balancing to a set of Pods.
 
-1. Apply the Redis Slave Service from the following `redis-slave-service.yaml` file:
+1. Apply the Redis Follower Service from the following `redis-follower-service.yaml` file:
 
    ```console
-   debian@busybox:~$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/examples/master/guestbook/redis-slave-service.yaml
+   debian@busybox:~$ kubectl apply -f https://k8s.io/examples/application/guestbook/redis-follower-service.yaml
    ```
 
-2. Query the list of Services to verify that the Redis slave service is running:
+2. Query the list of Services to verify that the Redis follower service is running:
 
    ```console
    debian@busybox:~$ kubectl get services
@@ -139,22 +139,22 @@ The guestbook application needs to communicate to Redis slaves to read data. To 
    The response should be similar to this:
 
    ```text
-   NAME           TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
-   kubernetes     ClusterIP   10.96.0.1        <none>        443/TCP    46h
-   redis-master   ClusterIP   10.103.95.1      <none>        6379/TCP   2m15s
-   redis-slave    ClusterIP   10.105.138.125   <none>        6379/TCP   7s
+   NAME             TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+   kubernetes       ClusterIP   10.96.0.1        <none>        443/TCP    2d22h
+   redis-follower   ClusterIP   10.98.90.120     <none>        6379/TCP   8s
+   redis-leader     ClusterIP   10.101.140.177   <none>        6379/TCP   4m24s
    ```
 
 ## Set up and Expose the Guestbook Frontend
 
-The guestbook application has a web frontend serving the HTTP requests written in PHP. It is configured to connect to the `redis-master` Service for write requests and the `redis-slave` service for Read requests.
+The guestbook application has a web frontend serving the HTTP requests written in PHP. It is configured to connect to the `redis-leader` Service for write requests and the `redis-follower` service for Read requests.
 
 ### Creating the Guestbook Frontend Deployment
 
 1. Apply the frontend Deployment from the `frontend-deployment.yaml` file:
 
    ```console
-   debian@busybox:~$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/examples/master/guestbook/frontend-deployment.yaml
+   debian@busybox:~$ kubectl apply -f https://k8s.io/examples/application/guestbook/frontend-deployment.yaml
    ```
 
 2. Query the list of Pods to verify that the three frontend replicas are running:
@@ -166,20 +166,20 @@ The guestbook application has a web frontend serving the HTTP requests written i
    The response should be similar to this:
 
    ```text
-   NAME                            READY   STATUS    RESTARTS   AGE
-   frontend-74b4665db5-vr6hf       1/1     Running   0          70s
-   frontend-74b4665db5-z76vh       1/1     Running   0          70s
-   frontend-74b4665db5-zg5kw       1/1     Running   0          70s
+   NAME                        READY   STATUS    RESTARTS   AGE
+   frontend-85595f5bf9-cdlkc   1/1     Running   0          71s
+   frontend-85595f5bf9-d7p9m   1/1     Running   0          71s
+   frontend-85595f5bf9-mpvhz   1/1     Running   0          71s
    ```
 
 ### Creating the Frontend Service
 
-The `redis-slave` and `redis-master` Services you applied are only accessible within the container cluster because the default type for a Service is ClusterIP. `ClusterIP` provides a single IP address for the set of Pods the Service is pointing to. This IP address is accessible only within the cluster.
+The `redis-follower` and `redis-leader` Services you applied are only accessible within the container cluster because the default type for a Service is ClusterIP. `ClusterIP` provides a single IP address for the set of Pods the Service is pointing to. This IP address is accessible only within the cluster.
 
 1. Apply the frontend Service from the `frontend-service.yaml` file:
 
    ```console
-   debian@busybox:~$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/examples/master/guestbook/frontend-service.yaml
+   debian@busybox:~$ kubectl apply -f https://raw.githubusercontent.com/mvallim/kubernetes-under-the-hood/master/services/kube-service-nodeport.yaml
    ```
 
 2. Query the list of Services to verify that the frontend Service is running:
@@ -191,11 +191,11 @@ The `redis-slave` and `redis-master` Services you applied are only accessible wi
    The response should be similar to this:
 
    ```text
-   NAME           TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
-   frontend       NodePort    10.99.225.158    <none>        80:30551/TCP   9s
-   kubernetes     ClusterIP   10.96.0.1        <none>        443/TCP        46h
-   redis-master   ClusterIP   10.103.95.1      <none>        6379/TCP       4m17s
-   redis-slave    ClusterIP   10.105.138.125   <none>        6379/TCP       2m9s
+   NAME               TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+   kubernetes         ClusterIP   10.96.0.1        <none>        443/TCP        2d22h
+   nodeport-service   NodePort    10.105.255.221   <none>        80:32767/TCP   12s
+   redis-follower     ClusterIP   10.98.90.120     <none>        6379/TCP       11m
+   redis-leader       ClusterIP   10.101.140.177   <none>        6379/TCP       15m
    ```
 
 ### Viewing the Frontend Service via **`NodePort`**
@@ -209,22 +209,22 @@ The `redis-slave` and `redis-master` Services you applied are only accessible wi
    The response should look similar to this:
 
    ```console
-   NAME          STATUS   ROLES    AGE   VERSION    INTERNAL-IP     EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION   CONTAINER-RUNTIME
-   kube-mast01   Ready    master   76m   v1.19.11   192.168.1.192   <none>        Debian GNU/Linux 9 (stretch)   4.19.0-18-amd64   containerd://1.4.3
-   kube-mast02   Ready    master   67m   v1.19.11   192.168.1.43    <none>        Debian GNU/Linux 9 (stretch)   4.19.0-18-amd64   containerd://1.4.3
-   kube-mast03   Ready    master   66m   v1.19.11   192.168.1.33    <none>        Debian GNU/Linux 9 (stretch)   4.19.0-18-amd64   containerd://1.4.3
-   kube-node01   Ready    <none>   21m   v1.19.11   192.168.2.150   <none>        Debian GNU/Linux 9 (stretch)   4.19.0-18-amd64   containerd://1.4.3
-   kube-node02   Ready    <none>   20m   v1.19.11   192.168.2.158   <none>        Debian GNU/Linux 9 (stretch)   4.19.0-18-amd64   containerd://1.4.3
-   kube-node03   Ready    <none>   20m   v1.19.11   192.168.2.239   <none>        Debian GNU/Linux 9 (stretch)   4.19.0-18-amd64   containerd://1.4.3
+   NAME          STATUS   ROLES                  AGE     VERSION    INTERNAL-IP     EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION    CONTAINER-RUNTIME
+   kube-mast01   Ready    control-plane,master   2d22h   v1.20.15   192.168.1.18    <none>        Debian GNU/Linux 10 (buster)   4.19.0-18-amd64   containerd://1.4.12
+   kube-mast02   Ready    control-plane,master   2d22h   v1.20.15   192.168.1.27    <none>        Debian GNU/Linux 10 (buster)   4.19.0-18-amd64   containerd://1.4.12
+   kube-mast03   Ready    control-plane,master   2d22h   v1.20.15   192.168.1.37    <none>        Debian GNU/Linux 10 (buster)   4.19.0-18-amd64   containerd://1.4.12
+   kube-node01   Ready    <none>                 2d22h   v1.20.15   192.168.2.185   <none>        Debian GNU/Linux 10 (buster)   4.19.0-18-amd64   containerd://1.4.12
+   kube-node02   Ready    <none>                 2d22h   v1.20.15   192.168.2.159   <none>        Debian GNU/Linux 10 (buster)   4.19.0-18-amd64   containerd://1.4.12
+   kube-node03   Ready    <none>                 2d22h   v1.20.15   192.168.2.171   <none>        Debian GNU/Linux 10 (buster)   4.19.0-18-amd64   containerd://1.4.12
    ```
 
 2. Choice any ip of `kube-nodes` (`kube-node01`, `kube-node02` or `kube-node03`)
 
-   Here we will use the `192.168.2.213` (`kube-node01`)
+   Here we will use the `192.168.2.185` (`kube-node01`)
 
-   Open your browser with address [http://192.168.2.213:30551](http://192.168.2.136:30551)
+   Open your browser with address [http://192.168.2.185:32767](http://192.168.2.136:32767)
 
-> Keep attention on port **`30551`**, you should change correspondent port show in your on output above.
+> Keep attention on port **`32767`**, you should change correspondent port show in your on output above.
 
 ## Scale the Web Frontend
 
@@ -245,15 +245,15 @@ Scaling up or down is easy because your servers are defined as a Service that us
    The response should look similar to this:
 
    ```text
-   NAME                            READY   STATUS    RESTARTS   AGE
-   frontend-74b4665db5-n2bsk       1/1     Running   0          8s
-   frontend-74b4665db5-sf42s       1/1     Running   0          8s
-   frontend-74b4665db5-vr6hf       1/1     Running   0          5m24s
-   frontend-74b4665db5-z76vh       1/1     Running   0          5m24s
-   frontend-74b4665db5-zg5kw       1/1     Running   0          5m24s
-   redis-master-6fbbc44567-sxvjh   1/1     Running   0          8m45s
-   redis-slave-74ccb764fc-smr7n    1/1     Running   0          7m45s
-   redis-slave-74ccb764fc-sps4r    1/1     Running   0          7m45s
+   NAME                             READY   STATUS    RESTARTS   AGE
+   frontend-85595f5bf9-cdlkc        1/1     Running   0          12m
+   frontend-85595f5bf9-d7p9m        1/1     Running   0          12m
+   frontend-85595f5bf9-lvpfh        1/1     Running   0          6s
+   frontend-85595f5bf9-mpvhz        1/1     Running   0          12m
+   frontend-85595f5bf9-srn4q        1/1     Running   0          6s
+   redis-follower-dddfbdcc9-4pcrs   1/1     Running   0          15m
+   redis-follower-dddfbdcc9-jfs29   1/1     Running   0          15m
+   redis-leader-fb76b4755-g7s42     1/1     Running   0          20m
    ```
 
 3. Run the following command to scale down the number of frontend Pods:
@@ -271,12 +271,12 @@ Scaling up or down is easy because your servers are defined as a Service that us
    The response should look similar to this:
 
    ```text
-   NAME                            READY   STATUS    RESTARTS   AGE
-   frontend-74b4665db5-z76vh       1/1     Running   0          6m18s
-   frontend-74b4665db5-zg5kw       1/1     Running   0          6m18s
-   redis-master-6fbbc44567-sxvjh   1/1     Running   0          9m39s
-   redis-slave-74ccb764fc-smr7n    1/1     Running   0          8m39s
-   redis-slave-74ccb764fc-sps4r    1/1     Running   0          8m39s
+   NAME                             READY   STATUS    RESTARTS   AGE
+   frontend-85595f5bf9-cdlkc        1/1     Running   0          13m
+   frontend-85595f5bf9-d7p9m        1/1     Running   0          13m
+   redis-follower-dddfbdcc9-4pcrs   1/1     Running   0          16m
+   redis-follower-dddfbdcc9-jfs29   1/1     Running   0          16m
+   redis-leader-fb76b4755-g7s42     1/1     Running   0          20m
    ```
 
 ## Cleaning up (Don't clean if you enable [`LoadBalancer`](/documentation/kube-metallb.md))
@@ -288,9 +288,9 @@ Deleting the Deployments and Services also deletes any running Pods. Use labels 
    ```console
    debian@busybox:~$ kubectl delete -n default deployment frontend
 
-   debian@busybox:~$ kubectl delete -n default deployment redis-slave
+   debian@busybox:~$ kubectl delete -n default deployment redis-follower
 
-   debian@busybox:~$ kubectl delete -n default deployment redis-master
+   debian@busybox:~$ kubectl delete -n default deployment redis-leader
 
    debian@busybox:~$ kubectl delete -n default service -l app=redis
 
@@ -317,5 +317,5 @@ Deleting the Deployments and Services also deletes any running Pods. Use labels 
    The response should be this:
 
    ```text
-   No resources found.
+   No resources found in default namespace.
    ```
