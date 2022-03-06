@@ -378,7 +378,7 @@ Based on the above information, we will have a [`kubeadm-config-external-etcd.ya
 ```yaml
 apiVersion: kubeadm.k8s.io/v1beta2
 kind: ClusterConfiguration
-kubernetesVersion: stable-1.19
+kubernetesVersion: stable-1.20
 apiServer:
   certSANs:
   - "192.168.4.20"
