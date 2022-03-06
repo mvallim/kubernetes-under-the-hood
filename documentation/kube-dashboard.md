@@ -40,7 +40,7 @@ Use the returned value to access the BusyBox:
 Expected output:
 
 ```console
-Linux busybox 4.9.0-15-amd64 #1 SMP Debian 4.9.258-1 (2021-03-08) x86_64
+Linux busybox 4.19.0-18-amd64 #1 SMP Debian 4.19.208-1 (2021-09-29) x86_64
 
 The programs included with the Debian GNU/Linux system are free software;
 the exact distribution terms for each program are described in the
@@ -63,7 +63,7 @@ permitted by applicable law.
 2. Install the Dashboard by applying the `kubernetes-dashboard.yaml` file:
 
    ```console
-   debian@busybox:~$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.2.0/aio/deploy/recommended.yaml
+   debian@busybox:~$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.0/aio/deploy/recommended.yaml
    ```
 
    Expected output:
@@ -95,11 +95,11 @@ permitted by applicable law.
 
    ```text
    NAME                                         READY   STATUS    RESTARTS   AGE   IP           NODE          NOMINATED NODE   READINESS GATES
-   dashboard-metrics-scraper-79c5968bdc-t6k7b   1/1     Running   0          17s   10.244.5.2   kube-node03   <none>           <none>
-   kubernetes-dashboard-9f9799597-qb8gw         1/1     Running   0          17s   10.244.4.2   kube-node02   <none>           <none>
+   dashboard-metrics-scraper-5b8896d7fc-2v4kp   1/1     Running   0          21s   10.244.3.2   kube-node01   <none>           <none>
+   kubernetes-dashboard-cb988587b-rx828         1/1     Running   0          21s   10.244.4.2   kube-node02   <none>           <none>
    ```
 
-   > Notice we now have a pod named `kubernetes-dashboard-9f9799597-qb8gw`
+   > Notice we now have a pod named `kubernetes-dashboard-cb988587b-rx828`
 
 ## Configure the Dashboard
 
@@ -144,26 +144,26 @@ To access the Dashboard, we need to have a token from the `cluster-admin-dashboa
 
    ```text
    NAME                                  TYPE                                  DATA   AGE
-   cluster-admin-dashboard-token-7srtb   kubernetes.io/service-account-token   3      35s
-   default-token-fqzs8                   kubernetes.io/service-account-token   3      96s
-   kubernetes-dashboard-certs            Opaque                                0      96s
-   kubernetes-dashboard-csrf             Opaque                                1      96s
-   kubernetes-dashboard-key-holder       Opaque                                2      96s
-   kubernetes-dashboard-token-rn2pj      kubernetes.io/service-account-token   3      96s
+   cluster-admin-dashboard-token-p2qm9   kubernetes.io/service-account-token   3      18s
+   default-token-ptzj7                   kubernetes.io/service-account-token   3      75s
+   kubernetes-dashboard-certs            Opaque                                0      75s
+   kubernetes-dashboard-csrf             Opaque                                1      75s
+   kubernetes-dashboard-key-holder       Opaque                                2      75s
+   kubernetes-dashboard-token-59xt6      kubernetes.io/service-account-token   3      75s
    ```
 
-   > We can see the `cluster-admin-dashboard` service account token has a token named `cluster-admin-dashboard-token-7srtb`
+   > We can see the `cluster-admin-dashboard` service account token has a token named `cluster-admin-dashboard-token-p2qm9`
 
-2. To fetch the token, describe the `cluster-admin-dashboard-token-7srtb` secret:
+2. To fetch the token, describe the `cluster-admin-dashboard-token-p2qm9` secret:
 
    ```console
-   debian@busybox:~$ kubectl describe secret cluster-admin-dashboard-token-7srtb -n kubernetes-dashboard
+   debian@busybox:~$ kubectl describe secret cluster-admin-dashboard-token-p2qm9 -n kubernetes-dashboard
    ```
 
    Expected output:
 
    ```text
-   Name:         cluster-admin-dashboard-token-7srtb
+   Name:         cluster-admin-dashboard-token-p2qm9
    Namespace:    kubernetes-dashboard
    Labels:       <none>
    Annotations:  kubernetes.io/service-account.name: cluster-admin-dashboard

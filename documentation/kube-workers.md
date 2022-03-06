@@ -120,7 +120,7 @@ Use the returned value to access the BusyBox:
 Expected output:
 
 ```console
-Linux busybox 4.9.0-15-amd64 #1 SMP Debian 4.9.258-1 (2021-03-08) x86_64
+Linux busybox 4.19.0-18-amd64 #1 SMP Debian 4.19.208-1 (2021-09-29) x86_64
 
 The programs included with the Debian GNU/Linux system are free software;
 the exact distribution terms for each program are described in the
@@ -234,11 +234,11 @@ runcmd:
   - [ sh, -c, 'curl -s https://download.docker.com/linux/debian/gpg | apt-key add -' ]
   - [ sh, -c, 'curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -' ]
   - [ apt-key, fingerprint, '0EBFCD88' ]
-  - [ sh, -c, 'echo deb https://download.gluster.org/pub/gluster/glusterfs/7/LATEST/Debian/9/amd64/apt/ stretch main > /etc/apt/sources.list.d/gluster.list' ]
-  - [ sh, -c, 'echo deb [arch=amd64] https://download.docker.com/linux/debian stretch stable > /etc/apt/sources.list.d/docker-ce.list' ]
+  - [ sh, -c, 'echo deb https://download.gluster.org/pub/gluster/glusterfs/7/LATEST/Debian/10/amd64/apt/ buster main > /etc/apt/sources.list.d/gluster.list' ]
+  - [ sh, -c, 'echo deb [arch=amd64] https://download.docker.com/linux/debian buster stable > /etc/apt/sources.list.d/docker-ce.list' ]
   - [ sh, -c, 'echo deb https://apt.kubernetes.io/ kubernetes-xenial main > /etc/apt/sources.list.d/kubernetes.list' ]
   - [ apt-get, update ]
-  - [ apt-get, install, -y, glusterfs-client, containerd.io, 'kubelet=1.19.11-00', 'kubectl=1.19.11-00', 'kubeadm=1.19.11-00' ]
+  - [ apt-get, install, -y, glusterfs-client, containerd.io, 'kubectl=1.20.15-00', 'kubectl=1.20.15-00', 'kubeadm=1.20.15-00' ]
   - [ apt-mark, hold, glusterfs-client, kubelet, kubectl, kubeadm, containerd.io ]
   # Configure containerd
   - [ mkdir, -p, /etc/containerd ]
@@ -349,45 +349,45 @@ power_state:
    Expected output:
 
    ```console
-   NAME          STATUS   ROLES    AGE   VERSION    INTERNAL-IP     EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION   CONTAINER-RUNTIME
-   kube-mast01   Ready    master   57m   v1.19.11   192.168.1.192   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   containerd://1.4.3
-   kube-mast02   Ready    master   47m   v1.19.11   192.168.1.43    <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   containerd://1.4.3
-   kube-mast03   Ready    master   46m   v1.19.11   192.168.1.33    <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   containerd://1.4.3
-   kube-node01   Ready    <none>   66s   v1.19.11   192.168.2.150   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   containerd://1.4.3
-   kube-node02   Ready    <none>   43s   v1.19.11   192.168.2.158   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   containerd://1.4.3
-   kube-node03   Ready    <none>   18s   v1.19.11   192.168.2.239   <none>        Debian GNU/Linux 9 (stretch)   4.9.0-15-amd64   containerd://1.4.3
+   NAME          STATUS   ROLES                  AGE     VERSION    INTERNAL-IP     EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION    CONTAINER-RUNTIME
+   kube-mast01   Ready    control-plane,master   21m     v1.20.15   192.168.1.18    <none>        Debian GNU/Linux 10 (buster)   4.19.0-18-amd64   containerd://1.4.12
+   kube-mast02   Ready    control-plane,master   10m     v1.20.15   192.168.1.27    <none>        Debian GNU/Linux 10 (buster)   4.19.0-18-amd64   containerd://1.4.12
+   kube-mast03   Ready    control-plane,master   8m57s   v1.20.15   192.168.1.37    <none>        Debian GNU/Linux 10 (buster)   4.19.0-18-amd64   containerd://1.4.12
+   kube-node01   Ready    <none>                 56s     v1.20.15   192.168.2.185   <none>        Debian GNU/Linux 10 (buster)   4.19.0-18-amd64   containerd://1.4.12
+   kube-node02   Ready    <none>                 35s     v1.20.15   192.168.2.159   <none>        Debian GNU/Linux 10 (buster)   4.19.0-18-amd64   containerd://1.4.12
+   kube-node03   Ready    <none>                 12s     v1.20.15   192.168.2.171   <none>        Debian GNU/Linux 10 (buster)   4.19.0-18-amd64   containerd://1.4.12
    ```
 
    > All nodes are **Ready**
 
    ```console
-   NAMESPACE     NAME                                  READY   STATUS    RESTARTS   AGE   IP              NODE          NOMINATED NODE   READINESS GATES
-   kube-system   coredns-f9fd979d6-c7xqr               1/1     Running   0          57m   10.244.0.3      kube-mast01   <none>           <none>
-   kube-system   coredns-f9fd979d6-twxsf               1/1     Running   0          57m   10.244.0.2      kube-mast01   <none>           <none>
-   kube-system   etcd-kube-mast01                      1/1     Running   0          57m   192.168.1.192   kube-mast01   <none>           <none>
-   kube-system   etcd-kube-mast02                      1/1     Running   0          48m   192.168.1.43    kube-mast02   <none>           <none>
-   kube-system   etcd-kube-mast03                      1/1     Running   0          46m   192.168.1.33    kube-mast03   <none>           <none>
-   kube-system   kube-apiserver-kube-mast01            1/1     Running   0          57m   192.168.1.192   kube-mast01   <none>           <none>
-   kube-system   kube-apiserver-kube-mast02            1/1     Running   0          48m   192.168.1.43    kube-mast02   <none>           <none>
-   kube-system   kube-apiserver-kube-mast03            1/1     Running   0          46m   192.168.1.33    kube-mast03   <none>           <none>
-   kube-system   kube-controller-manager-kube-mast01   1/1     Running   1          57m   192.168.1.192   kube-mast01   <none>           <none>
-   kube-system   kube-controller-manager-kube-mast02   1/1     Running   0          48m   192.168.1.43    kube-mast02   <none>           <none>
-   kube-system   kube-controller-manager-kube-mast03   1/1     Running   0          46m   192.168.1.33    kube-mast03   <none>           <none>
-   kube-system   kube-flannel-ds-bdjwx                 1/1     Running   0          40s   192.168.2.239   kube-node03   <none>           <none>
-   kube-system   kube-flannel-ds-jsnt9                 1/1     Running   0          65s   192.168.2.158   kube-node02   <none>           <none>
-   kube-system   kube-flannel-ds-k8m4s                 1/1     Running   0          53m   192.168.1.192   kube-mast01   <none>           <none>
-   kube-system   kube-flannel-ds-kqsn7                 1/1     Running   0          46m   192.168.1.33    kube-mast03   <none>           <none>
-   kube-system   kube-flannel-ds-l8gx5                 1/1     Running   0          88s   192.168.2.150   kube-node01   <none>           <none>
-   kube-system   kube-flannel-ds-m8tsf                 1/1     Running   1          48m   192.168.1.43    kube-mast02   <none>           <none>
-   kube-system   kube-proxy-8sgtf                      1/1     Running   0          48m   192.168.1.43    kube-mast02   <none>           <none>
-   kube-system   kube-proxy-f9k9z                      1/1     Running   0          46m   192.168.1.33    kube-mast03   <none>           <none>
-   kube-system   kube-proxy-gzzd2                      1/1     Running   0          57m   192.168.1.192   kube-mast01   <none>           <none>
-   kube-system   kube-proxy-hjbw4                      1/1     Running   0          88s   192.168.2.150   kube-node01   <none>           <none>
-   kube-system   kube-proxy-kk4sk                      1/1     Running   0          65s   192.168.2.158   kube-node02   <none>           <none>
-   kube-system   kube-proxy-w5g6v                      1/1     Running   0          40s   192.168.2.239   kube-node03   <none>           <none>
-   kube-system   kube-scheduler-kube-mast01            1/1     Running   1          57m   192.168.1.192   kube-mast01   <none>           <none>
-   kube-system   kube-scheduler-kube-mast02            1/1     Running   0          48m   192.168.1.43    kube-mast02   <none>           <none>
-   kube-system   kube-scheduler-kube-mast03            1/1     Running   0          46m   192.168.1.33    kube-mast03   <none>           <none>
+   NAMESPACE     NAME                                  READY   STATUS    RESTARTS   AGE     IP              NODE          NOMINATED NODE   READINESS GATES
+   kube-system   coredns-74ff55c5b-5bsbv               1/1     Running   0          21m     10.244.0.3      kube-mast01   <none>           <none>
+   kube-system   coredns-74ff55c5b-5jpqd               1/1     Running   0          21m     10.244.0.2      kube-mast01   <none>           <none>
+   kube-system   etcd-kube-mast01                      1/1     Running   0          21m     192.168.1.18    kube-mast01   <none>           <none>
+   kube-system   etcd-kube-mast02                      1/1     Running   0          10m     192.168.1.27    kube-mast02   <none>           <none>
+   kube-system   etcd-kube-mast03                      1/1     Running   0          9m9s    192.168.1.37    kube-mast03   <none>           <none>
+   kube-system   kube-apiserver-kube-mast01            1/1     Running   0          21m     192.168.1.18    kube-mast01   <none>           <none>
+   kube-system   kube-apiserver-kube-mast02            1/1     Running   0          10m     192.168.1.27    kube-mast02   <none>           <none>
+   kube-system   kube-apiserver-kube-mast03            1/1     Running   0          9m11s   192.168.1.37    kube-mast03   <none>           <none>
+   kube-system   kube-controller-manager-kube-mast01   1/1     Running   1          21m     192.168.1.18    kube-mast01   <none>           <none>
+   kube-system   kube-controller-manager-kube-mast02   1/1     Running   0          10m     192.168.1.27    kube-mast02   <none>           <none>
+   kube-system   kube-controller-manager-kube-mast03   1/1     Running   0          9m10s   192.168.1.37    kube-mast03   <none>           <none>
+   kube-system   kube-flannel-ds-7rqdv                 1/1     Running   1          10m     192.168.1.27    kube-mast02   <none>           <none>
+   kube-system   kube-flannel-ds-9lvj9                 1/1     Running   0          70s     192.168.2.185   kube-node01   <none>           <none>
+   kube-system   kube-flannel-ds-hrtbv                 1/1     Running   0          14m     192.168.1.18    kube-mast01   <none>           <none>
+   kube-system   kube-flannel-ds-hwgml                 1/1     Running   0          9m11s   192.168.1.37    kube-mast03   <none>           <none>
+   kube-system   kube-flannel-ds-p4qdh                 1/1     Running   0          49s     192.168.2.159   kube-node02   <none>           <none>
+   kube-system   kube-flannel-ds-pcvgj                 1/1     Running   0          26s     192.168.2.171   kube-node03   <none>           <none>
+   kube-system   kube-proxy-8wqf7                      1/1     Running   0          21m     192.168.1.18    kube-mast01   <none>           <none>
+   kube-system   kube-proxy-bmkgc                      1/1     Running   0          26s     192.168.2.171   kube-node03   <none>           <none>
+   kube-system   kube-proxy-cnkch                      1/1     Running   0          49s     192.168.2.159   kube-node02   <none>           <none>
+   kube-system   kube-proxy-f2nbx                      1/1     Running   0          10m     192.168.1.27    kube-mast02   <none>           <none>
+   kube-system   kube-proxy-htss8                      1/1     Running   0          70s     192.168.2.185   kube-node01   <none>           <none>
+   kube-system   kube-proxy-wc5p5                      1/1     Running   0          9m11s   192.168.1.37    kube-mast03   <none>           <none>
+   kube-system   kube-scheduler-kube-mast01            1/1     Running   1          21m     192.168.1.18    kube-mast01   <none>           <none>
+   kube-system   kube-scheduler-kube-mast02            1/1     Running   0          10m     192.168.1.27    kube-mast02   <none>           <none>
+   kube-system   kube-scheduler-kube-mast03            1/1     Running   0          9m9s    192.168.1.37    kube-mast03   <none>           <none>
    ```
 
    > All pods are **Running**

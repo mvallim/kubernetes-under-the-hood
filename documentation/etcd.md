@@ -209,7 +209,7 @@ Use the returned value to access.
 Expected output:
 
 ```console
-Linux busybox 4.9.0-15-amd64 #1 SMP Debian 4.9.258-1 (2021-03-08) x86_64
+Linux busybox 4.19.0-18-amd64 #1 SMP Debian 4.19.208-1 (2021-09-29) x86_64
 
 The programs included with the Debian GNU/Linux system are free software;
 the exact distribution terms for each program are described in the
@@ -455,15 +455,15 @@ Press **ctrl+b** and **shit+:**, type the following command and hit ENTER:
 
     ```console
     curl -L --progress \
-        https://github.com/etcd-io/etcd/releases/download/v3.4.7/etcd-v3.4.7-linux-amd64.tar.gz \
-        -o /tmp/etcd-v3.4.7-linux-amd64.tar.gz
+        https://github.com/etcd-io/etcd/releases/download/v3.4.16/etcd-v3.4.16-linux-amd64.tar.gz \
+        -o /tmp/etcd-v3.4.16-linux-amd64.tar.gz
 
-    tar xvzf /tmp/etcd-v3.4.7-linux-amd64.tar.gz
+    tar xvzf /tmp/etcd-v3.4.16-linux-amd64.tar.gz
 
-    sudo mv etcd-v3.4.7-linux-amd64/etcd* /usr/local/bin/.
+    sudo mv etcd-v3.4.16-linux-amd64/etcd* /usr/local/bin/.
     sudo chown root:root /usr/local/bin/etcd*
 
-    rm -rf etcd-v3.4.7-linux-amd64
+    rm -rf etcd-v3.4.16-linux-amd64
     ```
 
 5. Create a unit service file to run on `systemd`

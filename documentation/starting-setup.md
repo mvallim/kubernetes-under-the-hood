@@ -416,7 +416,7 @@ runcmd:
   - [ sh, -c, 'curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -' ]
   - [ sh, -c, 'echo deb https://apt.kubernetes.io/ kubernetes-xenial main > /etc/apt/sources.list.d/kubernetes.list' ]
   - [ apt-get, update ]
-  - [ apt-get, install, -y, 'kubectl=1.19.11-00' ]
+  - [ apt-get, install, -y, 'kubectl=1.20.15-00' ]
   - [ apt-mark, hold, kubectl ]
   - [ sh, -c, 'mv -u /run/.ssh/* /home/debian/.ssh/.' ]
   - [ chown, -R, 'debian:debian', '/home/debian' ]
@@ -463,26 +463,26 @@ The premise is that you already have **Virtualbox** properly installed on your l
 * Add your user on `vboxusers` group
 
   ```console
-  ~$ sudo usermod -a -G vboxusers $USER
+  sudo usermod -a -G vboxusers $USER
   ```
 
 * Install `shyaml`
 
   ```console
-  ~$ sudo apt-get install python3-pip
-  ~$ sudo pip3 install shyaml
+  sudo apt-get install python3-pip
+  sudo pip3 install shyaml
   ```
 
 * Install `genisoimage`
 
   ```console
-  ~$ sudo apt-get install genisoimage
+  sudo apt-get install genisoimage
   ```
 
 * Install `uuid-runtime`
 
   ```console
-  ~$ sudo apt-get install uuid-runtime
+  sudo apt-get install uuid-runtime
   ```
 
 * Configure Host-Only Networking
@@ -494,8 +494,8 @@ The premise is that you already have **Virtualbox** properly installed on your l
 * Configure Host Adapter VirtualBox
 
   ```console
-  ~$ vboxmanage hostonlyif create
-  ~$ vboxmanage hostonlyif ipconfig vboxnet0 --ip 192.168.254.1 --netmask 255.255.0.0
+  vboxmanage hostonlyif create
+  vboxmanage hostonlyif ipconfig vboxnet0 --ip 192.168.254.1 --netmask 255.255.0.0
   ```
 
 ### Clone repository
@@ -607,7 +607,7 @@ Use the returned value to access.
 ```console
 ~$ ssh debian@192.168.4.57
 
-Linux busybox 4.9.0-15-amd64 #1 SMP Debian 4.9.258-1 (2021-03-08) x86_64
+Linux busybox 4.19.0-18-amd64 #1 SMP Debian 4.19.208-1 (2021-09-29) x86_64
 
 The programs included with the Debian GNU/Linux system are free software;
 the exact distribution terms for each program are described in the
@@ -668,7 +668,7 @@ Let's check **`kubectl`** version
 ```console
 debian@busybox:~$ kubectl version --client
 
-Client Version: version.Info{Major:"1", Minor:"18", GitVersion:"v1.19.11", GitCommit:"68b4e26caf6ede7af577db4af62fb405b4dd47e6", GitTreeState:"clean", BuildDate:"2021-03-18T01:02:41Z", GoVersion:"go1.13.15", Compiler:"gc", Platform:"linux/amd64"}
+Client Version: version.Info{Major:"1", Minor:"20", GitVersion:"v1.20.15", GitCommit:"8f1e5bf0b9729a899b8df86249b56e2c74aebc55", GitTreeState:"clean", BuildDate:"2022-01-19T17:27:39Z", GoVersion:"go1.15.15", Compiler:"gc", Platform:"linux/amd64"}
 ```
 
 Let's check access `gate-node01`
@@ -676,7 +676,7 @@ Let's check access `gate-node01`
 ```console
 debian@busybox:~$ ssh debian@gate-node01
 
-Linux gate-node01 4.9.0-15-amd64 #1 SMP Debian 4.9.258-1 (2021-03-08) x86_64
+Linux gate-node01 4.19.0-18-amd64 #1 SMP Debian 4.19.208-1 (2021-09-29) x86_64
 
 The programs included with the Debian GNU/Linux system are free software;
 the exact distribution terms for each program are described in the

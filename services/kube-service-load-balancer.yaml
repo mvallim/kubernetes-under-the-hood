@@ -2,6 +2,9 @@ apiVersion: v1
 kind: Service
 metadata:  
   name: load-balancer-service
+  labels:
+    app: guestbook
+    tier: frontend
 spec:
   selector:    
     app: guestbook
