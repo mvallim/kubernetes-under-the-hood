@@ -148,7 +148,7 @@ To install MetalLB, apply the manifest:
 
    ```console
    NAME         READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES                               SELECTOR
-   controller   1/1     1            1           41s   controller   quay.io/metallb/controller:v0.12.1   app=metallb,component=controller
+   controller   0/1     1            0           11s   controller   quay.io/metallb/controller:v0.12.1   app=metallb,component=controller
    ```
 
 This will deploy MetalLB to your cluster, under the **`metallb-system`** namespace. The components in the manifest are:
