@@ -2,23 +2,19 @@
 write_files:
 
 # CA ssh pub certificate
+- path: /etc/ssh/sshd_config
+  permissions: '0644'
+  content: |
+    TrustedUserCAKeys /etc/ssh/ca.pub
+  append: true
+
+# CA ssh pub certificate
 - path: /etc/ssh/ca.pub
   permissions: '0644'
   encoding: b64
   content: |
-    c3NoLXJzYSBBQUFBQjNOemFDMXljMkVBQUFBREFRQUJBQUFDQVFERGozaTNSODZvQzNzZ0N3ZVRh
-    R1dHZVZHRFpLbFdiOHM4QWVJVE9hOTB3NHl5UndSUWtBTWNGaWFNWGx5OEVOSDd0MHNpM0tFYnRZ
-    M1B1ekpTNVMwTHY0MVFkaHlYMHJhUGxobTZpNnVDV3BvYWsycEF6K1ZFazhLbW1kZjdqMm5OTHlG
-    Y3NQeVg0b0t0SlQrajh6R2QxWHRBWDBuS0JWOXFkOGNTTFFBZGpQVkdNZGxYdTNCZzdsNml3OHhK
-    Ti9ld1l1Qm5DODZ5TlNiWFlDVVpLOE1oQUNLV2FMVWVnOSt0dXNyNTBSbGVRcGI0a2NKRE45LzFa
-    MjhneUtORTRCVENYanEyTzVqRE1MRDlDU3hqNXJoNXRPUUlKREFvblIrMnljUlVnZTltc2hIQ05D
-    VWU2WG16OFVJUFJ2UVpPNERFaHpHZ2N0cFJnWlhQajRoMGJoeGVMekUxcFROMHI2Q29GMDVpOFB0
-    QXd1czl1K0tjUHVoQlgrVm9UbW1JNmRBTStUQkxRUnJ3SUorNnhtM29nWEMwYVpjdkdCVUVTcVll
-    QjUyU0xjZEwyNnBKUlBrVjZYQ0Qyc3RleG5uOFREUEdjYnlZelFnaGNlYUYrb0psdWE4UDZDSzV2
-    VStkNlBGK2o1aEE2NGdHbDQrWmw0TUNBcXdNcnBySEhpd2E3bzF0MC9JTmdoYlFvUUdSU3haQXMz
-    UHdYcklMQ0xUeGN6V29UWHZIWUxuRXRTWW42MVh3SElldWJrTVhJamJBSysreStKWCswcm02aHRN
-    N2h2R2QzS0ZvU1N4aDlFY1FONTNXWEhMYXBHQ0o0NGVFU3NqbVgzN1NwWElUYUhEOHJQRXBia0E0
-    WWJzaVVoTXZPZ0VCLy9MZ1d0R2kvRVRxalVSUFkvWGRTVTR5dFE9PSBjYUBrdWJlLmRlbW8K
+    c3NoLWVkMjU1MTkgQUFBQUMzTnphQzFsWkRJMU5URTVBQUFBSUZWTW1rTnRuRmZDaXRjcFFlWnFR
+    dVZQK0NKV1JtWGp3aGlRakoyalJxaS8gY2FAa3ViZS5kZW1vCg==
 
 # We want to configure corosync to use cryptographic techniques to ensure the
 # authenticity and privacy of messages. We generate a private key.
@@ -27,9 +23,11 @@ write_files:
 - path: /etc/corosync/authkey
   permissions: '0400'
   content: !!binary |
-    oazyUUgBg/bkG5cmzZAunHkKozJQ4AKUVTUHcn0tGBXR8OLKsZi3KUWy2bKjeWY6Y44ZFjvuC4sj
-    1xCt67CRDkHHNuVViK79TCghbfczL6jnkkQNoWfmeMzX2axgp+Wp5tU3jBjGP5X7JMq0eu4RZ2vS
-    y8iZqL5kYaRqRn3ElD0=
+    OMTsv6GMyv7yUn2kfWiNA4d7NEudNDUokpxSkL60Czw1AN9t4vs/eOF09nk0STb5yXacjApDAq8J
+    smu0y/y2g0uQK9T9euYlZmqVuUJVX8afQ/ZYVVrJaB+JwwocTgjXE6jdXB38g8cqBCRSBxenlQpB
+    OGVN8os72UdniJynZa25gsPlSIrSoKNsoz2sgcZUgrDC3WsCjzQfuvK/RabyJjC997RMRUAvCliH
+    YnYf3AAFufgTtAxO41APzEg+7bceaxxfSjtv3QdQcLB1O6WoXadX+Ksm1QxfKJX0nz3UA9zKwXCY
+    mrUVTP1ilpvwkl1VZXYGOiHZakJC0BiayQhJDg==
 
 # The corosync.conf instructs the corosync executive about various parameters
 # needed to control the corosync executive. Empty lines and lines starting with
@@ -176,20 +174,17 @@ runcmd:
   - [ chmod, "0755", /usr/lib/ocf/resource.d/heartbeat/haproxy ]
   - [ systemctl, restart, pacemaker, corosync ]
   - [ systemctl, enable, pacemaker, corosync ]
-  # SSH server to trust the CA
-  - [ sh, -c, 'echo >> /etc/ssh/sshd_config' ]
-  - [ sh, -c, 'echo TrustedUserCAKeys /etc/ssh/ca.pub >> /etc/ssh/sshd_config' ]
 
 apt:
   sources_list: |
     deb http://us.archive.ubuntu.com/ubuntu/ $RELEASE main restricted universe multiverse
     deb-src http://us.archive.ubuntu.com/ubuntu/ $RELEASE main restricted universe multiverse
 
-    deb http://us.archive.ubuntu.com/ubuntu/ $RELEASE-security main restricted universe multiverse
     deb http://us.archive.ubuntu.com/ubuntu/ $RELEASE-updates main restricted universe multiverse
-
-    deb-src http://us.archive.ubuntu.com/ubuntu/ $RELEASE-security main restricted universe multiverse
     deb-src http://us.archive.ubuntu.com/ubuntu/ $RELEASE-updates main restricted universe multiverse
+
+    deb http://us.archive.ubuntu.com/ubuntu/ $RELEASE-security main restricted universe multiverse
+    deb-src http://us.archive.ubuntu.com/ubuntu/ $RELEASE-security main restricted universe multiverse
   conf: |
     APT {
       Get {

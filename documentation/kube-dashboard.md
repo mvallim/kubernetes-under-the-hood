@@ -141,7 +141,7 @@ First, try:
 ```console
 debian@busybox:~$ kubectl create token cluster-admin-dashboard -n kubernetes-dashboard
 ```
-    
+
 If a token is successfully generated, move on to "View the Dashboard" Section.
 
 1. Query secrets
