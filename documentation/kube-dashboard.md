@@ -137,12 +137,12 @@ To access the Dashboard, we need to have a token from the `cluster-admin-dashboa
 As referenced in: https://kubernetes.io/docs/concepts/configuration/secret/#service-account-token-secrets
     as of Kubernetes v1.22 a secret is not dynamically generated when a service account is created.
     First, try:
-    
-    ```console
-    debian@busybox:~$ kubectl create token cluster-admin-dashboard -n kubernetes-dashboard
-    ```
-    
-    If a token is successfully generated, move on to "View the Dashboard" Section.
+
+```console
+debian@busybox:~$ kubectl create token cluster-admin-dashboard -n kubernetes-dashboard
+```
+
+If a token is successfully generated, move on to "View the Dashboard" Section.
 
 1. Query secrets
 

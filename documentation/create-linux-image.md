@@ -197,7 +197,7 @@ This document shows how to create a Debian image from scratch to run on Cloud en
      --variant=minbase \
      --components "main" \
      --include "ca-certificates,cron,iptables,isc-dhcp-client,libnss-myhostname,ntp,ntpdate,rsyslog,ssh,sudo,dialog,whiptail,man-db,curl,dosfstools,e2fsck-static" \
-     buster \
+     bullseye \
      $HOME/debian-image-from-scratch/chroot \
      http://deb.debian.org/debian/
   ```
@@ -250,14 +250,14 @@ This document shows how to create a Debian image from scratch to run on Cloud en
 
    ```bash
    cat <<EOF > /etc/apt/sources.list
-   deb http://deb.debian.org/debian/ buster main contrib non-free
-   deb-src http://deb.debian.org/debian/ buster main contrib non-free
+   deb http://deb.debian.org/debian/ bullseye main contrib non-free
+   deb-src http://deb.debian.org/debian/ bullseye main contrib non-free
 
-   deb http://deb.debian.org/debian/ buster-updates main contrib non-free
-   deb-src http://deb.debian.org/debian/ buster-updates main contrib non-free
+   deb http://deb.debian.org/debian/ bullseye-updates main contrib non-free
+   deb-src http://deb.debian.org/debian/ bullseye-updates main contrib non-free
 
-   deb http://deb.debian.org/debian-security buster/updates main
-   deb-src http://deb.debian.org/debian-security buster/updates main
+   deb http://deb.debian.org/debian-security bullseye-security main
+   deb-src http://deb.debian.org/debian-security bullseye-security main
    EOF
    ```
 
@@ -477,13 +477,13 @@ If you plan to use this image in **VirtualBox**, install [**VirtualBox Guest Add
    1. Download VirtualBox Guest Additions:
 
        ```bash
-       curl --progress-bar https://download.virtualbox.org/virtualbox/6.1.18/VBoxGuestAdditions_6.1.18.iso -o VBoxGuestAdditions_6.1.18.iso
+       curl --progress-bar https://download.virtualbox.org/virtualbox/7.0.4/VBoxGuestAdditions_7.0.4.iso -o VBoxGuestAdditions_7.0.4.iso
        ```
 
    2. Mount the ISO file:
 
        ```bash
-       mount -o loop VBoxGuestAdditions_6.1.18.iso /mnt
+       mount -o loop VBoxGuestAdditions_7.0.4.iso /mnt
        ```
 
    3. Install VirtualBox:
@@ -495,7 +495,7 @@ If you plan to use this image in **VirtualBox**, install [**VirtualBox Guest Add
        Expected output
 
        ```console
-       Uncompressing VirtualBox 6.1.18 Guest Additions for Linux........
+       Uncompressing VirtualBox 7.0.4 Guest Additions for Linux........
        VirtualBox Guest Additions installer
        Copying additional installer modules ...
        Installing additional modules ...
