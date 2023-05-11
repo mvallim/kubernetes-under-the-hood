@@ -108,12 +108,12 @@ packages:
   - software-properties-common
   - bridge-utils
   - curl
+  - gnupg
 
 runcmd:
   - [ modprobe, overlay]
   - [ modprobe, br_netfilter ]
   - [ sysctl, --system ]
-  - [ apt-get, install, -y, ca-certificates, gnupg ]
   - [ sh, -c, 'mkdir -m 0755 -p /etc/apt/keyrings']
   - [ sh, -c, 'curl -fsSLo /etc/apt/trusted.gpg.d/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg' ]
   - [ sh, -c, 'echo deb https://apt.kubernetes.io/ kubernetes-xenial main > /etc/apt/sources.list.d/kubernetes.list' ]
