@@ -53,6 +53,10 @@ apt:
     deb http://deb.debian.org/debian-security $RELEASE-security main
     deb-src http://deb.debian.org/debian-security $RELEASE-security main
 
+  sources:
+    kubernetes.list:
+      source: deb https://apt.kubernetes.io/ kubernetes-xenial main
+
   conf: |
     APT {
       Get {
@@ -75,8 +79,7 @@ packages:
   - tmux
 
 runcmd:
-  - [ sh, -c, 'curl -fsSLo /etc/apt/trusted.gpg.d/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg' ]
-  - [ sh, -c, 'echo deb https://apt.kubernetes.io/ kubernetes-xenial main > /etc/apt/sources.list.d/kubernetes.list' ]
+  - [ sh, -c, 'curl -fsSLo /etc/apt/trusted.gpg.d/kubernetes-archive-keyring.gpg https://dl.k8s.io/apt/doc/apt-key.gpg' ]
   - [ apt-get, update ]
   - [ apt-get, install, -y, 'kubectl=1.20.15-00' ]
   - [ apt-mark, hold, kubectl ]

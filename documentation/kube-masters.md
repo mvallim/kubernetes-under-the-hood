@@ -104,23 +104,19 @@ Below you can find the same file commented for a better understanding:
 write_files:
 
 # CA ssh pub certificate
+- path: /etc/ssh/sshd_config
+  permissions: '0644'
+  content: |
+    TrustedUserCAKeys /etc/ssh/ca.pub
+  append: true
+
+# CA ssh pub certificate
 - path: /etc/ssh/ca.pub
   permissions: '0644'
   encoding: b64
   content: |
-    c3NoLXJzYSBBQUFBQjNOemFDMXljMkVBQUFBREFRQUJBQUFDQVFERGozaTNSODZvQzNzZ0N3ZVRh
-    R1dHZVZHRFpLbFdiOHM4QWVJVE9hOTB3NHl5UndSUWtBTWNGaWFNWGx5OEVOSDd0MHNpM0tFYnRZ
-    M1B1ekpTNVMwTHY0MVFkaHlYMHJhUGxobTZpNnVDV3BvYWsycEF6K1ZFazhLbW1kZjdqMm5OTHlG
-    Y3NQeVg0b0t0SlQrajh6R2QxWHRBWDBuS0JWOXFkOGNTTFFBZGpQVkdNZGxYdTNCZzdsNml3OHhK
-    Ti9ld1l1Qm5DODZ5TlNiWFlDVVpLOE1oQUNLV2FMVWVnOSt0dXNyNTBSbGVRcGI0a2NKRE45LzFa
-    MjhneUtORTRCVENYanEyTzVqRE1MRDlDU3hqNXJoNXRPUUlKREFvblIrMnljUlVnZTltc2hIQ05D
-    VWU2WG16OFVJUFJ2UVpPNERFaHpHZ2N0cFJnWlhQajRoMGJoeGVMekUxcFROMHI2Q29GMDVpOFB0
-    QXd1czl1K0tjUHVoQlgrVm9UbW1JNmRBTStUQkxRUnJ3SUorNnhtM29nWEMwYVpjdkdCVUVTcVll
-    QjUyU0xjZEwyNnBKUlBrVjZYQ0Qyc3RleG5uOFREUEdjYnlZelFnaGNlYUYrb0psdWE4UDZDSzV2
-    VStkNlBGK2o1aEE2NGdHbDQrWmw0TUNBcXdNcnBySEhpd2E3bzF0MC9JTmdoYlFvUUdSU3haQXMz
-    UHdYcklMQ0xUeGN6V29UWHZIWUxuRXRTWW42MVh3SElldWJrTVhJamJBSysreStKWCswcm02aHRN
-    N2h2R2QzS0ZvU1N4aDlFY1FONTNXWEhMYXBHQ0o0NGVFU3NqbVgzN1NwWElUYUhEOHJQRXBia0E0
-    WWJzaVVoTXZPZ0VCLy9MZ1d0R2kvRVRxalVSUFkvWGRTVTR5dFE9PSBjYUBrdWJlLmRlbW8K
+    c3NoLWVkMjU1MTkgQUFBQUMzTnphQzFsWkRJMU5URTVBQUFBSUZWTW1rTnRuRmZDaXRjcFFlWnFR
+    dVZQK0NKV1JtWGp3aGlRakoyalJxaS8gY2FAa3ViZS5kZW1vCg==
 
   # The bridge-netfilter code enables the following functionality:
   #  - {Ip,Ip6,Arp}tables can filter bridged IPv4/IPv6/ARP packets, even when
@@ -131,7 +127,12 @@ write_files:
   #  - Combined with ebtables, the bridge-nf code therefore makes Linux a very
   # powerful transparent firewall.
   #  - This enables, f.e., the creation of a transparent masquerading machine (i.e.
-  # all local hosts think they are directly connected to the Internet).    
+  # all local hosts think they are directly connected to the Internet).
+  #
+  # The OverlayFS is a union mount filesystem implementation for Linux. It combines
+  # multiple different underlying mount points into one, resulting in single 
+  # directory structure that contains underlying files and sub-directories from all 
+  # sources.
 - path: /etc/modules-load.d/containerd.conf
   permissions: '0644'
   content: |
@@ -164,6 +165,26 @@ write_files:
     timeout: 0
     debug: false
 
+- path: /etc/cni/net.d/net-conf.json
+  permission: '0644'
+  content: |
+    {
+      "cniVersion": "0.3.1"
+      "Network": "10.244.0.0/16",
+      "Backend": {
+        "Type": "vxlan"
+      }
+    }
+
+- path: /etc/cni/net.d/loopback-conf.json
+  permission: '0644'
+  content: |
+    {
+      "cniVersion": "0.3.1",
+      "name": "lo",
+      "type": "loopback"
+    }
+
 apt:
   sources_list: |
     deb http://deb.debian.org/debian/ $RELEASE main contrib non-free
@@ -172,8 +193,15 @@ apt:
     deb http://deb.debian.org/debian/ $RELEASE-updates main contrib non-free
     deb-src http://deb.debian.org/debian/ $RELEASE-updates main contrib non-free
 
-    deb http://deb.debian.org/debian-security $RELEASE/updates main
-    deb-src http://deb.debian.org/debian-security $RELEASE/updates main
+    deb http://deb.debian.org/debian-security $RELEASE-security main
+    deb-src http://deb.debian.org/debian-security $RELEASE-security main
+
+  sources:
+    kubernetes.list:
+      source: deb https://apt.kubernetes.io/ kubernetes-xenial main
+    docker.list:
+      source: deb https://download.docker.com/linux/debian $RELEASE stable
+
   conf: |
     APT {
       Get {
@@ -189,26 +217,20 @@ packages:
   - software-properties-common
   - bridge-utils
   - curl
+  - gnupg
 
 runcmd:
-  - [ modprobe, overlay, br_netfilter ]
+  - [ modprobe, overlay]
+  - [ modprobe, br_netfilter ]
   - [ sysctl, --system ]
-  - [ sh, -c, 'curl -s https://download.gluster.org/pub/gluster/glusterfs/7/rsa.pub | apt-key add -' ]
-  - [ sh, -c, 'curl -s https://download.docker.com/linux/debian/gpg | apt-key add -' ]
-  - [ sh, -c, 'curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -' ]
-  - [ apt-key, fingerprint, '0EBFCD88' ]
-  - [ sh, -c, 'echo deb https://download.gluster.org/pub/gluster/glusterfs/7/LATEST/Debian/10/amd64/apt/ buster main > /etc/apt/sources.list.d/gluster.list' ]
-  - [ sh, -c, 'echo deb [arch=amd64] https://download.docker.com/linux/debian buster stable > /etc/apt/sources.list.d/docker-ce.list' ]
-  - [ sh, -c, 'echo deb https://apt.kubernetes.io/ kubernetes-xenial main > /etc/apt/sources.list.d/kubernetes.list' ]
+  - [ sh, -c, 'curl -fsSLo /etc/apt/trusted.gpg.d/kubernetes-archive-keyring.gpg https://dl.k8s.io/apt/doc/apt-key.gpg' ]
+  - [ sh, -c, 'curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/trusted.gpg.d/docker-archive-keyring.gpg' ]
   - [ apt-get, update ]
-  - [ apt-get, install, -y, glusterfs-client, containerd.io, 'kubelet=1.20.15-00', 'kubectl=1.20.15-00', 'kubeadm=1.20.15-00' ]
-  - [ apt-mark, hold, glusterfs-client, kubelet, kubectl, kubeadm, containerd.io ]
+  - [ apt-get, install, -y, containerd.io, 'kubelet=1.20.15-00', 'kubectl=1.20.15-00', 'kubeadm=1.20.15-00' ]
+  - [ apt-mark, hold, kubelet, kubectl, kubeadm, containerd.io ]
   # Configure containerd
   - [ mkdir, -p, /etc/containerd ]
   - [ sh, -c, 'containerd config default > /etc/containerd/config.toml' ]
-  # SSH server to trust the CA
-  - [ sh, -c, 'echo >> /etc/ssh/sshd_config' ]
-  - [ sh, -c, 'echo TrustedUserCAKeys /etc/ssh/ca.pub >> /etc/ssh/sshd_config' ]
 
 users:
 - name: debian

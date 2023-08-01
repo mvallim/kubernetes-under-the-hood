@@ -85,14 +85,21 @@ write_files:
 
 apt:
   sources_list: |
-    deb http://us.archive.ubuntu.com/ubuntu/ $RELEASE main restricted universe multiverse
-    deb-src http://us.archive.ubuntu.com/ubuntu/ $RELEASE main restricted universe multiverse
+    deb http://deb.debian.org/debian/ $RELEASE main contrib non-free
+    deb-src http://deb.debian.org/debian/ $RELEASE main contrib non-free
 
-    deb http://us.archive.ubuntu.com/ubuntu/ $RELEASE-updates main restricted universe multiverse
-    deb-src http://us.archive.ubuntu.com/ubuntu/ $RELEASE-updates main restricted universe multiverse
+    deb http://deb.debian.org/debian/ $RELEASE-updates main contrib non-free
+    deb-src http://deb.debian.org/debian/ $RELEASE-updates main contrib non-free
 
-    deb http://us.archive.ubuntu.com/ubuntu/ $RELEASE-security main restricted universe multiverse
-    deb-src http://us.archive.ubuntu.com/ubuntu/ $RELEASE-security main restricted universe multiverse
+    deb http://deb.debian.org/debian-security $RELEASE-security main
+    deb-src http://deb.debian.org/debian-security $RELEASE-security main
+
+  sources:
+    kubernetes.list:
+      source: deb https://apt.kubernetes.io/ kubernetes-xenial main
+    docker.list:
+      source: deb https://download.docker.com/linux/ubuntu $RELEASE stable
+
   conf: |
     APT {
       Get {
@@ -108,16 +115,17 @@ packages:
   - software-properties-common
   - bridge-utils
   - curl
+  - gnupg
 
 runcmd:
   - [ modprobe, overlay]
   - [ modprobe, br_netfilter ]
   - [ sysctl, --system ]
-  - [ sh, -c, 'curl -fsSLo /etc/apt/trusted.gpg.d/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg' ]
-  - [ sh, -c, 'echo deb https://apt.kubernetes.io/ kubernetes-xenial main > /etc/apt/sources.list.d/kubernetes.list' ]
+  - [ sh, -c, 'curl -fsSLo /etc/apt/trusted.gpg.d/kubernetes-archive-keyring.gpg https://dl.k8s.io/apt/doc/apt-key.gpg' ]
+  - [ sh, -c, 'curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/trusted.gpg.d/docker-archive-keyring.gpg' ]
   - [ apt-get, update ]
-  - [ apt-get, install, -y, containerd, 'kubelet=1.20.15-00', 'kubectl=1.20.15-00', 'kubeadm=1.20.15-00' ]
-  - [ apt-mark, hold, kubelet, kubectl, kubeadm, containerd ]
+  - [ apt-get, install, -y, containerd.io, 'kubelet=1.20.15-00', 'kubectl=1.20.15-00', 'kubeadm=1.20.15-00' ]
+  - [ apt-mark, hold, kubelet, kubectl, kubeadm, containerd.io ]
   # Configure containerd
   - [ mkdir, -p, /etc/containerd ]
   - [ sh, -c, 'containerd config default > /etc/containerd/config.toml' ]
