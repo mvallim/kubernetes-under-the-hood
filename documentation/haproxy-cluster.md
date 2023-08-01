@@ -471,7 +471,7 @@ Before carrying out with the Pacemaker configuration, it is worth making some ob
    colocation loc inf: virtual-ip-resource haproxy-resource
    order ord Mandatory: virtual-ip-resource haproxy-resource
    commit
-   bye
+   quit
    EOF
    ```
 
