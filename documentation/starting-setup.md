@@ -55,7 +55,7 @@ One of the issues with tools like **Chef**/**Puppet**/**Salt** is that they need
 
 ### Seed ISO
 
-The initialization of the data source used here will be [nocloud](https://cloudinit.readthedocs.io/en/latest/topics/datasources/nocloud.html). To boot the system in this way, you need to create an ISO file with a **meta-data** file and a **user-data** file, as shown below.
+The initialization of the data source used here will be [nocloud](https://cloudinit.readthedocs.io/en/latest/reference/datasources/nocloud.html). To boot the system in this way, you need to create an ISO file with a **meta-data** file and a **user-data** file, as shown below.
 
 The filesystem volume label must be **cidata** or **CIDATA**.
 

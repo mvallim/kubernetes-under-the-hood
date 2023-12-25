@@ -311,7 +311,7 @@ permitted by applicable law.
 
 At this point, we need to set up our K8S cluster with its initial configuration.
 
-The **SAN**, **Plane Control EndPoint** and **POD Subnet** information is required.
+The **SAN**, **Control Plane EndPoint** and **POD Subnet** information is required.
 
 - The **Control Plane EndPoint** address was defined in the HAProxy Cluster (192.168.4.20) ([here](/documentation/haproxy-cluster.md)).
 - The **SAN address** will be the same as the Control Plane EndPoint.
