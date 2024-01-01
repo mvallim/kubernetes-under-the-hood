@@ -131,6 +131,7 @@ runcmd:
   # Configure containerd
   - [ mkdir, -p, /etc/containerd ]
   - [ sh, -c, 'containerd config default > /etc/containerd/config.toml' ]
+  - [ sh, -c, 'sed -i "s/SystemdCgroup = false/SystemdCgroup = true/g" /etc/containerd/config.toml' ]
 
 users:
 - name: debian
