@@ -1,0 +1,164 @@
+#cloud-config
+write_files:
+
+# CA ssh pub certificate
+- path: /etc/ssh/sshd_config
+  permissions: '0644'
+  content: |
+    TrustedUserCAKeys /etc/ssh/ca.pub
+  append: true
+
+# CA ssh pub certificate
+- path: /etc/ssh/ca.pub
+  permissions: '0644'
+  encoding: b64
+  content: |
+    c3NoLWVkMjU1MTkgQUFBQUMzTnphQzFsWkRJMU5URTVBQUFBSUZWTW1rTnRuRmZDaXRjcFFlWnFR
+    dVZQK0NKV1JtWGp3aGlRakoyalJxaS8gY2FAa3ViZS5kZW1vCg==
+
+  # The bridge-netfilter code enables the following functionality:
+  #  - {Ip,Ip6,Arp}tables can filter bridged IPv4/IPv6/ARP packets, even when
+  # encapsulated in an 802.1Q VLAN or PPPoE header. This enables the functionality
+  # of a stateful transparent firewall.
+  #  - All filtering, logging and NAT features of the 3 tools can therefore be used
+  # on bridged frames.
+  #  - Combined with ebtables, the bridge-nf code therefore makes Linux a very
+  # powerful transparent firewall.
+  #  - This enables, f.e., the creation of a transparent masquerading machine (i.e.
+  # all local hosts think they are directly connected to the Internet).
+  #
+  # The OverlayFS is a union mount filesystem implementation for Linux. It combines
+  # multiple different underlying mount points into one, resulting in single 
+  # directory structure that contains underlying files and sub-directories from all 
+  # sources.
+- path: /etc/modules-load.d/containerd.conf
+  permissions: '0644'
+  content: |
+    overlay
+    br_netfilter
+
+  # Besides providing the NetworkPlugin interface to configure and clean up pod networking,
+  # the plugin may also need specific support for kube-proxy. The iptables proxy obviously
+  # depends on iptables, and the plugin may need to ensure that container traffic is made
+  # available to iptables. For example, if the plugin connects containers to a Linux bridge,
+  # the plugin must set the net/bridge/bridge-nf-call-iptables sysctl to 1 to ensure that
+  # the iptables proxy functions correctly. If the plugin does not use a Linux bridge
+  # (but instead something like Open vSwitch or some other mechanism) it should ensure
+  # container traffic is appropriately routed for the proxy.
+  #
+  # For more details : https://kubernetes.io/docs/concepts/extend-kubernetes/compute-storage-net/network-plugins/#network-plugin-requirements
+  #
+  # As a requirement for your Linux Node’s iptables to correctly see bridged traffic
+- path: /etc/sysctl.d/10-kubernetes.conf
+  permissions: '0644'
+  content: |
+    net.ipv4.ip_forward=1
+    net.bridge.bridge-nf-call-iptables=1
+    net.bridge.bridge-nf-call-arptables=1
+
+- path: /etc/crictl.yaml
+  permissions: '0644'
+  content: |
+    runtime-endpoint: unix:///var/run/containerd/containerd.sock
+    timeout: 0
+    debug: false
+
+- path: /etc/cni/net.d/net-conf.json
+  permission: '0644'
+  content: |
+    {
+      "cniVersion": "0.3.1"
+      "Network": "10.244.0.0/16",
+      "Backend": {
+        "Type": "vxlan"
+      }
+    }
+
+- path: /etc/cni/net.d/loopback-conf.json
+  permission: '0644'
+  content: |
+    {
+      "cniVersion": "0.3.1",
+      "name": "lo",
+      "type": "loopback"
+    }
+
+apt:
+  sources_list: |
+    deb http://deb.debian.org/debian/ $RELEASE main contrib non-free
+    deb-src http://deb.debian.org/debian/ $RELEASE main contrib non-free
+
+    deb http://deb.debian.org/debian/ $RELEASE-updates main contrib non-free
+    deb-src http://deb.debian.org/debian/ $RELEASE-updates main contrib non-free
+
+    deb http://deb.debian.org/debian-security $RELEASE-security main
+    deb-src http://deb.debian.org/debian-security $RELEASE-security main
+
+  sources:
+    kubernetes.list:
+      source: deb https://apt.kubernetes.io/ kubernetes-xenial main
+    docker.list:
+      source: deb https://download.docker.com/linux/debian $RELEASE stable
+
+  conf: |
+    APT {
+      Get {
+        Assume-Yes "true";
+        Fix-Broken "true";
+      };
+    };
+
+packages: 
+  - apt-transport-https
+  - ca-certificates
+  - gnupg2
+  - software-properties-common
+  - bridge-utils
+  - curl
+  - gnupg
+
+runcmd:
+  - [ modprobe, overlay]
+  - [ modprobe, br_netfilter ]
+  - [ sysctl, --system ]
+  - [ sh, -c, 'curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg' ]
+  - [ sh, -c, 'curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg' ]
+  - [ sh, -c, 'echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian bookworm stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null' ]
+  - [ sh, -c, 'echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list' ]
+  - [ apt-get, update ]
+  - [ apt-get, install, -y, containerd.io, 'kubelet=1.29.0-1.1', 'kubectl=1.29.0-1.1', 'kubeadm=1.29.0-1.1' ]
+  - [ apt-mark, hold, kubelet, kubectl, kubeadm, containerd.io ]
+  # Configure containerd
+  - [ mkdir, -p, /etc/containerd ]
+  - [ sh, -c, 'containerd config default > /etc/containerd/config.toml' ]
+  - [ sh, -c, 'sed -i "s/SystemdCgroup = false/SystemdCgroup = true/g" /etc/containerd/config.toml' ]
+
+users:
+- name: debian
+  gecos: Debian User
+  sudo: ALL=(ALL) NOPASSWD:ALL
+  shell: /bin/bash
+  lock_passwd: true
+- name: root
+  lock_passwd: true
+
+locale: en_US.UTF-8
+
+timezone: UTC
+
+ssh_deletekeys: 1
+
+package_upgrade: true
+
+ssh_pwauth: true
+
+manage_etc_hosts: true
+
+fqdn: #HOSTNAME#.kube.demo
+
+hostname: #HOSTNAME#
+
+power_state:
+  mode: reboot
+  timeout: 30
+  condition: true
