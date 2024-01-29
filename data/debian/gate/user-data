@@ -78,6 +78,7 @@ write_files:
 runcmd:
   # Apply kernel parameters
   - [ sysctl, --system ]
+  - [ systemctl, disable, haproxy, keepalived ]
 
 # NAT enable
 bootcmd:

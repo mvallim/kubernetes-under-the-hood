@@ -86,6 +86,7 @@ runcmd:
   - [ apt-mark, hold, kubectl ]
   - [ sh, -c, 'mv -u /run/.ssh/* /home/debian/.ssh/.' ]
   - [ chown, -R, 'debian:debian', '/home/debian' ]
+  - [ systemctl, disable, haproxy, keepalived ]
 
 users:
 - name: debian
