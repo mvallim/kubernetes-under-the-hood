@@ -28,8 +28,8 @@ write_files:
   # all local hosts think they are directly connected to the Internet).
   #
   # The OverlayFS is a union mount filesystem implementation for Linux. It combines
-  # multiple different underlying mount points into one, resulting in single 
-  # directory structure that contains underlying files and sub-directories from all 
+  # multiple different underlying mount points into one, resulting in single
+  # directory structure that contains underlying files and sub-directories from all
   # sources.
 - path: /etc/modules-load.d/containerd.conf
   permissions: '0644'
@@ -96,7 +96,7 @@ write_files:
 #
 # For more details read haproxy.cfg page https://www.haproxy.org/download/1.7/doc/configuration.txt
 - path: /etc/haproxy/haproxy.cfg
-  permissions: '0644'  
+  permissions: '0644'
   content: |
     global
       log /dev/log	local0
@@ -160,7 +160,7 @@ write_files:
       stats auth admin:admin
 
 - path: /etc/keepalived/keepalived.conf
-  permissions: '0644'  
+  permissions: '0644'
   content: |
     global_defs {
       notification_email {
@@ -174,6 +174,8 @@ write_files:
       script "killall -0 haproxy" # check the haproxy process
       interval 2 # every 2 seconds
       weight 2 # add 2 points if OK
+      rise 3
+      fall 2
     }
 
     vrrp_instance VI_1 {
@@ -181,9 +183,16 @@ write_files:
       state BACKUP # MASTER on haproxy, BACKUP on haproxy2
       virtual_router_id 51
       priority 101 # 101 on haproxy, 100 on haproxy2
-      virtual_ipaddress {
-        192.168.0.100 # virtual ip address
+
+      authentication {
+        auth_type PASS
+        auth_pass "MyPassword"
       }
+
+      virtual_ipaddress {
+        192.168.4.20 dev enp0s3 label enp0s3:1# virtual ip address
+      }
+
       track_script {
         check_haproxy
       }
@@ -214,7 +223,7 @@ apt:
       };
     };
 
-packages: 
+packages:
   - apt-transport-https
   - ca-certificates
   - gnupg2
