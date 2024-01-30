@@ -160,6 +160,13 @@ write_files:
       stats hide-version
       stats auth admin:admin
 
+- path: /usr/local/bin/keepalived_notify.sh
+  permissions: '0644'
+  content: |
+    #!/bin/bash
+    #
+    #echo "$1 $2 has transitioned to the $3 state with a priority of $4" > /var/run/keepalived_status
+
 - path: /etc/keepalived/keepalived.conf
   permissions: '0644'
   content: |
@@ -172,17 +179,18 @@ write_files:
       vrrp_gna_interval 0
     }
     vrrp_script check_haproxy {
-      script "killall -0 haproxy" # check the haproxy process
-      interval 2 # every 2 seconds
+      # script "killall -0 haproxy" # check the haproxy process
+      script "systemctl is-active --quiet haproxy" # check the haproxy process
+      interval 2 # check every 2 seconds
       weight 2 # add 2 points if OK
-      rise 3
-      fall 2
+      rise 3 # 3 OKs required to consider the process up after failure
+      fall 2 # 2 fails required for failure
     }
 
     vrrp_instance VI_1 {
       interface enp0s3 # interface to monitor
       state BACKUP # MASTER on haproxy, BACKUP on haproxy2
-      virtual_router_id 51
+      virtual_router_id 51 # Unique, same across peers
       priority 101 # 101 on haproxy, 100 on haproxy2
 
       authentication {
@@ -194,9 +202,11 @@ write_files:
         192.168.4.20
       }
 
+      # check that  haproxy is up
       track_script {
         check_haproxy
       }
+      notify "/usr/local/bin/keepalived_notify.sh"
     }
 
 apt:
