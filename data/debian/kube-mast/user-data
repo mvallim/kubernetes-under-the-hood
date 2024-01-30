@@ -141,7 +141,7 @@ write_files:
       hold valid 10s
 
     frontend kubernetes-apiserver-https
-      bind 192.168.4.20:6443
+      bind 192.168.4.20:443
       mode tcp
       default_backend kubernetes-master-nodes
 
@@ -161,11 +161,11 @@ write_files:
       stats auth admin:admin
 
 - path: /usr/local/bin/keepalived_notify.sh
-  permissions: '0644'
+  permissions: '0755'
   content: |
     #!/bin/bash
     #
-    #echo "$1 $2 has transitioned to the $3 state with a priority of $4" > /var/run/keepalived_status
+    echo "$1 $2 has transitioned to the $3 state with a priority of $4" > /var/run/keepalived_status
 
 - path: /etc/keepalived/keepalived.conf
   permissions: '0644'
