@@ -55,6 +55,7 @@ write_files:
     net.ipv4.ip_forward=1
     net.bridge.bridge-nf-call-iptables=1
     net.bridge.bridge-nf-call-arptables=1
+    net.ipv4.ip_nonlocal_bind=1
 
 - path: /etc/crictl.yaml
   permissions: '0644'
@@ -140,7 +141,7 @@ write_files:
       hold valid 10s
 
     frontend kubernetes-apiserver-https
-      bind *:6443
+      bind 192.168.4.20:6443
       mode tcp
       default_backend kubernetes-master-nodes
 
@@ -190,7 +191,7 @@ write_files:
       }
 
       virtual_ipaddress {
-        192.168.4.20 dev enp0s3 label enp0s3:1# virtual ip address
+        192.168.4.20
       }
 
       track_script {
