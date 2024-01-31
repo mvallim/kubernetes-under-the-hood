@@ -20,6 +20,7 @@ Master components can be run on any machine in the cluster. However, for simplic
 - **Scheduler** - Watches for unscheduled pods and binds them to nodes via the binding pod subresource API, according to the availability of the requested resources, quality of service requirements, affinity and anti-affinity specifications, and other constraints. Once the pod has a node assigned, the regular behavior of the Kubelet is triggered and the pod and its containers are created.
 - **Kube Proxy** - Acts as a network proxy and a load balancer for a service on a single worker node. It takes care of the network routing for TCP and UDP packets.
 - **Flannel** - A layer 3 network fabric designed for Kubernetes. Check our [previous topic about flannel](kube-flannel.md) for more information.
+- **Cilium** - A layer 3 network fabric designed for Kubernetes. Check our [cilium](https://docs.cilium.io/en/stable/gettingstarted/k8s-install-default/) for more information.
 - **CoreDNS** - The DNS Server of the Kubernetes cluster. For more information, check the [CoreDNS official repository](https://github.com/coredns/coredns).
 
 ## Create the VMs
@@ -474,6 +475,67 @@ This approach requires less infrastructure. The etcd members and control plane n
    ```
 
 > If you look at the status on the `kube-mast01` node, it says it is **NotReady** and the `coredns` pods are in the **Pending** state. This is because, up to this point, we do not have a network component configured in our K8S cluster. Remember, as explained before, **Flannel** will be used for this matter.
+#### Deploy Cilium
+
+1. Run the following command to install the cilium tool
+
+  ```console
+  debian@kube-mast01:~$ CILIUM_CLI_VERSION=$(curl -s https://raw.githubusercontent.com/cilium/cilium-cli/main/stable.txt)
+  CLI_ARCH=amd64
+  if [ "$(uname -m)" = "aarch64" ]; then CLI_ARCH=arm64; fi
+  curl -L --fail --remote-name-all https://github.com/cilium/cilium-cli/releases/download/${CILIUM_CLI_VERSION}/cilium-linux-${CLI_ARCH}.tar.gz{,.sha256sum}
+  sha256sum --check cilium-linux-${CLI_ARCH}.tar.gz.sha256sum
+  sudo tar xzvfC cilium-linux-${CLI_ARCH}.tar.gz /usr/local/bin
+  rm cilium-linux-${CLI_ARCH}.tar.gz{,.sha256sum}
+  ```
+
+2. Install Cilium
+  ```
+  debian@kube-mast01:~$ cilium install --version 1.14.6
+  ```
+
+3. Check Cilium's status
+
+  ```console
+  debian@kube-mast01:~$ cilium status
+  ```
+
+  Expected output:
+  ```
+      /¯¯\
+ /¯¯\__/¯¯\    Cilium:             OK
+ \__/¯¯\__/    Operator:           OK
+ /¯¯\__/¯¯\    Envoy DaemonSet:    disabled (using embedded mode)
+ \__/¯¯\__/    Hubble Relay:       disabled
+    \__/       ClusterMesh:        disabled
+
+DaemonSet              cilium             Desired: 1, Ready: 1/1, Available: 1/1
+Deployment             cilium-operator    Desired: 1, Ready: 1/1, Available: 1/1
+Containers:            cilium-operator    Running: 1
+                       cilium             Running: 1
+Cluster Pods:          2/5 managed by Cilium
+Helm chart version:    1.14.6
+Image versions         cilium             quay.io/cilium/cilium:v1.14.6@sha256:37a49f1abb333279a9b802ee8a21c61cde9dd9138b5ac55f77bdfca733ba852a: 1
+                       cilium-operator    quay.io/cilium/operator-generic:v1.14.6@sha256:2f0bf8fb8362c7379f3bf95036b90ad5b67378ed05cd8eb0410c1afc13423848: 1
+  ```
+
+4. Check cluster's status
+  ```console
+  debian@kube-mast01:~$ kubectl get pods -o wide -A
+NAMESPACE     NAME                                  READY   STATUS             RESTARTS        AGE     IP              NODE          NOMINATED NODE   READINESS GATES
+cilium-test   client-69748f45d8-4dwjk               0/1     Pending            0               8m22s   <none>          <none>        <none>           <none>
+cilium-test   client2-ccd7b8bdf-tv4f6               0/1     Pending            0               8m22s   <none>          <none>        <none>           <none>
+cilium-test   echo-same-node-6698bd45b-vhfms        0/2     Pending            0               8m23s   <none>          <none>        <none>           <none>
+kube-system   cilium-operator-75f4ff66f6-xh8nm      1/1     Running            0               11m     192.168.1.225   kube-mast01   <none>           <none>
+kube-system   cilium-rjjx5                          1/1     Running            0               11m     192.168.1.225   kube-mast01   <none>           <none>
+kube-system   coredns-76f75df574-j6nbw              0/1     CrashLoopBackOff   6 (3m31s ago)   16m     10.0.0.88       kube-mast01   <none>           <none>
+kube-system   coredns-76f75df574-ts5g2              0/1     CrashLoopBackOff   6 (3m24s ago)   16m     10.0.0.82       kube-mast01   <none>           <none>
+kube-system   etcd-kube-mast01                      1/1     Running            0               17m     192.168.1.225   kube-mast01   <none>           <none>
+kube-system   kube-apiserver-kube-mast01            1/1     Running            0               16m     192.168.1.225   kube-mast01   <none>           <none>
+kube-system   kube-controller-manager-kube-mast01   1/1     Running            0               17m     192.168.1.225   kube-mast01   <none>           <none>
+kube-system   kube-proxy-d7bzv                      1/1     Running            0               16m     192.168.1.225   kube-mast01   <none>           <none>
+kube-system   kube-scheduler-kube-mast01            1/1     Running            0               17m     192.168.1.225   kube-mast01   <none>           <none>
+  ```
 
 #### Deploy flannel
 
