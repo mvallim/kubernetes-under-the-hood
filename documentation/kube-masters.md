@@ -521,21 +521,20 @@ Image versions         cilium             quay.io/cilium/cilium:v1.14.6@sha256:3
 
 4. Check cluster's status
   ```console
-  debian@kube-mast01:~$ kubectl get pods -o wide -A
-NAMESPACE     NAME                                  READY   STATUS             RESTARTS        AGE     IP              NODE          NOMINATED NODE   READINESS GATES
-cilium-test   client-69748f45d8-4dwjk               0/1     Pending            0               8m22s   <none>          <none>        <none>           <none>
-cilium-test   client2-ccd7b8bdf-tv4f6               0/1     Pending            0               8m22s   <none>          <none>        <none>           <none>
-cilium-test   echo-same-node-6698bd45b-vhfms        0/2     Pending            0               8m23s   <none>          <none>        <none>           <none>
-kube-system   cilium-operator-75f4ff66f6-xh8nm      1/1     Running            0               11m     192.168.1.225   kube-mast01   <none>           <none>
-kube-system   cilium-rjjx5                          1/1     Running            0               11m     192.168.1.225   kube-mast01   <none>           <none>
-kube-system   coredns-76f75df574-j6nbw              0/1     CrashLoopBackOff   6 (3m31s ago)   16m     10.0.0.88       kube-mast01   <none>           <none>
-kube-system   coredns-76f75df574-ts5g2              0/1     CrashLoopBackOff   6 (3m24s ago)   16m     10.0.0.82       kube-mast01   <none>           <none>
-kube-system   etcd-kube-mast01                      1/1     Running            0               17m     192.168.1.225   kube-mast01   <none>           <none>
-kube-system   kube-apiserver-kube-mast01            1/1     Running            0               16m     192.168.1.225   kube-mast01   <none>           <none>
-kube-system   kube-controller-manager-kube-mast01   1/1     Running            0               17m     192.168.1.225   kube-mast01   <none>           <none>
-kube-system   kube-proxy-d7bzv                      1/1     Running            0               16m     192.168.1.225   kube-mast01   <none>           <none>
-kube-system   kube-scheduler-kube-mast01            1/1     Running            0               17m     192.168.1.225   kube-mast01   <none>           <none>
+  debian@kube-mast01:~$ kubectl get pods -A -o wide
+  NAMESPACE     NAME                                  READY   STATUS    RESTARTS   AGE    IP              NODE          NOMINATED NODE   READINESS GATES
+  kube-system   cilium-operator-75f4ff66f6-xh8nm      1/1     Running   0          53m    192.168.1.225   kube-mast01   <none>           <none>
+  kube-system   cilium-rjjx5                          1/1     Running   0          53m    192.168.1.225   kube-mast01   <none>           <none>
+  kube-system   coredns-76f75df574-7hr4w              1/1     Running   0          21s    10.0.0.48       kube-mast01   <none>           <none>
+  kube-system   coredns-76f75df574-mwg9n              1/1     Running   0          2m2s   10.0.0.143      kube-mast01   <none>           <none>
+  kube-system   etcd-kube-mast01                      1/1     Running   0          59m    192.168.1.225   kube-mast01   <none>           <none>
+  kube-system   kube-apiserver-kube-mast01            1/1     Running   0          59m    192.168.1.225   kube-mast01   <none>           <none>
+  kube-system   kube-controller-manager-kube-mast01   1/1     Running   0          59m    192.168.1.225   kube-mast01   <none>           <none>
+  kube-system   kube-proxy-d7bzv                      1/1     Running   0          59m    192.168.1.225   kube-mast01   <none>           <none>
+  kube-system   kube-scheduler-kube-mast01            1/1     Running   0          59m    192.168.1.225   kube-mast01   <none>           <none>
   ```
+ 
+ If coredns shows `CrashLoopBackOff`, please refer to [loop](https://coredns.io/plugins/loop/) to resolve forwarding loop issue.
 
 #### Deploy flannel
 
