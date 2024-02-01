@@ -30,6 +30,8 @@ write_files:
     no-hosts
     domain-needed
     bogus-priv
+    server=8.8.8.8
+    server=8.8.4.4
     listen-address=127.0.0.1
     listen-address=192.168.1.1
     listen-address=192.168.2.1
