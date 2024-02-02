@@ -20,6 +20,7 @@ Master components can be run on any machine in the cluster. However, for simplic
 - **Scheduler** - Watches for unscheduled pods and binds them to nodes via the binding pod subresource API, according to the availability of the requested resources, quality of service requirements, affinity and anti-affinity specifications, and other constraints. Once the pod has a node assigned, the regular behavior of the Kubelet is triggered and the pod and its containers are created.
 - **Kube Proxy** - Acts as a network proxy and a load balancer for a service on a single worker node. It takes care of the network routing for TCP and UDP packets.
 - **Flannel** - A layer 3 network fabric designed for Kubernetes. Check our [previous topic about flannel](kube-flannel.md) for more information.
+- **Cilium** - A layer 3 network fabric designed for Kubernetes. Check our [cilium](https://docs.cilium.io/en/stable/gettingstarted/k8s-install-default/) for more information.
 - **CoreDNS** - The DNS Server of the Kubernetes cluster. For more information, check the [CoreDNS official repository](https://github.com/coredns/coredns).
 
 ## Create the VMs
@@ -311,7 +312,7 @@ permitted by applicable law.
 
 At this point, we need to set up our K8S cluster with its initial configuration.
 
-The **SAN**, **Plane Control EndPoint** and **POD Subnet** information is required.
+The **SAN**, **Control Plane EndPoint** and **POD Subnet** information is required.
 
 - The **Control Plane EndPoint** address was defined in the HAProxy Cluster (192.168.4.20) ([here](/documentation/haproxy-cluster.md)).
 - The **SAN address** will be the same as the Control Plane EndPoint.
@@ -474,6 +475,66 @@ This approach requires less infrastructure. The etcd members and control plane n
    ```
 
 > If you look at the status on the `kube-mast01` node, it says it is **NotReady** and the `coredns` pods are in the **Pending** state. This is because, up to this point, we do not have a network component configured in our K8S cluster. Remember, as explained before, **Flannel** will be used for this matter.
+#### Deploy Cilium
+
+1. Run the following command to install the cilium tool
+
+  ```console
+  debian@kube-mast01:~$ CILIUM_CLI_VERSION=$(curl -s https://raw.githubusercontent.com/cilium/cilium-cli/main/stable.txt)
+  CLI_ARCH=amd64
+  if [ "$(uname -m)" = "aarch64" ]; then CLI_ARCH=arm64; fi
+  curl -L --fail --remote-name-all https://github.com/cilium/cilium-cli/releases/download/${CILIUM_CLI_VERSION}/cilium-linux-${CLI_ARCH}.tar.gz{,.sha256sum}
+  sha256sum --check cilium-linux-${CLI_ARCH}.tar.gz.sha256sum
+  sudo tar xzvfC cilium-linux-${CLI_ARCH}.tar.gz /usr/local/bin
+  rm cilium-linux-${CLI_ARCH}.tar.gz{,.sha256sum}
+  ```
+
+2. Install Cilium
+  ```
+  debian@kube-mast01:~$ cilium install --version 1.14.6
+  ```
+
+3. Check Cilium's status
+
+  ```console
+  debian@kube-mast01:~$ cilium status
+  ```
+
+  Expected output:
+  ```
+      /¯¯\
+ /¯¯\__/¯¯\    Cilium:             OK
+ \__/¯¯\__/    Operator:           OK
+ /¯¯\__/¯¯\    Envoy DaemonSet:    disabled (using embedded mode)
+ \__/¯¯\__/    Hubble Relay:       disabled
+    \__/       ClusterMesh:        disabled
+
+DaemonSet              cilium             Desired: 1, Ready: 1/1, Available: 1/1
+Deployment             cilium-operator    Desired: 1, Ready: 1/1, Available: 1/1
+Containers:            cilium-operator    Running: 1
+                       cilium             Running: 1
+Cluster Pods:          2/5 managed by Cilium
+Helm chart version:    1.14.6
+Image versions         cilium             quay.io/cilium/cilium:v1.14.6@sha256:37a49f1abb333279a9b802ee8a21c61cde9dd9138b5ac55f77bdfca733ba852a: 1
+                       cilium-operator    quay.io/cilium/operator-generic:v1.14.6@sha256:2f0bf8fb8362c7379f3bf95036b90ad5b67378ed05cd8eb0410c1afc13423848: 1
+  ```
+
+4. Check cluster's status
+  ```console
+  debian@kube-mast01:~$ kubectl get pods -A -o wide
+  NAMESPACE     NAME                                  READY   STATUS    RESTARTS   AGE    IP              NODE          NOMINATED NODE   READINESS GATES
+  kube-system   cilium-operator-75f4ff66f6-xh8nm      1/1     Running   0          53m    192.168.1.225   kube-mast01   <none>           <none>
+  kube-system   cilium-rjjx5                          1/1     Running   0          53m    192.168.1.225   kube-mast01   <none>           <none>
+  kube-system   coredns-76f75df574-7hr4w              1/1     Running   0          21s    10.0.0.48       kube-mast01   <none>           <none>
+  kube-system   coredns-76f75df574-mwg9n              1/1     Running   0          2m2s   10.0.0.143      kube-mast01   <none>           <none>
+  kube-system   etcd-kube-mast01                      1/1     Running   0          59m    192.168.1.225   kube-mast01   <none>           <none>
+  kube-system   kube-apiserver-kube-mast01            1/1     Running   0          59m    192.168.1.225   kube-mast01   <none>           <none>
+  kube-system   kube-controller-manager-kube-mast01   1/1     Running   0          59m    192.168.1.225   kube-mast01   <none>           <none>
+  kube-system   kube-proxy-d7bzv                      1/1     Running   0          59m    192.168.1.225   kube-mast01   <none>           <none>
+  kube-system   kube-scheduler-kube-mast01            1/1     Running   0          59m    192.168.1.225   kube-mast01   <none>           <none>
+  ```
+ 
+ If coredns shows `CrashLoopBackOff`, please refer to [loop](https://coredns.io/plugins/loop/) to resolve forwarding loop issue.
 
 #### Deploy flannel
 
