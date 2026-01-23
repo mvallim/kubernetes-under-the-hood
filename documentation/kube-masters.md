@@ -95,7 +95,7 @@ Notice we also make use of our [`create-image.sh`](../create-image.sh) helper sc
 
 ### Understading the user-data file
 
-The cloud-init kube-master configuration file can be found [here](/data/debian/kube/user-data). This configures and installs Docker and Kubernetes binaries (kubeadm, kubectl, kublet).
+The cloud-init kube-master configuration file can be found [here](/data/debian/kube/user-data). This configures and installs Docker and Kubernetes binaries (kubeadm, kubectl, kubelet).
 
 Below you can find the same file commented for a better understanding:
 
