@@ -132,7 +132,7 @@ permitted by applicable law.
 
 ### Understading the user-data file
 
-The cloud-init kube-master configuration file can be found [here](/data/debian/kube/user-data). This configures and install docker and kubernetes biniaries (kubeadm, kubectl, kublet).
+The cloud-init kube-master configuration file can be found [here](/data/debian/kube/user-data). This configures and install docker and kubernetes binaries (kubeadm, kubectl, kubelet).
 
 Below you can find the same file commented for easier understanding:
 

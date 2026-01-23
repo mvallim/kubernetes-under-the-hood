@@ -52,7 +52,7 @@ permitted by applicable law.
 
 ## Deploy
 
-1. Configure `kubectl` in the BusyXox. To do so, copy the configuration from the master node:
+1. Configure `kubectl` in the BusyBox. To do so, copy the configuration from the master node:
 
    ```console
    debian@busybox:~$ mkdir ~/.kube

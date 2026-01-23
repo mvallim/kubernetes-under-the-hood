@@ -4,7 +4,7 @@
   <img src="documentation/images/under-the-hood.jpg">
 </p>
 
-It even includes a SlideShare explaining the reasoning behid it [Kubernetes under the hood journey](https://pt.slideshare.net/MarcosVallim1/kubernetes-under-the-hood-journey/MarcosVallim1/kubernetes-under-the-hood-journey)
+It even includes a SlideShare explaining the reasoning behind it [Kubernetes under the hood journey](https://pt.slideshare.net/MarcosVallim1/kubernetes-under-the-hood-journey/MarcosVallim1/kubernetes-under-the-hood-journey)
 
 ## Target Audience
 
@@ -12,9 +12,9 @@ The target audience for this tutorial is someone planning to install a Kubernete
 
 ## Index
 
-***Atention**: the documentation for this project is being actively improved to explain the demonstrated concepts clearly. If you face any difficulties while following the steps described in the documentation, please open an issue, so we can keep improving it. The version of Kubernetes used here is **1.20.15***
+***Attention**: the documentation for this project is being actively improved to explain the demonstrated concepts clearly. If you face any difficulties while following the steps described in the documentation, please open an issue, so we can keep improving it. The version of Kubernetes used here is **1.20.15***
 
-1. Introdution
+1. Introduction
    - [Up and running out of the cloud](documentation/objective.md)
 2. Planning
    - [Architecture Overview](documentation/common-cluster.md)
