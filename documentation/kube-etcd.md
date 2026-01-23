@@ -90,6 +90,6 @@ This part of the story illustrates a scenario of network partitioning, for examp
 
 ## How does etcd fit inside the Kubernetes Cluster?
 
-**etcd** the stores settings, state and metadata of **Kubernetes**. Because **Kubernetes** is a distributed system, it makes a lot of sense to use a distributed database. **etcd**, as already explained, is a distributed database with high availability and scalability.
+**etcd** stores settings, state and metadata of **Kubernetes**. Because **Kubernetes** is a distributed system, it makes a lot of sense to use a distributed database. **etcd**, as already explained, is a distributed database with high availability and scalability.
 
 *"An ideal wedding for an ideal solution in the **Cluster Land**."*
