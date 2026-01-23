@@ -4,8 +4,6 @@
   <img src="documentation/images/under-the-hood.jpg">
 </p>
 
-It even includes a SlideShare explaining the reasoning behind it [Kubernetes under the hood journey](https://pt.slideshare.net/MarcosVallim1/kubernetes-under-the-hood-journey/MarcosVallim1/kubernetes-under-the-hood-journey)
-
 ## Target Audience
 
 The target audience for this tutorial is someone planning to install a Kubernetes cluster and wants to understand how everything fits together.
