@@ -197,7 +197,7 @@ This document shows how to create a Debian image from scratch to run on Cloud en
      --variant=minbase \
      --components "main" \
      --include "ca-certificates,cron,iptables,isc-dhcp-client,libnss-myhostname,ntp,ntpdate,rsyslog,ssh,sudo,dialog,whiptail,man-db,curl,dosfstools,e2fsck-static" \
-     bullseye \
+     bookworm \
      $HOME/debian-image-from-scratch/chroot \
      http://deb.debian.org/debian/
   ```
@@ -250,14 +250,14 @@ This document shows how to create a Debian image from scratch to run on Cloud en
 
    ```bash
    cat <<EOF > /etc/apt/sources.list
-   deb http://deb.debian.org/debian/ bullseye main contrib non-free
-   deb-src http://deb.debian.org/debian/ bullseye main contrib non-free
+   deb http://deb.debian.org/debian/ bookworm main contrib non-free non-free-firmware
+   deb-src http://deb.debian.org/debian/ bookworm main contrib non-free non-free-firmware
 
-   deb http://deb.debian.org/debian/ bullseye-updates main contrib non-free
-   deb-src http://deb.debian.org/debian/ bullseye-updates main contrib non-free
+   deb http://deb.debian.org/debian/ bookworm-updates main contrib non-free non-free-firmware
+   deb-src http://deb.debian.org/debian/ bookworm-updates main contrib non-free non-free-firmware
 
-   deb http://deb.debian.org/debian-security bullseye-security main
-   deb-src http://deb.debian.org/debian-security bullseye-security main
+   deb http://deb.debian.org/debian-security bookworm-security main
+   deb-src http://deb.debian.org/debian-security bookworm-security main
    EOF
    ```
 
@@ -477,13 +477,13 @@ If you plan to use this image in **VirtualBox**, install [**VirtualBox Guest Add
    1. Download VirtualBox Guest Additions:
 
        ```bash
-       curl --progress-bar https://download.virtualbox.org/virtualbox/7.0.4/VBoxGuestAdditions_7.0.4.iso -o VBoxGuestAdditions_7.0.4.iso
+       curl --progress-bar https://download.virtualbox.org/virtualbox/7.2.4/VBoxGuestAdditions_7.2.4.iso -o VBoxGuestAdditions_7.2.4.iso
        ```
 
    2. Mount the ISO file:
 
        ```bash
-       mount -o loop VBoxGuestAdditions_7.0.4.iso /mnt
+       mount -o loop VBoxGuestAdditions_7.2.4.iso /mnt
        ```
 
    3. Install VirtualBox:
@@ -495,13 +495,14 @@ If you plan to use this image in **VirtualBox**, install [**VirtualBox Guest Add
        Expected output
 
        ```console
-       Uncompressing VirtualBox 7.0.4 Guest Additions for Linux........
+       Verifying archive integrity...  100%   MD5 checksums are OK. All good.
+       Uncompressing VirtualBox 7.2.4 Guest Additions for Linux  100%  
        VirtualBox Guest Additions installer
-       Copying additional installer modules ...
-       Installing additional modules ...
-       depmod: ERROR: could not open directory /lib/modules/5.10.0-1-amd64: No such file or directory
+       Running in chroot, ignoring command 'daemon-reload'
+       depmod: ERROR: could not open directory /lib/modules/6.12.63+deb13-amd64: No such file or directory
        depmod: FATAL: could not search modules: No such file or directory
        VirtualBox Guest Additions: Starting.
+       VirtualBox Guest Additions: Setting up modules
        VirtualBox Guest Additions: Building the VirtualBox Guest Additions kernel 
        modules.  This may take a while.
        VirtualBox Guest Additions: To build modules for other installed kernels, run
@@ -509,11 +510,12 @@ If you plan to use this image in **VirtualBox**, install [**VirtualBox Guest Add
        VirtualBox Guest Additions: or
        VirtualBox Guest Additions:   /sbin/rcvboxadd quicksetup all
        VirtualBox Guest Additions: Kernel headers not found for target kernel 
-       5.10.0-1-amd64. Please install them and execute
+       6.12.63+deb13-amd64. Please install them and execute
          /sbin/rcvboxadd setup
-       modprobe vboxguest failed
+       VirtualBox Guest Additions: reloading kernel modules and services
+       VirtualBox Guest Additions: unable to load vboxguest kernel module, see dmesg
+       VirtualBox Guest Additions: kernel modules and services were not reloaded
        The log file /var/log/vboxadd-setup.log may contain further information.
-       Running in chroot, ignoring request.
        ```
 
    4. Generate modules inside `chroot` environment:
@@ -526,22 +528,22 @@ If you plan to use this image in **VirtualBox**, install [**VirtualBox Guest Add
 
        ```console
        total 12
-       drwxr-xr-x  3 root root 4096 Feb  2 23:36 .
-       drwxr-xr-x 14 root root 4096 Feb  2 23:36 ..
-       drwxr-xr-x  3 root root 4096 Feb  2 23:36 4.19.0-18-amd64
+       drwxr-xr-x  3 root root 4096 Jan 25 23:07 .
+       drwxr-xr-x 57 root root 4096 Jan 25 23:07 ..
+       drwxr-xr-x  3 root root 4096 Jan 25 23:07 6.1.0-42-amd64
        ```
 
-       Refer to the file name listed. In this case, `4.19.0-18-amd64`:
+       Refer to the file name listed. In this case, `6.1.0-42-amd64`:
 
        ```bash
-       rcvboxadd quicksetup 4.19.0-18-amd64
+       rcvboxadd quicksetup 6.1.0-42-amd64
        ```
 
        Expected output
 
        ```console
-       VirtualBox Guest Additions: Building the modules for kernel 4.19.0-18-amd64.
-       update-initramfs: Generating /boot/initrd.img-4.19.0-18-amd64
+       VirtualBox Guest Additions: Building the modules for kernel 6.1.0-42-amd64.
+       update-initramfs: Generating /boot/initrd.img-6.1.0-42-amd64
        ```
 
    5. Umount and remove the ISO file:
@@ -549,7 +551,7 @@ If you plan to use this image in **VirtualBox**, install [**VirtualBox Guest Add
        ```bash
        umount /mnt
 
-       rm -rf VBoxGuestAdditions_6.1.18.iso
+       rm -rf VBoxGuestAdditions_7.2.4.iso
        ```
 
    6. Fix `vboxadd-service`
