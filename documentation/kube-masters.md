@@ -187,20 +187,20 @@ write_files:
 
 apt:
   sources_list: |
-    deb http://deb.debian.org/debian/ $RELEASE main contrib non-free
-    deb-src http://deb.debian.org/debian/ $RELEASE main contrib non-free
+    deb http://deb.debian.org/debian/ $RELEASE main contrib non-free non-free-firmware
+    deb-src http://deb.debian.org/debian/ $RELEASE main contrib non-free non-free-firmware
 
-    deb http://deb.debian.org/debian/ $RELEASE-updates main contrib non-free
-    deb-src http://deb.debian.org/debian/ $RELEASE-updates main contrib non-free
+    deb http://deb.debian.org/debian/ $RELEASE-updates main contrib non-free non-free-firmware
+    deb-src http://deb.debian.org/debian/ $RELEASE-updates main contrib non-free non-free-firmware
 
     deb http://deb.debian.org/debian-security $RELEASE-security main
     deb-src http://deb.debian.org/debian-security $RELEASE-security main
 
   sources:
     kubernetes.list:
-      source: deb https://apt.kubernetes.io/ kubernetes-xenial main
+      source: deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /
     docker.list:
-      source: deb https://download.docker.com/linux/debian $RELEASE stable
+      source: deb [signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $RELEASE stable
 
   conf: |
     APT {
@@ -223,14 +223,17 @@ runcmd:
   - [ modprobe, overlay]
   - [ modprobe, br_netfilter ]
   - [ sysctl, --system ]
-  - [ sh, -c, 'curl -fsSLo /etc/apt/trusted.gpg.d/kubernetes-archive-keyring.gpg https://dl.k8s.io/apt/doc/apt-key.gpg' ]
-  - [ sh, -c, 'curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/trusted.gpg.d/docker-archive-keyring.gpg' ]
+  - [ sh, -c, 'curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg' ]
+  - [ sh, -c, 'curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg' ]
   - [ apt-get, update ]
-  - [ apt-get, install, -y, containerd.io, 'kubelet=1.20.15-00', 'kubectl=1.20.15-00', 'kubeadm=1.20.15-00' ]
+  - [ apt-get, install, -y, containerd.io, 'kubelet=1.29.15-1.1', 'kubectl=1.29.15-1.1', 'kubeadm=1.29.15-1.1' ]
   - [ apt-mark, hold, kubelet, kubectl, kubeadm, containerd.io ]
   # Configure containerd
   - [ mkdir, -p, /etc/containerd ]
   - [ sh, -c, 'containerd config default > /etc/containerd/config.toml' ]
+  - [ sh, -c, 'sed -i "s/SystemdCgroup = false/SystemdCgroup = true/" /etc/containerd/config.toml' ]
+  - [ systemctl, restart, containerd ]
+  - [ systemctl, enable, containerd ]
 
 users:
 - name: debian
@@ -320,15 +323,19 @@ The **SAN**, **Plane Control EndPoint** and **POD Subnet** information is requir
 Based on the above information, we will have a [`kubeadm-config.yml`](../master/kubeadm-config.yaml) that looks like this:
 
 ```yaml
-apiVersion: kubeadm.k8s.io/v1beta2
+apiVersion: kubeadm.k8s.io/v1beta3
 kind: ClusterConfiguration
-kubernetesVersion: stable-1.20
+kubernetesVersion: v1.29.15
 apiServer:
   certSANs:
   - "192.168.4.20"
 controlPlaneEndpoint: "192.168.4.20:6443"
 networking:
   podSubnet: 10.244.0.0/16
+---
+kind: KubeletConfiguration
+apiVersion: kubelet.config.k8s.io/v1beta1
+cgroupDriver: systemd
 ```
 
 #### `kubeadm init`
@@ -356,7 +363,7 @@ This approach requires less infrastructure. The etcd members and control plane n
    Expected output:
 
    ```console
-   [init] Using Kubernetes version: v1.20.15
+   [init] Using Kubernetes version: v1.29.15
    [preflight] Running pre-flight checks
    [preflight] Pulling images required for setting up a Kubernetes cluster
    [preflight] This might take a minute or two, depending on the speed of your internet connection
@@ -364,81 +371,82 @@ This approach requires less infrastructure. The etcd members and control plane n
    [certs] Using certificateDir folder "/etc/kubernetes/pki"
    [certs] Generating "ca" certificate and key
    [certs] Generating "apiserver" certificate and key
-   [certs] apiserver serving cert is signed for DNS names [kube-mast01 kubernetes kubernetes.default kubernetes.default.svc kubernetes.default.svc.cluster.local] and IPs [10.96.0.1 192.168.1.18 192.168.4.20]
+   [certs] apiserver serving cert is signed for DNS names [kube-mast01 kubernetes kubernetes.default kubernetes.default.svc kubernetes.default.svc.cluster.local] and IPs [10.96.0.1 192.168.1.55 192.168.4.20]
    [certs] Generating "apiserver-kubelet-client" certificate and key
    [certs] Generating "front-proxy-ca" certificate and key
    [certs] Generating "front-proxy-client" certificate and key
    [certs] Generating "etcd/ca" certificate and key
    [certs] Generating "etcd/server" certificate and key
-   [certs] etcd/server serving cert is signed for DNS names [kube-mast01 localhost] and IPs [192.168.1.18 127.0.0.1 ::1]
+   [certs] etcd/server serving cert is signed for DNS names [kube-mast01 localhost] and IPs [192.168.1.55 127.0.0.1 ::1]
    [certs] Generating "etcd/peer" certificate and key
-   [certs] etcd/peer serving cert is signed for DNS names [kube-mast01 localhost] and IPs [192.168.1.18 127.0.0.1 ::1]
+   [certs] etcd/peer serving cert is signed for DNS names [kube-mast01 localhost] and IPs [192.168.1.55 127.0.0.1 ::1]
    [certs] Generating "etcd/healthcheck-client" certificate and key
    [certs] Generating "apiserver-etcd-client" certificate and key
    [certs] Generating "sa" key and public key
    [kubeconfig] Using kubeconfig folder "/etc/kubernetes"
    [kubeconfig] Writing "admin.conf" kubeconfig file
+   [kubeconfig] Writing "super-admin.conf" kubeconfig file
    [kubeconfig] Writing "kubelet.conf" kubeconfig file
    [kubeconfig] Writing "controller-manager.conf" kubeconfig file
    [kubeconfig] Writing "scheduler.conf" kubeconfig file
-   [kubelet-start] Writing kubelet environment file with flags to file "/var/lib/kubelet/kubeadm-flags.env"
-   [kubelet-start] Writing kubelet configuration to file "/var/lib/kubelet/config.yaml"
-   [kubelet-start] Starting the kubelet
+   [etcd] Creating static Pod manifest for local etcd in "/etc/kubernetes/manifests"
    [control-plane] Using manifest folder "/etc/kubernetes/manifests"
    [control-plane] Creating static Pod manifest for "kube-apiserver"
    [control-plane] Creating static Pod manifest for "kube-controller-manager"
    [control-plane] Creating static Pod manifest for "kube-scheduler"
-   [etcd] Creating static Pod manifest for local etcd in "/etc/kubernetes/manifests"
+   [kubelet-start] Writing kubelet environment file with flags to file "/var/lib/kubelet/kubeadm-flags.env"
+   [kubelet-start] Writing kubelet configuration to file "/var/lib/kubelet/config.yaml"
+   [kubelet-start] Starting the kubelet
    [wait-control-plane] Waiting for the kubelet to boot up the control plane as static Pods from directory "/etc/kubernetes/manifests". This can take up to 4m0s
-   [apiclient] All control plane components are healthy after 18.032112 seconds
+   [apiclient] All control plane components are healthy after 5.020197 seconds
    [upload-config] Storing the configuration used in ConfigMap "kubeadm-config" in the "kube-system" Namespace
-   [kubelet] Creating a ConfigMap "kubelet-config-1.20" in namespace kube-system with the configuration for the kubelets in the cluster
+   [kubelet] Creating a ConfigMap "kubelet-config" in namespace kube-system with the configuration for the kubelets in the cluster
    [upload-certs] Storing the certificates in Secret "kubeadm-certs" in the "kube-system" Namespace
    [upload-certs] Using certificate key:
-   2fb2e3372428723ed5ccc023a88e8c2e076cd9fcbb31bf4cb5f41455cc3b2390
-   [mark-control-plane] Marking the node kube-mast01 as control-plane by adding the labels "node-role.kubernetes.io/master=''" and "node-role.kubernetes.io/control-plane='' (deprecated)"
-   [mark-control-plane] Marking the node kube-mast01 as control-plane by adding the taints [node-role.kubernetes.io/master:NoSchedule]
-   [bootstrap-token] Using token: zlo94s.6bws9rl0j69jx1ob
+   0a06ef4ee3d6a70d6347453e26c321a47da0af7984f3879892f3ae202ef37ae9
+   [mark-control-plane] Marking the node kube-mast01 as control-plane by adding the labels: [node-role.kubernetes.io/control-plane node.kubernetes.io/exclude-from-external-load-balancers]
+   [mark-control-plane] Marking the node kube-mast01 as control-plane by adding the taints [node-role.kubernetes.io/control-plane:NoSchedule]
+   [bootstrap-token] Using token: 69nn0g.sjtaydlhg35swq7c
    [bootstrap-token] Configuring bootstrap tokens, cluster-info ConfigMap, RBAC Roles
-   [bootstrap-token] configured RBAC rules to allow Node Bootstrap tokens to get nodes
-   [bootstrap-token] configured RBAC rules to allow Node Bootstrap tokens to post CSRs in order for nodes to get long term certificate credentials
-   [bootstrap-token] configured RBAC rules to allow the csrapprover controller automatically approve CSRs from a Node Bootstrap Token
-   [bootstrap-token] configured RBAC rules to allow certificate rotation for all node client certificates in the cluster
+   [bootstrap-token] Configured RBAC rules to allow Node Bootstrap tokens to get nodes
+   [bootstrap-token] Configured RBAC rules to allow Node Bootstrap tokens to post CSRs in order for nodes to get long term certificate credentials
+   [bootstrap-token] Configured RBAC rules to allow the csrapprover controller automatically approve CSRs from a Node Bootstrap Token
+   [bootstrap-token] Configured RBAC rules to allow certificate rotation for all node client certificates in the cluster
    [bootstrap-token] Creating the "cluster-info" ConfigMap in the "kube-public" namespace
    [kubelet-finalize] Updating "/etc/kubernetes/kubelet.conf" to point to a rotatable kubelet client certificate and key
    [addons] Applied essential addon: CoreDNS
    [addons] Applied essential addon: kube-proxy
-
+   
    Your Kubernetes control-plane has initialized successfully!
-
+   
    To start using your cluster, you need to run the following as a regular user:
-
+   
      mkdir -p $HOME/.kube
      sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
      sudo chown $(id -u):$(id -g) $HOME/.kube/config
-
+   
    Alternatively, if you are the root user, you can run:
-
+   
      export KUBECONFIG=/etc/kubernetes/admin.conf
-
+   
    You should now deploy a pod network to the cluster.
    Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:
      https://kubernetes.io/docs/concepts/cluster-administration/addons/
-
+   
    You can now join any number of the control-plane node running the following command on each as root:
-
-     kubeadm join 192.168.4.20:6443 --token zlo94s.6bws9rl0j69jx1ob \
-       --discovery-token-ca-cert-hash sha256:0e1d9858d9a6ea37e4933820490e34598732d43f872c9f4dd82832b906816d18 \
-       --control-plane --certificate-key 2fb2e3372428723ed5ccc023a88e8c2e076cd9fcbb31bf4cb5f41455cc3b2390
-
+   
+     kubeadm join 192.168.4.20:6443 --token 69nn0g.sjtaydlhg35swq7c \
+           --discovery-token-ca-cert-hash sha256:82bad0cbe9b67c9241f7ed619b620a581dd0196703911468a64d9401cb122d0d \
+           --control-plane --certificate-key 0a06ef4ee3d6a70d6347453e26c321a47da0af7984f3879892f3ae202ef37ae9
+   
    Please note that the certificate-key gives access to cluster sensitive data, keep it secret!
    As a safeguard, uploaded-certs will be deleted in two hours; If necessary, you can use
    "kubeadm init phase upload-certs --upload-certs" to reload certs afterward.
-
+   
    Then you can join any number of worker nodes by running the following on each as root:
-
-   kubeadm join 192.168.4.20:6443 --token zlo94s.6bws9rl0j69jx1ob \
-       --discovery-token-ca-cert-hash sha256:0e1d9858d9a6ea37e4933820490e34598732d43f872c9f4dd82832b906816d18
+   
+   kubeadm join 192.168.4.20:6443 --token 69nn0g.sjtaydlhg35swq7c \
+           --discovery-token-ca-cert-hash sha256:82bad0cbe9b67c9241f7ed619b620a581dd0196703911468a64d9401cb122d0d 
    ```
 
 2. Finish configuring the cluster and query the state of nodes and pods
@@ -458,19 +466,19 @@ This approach requires less infrastructure. The etcd members and control plane n
    Expected output:
 
    ```console
-   NAME          STATUS   ROLES                  AGE   VERSION    INTERNAL-IP    EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION    CONTAINER-RUNTIME
-   kube-mast01   Ready    control-plane,master   60s   v1.20.15   192.168.1.18   <none>        Debian GNU/Linux 10 (buster)   4.19.0-18-amd64   containerd://1.4.12
+   NAME          STATUS   ROLES           AGE   VERSION    INTERNAL-IP    EXTERNAL-IP   OS-IMAGE                         KERNEL-VERSION   CONTAINER-RUNTIME
+   kube-mast01   Ready    control-plane   47s   v1.29.15   192.168.1.55   <none>        Debian GNU/Linux 12 (bookworm)   6.1.0-42-amd64   containerd://2.2.1
    ```
 
    ```console
-   NAMESPACE     NAME                                  READY   STATUS              RESTARTS   AGE   IP             NODE          NOMINATED NODE   READINESS GATES
-   kube-system   coredns-74ff55c5b-5bsbv               0/1     ContainerCreating   0          67s   <none>         kube-mast01   <none>           <none>
-   kube-system   coredns-74ff55c5b-5jpqd               0/1     ContainerCreating   0          67s   <none>         kube-mast01   <none>           <none>
-   kube-system   etcd-kube-mast01                      0/1     Running             0          69s   192.168.1.18   kube-mast01   <none>           <none>
-   kube-system   kube-apiserver-kube-mast01            1/1     Running             0          69s   192.168.1.18   kube-mast01   <none>           <none>
-   kube-system   kube-controller-manager-kube-mast01   0/1     Running             0          69s   192.168.1.18   kube-mast01   <none>           <none>
-   kube-system   kube-proxy-8wqf7                      1/1     Running             0          67s   192.168.1.18   kube-mast01   <none>           <none>
-   kube-system   kube-scheduler-kube-mast01            1/1     Running             0          69s   192.168.1.18   kube-mast01   <none>           <none>
+   NAMESPACE     NAME                                  READY   STATUS              RESTARTS   AGE     IP             NODE          NOMINATED NODE   READINESS GATES
+   kube-system   coredns-76f75df574-g4nq4              0/1     ContainerCreating   0          2m41s   <none>         kube-mast01   <none>           <none>
+   kube-system   coredns-76f75df574-qtdnw              0/1     ContainerCreating   0          2m41s   <none>         kube-mast01   <none>           <none>
+   kube-system   etcd-kube-mast01                      1/1     Running             5          2m54s   192.168.1.55   kube-mast01   <none>           <none>
+   kube-system   kube-apiserver-kube-mast01            1/1     Running             0          2m53s   192.168.1.55   kube-mast01   <none>           <none>
+   kube-system   kube-controller-manager-kube-mast01   1/1     Running             0          2m54s   192.168.1.55   kube-mast01   <none>           <none>
+   kube-system   kube-proxy-xqfgl                      1/1     Running             0          2m42s   192.168.1.55   kube-mast01   <none>           <none>
+   kube-system   kube-scheduler-kube-mast01            1/1     Running             3          2m54s   192.168.1.55   kube-mast01   <none>           <none>
    ```
 
 > If you look at the status on the `kube-mast01` node, it says it is **NotReady** and the `coredns` pods are in the **Pending** state. This is because, up to this point, we do not have a network component configured in our K8S cluster. Remember, as explained before, **Flannel** will be used for this matter.
@@ -480,13 +488,13 @@ This approach requires less infrastructure. The etcd members and control plane n
 1. Run the following commands to init the flannel network component:
 
    ```console
-   debian@kube-mast01:~$ kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/v0.17.0/Documentation/kube-flannel.yml
+   debian@kube-mast01:~$ kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/v0.28.0/Documentation/kube-flannel.yml
    ```
 
    Expected output:
 
    ```console
-   podsecuritypolicy.policy/psp.flannel.unprivileged created
+   namespace/kube-flannel created
    clusterrole.rbac.authorization.k8s.io/flannel created
    clusterrolebinding.rbac.authorization.k8s.io/flannel created
    serviceaccount/flannel created
@@ -505,23 +513,23 @@ This approach requires less infrastructure. The etcd members and control plane n
    Expected output:
 
    ```console
-   NAME          STATUS   ROLES                  AGE     VERSION    INTERNAL-IP    EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION    CONTAINER-RUNTIME
-   kube-mast01   Ready    control-plane,master   7m16s   v1.20.15   192.168.1.18   <none>        Debian GNU/Linux 10 (buster)   4.19.0-18-amd64   containerd://1.4.12
+   NAME          STATUS   ROLES           AGE     VERSION    INTERNAL-IP    EXTERNAL-IP   OS-IMAGE                         KERNEL-VERSION   CONTAINER-RUNTIME
+   kube-mast01   Ready    control-plane   6m10s   v1.29.15   192.168.1.55   <none>        Debian GNU/Linux 12 (bookworm)   6.1.0-42-amd64   containerd://2.2.1
    ```
 
    ```console
-   NAMESPACE     NAME                                  READY   STATUS    RESTARTS   AGE     IP             NODE          NOMINATED NODE   READINESS GATES
-   kube-system   coredns-74ff55c5b-5bsbv               1/1     Running   0          7m39s   10.244.0.3     kube-mast01   <none>           <none>
-   kube-system   coredns-74ff55c5b-5jpqd               1/1     Running   0          7m39s   10.244.0.2     kube-mast01   <none>           <none>
-   kube-system   etcd-kube-mast01                      1/1     Running   0          7m41s   192.168.1.18   kube-mast01   <none>           <none>
-   kube-system   kube-apiserver-kube-mast01            1/1     Running   0          7m41s   192.168.1.18   kube-mast01   <none>           <none>
-   kube-system   kube-controller-manager-kube-mast01   1/1     Running   0          7m41s   192.168.1.18   kube-mast01   <none>           <none>
-   kube-system   kube-flannel-ds-hrtbv                 1/1     Running   0          61s     192.168.1.18   kube-mast01   <none>           <none>
-   kube-system   kube-proxy-8wqf7                      1/1     Running   0          7m39s   192.168.1.18   kube-mast01   <none>           <none>
-   kube-system   kube-scheduler-kube-mast01            1/1     Running   0          7m41s   192.168.1.18   kube-mast01   <none>           <none>
+   NAMESPACE      NAME                                  READY   STATUS    RESTARTS   AGE     IP             NODE          NOMINATED NODE   READINESS GATES
+   kube-flannel   kube-flannel-ds-xjbnd                 1/1     Running   0          68s     192.168.1.55   kube-mast01   <none>           <none>
+   kube-system    coredns-76f75df574-g4nq4              1/1     Running   0          6m21s   10.244.0.3     kube-mast01   <none>           <none>
+   kube-system    coredns-76f75df574-qtdnw              1/1     Running   0          6m21s   10.244.0.2     kube-mast01   <none>           <none>
+   kube-system    etcd-kube-mast01                      1/1     Running   5          6m34s   192.168.1.55   kube-mast01   <none>           <none>
+   kube-system    kube-apiserver-kube-mast01            1/1     Running   0          6m33s   192.168.1.55   kube-mast01   <none>           <none>
+   kube-system    kube-controller-manager-kube-mast01   1/1     Running   0          6m34s   192.168.1.55   kube-mast01   <none>           <none>
+   kube-system    kube-proxy-xqfgl                      1/1     Running   0          6m22s   192.168.1.55   kube-mast01   <none>           <none>
+   kube-system    kube-scheduler-kube-mast01            1/1     Running   3          6m34s   192.168.1.55   kube-mast01   <none>           <none>
    ```
 
-> If you look at the status on the `kube-mast01` node, it is now **Ready** and coredns is **Running**. Also, now there is a pod named `kube-flannel-ds-amd64`.
+> If you look at the status on the `kube-mast01` node, it is now **Ready** and coredns is **Running**. Also, now there is a pod named `kube-flannel-ds-xjbnd`.
 
 ### Join the Master Replicas
 
@@ -611,17 +619,17 @@ Now we need to join the other nodes to our K8S cluster. For this, we need the ce
    ```console
    debian@busybox:~$ ssh kube-mast01
 
-   debian@kube-mast01:~$ sudo ctr images pull quay.io/coreos/etcd:v3.4.3
+   debian@kube-mast01:~$ sudo ctr images pull quay.io/coreos/etcd:v3.6.7
 
    debian@kube-mast01:~$ sudo ctr run --rm --net-host -t \
-      --mount type=bind,src=/etc/kubernetes,dst=/etc/kubernetes,options=rbind:ro quay.io/coreos/etcd:v3.4.3 etcdctl etcdctl \
+      --mount type=bind,src=/etc/kubernetes,dst=/etc/kubernetes,options=rbind:ro quay.io/coreos/etcd:v3.6.7 etcdctl etcdctl \
       --cert /etc/kubernetes/pki/etcd/peer.crt \
       --key /etc/kubernetes/pki/etcd/peer.key \
       --cacert /etc/kubernetes/pki/etcd/ca.crt \
       --endpoints https://127.0.0.1:2379 endpoint status --cluster -w table
 
    debian@kube-mast01:~$ sudo ctr run --rm --net-host -t \
-      --mount type=bind,src=/etc/kubernetes,dst=/etc/kubernetes,options=rbind:ro quay.io/coreos/etcd:v3.4.3 etcdctl etcdctl \
+      --mount type=bind,src=/etc/kubernetes,dst=/etc/kubernetes,options=rbind:ro quay.io/coreos/etcd:v3.6.7 etcdctl etcdctl \
       --cert /etc/kubernetes/pki/etcd/peer.crt \
       --key /etc/kubernetes/pki/etcd/peer.key \
       --cacert /etc/kubernetes/pki/etcd/ca.crt \
@@ -631,23 +639,23 @@ Now we need to join the other nodes to our K8S cluster. For this, we need the ce
    Expected output:
 
    ```console
-   +---------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+
-   |         ENDPOINT          |        ID        | VERSION | DB SIZE | IS LEADER | IS LEARNER | RAFT TERM | RAFT INDEX | RAFT APPLIED INDEX | ERRORS |
-   +---------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+
-   | https://192.168.1.37:2379 | 6ce1dc55bed745d3 |  3.4.13 |  2.6 MB |     false |      false |         7 |       1990 |               1990 |        |
-   | https://192.168.1.18:2379 | a760cbd89e28c740 |  3.4.13 |  2.1 MB |      true |      false |         7 |       1990 |               1990 |        |
-   | https://192.168.1.27:2379 | c1ca592f825e9e8b |  3.4.13 |  2.0 MB |     false |      false |         7 |       1990 |               1990 |        |
-   +---------------------------+------------------+---------+---------+-----------+------------+-----------+------------+--------------------+--------+
+   +----------------------------+------------------+---------+-----------------+---------+--------+-----------------------+-------+-----------+------------+-----------+------------+--------------------+--------+--------------------------+-------------------+
+   |          ENDPOINT          |        ID        | VERSION | STORAGE VERSION | DB SIZE | IN USE | PERCENTAGE NOT IN USE | QUOTA | IS LEADER | IS LEARNER | RAFT TERM | RAFT INDEX | RAFT APPLIED INDEX | ERRORS | DOWNGRADE TARGET VERSION | DOWNGRADE ENABLED |
+   +----------------------------+------------------+---------+-----------------+---------+--------+-----------------------+-------+-----------+------------+-----------+------------+--------------------+--------+--------------------------+-------------------+
+   | https://192.168.1.218:2379 | 7050c2ed315bf21b |  3.5.16 |                 |  2.3 MB | 1.6 MB |                   33% |   0 B |     false |      false |         2 |       3624 |               3624 |        |                          |             false |
+   | https://192.168.1.183:2379 | 90d0f93691bc2f42 |  3.5.16 |                 |  2.4 MB | 1.6 MB |                   34% |   0 B |     false |      false |         2 |       3624 |               3624 |        |                          |             false |
+   |  https://192.168.1.55:2379 | b68e3b9439f52a12 |  3.5.16 |                 |  2.4 MB | 1.6 MB |                   35% |   0 B |      true |      false |         2 |       3624 |               3624 |        |                          |             false |
+   +----------------------------+------------------+---------+-----------------+---------+--------+-----------------------+-------+-----------+------------+-----------+------------+--------------------+--------+--------------------------+-------------------+
    ```
 
    ```console
-   +------------------+---------+-------------+---------------------------+---------------------------+------------+
-   |        ID        | STATUS  |    NAME     |        PEER ADDRS         |       CLIENT ADDRS        | IS LEARNER |
-   +------------------+---------+-------------+---------------------------+---------------------------+------------+
-   | 6ce1dc55bed745d3 | started | kube-mast03 | https://192.168.1.37:2380 | https://192.168.1.37:2379 |      false |
-   | a760cbd89e28c740 | started | kube-mast01 | https://192.168.1.18:2380 | https://192.168.1.18:2379 |      false |
-   | c1ca592f825e9e8b | started | kube-mast02 | https://192.168.1.27:2380 | https://192.168.1.27:2379 |      false |
-   +------------------+---------+-------------+---------------------------+---------------------------+------------+
+   +------------------+---------+-------------+----------------------------+----------------------------+------------+
+   |        ID        | STATUS  |    NAME     |         PEER ADDRS         |        CLIENT ADDRS        | IS LEARNER |
+   +------------------+---------+-------------+----------------------------+----------------------------+------------+
+   | 7050c2ed315bf21b | started | kube-mast03 | https://192.168.1.218:2380 | https://192.168.1.218:2379 |      false |
+   | 90d0f93691bc2f42 | started | kube-mast02 | https://192.168.1.183:2380 | https://192.168.1.183:2379 |      false |
+   | b68e3b9439f52a12 | started | kube-mast01 |  https://192.168.1.55:2380 |  https://192.168.1.55:2379 |      false |
+   +------------------+---------+-------------+----------------------------+----------------------------+------------+
    ```
 
 ### Check the K8S Cluster stats
@@ -665,36 +673,35 @@ Now we need to join the other nodes to our K8S cluster. For this, we need the ce
    Expected output:
 
    ```console
-   NAME          STATUS   ROLES                  AGE     VERSION    INTERNAL-IP    EXTERNAL-IP   OS-IMAGE                       KERNEL-VERSION    CONTAINER-RUNTIME
-   kube-mast01   Ready    control-plane,master   14m     v1.20.15   192.168.1.18   <none>        Debian GNU/Linux 10 (buster)   4.19.0-18-amd64   containerd://1.4.12
-   kube-mast02   Ready    control-plane,master   3m23s   v1.20.15   192.168.1.27   <none>        Debian GNU/Linux 10 (buster)   4.19.0-18-amd64   containerd://1.4.12
-   kube-mast03   Ready    control-plane,master   110s    v1.20.15   192.168.1.37   <none>        Debian GNU/Linux 10 (buster)   4.19.0-18-amd64   containerd://1.4.12
+   NAME          STATUS   ROLES           AGE   VERSION    INTERNAL-IP     EXTERNAL-IP   OS-IMAGE                         KERNEL-VERSION   CONTAINER-RUNTIME
+   kube-mast01   Ready    control-plane   25m   v1.29.15   192.168.1.55    <none>        Debian GNU/Linux 12 (bookworm)   6.1.0-42-amd64   containerd://2.2.1
+   kube-mast02   Ready    control-plane   15m   v1.29.15   192.168.1.183   <none>        Debian GNU/Linux 12 (bookworm)   6.1.0-42-amd64   containerd://2.2.1
+   kube-mast03   Ready    control-plane   14m   v1.29.15   192.168.1.218   <none>        Debian GNU/Linux 12 (bookworm)   6.1.0-42-amd64   containerd://2.2.1
    ```
 
    > All master nodes are now expected to be in the **Ready** state:
 
    ```console
-   NAMESPACE     NAME                                  READY   STATUS    RESTARTS   AGE     IP             NODE          NOMINATED NODE   READINESS GATES
-   kube-system   coredns-74ff55c5b-5bsbv               1/1     Running   0          14m     10.244.0.3     kube-mast01   <none>           <none>
-   kube-system   coredns-74ff55c5b-5jpqd               1/1     Running   0          14m     10.244.0.2     kube-mast01   <none>           <none>
-   kube-system   etcd-kube-mast01                      1/1     Running   0          14m     192.168.1.18   kube-mast01   <none>           <none>
-   kube-system   etcd-kube-mast02                      1/1     Running   0          3m38s   192.168.1.27   kube-mast02   <none>           <none>
-   kube-system   etcd-kube-mast03                      1/1     Running   0          2m13s   192.168.1.37   kube-mast03   <none>           <none>
-   kube-system   kube-apiserver-kube-mast01            1/1     Running   0          14m     192.168.1.18   kube-mast01   <none>           <none>
-   kube-system   kube-apiserver-kube-mast02            1/1     Running   0          3m46s   192.168.1.27   kube-mast02   <none>           <none>
-   kube-system   kube-apiserver-kube-mast03            1/1     Running   0          2m15s   192.168.1.37   kube-mast03   <none>           <none>
-   kube-system   kube-controller-manager-kube-mast01   1/1     Running   1          14m     192.168.1.18   kube-mast01   <none>           <none>
-   kube-system   kube-controller-manager-kube-mast02   1/1     Running   0          3m38s   192.168.1.27   kube-mast02   <none>           <none>
-   kube-system   kube-controller-manager-kube-mast03   1/1     Running   0          2m14s   192.168.1.37   kube-mast03   <none>           <none>
-   kube-system   kube-flannel-ds-7rqdv                 1/1     Running   1          3m48s   192.168.1.27   kube-mast02   <none>           <none>
-   kube-system   kube-flannel-ds-hrtbv                 1/1     Running   0          7m43s   192.168.1.18   kube-mast01   <none>           <none>
-   kube-system   kube-flannel-ds-hwgml                 1/1     Running   0          2m15s   192.168.1.37   kube-mast03   <none>           <none>
-   kube-system   kube-proxy-8wqf7                      1/1     Running   0          14m     192.168.1.18   kube-mast01   <none>           <none>
-   kube-system   kube-proxy-f2nbx                      1/1     Running   0          3m48s   192.168.1.27   kube-mast02   <none>           <none>
-   kube-system   kube-proxy-wc5p5                      1/1     Running   0          2m15s   192.168.1.37   kube-mast03   <none>           <none>
-   kube-system   kube-scheduler-kube-mast01            1/1     Running   1          14m     192.168.1.18   kube-mast01   <none>           <none>
-   kube-system   kube-scheduler-kube-mast02            1/1     Running   0          3m47s   192.168.1.27   kube-mast02   <none>           <none>
-   kube-system   kube-scheduler-kube-mast03            1/1     Running   0          2m13s   192.168.1.37   kube-mast03   <none>           <none>
+   kube-flannel   kube-flannel-ds-6kg8w                 1/1     Running   0             14m   192.168.1.218   kube-mast03   <none>           <none>
+   kube-flannel   kube-flannel-ds-7zvlm                 1/1     Running   0             15m   192.168.1.183   kube-mast02   <none>           <none>
+   kube-flannel   kube-flannel-ds-xjbnd                 1/1     Running   0             20m   192.168.1.55    kube-mast01   <none>           <none>
+   kube-system    coredns-76f75df574-g4nq4              1/1     Running   0             25m   10.244.0.3      kube-mast01   <none>           <none>
+   kube-system    coredns-76f75df574-qtdnw              1/1     Running   0             25m   10.244.0.2      kube-mast01   <none>           <none>
+   kube-system    etcd-kube-mast01                      1/1     Running   5             25m   192.168.1.55    kube-mast01   <none>           <none>
+   kube-system    etcd-kube-mast02                      1/1     Running   0             15m   192.168.1.183   kube-mast02   <none>           <none>
+   kube-system    etcd-kube-mast03                      1/1     Running   0             14m   192.168.1.218   kube-mast03   <none>           <none>
+   kube-system    kube-apiserver-kube-mast01            1/1     Running   0             25m   192.168.1.55    kube-mast01   <none>           <none>
+   kube-system    kube-apiserver-kube-mast02            1/1     Running   1 (14m ago)   15m   192.168.1.183   kube-mast02   <none>           <none>
+   kube-system    kube-apiserver-kube-mast03            1/1     Running   1 (13m ago)   14m   192.168.1.218   kube-mast03   <none>           <none>
+   kube-system    kube-controller-manager-kube-mast01   1/1     Running   0             25m   192.168.1.55    kube-mast01   <none>           <none>
+   kube-system    kube-controller-manager-kube-mast02   1/1     Running   0             15m   192.168.1.183   kube-mast02   <none>           <none>
+   kube-system    kube-controller-manager-kube-mast03   1/1     Running   0             14m   192.168.1.218   kube-mast03   <none>           <none>
+   kube-system    kube-proxy-hkg2f                      1/1     Running   0             15m   192.168.1.183   kube-mast02   <none>           <none>
+   kube-system    kube-proxy-r7k9x                      1/1     Running   0             14m   192.168.1.218   kube-mast03   <none>           <none>
+   kube-system    kube-proxy-xqfgl                      1/1     Running   0             25m   192.168.1.55    kube-mast01   <none>           <none>
+   kube-system    kube-scheduler-kube-mast01            1/1     Running   3             25m   192.168.1.55    kube-mast01   <none>           <none>
+   kube-system    kube-scheduler-kube-mast02            1/1     Running   0             15m   192.168.1.183   kube-mast02   <none>           <none>
+   kube-system    kube-scheduler-kube-mast03            1/1     Running   0             14m   192.168.1.218   kube-mast03   <none>           <none>
    ```
 
    > All master pods are **Running**
