@@ -85,20 +85,20 @@ write_files:
 
 apt:
   sources_list: |
-    deb http://deb.debian.org/debian/ $RELEASE main contrib non-free
-    deb-src http://deb.debian.org/debian/ $RELEASE main contrib non-free
+    deb http://deb.debian.org/debian/ $RELEASE main contrib non-free non-free-firmware
+    deb-src http://deb.debian.org/debian/ $RELEASE main contrib non-free non-free-firmware
 
-    deb http://deb.debian.org/debian/ $RELEASE-updates main contrib non-free
-    deb-src http://deb.debian.org/debian/ $RELEASE-updates main contrib non-free
+    deb http://deb.debian.org/debian/ $RELEASE-updates main contrib non-free non-free-firmware
+    deb-src http://deb.debian.org/debian/ $RELEASE-updates main contrib non-free non-free-firmware
 
     deb http://deb.debian.org/debian-security $RELEASE-security main
     deb-src http://deb.debian.org/debian-security $RELEASE-security main
 
   sources:
     kubernetes.list:
-      source: deb https://apt.kubernetes.io/ kubernetes-xenial main
+      source: deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /
     docker.list:
-      source: deb https://download.docker.com/linux/debian $RELEASE stable
+      source: deb [signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $RELEASE stable
 
   conf: |
     APT {
@@ -121,14 +121,17 @@ runcmd:
   - [ modprobe, overlay]
   - [ modprobe, br_netfilter ]
   - [ sysctl, --system ]
-  - [ sh, -c, 'curl -fsSLo /etc/apt/trusted.gpg.d/kubernetes-archive-keyring.gpg https://dl.k8s.io/apt/doc/apt-key.gpg' ]
-  - [ sh, -c, 'curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/trusted.gpg.d/docker-archive-keyring.gpg' ]
+  - [ sh, -c, 'curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg' ]
+  - [ sh, -c, 'curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg' ]
   - [ apt-get, update ]
-  - [ apt-get, install, -y, containerd.io, 'kubelet=1.20.15-00', 'kubectl=1.20.15-00', 'kubeadm=1.20.15-00' ]
+  - [ apt-get, install, -y, containerd.io, 'kubelet=1.29.15-1.1', 'kubectl=1.29.15-1.1', 'kubeadm=1.29.15-1.1' ]
   - [ apt-mark, hold, kubelet, kubectl, kubeadm, containerd.io ]
   # Configure containerd
   - [ mkdir, -p, /etc/containerd ]
   - [ sh, -c, 'containerd config default > /etc/containerd/config.toml' ]
+  - [ sh, -c, 'sed -i "s/SystemdCgroup = false/SystemdCgroup = true/" /etc/containerd/config.toml' ]
+  - [ systemctl, restart, containerd ]
+  - [ systemctl, enable, containerd ]
 
 users:
 - name: debian
