@@ -1,5 +1,4 @@
 #cloud-config
-
 write_files:
 
 # CA ssh pub certificate
