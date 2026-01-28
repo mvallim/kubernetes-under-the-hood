@@ -713,6 +713,7 @@ Now we need to join the other nodes to our K8S cluster. For this, we need the ce
    > All master nodes are now expected to be in the **Ready** state:
 
    ```console
+   NAMESPACE      NAME                                  READY   STATUS    RESTARTS      AGE   IP              NODE          NOMINATED NODE   READINESS GATES
    kube-flannel   kube-flannel-ds-6kg8w                 1/1     Running   0             14m   192.168.1.218   kube-mast03   <none>           <none>
    kube-flannel   kube-flannel-ds-7zvlm                 1/1     Running   0             15m   192.168.1.183   kube-mast02   <none>           <none>
    kube-flannel   kube-flannel-ds-xjbnd                 1/1     Running   0             20m   192.168.1.55    kube-mast01   <none>           <none>
