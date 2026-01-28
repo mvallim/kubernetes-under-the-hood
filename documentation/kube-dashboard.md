@@ -40,7 +40,7 @@ Use the returned value to access the BusyBox:
 Expected output:
 
 ```console
-Linux busybox 4.19.0-18-amd64 #1 SMP Debian 4.19.208-1 (2021-09-29) x86_64
+Linux busybox 6.1.0-42-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.1.159-1 (2025-12-30) x86_64
 
 The programs included with the Debian GNU/Linux system are free software;
 the exact distribution terms for each program are described in the
@@ -95,7 +95,7 @@ permitted by applicable law.
 
    ```text
    NAME                                         READY   STATUS    RESTARTS   AGE   IP            NODE          NOMINATED NODE   READINESS GATES
-   dashboard-metrics-scraper-5657497c4c-68ld8   1/1     Running   0          11s   10.244.8.30   ceph-node03   <none>           <none>
+   dashboard-metrics-scraper-5657497c4c-68ld8   1/1     Running   0          11s   10.244.8.30   kube-node03   <none>           <none>
    kubernetes-dashboard-78f87ddfc-6n2r6         1/1     Running   0          11s   10.244.3.13   kube-node01   <none>           <none>
    ```
 
