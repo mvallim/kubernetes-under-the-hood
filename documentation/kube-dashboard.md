@@ -63,7 +63,7 @@ permitted by applicable law.
 2. Install the Dashboard by applying the `kubernetes-dashboard.yaml` file:
 
    ```console
-   debian@busybox:~$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.0/aio/deploy/recommended.yaml
+   debian@busybox:~$ kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml
    ```
 
    Expected output:
@@ -94,12 +94,12 @@ permitted by applicable law.
    Expected output:
 
    ```text
-   NAME                                         READY   STATUS    RESTARTS   AGE   IP           NODE          NOMINATED NODE   READINESS GATES
-   dashboard-metrics-scraper-5b8896d7fc-2v4kp   1/1     Running   0          21s   10.244.3.2   kube-node01   <none>           <none>
-   kubernetes-dashboard-cb988587b-rx828         1/1     Running   0          21s   10.244.4.2   kube-node02   <none>           <none>
+   NAME                                         READY   STATUS    RESTARTS   AGE   IP            NODE          NOMINATED NODE   READINESS GATES
+   dashboard-metrics-scraper-5657497c4c-68ld8   1/1     Running   0          11s   10.244.8.30   ceph-node03   <none>           <none>
+   kubernetes-dashboard-78f87ddfc-6n2r6         1/1     Running   0          11s   10.244.3.13   kube-node01   <none>           <none>
    ```
 
-   > Notice we now have a pod named `kubernetes-dashboard-cb988587b-rx828`
+   > Notice we now have a pod named `kubernetes-dashboard-78f87ddfc-6n2r6`
 
 ## Configure the Dashboard
 
@@ -134,61 +134,21 @@ We need a service account to access the K8S Dashboard.
 
 To access the Dashboard, we need to have a token from the `cluster-admin-dashboard` service account.
 
-As referenced in: https://kubernetes.io/docs/concepts/configuration/secret/#service-account-token-secrets as of Kubernetes v1.22 a secret is not dynamically generated when a service account is created.
-
 First, try:
 
 ```console
 debian@busybox:~$ kubectl create token cluster-admin-dashboard -n kubernetes-dashboard
 ```
 
+Expected output:
+
+```text
+eyJhbGciOiJSUzI1NiIsImtpZCI6IjJDTFJsczdnZndvWFp4Y3NOZ2tyNmU3N3JzaWZxRWFBRER3QUNsN1hIbjAifQ.eyJhdWQiOlsiaHR0cHM6Ly9rdWJlcm5ldGVzLmRlZmF1bHQuc3ZjLmNsdXN0ZXIubG9jYWwiXSwiZXhwIjoxNzY5NTcwNjM5LCJpYXQiOjE3Njk1NjcwMzksImlzcyI6Imh0dHBzOi8va3ViZXJuZXRlcy5kZWZhdWx0LnN2Yy5jbHVzdGVyLmxvY2FsIiwia3ViZXJuZXRlcy5pbyI6eyJuYW1lc3BhY2UiOiJrdWJlcm5ldGVzLWRhc2hib2FyZCIsInNlcnZpY2VhY2NvdW50Ijp7Im5hbWUiOiJjbHVzdGVyLWFkbWluLWRhc2hib2FyZCIsInVpZCI6ImU2NmIzMzVlLTYwN2ItNGFiMy04ODQyLTcxNWM0NmMzYjNlZSJ9fSwibmJmIjoxNzY5NTY3MDM5LCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6a3ViZXJuZXRlcy1kYXNoYm9hcmQ6Y2x1c3Rlci1hZG1pbi1kYXNoYm9hcmQifQ.PlHZvHlT4de7Yely2p_WEU5AcLLuHqO2fzIhhkpJnP_tao-VqnDVbeU7cuainAb8wD1qW9vZaW4eO3Pfiy_zr3_AKxSX59R5dKtZSzkoZBJRSHK07Y2iD9jd3C0Nz2Rg1ACN1t_lNtEoMEZHmr7P18ve7HhUhwrqaOSSTSOTBZpTHzAiSslfwU2q9dE3rph4iSIbRQIPXATgBRydzKByfnud716t-7LWDLgXvwd4MGCH-o95OU9-GxREC02V_41jc-s32cSpJc_BIcK3DyTOyYwN8L0oWJtsv6Rk1yoWpPPJOqCLTYy2RDtLrxy0dzKkIm1wEhz0ToHVdsESl2gP1A
+```
+
 If a token is successfully generated, move on to "View the Dashboard" Section.
 
-1. Query secrets
-
-   ```console
-   debian@busybox:~$ kubectl get secret -n kubernetes-dashboard
-   ```
-
-   Expected output:
-
-   ```text
-   NAME                                  TYPE                                  DATA   AGE
-   cluster-admin-dashboard-token-p2qm9   kubernetes.io/service-account-token   3      18s
-   default-token-ptzj7                   kubernetes.io/service-account-token   3      75s
-   kubernetes-dashboard-certs            Opaque                                0      75s
-   kubernetes-dashboard-csrf             Opaque                                1      75s
-   kubernetes-dashboard-key-holder       Opaque                                2      75s
-   kubernetes-dashboard-token-59xt6      kubernetes.io/service-account-token   3      75s
-   ```
-
-   > We can see the `cluster-admin-dashboard` service account token has a token named `cluster-admin-dashboard-token-p2qm9`
-
-2. To fetch the token, describe the `cluster-admin-dashboard-token-p2qm9` secret:
-
-   ```console
-   debian@busybox:~$ kubectl describe secret cluster-admin-dashboard-token-p2qm9 -n kubernetes-dashboard
-   ```
-
-   Expected output:
-
-   ```text
-   Name:         cluster-admin-dashboard-token-p2qm9
-   Namespace:    kubernetes-dashboard
-   Labels:       <none>
-   Annotations:  kubernetes.io/service-account.name: cluster-admin-dashboard
-                 kubernetes.io/service-account.uid: a2cb115c-3d82-42cf-80ac-3fa003e568cf
-   
-   Type:  kubernetes.io/service-account-token
-   
-   Data
-   ====
-   ca.crt:     1025 bytes
-   namespace:  20 bytes
-   token:      eyJhbGciOiJSUzI1NiIsImtpZCI6ImpTTHVJZ0h6LVpGSnFadzBpaXBUSjYyemVWZFJNZUZ3X29qMjIxRHBQOU0ifQ.   eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlcm5ldGVzLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJjbHVzdGVyLWFkbWluLWRhc2hib2FyZC10b2tlbi1qdnpibSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJjbHVzdGVyLWFkbWluLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6IjE4MWIwZGQ2LTU2MWQtNGRjZi05ZjY2LTU4ZmQxNTRiNWE3ZCIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDprdWJlcm5ldGVzLWRhc2hib2FyZDpjbHVzdGVyLWFkbWluLWRhc2hib2FyZCJ9.uibwq9m149OSdWG8FJGYJIxEBQle_QEVTnctBMY_67_HkCVLBA0R9d2brGhcw-bq9_IQWfOkMLRBj3duPr7YBTqKg53i6jXsnKnlh_t_UOCjx543or5Aw5HgcasslfHAVken6CtcEIYin4ya1LOb5DNH7mfHvdGWDFzTsSM3TxXe4FD6rvLfS-S0ICju7RBRLaOsrEptGjoX7z7mRXoQbeO3cFRlMsOQG7uShxgfz9BZDYrYICYw3YjhupQ9FXvWe_guLCA4XD3GNpPVp8bSgX_UayvgMouAleYs93QrlKqdBT0oD72VEFAHr0GeRjnoC9z-XDBixeaM4BFxGuAfqw
-   ```
-
-   > We are going to use the `eyJhbGciOiJSUzI1NiIsImtpZCI6ImpTTHVJZ0h6L...72VEFAHr0GeRjnoC9z-XDBixeaM4BFxGuAfqw` token. For shortness, we show only the first and last blocks here, but we must use the full printed value to access the Dashboard.
+> We are going to use the `eyJhbGciOiJSUzI1NiIsImtpZCI6IjJDTFJsczdnZ...Yy2RDtLrxy0dzKkIm1wEhz0ToHVdsESl2gP1A` token. For shortness, we show only the first and last blocks here, but we must use the full printed value to access the Dashboard.
 
 ### View the Dashboard
 
