@@ -1,4 +1,15 @@
+[![GitHub stars](https://img.shields.io/github/stars/mvallim/kubernetes-under-the-hood?style=social)](https://github.com/mvallim/kubernetes-under-the-hood/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/mvallim/kubernetes-under-the-hood?style=social)](https://github.com/mvallim/kubernetes-under-the-hood/network/members)
+[![GitHub watchers](https://img.shields.io/github/watchers/mvallim/kubernetes-under-the-hood?style=social)](https://github.com/mvallim/kubernetes-under-the-hood/watchers)
+
 # Kubernetes under the hood
+
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/mvallim/kubernetes-under-the-hood/graphs/commit-activity)
+[![GitHub last commit](https://img.shields.io/github/last-commit/mvallim/kubernetes-under-the-hood)](https://github.com/mvallim/kubernetes-under-the-hood/commits/master)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/mvallim/kubernetes-under-the-hood)](https://github.com/mvallim/kubernetes-under-the-hood/pulls)
+[![License](https://img.shields.io/github/license/mvallim/kubernetes-under-the-hood)](https://github.com/mvallim/kubernetes-under-the-hood/blob/master/LICENSE)
+[![Kubernetes](https://img.shields.io/badge/Kubernetes-1.29.15-blue.svg)](https://kubernetes.io/)
+[![Platform](https://img.shields.io/badge/Platform-VirtualBox-orange.svg)](https://www.virtualbox.org/)
 
 <p align="center">
   <img src="documentation/images/under-the-hood.jpg">
