@@ -145,11 +145,13 @@ packages:
   - bridge-utils
   - curl
   - gnupg
+  - lvm2
 
 runcmd:
   - [ modprobe, overlay]
   - [ modprobe, br_netfilter ]
   - [ sysctl, --system ]
+  - [ vgchange, -ay ]
   - [ sh, -c, 'curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg' ]
   - [ sh, -c, 'curl -fsSL https://github.com/containerd/containerd/releases/download/v2.2.1/containerd-2.2.1-linux-amd64.tar.gz | tar -xz -C /usr/local' ]
   - [ sh, -c, 'curl -fsSL https://github.com/opencontainers/runc/releases/download/v1.4.0/runc.amd64 -o /usr/local/sbin/runc && chmod 755 /usr/local/sbin/runc' ]

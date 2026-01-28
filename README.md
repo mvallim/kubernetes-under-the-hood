@@ -10,7 +10,7 @@ The target audience for this tutorial is someone planning to install a Kubernete
 
 ## Index
 
-***Attention**: the documentation for this project is being actively improved to explain the demonstrated concepts clearly. If you face any difficulties while following the steps described in the documentation, please open an issue, so we can keep improving it. The version of Kubernetes used here is **1.20.15***
+***Attention**: the documentation for this project is being actively improved to explain the demonstrated concepts clearly. If you face any difficulties while following the steps described in the documentation, please open an issue, so we can keep improving it. The version of Kubernetes used here is **1.29.15***
 
 1. Introduction
    - [Up and running out of the cloud](documentation/objective.md)

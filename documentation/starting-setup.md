@@ -7,7 +7,6 @@ We created the base image, for both Ubuntu and Debian, that we will use as the b
 * **HA Proxy** (two instances)
 * **Kubernetes Master** (three instances)
 * **Kubernetes Worker** (three instances)
-* **Gluster nodes** (three instances)
 
 Check our [Architecture Overview](common-cluster.md) for a better understanding of how these components interact with each other.
 
@@ -103,7 +102,7 @@ Now let's create the images using a custom tool we created (create-image.sh) tha
 * **`-o`** is used to pass the **hostname** that will be assigned to our instance. This will also be the name used by **VirtualBox** to reference our instance.
 * **`-l`** is used to inform which Linux distribution (**debian** or **ubuntu**) configuration files we want to use (notice this is used to specify which folder under data is referenced). Default is **`debian`**.
 * **`-b`** is used to specify which **base image** should be used. This is the image name that was created on **VirtualBox** when we executed the installation steps from our [linux image](create-linux-image.md).
-* **`-s`** is used to pass a configuration file that our script will use to configure **virtual disks** on **VirtualBox**. You'll notice this is used only on the **Gluster** configuration step.
+* **`-s`** is used to pass a configuration file that our script will use to configure **virtual disks** on **VirtualBox**.
 * **`-a`** whether or not our instance **should be initialized** after it's created. Default is **`true`**.
 
 ## Gateway configuration
@@ -129,19 +128,15 @@ write_files:
   permissions: '0644'
   encoding: b64
   content: |
-    c3NoLXJzYSBBQUFBQjNOemFDMXljMkVBQUFBREFRQUJBQUFDQVFERGozaTNSODZvQzNzZ0N3ZVRh
-    R1dHZVZHRFpLbFdiOHM4QWVJVE9hOTB3NHl5UndSUWtBTWNGaWFNWGx5OEVOSDd0MHNpM0tFYnRZ
-    M1B1ekpTNVMwTHY0MVFkaHlYMHJhUGxobTZpNnVDV3BvYWsycEF6K1ZFazhLbW1kZjdqMm5OTHlG
-    Y3NQeVg0b0t0SlQrajh6R2QxWHRBWDBuS0JWOXFkOGNTTFFBZGpQVkdNZGxYdTNCZzdsNml3OHhK
-    Ti9ld1l1Qm5DODZ5TlNiWFlDVVpLOE1oQUNLV2FMVWVnOSt0dXNyNTBSbGVRcGI0a2NKRE45LzFa
-    MjhneUtORTRCVENYanEyTzVqRE1MRDlDU3hqNXJoNXRPUUlKREFvblIrMnljUlVnZTltc2hIQ05D
-    VWU2WG16OFVJUFJ2UVpPNERFaHpHZ2N0cFJnWlhQajRoMGJoeGVMekUxcFROMHI2Q29GMDVpOFB0
-    QXd1czl1K0tjUHVoQlgrVm9UbW1JNmRBTStUQkxRUnJ3SUorNnhtM29nWEMwYVpjdkdCVUVTcVll
-    QjUyU0xjZEwyNnBKUlBrVjZYQ0Qyc3RleG5uOFREUEdjYnlZelFnaGNlYUYrb0psdWE4UDZDSzV2
-    VStkNlBGK2o1aEE2NGdHbDQrWmw0TUNBcXdNcnBySEhpd2E3bzF0MC9JTmdoYlFvUUdSU3haQXMz
-    UHdYcklMQ0xUeGN6V29UWHZIWUxuRXRTWW42MVh3SElldWJrTVhJamJBSysreStKWCswcm02aHRN
-    N2h2R2QzS0ZvU1N4aDlFY1FONTNXWEhMYXBHQ0o0NGVFU3NqbVgzN1NwWElUYUhEOHJQRXBia0E0
-    WWJzaVVoTXZPZ0VCLy9MZ1d0R2kvRVRxalVSUFkvWGRTVTR5dFE9PSBjYUBrdWJlLmRlbW8K
+    c3NoLWVkMjU1MTkgQUFBQUMzTnphQzFsWkRJMU5URTVBQUFBSUZWTW1rTnRuRmZDaXRjcFFlWnFR
+    dVZQK0NKV1JtWGp3aGlRakoyalJxaS8gY2FAa3ViZS5kZW1vCg==
+
+# Trusted User CA Keys
+- path: /etc/ssh/sshd_config
+  permissions: '0600'
+  content: |
+    TrustedUserCAKeys /etc/ssh/ca.pub
+  append: true
 
 # Enable IP Forward
 - path: /etc/sysctl.d/10-gateway.conf
@@ -204,13 +199,6 @@ write_files:
 runcmd:
   # Apply kernel parameters
   - [ sysctl, --system ]
-  # Disable systemd resolve
-  - [ systemctl, stop, systemd-resolved ]
-  - [ systemctl, disable, systemd-resolved ]
-  - [ systemctl, mask, systemd-resolved ]
-  - [ chown, -R, 'debian:debian', '/home/debian' ]
-  # SSH server to trust the CA
-  - echo '\nTrustedUserCAKeys /etc/ssh/ca.pub' | tee -a /etc/ssh/sshd_config
 
 # NAT enable
 bootcmd:
@@ -254,14 +242,14 @@ bootcmd:
 
 apt:
   sources_list: |
-    deb http://deb.debian.org/debian/ $RELEASE main contrib non-free
-    deb-src http://deb.debian.org/debian/ $RELEASE main contrib non-free
+    deb http://deb.debian.org/debian/ $RELEASE main contrib non-free non-free-firmware
+    deb-src http://deb.debian.org/debian/ $RELEASE main contrib non-free non-free-firmware
 
-    deb http://deb.debian.org/debian/ $RELEASE-updates main contrib non-free
-    deb-src http://deb.debian.org/debian/ $RELEASE-updates main contrib non-free
+    deb http://deb.debian.org/debian/ $RELEASE-updates main contrib non-free non-free-firmware
+    deb-src http://deb.debian.org/debian/ $RELEASE-updates main contrib non-free non-free-firmware
 
-    deb http://deb.debian.org/debian-security $RELEASE/updates main
-    deb-src http://deb.debian.org/debian-security $RELEASE/updates main
+    deb http://deb.debian.org/debian-security $RELEASE-security main
+    deb-src http://deb.debian.org/debian-security $RELEASE-security main
   conf: |
     APT {
       Get {
@@ -359,18 +347,18 @@ write_files:
 
 apt:
   sources_list: |
-    deb http://deb.debian.org/debian/ $RELEASE main contrib non-free
-    deb-src http://deb.debian.org/debian/ $RELEASE main contrib non-free
+    deb http://deb.debian.org/debian/ $RELEASE main contrib non-free non-free-firmware
+    deb-src http://deb.debian.org/debian/ $RELEASE main contrib non-free non-free-firmware
 
-    deb http://deb.debian.org/debian/ $RELEASE-updates main contrib non-free
-    deb-src http://deb.debian.org/debian/ $RELEASE-updates main contrib non-free
+    deb http://deb.debian.org/debian/ $RELEASE-updates main contrib non-free non-free-firmware
+    deb-src http://deb.debian.org/debian/ $RELEASE-updates main contrib non-free non-free-firmware
 
     deb http://deb.debian.org/debian-security $RELEASE-security main
     deb-src http://deb.debian.org/debian-security $RELEASE-security main
 
   sources:
     kubernetes.list:
-      source: deb https://apt.kubernetes.io/ kubernetes-xenial main
+      source: deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /
 
   conf: |
     APT {
@@ -394,9 +382,9 @@ packages:
   - tmux
 
 runcmd:
-  - [ sh, -c, 'curl -fsSLo /etc/apt/trusted.gpg.d/kubernetes-archive-keyring.gpg https://dl.k8s.io/apt/doc/apt-key.gpg' ]
+  - [ sh, -c, 'curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg' ]
   - [ apt-get, update ]
-  - [ apt-get, install, -y, 'kubectl=1.20.15-00' ]
+  - [ apt-get, install, -y, 'kubectl=1.29.15-1.1' ]
   - [ apt-mark, hold, kubectl ]
   - [ sh, -c, 'mv -u /run/.ssh/* /home/debian/.ssh/.' ]
   - [ chown, -R, 'debian:debian', '/home/debian' ]
@@ -450,7 +438,7 @@ The premise is that you already have **Virtualbox** properly installed on your l
 
   ```console
   sudo apt-get install python3-pip
-  sudo pip3 install shyaml
+  sudo pip3 install shyaml --break-system-packages
   ```
 
 * Install `genisoimage`
@@ -498,7 +486,7 @@ Resolving deltas: 100% (1662/1662), done.
 
 To initialize and configure our instances using cloud-init, we'll use the configuration files versioned at the data directory from our repository.
 
-Note: pay attention that, for each step, we pass the specific configuration files of the component being configured (gate, hapx, glus etc.)
+Note: pay attention that, for each step, we pass the specific configuration files of the component being configured (gate, hapx, storage etc.)
 
 * **Create Gateway**
 
@@ -587,7 +575,7 @@ Use the returned value to access.
 ```console
 ~$ ssh debian@192.168.4.57
 
-Linux busybox 4.19.0-18-amd64 #1 SMP Debian 4.19.208-1 (2021-09-29) x86_64
+Linux busybox 6.1.0-42-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.1.159-1 (2025-12-30) x86_64
 
 The programs included with the Debian GNU/Linux system are free software;
 the exact distribution terms for each program are described in the
@@ -656,7 +644,7 @@ Let's check access `gate-node01`
 ```console
 debian@busybox:~$ ssh debian@gate-node01
 
-Linux gate-node01 4.19.0-18-amd64 #1 SMP Debian 4.19.208-1 (2021-09-29) x86_64
+Linux gate-node01 6.1.0-42-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.1.159-1 (2025-12-30) x86_64
 
 The programs included with the Debian GNU/Linux system are free software;
 the exact distribution terms for each program are described in the

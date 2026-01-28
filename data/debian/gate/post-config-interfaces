@@ -16,7 +16,7 @@ nic3:
 nic4:
   id: 4
   type: intnet
-  name: glus
+  name: storage
 
 nic5:
   id: 5
