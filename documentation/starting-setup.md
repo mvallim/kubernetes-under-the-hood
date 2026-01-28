@@ -7,7 +7,6 @@ We created the base image, for both Ubuntu and Debian, that we will use as the b
 * **HA Proxy** (two instances)
 * **Kubernetes Master** (three instances)
 * **Kubernetes Worker** (three instances)
-* **Gluster nodes** (three instances)
 
 Check our [Architecture Overview](common-cluster.md) for a better understanding of how these components interact with each other.
 
@@ -103,7 +102,7 @@ Now let's create the images using a custom tool we created (create-image.sh) tha
 * **`-o`** is used to pass the **hostname** that will be assigned to our instance. This will also be the name used by **VirtualBox** to reference our instance.
 * **`-l`** is used to inform which Linux distribution (**debian** or **ubuntu**) configuration files we want to use (notice this is used to specify which folder under data is referenced). Default is **`debian`**.
 * **`-b`** is used to specify which **base image** should be used. This is the image name that was created on **VirtualBox** when we executed the installation steps from our [linux image](create-linux-image.md).
-* **`-s`** is used to pass a configuration file that our script will use to configure **virtual disks** on **VirtualBox**. You'll notice this is used only on the **Gluster** configuration step.
+* **`-s`** is used to pass a configuration file that our script will use to configure **virtual disks** on **VirtualBox**.
 * **`-a`** whether or not our instance **should be initialized** after it's created. Default is **`true`**.
 
 ## Gateway configuration
@@ -487,7 +486,7 @@ Resolving deltas: 100% (1662/1662), done.
 
 To initialize and configure our instances using cloud-init, we'll use the configuration files versioned at the data directory from our repository.
 
-Note: pay attention that, for each step, we pass the specific configuration files of the component being configured (gate, hapx, glus etc.)
+Note: pay attention that, for each step, we pass the specific configuration files of the component being configured (gate, hapx, storage etc.)
 
 * **Create Gateway**
 

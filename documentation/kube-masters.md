@@ -185,6 +185,37 @@ write_files:
       "type": "loopback"
     }
 
+- path: /usr/local/lib/systemd/system/containerd.service
+  permissions: '0644'
+  content: |
+    [Unit]
+    Description=containerd container runtime
+    Documentation=https://containerd.io
+    After=network.target dbus.service
+
+    [Service]
+    ExecStartPre=-/sbin/modprobe overlay
+    ExecStart=/usr/local/bin/containerd
+
+    Type=notify
+    Delegate=yes
+    KillMode=process
+    Restart=always
+    RestartSec=5
+
+    # Having non-zero Limit*s causes performance problems due to accounting overhead
+    # in the kernel. We recommend using cgroups to do container-local accounting.
+    LimitNPROC=infinity
+    LimitCORE=infinity
+
+    # Comment TasksMax if your systemd version does not supports it.
+    # Only systemd 226 and above support this version.
+    TasksMax=infinity
+    OOMScoreAdjust=-999
+
+    [Install]
+    WantedBy=multi-user.target
+
 apt:
   sources_list: |
     deb http://deb.debian.org/debian/ $RELEASE main contrib non-free non-free-firmware
@@ -199,8 +230,6 @@ apt:
   sources:
     kubernetes.list:
       source: deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.29/deb/ /
-    docker.list:
-      source: deb [signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $RELEASE stable
 
   conf: |
     APT {
@@ -224,16 +253,18 @@ runcmd:
   - [ modprobe, br_netfilter ]
   - [ sysctl, --system ]
   - [ sh, -c, 'curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg' ]
-  - [ sh, -c, 'curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg' ]
+  - [ sh, -c, 'curl -fsSL https://github.com/containerd/containerd/releases/download/v2.2.1/containerd-2.2.1-linux-amd64.tar.gz | tar -xz -C /usr/local' ]
+  - [ sh, -c, 'curl -fsSL https://github.com/opencontainers/runc/releases/download/v1.4.0/runc.amd64 -o /usr/local/sbin/runc && chmod 755 /usr/local/sbin/runc' ]
+  - [ sh, -c, 'curl -fsSL https://github.com/containernetworking/plugins/releases/download/v1.9.0/cni-plugins-linux-amd64-v1.9.0.tgz | tar -xz -C /opt/cni/bin' ]
   - [ apt-get, update ]
-  - [ apt-get, install, -y, containerd.io, 'kubelet=1.29.15-1.1', 'kubectl=1.29.15-1.1', 'kubeadm=1.29.15-1.1' ]
-  - [ apt-mark, hold, kubelet, kubectl, kubeadm, containerd.io ]
+  - [ apt-get, install, -y, 'kubelet=1.29.15-1.1', 'kubectl=1.29.15-1.1', 'kubeadm=1.29.15-1.1' ]
+  - [ apt-mark, hold, kubelet, kubectl, kubeadm ]
   # Configure containerd
   - [ mkdir, -p, /etc/containerd ]
   - [ sh, -c, 'containerd config default > /etc/containerd/config.toml' ]
   - [ sh, -c, 'sed -i "s/SystemdCgroup = false/SystemdCgroup = true/" /etc/containerd/config.toml' ]
-  - [ systemctl, restart, containerd ]
-  - [ systemctl, enable, containerd ]
+  - [ systemctl, daemon-reload ]
+  - [ systemctl, enable, --now, containerd ]
 
 users:
 - name: debian

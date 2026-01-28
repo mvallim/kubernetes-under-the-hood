@@ -1,6 +1,0 @@
----
-storage1:
-  id: 1
-  size: 512000
-  format: VDI
-  variant: Standard

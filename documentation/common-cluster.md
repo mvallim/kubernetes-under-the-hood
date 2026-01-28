@@ -20,13 +20,6 @@ Each of the **HAProxy** load balancers will be configured to split traffic betwe
 
 Kubernetes is an open-source platform and is production-ready.
 
-## Gluster
-
-[GlusterFS](https://docs.gluster.org/en/latest/Administrator%20Guide/GlusterFS%20Introduction/) is a scalable network filesystem suitable for data-intensive tasks such as cloud storage and media streaming. GlusterFS is free and open source software and can utilize common off-the-shelf hardware. The main purpose of **Gluster** here is to provide volumes to Kubernetes Pods. It will be managed and [orchestrated like any other app](https://github.com/gluster/gluster-kubernetes) in Kubernetes. This is a convenient way to unlock the power of dynamically provisioned, persistent GlusterFS volumes in Kubernetes.
-<p align="center">
-  <img src="images/gluster-create-volume.gif">
-</p>
-
 ## Cluster Definition
 
 Cluster is an English term meaning “agglomerate” or “agglomeration” and can be applied in various contexts. In the context of computing, the term defines a system architecture capable of combining several computers to work together.

@@ -158,41 +158,33 @@ In our specific case, since we are going to create a VM image that will be the b
   LVM extension concept in action
 </p>
 
+## Containerd
 
-## Gluster
-*“Gluster is a free and open source software scalable network filesystem.”*
+*"Containerd is an industry-standard core container runtime that manages the complete container lifecycle on a host system. It handles image transfer and storage, container execution and supervision, low-level storage, and network attachments. Containerd is designed to be embedded into larger systems, such as Kubernetes, rather than being used directly by developers."*
 
-Reference: https://www.gluster.org/
+Reference: https://containerd.io/
 
-You can see the objective of the Gluster [here](/documentation/common-cluster.md#gluster).
+Reference: https://github.com/containerd/containerd
 
-## Docker
-
-*“Docker is a collection of interoperating [software-as-a-service](https://en.wikipedia.org/wiki/Software-as-a-service) and [platform-as-a-service](https://en.wikipedia.org/wiki/Platform-as-a-service) offerings that employ [operating-system-level virtualization](https://en.wikipedia.org/wiki/Operating-system-level_virtualization) to cultivate development and delivery of software inside standardized software packages called [containers](https://en.wikipedia.org/wiki/Container_%28virtualization%29). The software that hosts the containers is called **Docker Engine**. It was first started in 2013 and is developed by [Docker, Inc](https://en.wikipedia.org/wiki/Docker,_Inc.). The service has both free and premium tiers.”*
-
-Reference: https://en.wikipedia.org/wiki/Docker_(software)
-
-Reference: https://www.docker.com/
-
-**Docker** was initially developed based on [LXC](https://linuxcontainers.org/lxc/introduction/) technology but has become independent. It offers more than just running containers: it makes it easy to create, build, upload, and control version images.
+**Containerd** was originally developed as part of Docker but was later extracted and donated to the Cloud Native Computing Foundation (CNCF) as an independent project. It provides a lightweight, focused runtime that implements the core container functionality needed by orchestration platforms, without the additional tooling and features that Docker includes for developer workflows.
 
 <p align="center">
   <img src="images/brief-container-history.png"><br>
   Above is a brief summary of the history of containers taken from Wikipedia and <a href="https://content.pivotal.io/infographics/moments-in-container-history">other sources</a>
 </p>
 
-This is essentially a way of packing your software in container format. But what does that mean? It means that all your software and its dependencies (like libraries, configurations, etc) are contained in this container, making it easier to port your application without having to worry about potential differences in the environment where your application is deployed into.
+Containerd serves as the underlying runtime that executes and manages containers on a host system. It handles critical low-level operations such as pulling and storing container images, creating and managing container filesystems, executing containers, and managing their lifecycle. This abstraction allows higher-level tools and orchestrators to focus on application-level concerns without worrying about the implementation details of container execution.
 
-One of the great advantages of this approach is that you can start your container in any other environment or new machines without having unexpected errors or additional configurations since everything your application needs is packaged inside the same container. In this way, the management of the container becomes: predictable, repeatable and immutable.
+One of the great advantages of using containerd is its simplicity and focus. By providing only the essential container runtime functionality, it offers better performance, reduced resource consumption, and a smaller attack surface compared to full container platforms. Additionally, being a CNCF graduated project, containerd has become the de facto standard runtime for Kubernetes and other cloud-native platforms.
 
-Some may argue the same could be achieved through virtualization. This assumption is correct and the result would be practically the same but the big difference here is that we have better use of our resources. Using containers, we are able to share our OS resources, removing the need for an entire operating system host our application. For a better understanding of this concept, check the image below:
+While containerd and Docker both enable containerization, containerd is specifically designed as a runtime daemon focused on core container operations, whereas Docker is a complete platform with developer tools, image building capabilities, and a CLI for direct user interaction. For a better understanding of this architectural difference, check the image below:
 
 <p align="center">
   <img src="images/virtualization-lxc.png"><br>
   Image by: https://www.redhat.com
 </p>
 
-All this sounds really great but what happens when I have an ecosystem of applications running on **Docker** containers? This makes our management work very unproductive, boring and prone to errors. That’s where **Kubernetes** joins the party. **Kubernetes** is an open-source container orchestration system for automating application deployment, scaling, and management, able to manage containers smartly and cleanly.
+When running containerized applications at scale, having a dedicated container runtime becomes essential. **Kubernetes** integrates directly with **containerd** through the Container Runtime Interface (CRI), eliminating the need for intermediate layers and improving overall efficiency. **Kubernetes** is an open-source container orchestration system for automating application deployment, scaling, and management, and containerd serves as its lightweight, efficient runtime engine that handles the actual execution of containers on each node.
 
 ## Kubernetes
 
@@ -213,9 +205,3 @@ We’ll cover the internals of Kubernetes in detail in the other topic.
 *“Debian is a free operating system (OS) for your computer. An operating system is the set of basic programs and utilities that make your computer run.”*
 
 Reference: https://www.debian.org/
-
-## Ubuntu
-
-*“Ubuntu is an open source software operating system that runs from the desktop, to the cloud, to all your internet connected things.”*
-
-Reference: https://www.ubuntu.com/

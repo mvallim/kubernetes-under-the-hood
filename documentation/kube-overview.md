@@ -60,7 +60,7 @@ Container management takes place at a higher and more refined level, without som
 * **Scheduler**: Component on the master that watches newly created Pods that have no worker node assigned, and selects a worker node for them to run into. Factors taken into account for scheduling decisions include individual and collective resource requirements, hardware/software/policy constraints, affinity and anti-affinity specifications, data locality, inter-workload interference and deadlines.
 * **Controller manager**: Component on the master that runs controllers. Logically, each controller is a separate process but, to reduce complexity, they are all compiled into a single binary and run in a single process.
 * **kubelet**: A service ran on the worker nodes that reads Pod manifests and ensures that its defined containers have been started and are running.
-* **containerd**: A container runtime with an emphasis on simplicity, robustness and portability **containerd** is a container runtime that runs as a daemon on Linux or Windows. **containerd** takes care of fetching and storing container images, executing containers, providing network access, and more. (in our solution we’ll use **Docker** for this purpose)
+* **containerd**: A container runtime with an emphasis on simplicity, robustness and portability **containerd** is a container runtime that runs as a daemon on Linux or Windows. **containerd** takes care of fetching and storing container images, executing containers, providing network access, and more.
 * **Kube Proxy**: It is a network proxy that runs on each worker node in the cluster. **kube-proxy** is responsible for request forwarding. **kube-proxy** allows TCP and UDP stream forwarding or round-robin TCP and UDP forwarding across a set of backend functions.
 
 > Reference: https://kubernetes.io/docs/reference/glossary/?fundamental=true
@@ -74,13 +74,13 @@ Container management takes place at a higher and more refined level, without som
 
 **kubectl** is a command line tool for communicating with a **Kubernetes API** server. You can use **kubectl** to create, inspect, update, and delete **Kubernetes** objects.
 
-### What about Docker?
+### What about Containerd?
 
 <p align="center">
-  <img src="images/docker-logo.png"><br>
+  <img src="images/containerd-logo.png"><br>
 </p>
 
-**Docker** keeps its original function. What changes is that when **Kubernetes** configures a Pod, it sends instructions to the **kubelet** of the selected worker node with instructions for Docker to start (or stop) a container with the given specification. **kubelet**, in turn, continues collecting information from **Docker** and its **containers** and aggregating all this information in the master. The big difference here is that all of this happens in an automated way, without the need of an administrator having to do all this configuration and information gathering manually.
+**Containerd** serves as the core container runtime. When **Kubernetes** configures a Pod, it sends instructions directly to the **kubelet** of the selected worker node, which communicates with **containerd** through the Container Runtime Interface (CRI) to start (or stop) a container with the given specification. **kubelet**, in turn, continues collecting information from **containerd** and its **containers** and aggregating all this information in the control plane. The big difference here is that all of this happens in an automated and efficient way, with direct communication between Kubernetes and the runtime, without the need of an administrator having to do all this configuration and information gathering manually, and without requiring intermediate compatibility layers.
 
 ## Kubernetes’ main objects
 
