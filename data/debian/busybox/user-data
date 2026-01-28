@@ -1,5 +1,4 @@
 #cloud-config
-
 write_files:
 
 # Private ED25519 key
