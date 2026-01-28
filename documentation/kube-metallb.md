@@ -99,46 +99,44 @@ spec:
 
 To install MetalLB, apply the manifest:
 
-1. Apply the MetalLB manifest `namespace` from the `namespace.yaml` file:
+1. To install MetalLB, apply the manifest `controller`, `speaker` and `namespace`:
 
    ```console
-   debian@busybox:~$ kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.12.1/manifests/namespace.yaml
+   debian@busybox:~$ kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.15.3/config/manifests/metallb-native.yaml
    ```
 
    The response should look similar to this:
 
    ```text
    namespace/metallb-system created
-   ```
-
-2. Apply the MetalLB manifest `controller` and `speaker` from the `metallb.yaml` file:
-
-   ```console
-   debian@busybox:~$ kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.12.1/manifests/metallb.yaml
-   ```
-
-   The response should look similar to this:
-
-   ```text
-   podsecuritypolicy.policy/controller created
-   podsecuritypolicy.policy/speaker created
+   customresourcedefinition.apiextensions.k8s.io/bfdprofiles.metallb.io created
+   customresourcedefinition.apiextensions.k8s.io/bgpadvertisements.metallb.io created
+   customresourcedefinition.apiextensions.k8s.io/bgppeers.metallb.io created
+   customresourcedefinition.apiextensions.k8s.io/communities.metallb.io created
+   customresourcedefinition.apiextensions.k8s.io/configurationstates.metallb.io created
+   customresourcedefinition.apiextensions.k8s.io/ipaddresspools.metallb.io created
+   customresourcedefinition.apiextensions.k8s.io/l2advertisements.metallb.io created
+   customresourcedefinition.apiextensions.k8s.io/servicebgpstatuses.metallb.io created
+   customresourcedefinition.apiextensions.k8s.io/servicel2statuses.metallb.io created
    serviceaccount/controller created
    serviceaccount/speaker created
+   role.rbac.authorization.k8s.io/controller created
+   role.rbac.authorization.k8s.io/pod-lister created
    clusterrole.rbac.authorization.k8s.io/metallb-system:controller created
    clusterrole.rbac.authorization.k8s.io/metallb-system:speaker created
-   role.rbac.authorization.k8s.io/config-watcher created
-   role.rbac.authorization.k8s.io/pod-lister created
-   role.rbac.authorization.k8s.io/controller created
+   rolebinding.rbac.authorization.k8s.io/controller created
+   rolebinding.rbac.authorization.k8s.io/pod-lister created
    clusterrolebinding.rbac.authorization.k8s.io/metallb-system:controller created
    clusterrolebinding.rbac.authorization.k8s.io/metallb-system:speaker created
-   rolebinding.rbac.authorization.k8s.io/config-watcher created
-   rolebinding.rbac.authorization.k8s.io/pod-lister created
-   rolebinding.rbac.authorization.k8s.io/controller created
-   daemonset.apps/speaker created
+   configmap/metallb-excludel2 created
+   secret/metallb-webhook-cert created
+   service/metallb-webhook-service created
    deployment.apps/controller created
+   daemonset.apps/speaker created
+   validatingwebhookconfiguration.admissionregistration.k8s.io/metallb-webhook-configuration created
    ```
 
-3. Query the state of deploy
+2. Query the state of deploy
 
    ```shell
    debian@busybox:~$ kubectl get deploy -n metallb-system -o wide
@@ -148,7 +146,7 @@ To install MetalLB, apply the manifest:
 
    ```console
    NAME         READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES                               SELECTOR
-   controller   0/1     1            0           11s   controller   quay.io/metallb/controller:v0.12.1   app=metallb,component=controller
+   controller   1/1     1            1           72s   controller   quay.io/metallb/controller:v0.15.3   app=metallb,component=controller
    ```
 
 This will deploy MetalLB to your cluster, under the **`metallb-system`** namespace. The components in the manifest are:
@@ -166,18 +164,23 @@ The installation manifest does not include a configuration file. MetalLB’s com
 Based on the planed network configuration ([here](/documentation/network-segmentation.md#loadbalancer)) we will have a [`metallb-config.yaml`](../metallb/metallb-config.yaml) as below:
 
 ```yaml
-apiVersion: v1
-kind: ConfigMap
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
 metadata:
+  name: pool-addresses
   namespace: metallb-system
-  name: config
-data:
-  config: |
-    address-pools:
-    - name: default
-      protocol: layer2
-      addresses:
-      - 192.168.2.2-192.168.2.125
+spec:
+  addresses:
+    - 192.168.2.2-192.168.2.125 
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: l2-advertisement
+  namespace: metallb-system
+spec:
+  ipAddressPools:
+    - pool-addresses 
 ```
 
 1. Apply the MetalLB configmap from the `metallb-config.yaml` file:
@@ -186,20 +189,7 @@ data:
    debian@busybox:~$ kubectl apply -f https://raw.githubusercontent.com/mvallim/kubernetes-under-the-hood/master/metallb/metallb-config.yaml
    ```
 
-2. Query the state of deploy
-
-   ```console
-   debian@busybox:~$ kubectl get deploy controller -n metallb-system -o wide
-   ```
-
-   The response should look similar to this:
-
-   ```console
-   NAME         READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES                               SELECTOR
-   controller   1/1     1            1           88s   controller   quay.io/metallb/controller:v0.12.1   app=metallb,component=controller
-   ```
-
-3. Query the state of service `load-balancer-service`
+2. Query the state of service `load-balancer-service`
 
    ```console
    debian@busybox:~$ kubectl get service load-balancer-service -o wide
@@ -208,8 +198,8 @@ data:
    The response should look similar to this:
 
    ```text
-   NAME                    TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE     SELECTOR
-   load-balancer-service   LoadBalancer   10.103.128.109   192.168.2.2   80:31969/TCP   4m51s   app=guestbook,tier=frontend
+   NAME                    TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE     SELECTOR
+   load-balancer-service   LoadBalancer   10.99.161.153   192.168.2.2   80:31364/TCP   6m22s   app=guestbook,tier=frontend
    ```
 
 > Now if you look at the status on the `EXTERNAL-IP` it is **`192.168.2.2`** and can be access directly from external, without using [`NodePort`](/documentation/kube.md#service) or [`ClusterIp`](/documentation/kube.md#service). Remember this IP **`192.168.2.2`** isn't assigned to any node. In this example of service we can access using [`http://192.168.2.2`](http://192.168.2.2).
